@@ -7,7 +7,7 @@ function DrawArrow(props) {
  
  const [hovered, setHovered] = useState(false);
  const [trashHovered, setTrashHovered] = useState(false);
- const [image] = useImage(require("./design/Logos/trash.png"));
+ const [image] = useImage(require("./Logos/trash.png"));
  
  function Trashcan() {
  return <Image
