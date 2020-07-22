@@ -1,0 +1,4 @@
+.profile-nav-link:global(.active){
+    background-color: none;
+    color: black
+}

@@ -1,0 +1,21 @@
+.navBarIcon{
+  text-decoration: none;
+    display: block;
+    color: white;
+    height: 30px;
+}
+
+/* Color for the Remember Me checkbox */
+/* Side Note: it seems to be connected to the sign up's labels as well for some reason! */
+label{
+  color:gray;
+}
+
+.navigationBar{
+  background-color: #17252A;
+
+}
+
+#basic-nav-dropdown{
+  background-color: #17252A;
+}

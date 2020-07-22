@@ -1,0 +1,7 @@
+#nav-dropdown{
+    color: black;
+}
+
+#nav-dropdown:hover, #nav-dropdown:active{
+    background-color: none;
+}

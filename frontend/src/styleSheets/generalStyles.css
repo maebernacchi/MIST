@@ -1,0 +1,46 @@
+/*
+Set font for all code in the body.
+*/
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Used in App.js -- a container for the whole page (Navigation + whatever page is being pulled up + footer */
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* container for the current page (without header) + footer */
+#content-wrap {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.row-flex {
+  justify-content: space-between;
+}
+
+/* footer information (everything below this comment)*/
+.justify-content-center {
+  color: rgb(221, 219, 219);
+  padding-top: 10px;
+}
+#footer-button {
+  color: white;
+}
+
+/*Keeps footer at the bottom of the page and sets its color*/
+#footer {
+  background-color: #17252a;
+  padding: 20px;
+  margin-top: 20px;
+  bottom: 0;
+  width: 100%;
+  height: 90px;
+}

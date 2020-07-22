@@ -1,0 +1,41 @@
+/* Styling for both sign In and Up pages! */
+
+.icons{
+        display: flex;
+        flex-direction: row;
+        margin: auto;
+        justify-content: center;
+   }
+
+.icon{
+    width: 3em;
+    margin: 1em;
+}
+
+.signUp-center {
+    width: 40%;
+
+    /* with border*/
+    /*
+    border-color: gray;
+    border: solid;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    padding-left: 3em;
+    padding-right: 3em;*/
+
+  }
+
+.signIn-center{
+    width: 25%;
+  }
+
+  .form{
+    text-align: left;
+    padding-top: 1em;
+  }
+
+  .form-container{
+    width: 50%;
+  }
+

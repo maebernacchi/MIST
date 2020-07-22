@@ -1,0 +1,56 @@
+td {
+  padding: 2%;
+}
+
+.tableContainer {
+  margin: auto auto;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 70%;
+}
+
+.tableContainer td,
+.tableContainer th {
+  border: 1px solid #ddd;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-right: 1em;
+  padding-left: 1em;
+  text-align: left;
+}
+
+.tableContainer tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.tableContainer tr:hover {
+  background-color: #ddd;
+}
+
+.tableContainer th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-right: 1em;
+  padding-left: 1em;
+  text-align: left;
+  background-color: #17252a;
+  color: white;
+}
+
+#accordion {
+  text-align: left;
+  width: 50%;
+  margin: auto auto;
+  padding: 2em;
+}
+
+#card-header:hover {
+  background-color: #2b7a78;
+  color: white;
+}
+#card-header:focus {
+  background-color: #def2f1;
+}
+#card-header:focus {
+  background-color: black;
+}

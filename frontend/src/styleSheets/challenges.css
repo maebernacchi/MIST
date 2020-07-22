@@ -1,0 +1,18 @@
+h1, p, .pagination-style{
+    margin: auto;
+    text-align: center;
+}
+
+.row-flex{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.cards-container-column{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+}

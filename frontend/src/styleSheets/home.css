@@ -1,0 +1,102 @@
+/* 
+Styling for Intro
+*/
+#intro {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#logoImage {
+  margin: 0 2%;
+  display: inline-block;
+  width: 90%;
+}
+#about {
+  color: #575757;
+  margin: 0 1%;
+  font-size: 1.4em;
+}
+
+/*
+Styling for ButtonContainer
+*/
+
+#homeButtons {
+  margin: auto auto;
+  display: flex;
+  justify-content: center;
+}
+
+.linkButton {
+  background-color: #2b7a78;
+  border: none;
+  color: white;
+
+  text-align: center;
+  opacity: 0.6;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+
+  padding-left: 3%;
+  padding-right: 3%;
+  font-weight: bold;
+  text-align: center;
+  font-size: 130%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin: 2%;
+  width: 20%;
+}
+
+.linkButton:hover {
+  opacity: 1;
+}
+
+#middleButton {
+  background-color: #17252a;
+}
+
+#middleButton:hover {
+  opacity: 1;
+}
+
+/*
+Styling for FeaturedImages 
+*/
+.featuredImagesFlex {
+  display: flex;
+  margin: auto auto;
+  justify-content: center;
+}
+.featuredImage {
+  width: 10%;
+  justify-content: center;
+  padding-left: 1%;
+  padding-right: 1%;
+}
+.featuredImagesContainer {
+  border-style: solid;
+  border-color: #17252a;
+  text-align: left;
+  padding-left: 3%;
+  padding-right: 3%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  width: 60%;
+  margin: auto;
+}
+
+/* NavLink styling*/
+.Nav_link:link {
+  text-decoration: none;
+}
+
+.Nav_link:visited {
+  color: #fff;
+}
+.Nav_link:hover {
+  color: black;
+}
