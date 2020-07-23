@@ -1,5 +1,8 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+
 /******************************************************************************
-* DESCRIPTION:
 * displayImages.js provides Gallery, ImageView, and ModalView settings
 * for viewing images. We expect to call use these settings on both the
 * Gallery page and on the Profile/Images page.
@@ -18,42 +21,38 @@
 *   6.  Additional components (icons, comments)
 *********************************************************************************/
 
-/**********************************************
- *             1. IMPORTS
- **********************************************/
+// +---------+----------------------------------------------------------------------
+// | Imports |
+// +---------+
 
-import React, { useState, useRef } from "react";
-import "./styleSheets/gallery.css";
-import { Card, Button, Pagination, Container, Row, Col, Nav, NavDropdown,
-  Popover, Overlay, Form, Modal, OverlayTrigger, Dropdown }
-  from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route, Link, useHistory,
-  useLocation, useParams} from "react-router-dom";
-import { BsClock } from "react-icons/bs";
-import { AiOutlineStar } from "react-icons/ai";
-import { FiSave, FiCode, FiSend, FiMoreHorizontal } from "react-icons/fi";
-import { FaRegShareSquare, FaRegComments, FaFacebook, FaSnapchat,
-} from "react-icons/fa";
-import { TiSocialInstagram } from "react-icons/ti";
 import MISTImage from "./MISTImageGallery"
+import React, { useState, useRef, useEffect } from "react";
+import { Card, Button, Pagination, Container, Row,
+  Col, Nav, NavDropdown, Popover, Overlay, Form,
+  Modal, OverlayTrigger, Dropdown } from "react-bootstrap";
+import { AiOutlineStar } from "react-icons/ai";
+import { BsClock } from "react-icons/bs";
+import {  FaRegShareSquare, FaRegComments, FaFacebook,
+  FaSnapchat } from "react-icons/fa";
+import { FiSave, FiCode, FiSend, FiMoreHorizontal } from "react-icons/fi";
+import { TiSocialInstagram } from "react-icons/ti";
+import { BrowserRouter as Router, Switch, Route, Link,
+  useHistory, useLocation, useParams } from "react-router-dom";
+import "./styleSheets/gallery.css";
 
-/* Note: We will need to add BsViewStacked
+/* Note: We'll eventually need to add BsViewStacked
 and BsLayout Split as imports. They will 
 allow users to change views on the overlay modal. */
 
-/**********************************************
- *             2. ROUTER & SWITCHES
- *
- **********************************************
- * ModalGalleryExample & ModalSwitch
- **********************************************/
+// +---------+----------------------------------------------------------------------
+// | Routers |
+// +---------+
 
-/** Makes the router and calls the switcher between the URLs.
+/** DisplayImages makes the router and calls the switcher between the URLs.
  *  Note: We should keep DisplayImages() and ModalSwitch() as 
  *  two separate functions. Combining them creates issues
  *  with transitioning between the Gallery and Modal View.
 */
-
 export default function DisplayImages(props) {
   return (
     <Router>
@@ -61,17 +60,15 @@ export default function DisplayImages(props) {
     </Router>
   );
 }
-/** Returns the relevant page based on the URL */
+
+/** ModalSwitch calls the relevant page based on the URL */
 function ModalSwitch(props) {
   let location = useLocation();
 
-  // This piece of state is set when one of the
-  // gallery links is clicked. The `background` state
-  // is the location that we were at when one of
-  // the gallery links was clicked. If it's there,
-  // use it as the location for the <Switch> so
-  // we show the gallery in the background, behind
-  // the modal.
+  /* This piece of state is set when one of the gallery links is clicked.
+  // The `background` state is the location that we were at when one of
+  // the gallery links was clicked. If it's there, use it as the location
+  // for the <Switch> so we show the gallery in the background. */
   let background = location.state && location.state.background;
 
   return (
@@ -86,21 +83,20 @@ function ModalSwitch(props) {
         <Route path="/img/:id" children={<ImageView cards={props.cards} />} />
       </Switch>
 
-      {/* Show the modal when a background page is set */}
+      {/* Show the modal when a background page is set. */}
       {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} />} />}
     </div>
   );
 }
 
-/*******************************************
- *               3. GALLERY
- *
- * *****************************************
- *    How the card itself looks like
- *******************************************/
+// +---------+----------------------------------------------------------------------
+// | Gallery |
+// +---------+
+
 function Gallery(props) {
   let cards = props.cards;
   let location = useLocation();
+
   return (
     <div>
       <Row style={{ justifyContent: "space-between" }}>
@@ -115,7 +111,7 @@ function Gallery(props) {
                 {card.isAnimated ? (
                   <BsClock size={15} style={{ margin: "1vh" }} />
                 ) : (
-                    ""
+                  ""
                   )}
               </Card.Title>
 
@@ -172,10 +168,7 @@ function Gallery(props) {
                       {card.ratings}
                     </Nav.Link>
 
-                    {/* Code Icon */}
                     <CodeIcon code={card.code} />
-
-                    {/* Save Icon */}
                     <SaveIcon />
 
                     {/* Comment Icon */}
@@ -193,10 +186,7 @@ function Gallery(props) {
                       />
                     </Link>
 
-                    {/* Share Icon */}
                     <ShareIcon />
-
-                    {/* More Icon */}
                     <MoreIcon />
 
                   </Row>
@@ -204,24 +194,8 @@ function Gallery(props) {
                   {/*****************************
                    * TYPE COMMENT HERE SECTION
                    *******************************/}
-                  <Row>
-                    <div style={{ width: "90%" }}>
-                      {/* Type comment here */}
-                      <Form.Control
-                        as="textarea"
-                        rows="1"
-                        placeholder="Type comment here"
-                      />
-                    </div>
-
-                    {/* Submit icon */}
-                    <div style={{ width: "10%" }}>
-                      <Nav.Link>
-                        {" "}
-                        <FiSend style={{ color: "black" }} />{" "}
-                      </Nav.Link>
-                    </div>
-                  </Row>
+                   <MakeComment imageId={card._id}/>
+                   {console.log("card._id: ", card._id)}
                 </Col>
               </Card.Body>
             </Card.Header>
@@ -267,7 +241,7 @@ function ImageView(props) {
 
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
-  if (!card) return <div>Image not found</div>; 
+  if (!card) return <div>Image not found</div>;
 
   return (
     <div>
@@ -294,7 +268,7 @@ function ImageView(props) {
             </Col>
             <Container style={{ width: "50%" }}>
               {/* COMMENTS */}
-              <ModalComments cards={props.cards} />
+              <ModalComments card={card} />
             </Container>
           </Row>
         </Col>
@@ -325,7 +299,7 @@ function ImageModal(props) {
     <MyVerticallyCenteredModal
       show={modalShow}
       onHide={() => history.goBack()}
-      cards={props.cards}
+      card={card}
     />
   );
 }
@@ -335,8 +309,7 @@ function ImageModal(props) {
  ***************************************************/
 function MyVerticallyCenteredModal(props) {
 
-  let { id } = useParams();
-  let card = props.cards.find(elem => elem._id === id);
+  let card = props.card;
 
   return (
     <Modal
@@ -362,7 +335,7 @@ function MyVerticallyCenteredModal(props) {
 
       {/* BODY */}
       <Container>
-        <SideView cards={props.cards} />
+        <SideView card={card} />
       </Container>
 
       {/* FOOTER */}
@@ -382,8 +355,7 @@ function MyVerticallyCenteredModal(props) {
 //Returns a Body that puts the image NEXT TO the comments
 function SideView(props) {
 
-  let { id } = useParams();
-  let card = props.cards.find(elem => elem._id === id);
+  let card = props.card;
 
   return (
     <Modal.Body>
@@ -407,39 +379,12 @@ function SideView(props) {
         {/* COMMENT SECTION */}
         <Container style={{ width: "50%" }}>
           <div style={{ paddingLeft: "1em" }}></div>
-          <ModalComments cards={props.cards} />
+          <ModalComments card={card} />
         </Container>
       </Row>
     </Modal.Body>
   );
 }
-
-//Returns a Body that puts the image ON TOP OF the comments
-/* function StackedView(props) {
-  let { id } = useParams();
-  let cards = props.cards;
-  let card = cards[parseInt(id, 10)];
-
-  return (
-    <Modal.Body>
-      <Col>
-        <Col> */
-/*
-<Image src={card.image} rounded style={{ width: "100%" }} />
-*/
-/*
-{card.description}
-<Form>
-  <Form.Control type="range" custom style={{ marginTop: "1em" }} />
-</Form>
-</Col>
-<Container style={{ width: "50%" }}>
-<ModalComments />
-</Container>
-</Col>
-</Modal.Body>
-);
-} */
 
 /*********************************************************
  *                      COMMENTS
@@ -463,29 +408,82 @@ function ModalComments(props) {
 
         {/* ICONS */}
 
-        <ModalIcons cards={props.cards} />
+        <ModalIcons card={props.card} />
 
         {/* Form to write comment */}
-        <Row style={{ width: "100%" }}>
-          {/* text area */}
-          <Container style={{ width: "90%", marginRight: "0" }}>
-            <Form.Control as="textarea" rows="2" placeholder="Type here" />
-          </Container>
-
-          {/* send it icon */}
-          <Container style={{ width: "10%" }}>
-            <Nav.Link style={{ padding: "0" }}>
-              {" "}
-              <FiSend style={{ color: "black" }} />{" "}
-            </Nav.Link>
-          </Container>
-        </Row>
+        <MakeComment imageId={props.card._id}/>
       </Col>
     </Form.Group>
   );
 }
 
-/* 1 comment */
+/**
+ * Component for making and submitting a comment
+ * posts comment to database
+ */
+function MakeComment(props) {
+  console.log("imageId: ", props.imageId);
+  const [comment, setComment] = useState("");
+
+  //update the comment(state) as the user types it
+  const handleChange = (event) => {
+    const comment = event.target.value;
+    setComment(comment);
+  };
+
+  // when the user submits the comment, post to database
+  const handleSubmit = (event) => {
+    // prevent the page from refreshing 
+    event.preventDefault();
+
+    // build full comment
+    let fullcomment = {
+      "active": true,
+      "flags": [],
+      "userId": "5f09091de2990f3b98e18f85",
+      "body": comment,
+      "imageId": props.imageId
+    };
+
+    //post comment
+    fetch('/api/gallery', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(fullcomment)
+    })
+      //reset comment state
+      .then(setComment(""))
+  };
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Form.Row style={{
+        justifyContent: "space-between",
+        marginTop: "1em",
+      }}>
+        <Col xs={9}>
+          <Form.Control
+            name="comment"
+            as="textarea"
+            rows="1"
+            placeholder="Type comment here"
+            value={comment}
+            onChange={handleChange}
+          />
+        </Col>
+        <Col>
+          <Button variant="light" type="submit">
+            <FiSend style={{ color: "black" }} />
+          </Button>
+        </Col>
+      </Form.Row>
+    </Form>
+  );
+}
+
+/* 1 example comment */
 export function Comment() {
   return (
     <Row>
@@ -632,8 +630,7 @@ function SaveIcon() {
 
 function ModalIcons(props) {
 
-  let { id } = useParams();
-  let card = props.cards.find(elem => elem._id === id);
+  let card = props.card;
 
   return (
     <Row style={{ justifyContent: "flex-start" }}>

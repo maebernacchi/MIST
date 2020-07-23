@@ -409,6 +409,66 @@ module.exports.getChallenges = (category, callback) => {
     })
 }
 
+// +----------------+-------------------------------------------------
+// |    Comments    |
+// +----------------+
+
+/**
+ * saves the comment in the comments collection,
+ * the user's comment array, and to image's comment array
+ */
+module.exports.saveComment = function (req, res) {
+    // build the comment
+    //let userID = req.user._id;
+    let userID = req.body.userId;
+    //let imageID = sanitize(req.params.imageid)
+    let imageID = req.body.imageId;
+    let comment = Comment({
+        //userId: userID,
+        userId: userID,
+        //body: sanitize(req.body.newComment),
+        body: req.body.body,
+        //active: true
+        active: req.body.active,
+        imageId: imageID,
+        flags: req.body.flags
+    });
+
+    //save comment
+    comment.save()
+        .then(comment => {
+            //push comment to user's comment array
+            User.updateOne({ _id: userID }, { $push: { comments: comment._id } })
+                .exec()
+                .then((writeOpResult) => {
+                    if (writeOpResult.nModified === 0) {
+                        console.log("Failed to insert comment into user's array");
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                    res.end(JSON.stringify(error));
+                })
+            //push comment to image's comment array
+            Image.updateOne({ _id: imageID }, { $push: { comments: comment._id } })
+                .exec()
+                .then((writeOpResult) => {
+                    if (writeOpResult.nModified === 0) {
+                        console.log("Failed to insert comment into image's array");
+                    } else console.log("Inserted Comment");
+                })
+                .catch(err => {
+                    console.error(err)
+                    res.end(JSON.stringify(error));
+                })
+            res.redirect('back');
+        })
+        .catch(err => {
+            console.error(err)
+            res.end(JSON.stringify(error));
+        })
+}
+
 
 // +------------+-------------------------------------------------
 // |    Misc    |

@@ -67,7 +67,7 @@ module.exports = (app, passport, database) => {
 
         // grab URL parameters 
         let search = req.query.level + ', ' +
-        req.query.color + ', ' + req.query.animation;
+            req.query.color + ', ' + req.query.animation;
         //console.log("search: ", search)
 
         database.getChallenges(search, (challenges, error) => {
@@ -77,6 +77,15 @@ module.exports = (app, passport, database) => {
             } else if (!challenges) res.json([]);
             else res.json(challenges);
         })
+    })
+
+    //------------------------------------------------
+
+    app.post('/api/gallery', (req, res) => {
+        let data = req.body;
+        console.log("comment: ", data);
+        database.saveComment(req, res);
+
     })
 
     //------------------------------------------------
@@ -235,7 +244,7 @@ module.exports = (app, passport, database) => {
 
     // Handles any requests that don't match the ones above
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname + '../public/index.html'));
+        //res.sendFile(path.join(__dirname + '../../frontend/public/index.html'));
     });
 
 
