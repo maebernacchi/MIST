@@ -972,7 +972,11 @@ const sections = [
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
+              <Container> 
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='mistif(y,y,x)' resolution="250" />
+              </Container>,
+              
             hint:
               <Container> This is a hint 1 </Container>
           },
@@ -1026,15 +1030,21 @@ const sections = [
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
+            <Container>
+              <p1>Try making the following image:  <br /></p1>
+              <MISTImage code='rgb(x,x,y)' resolution="250" />
+            </Container>,
             hint:
-              <Container> This is a hint 1 </Container>
+              <Container> Try to think of what variables make the RGB values change! </Container>
           },
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+            <Container>
+            <p1>For a harder challenge, try making this image: <br /> </p1>
+            <MISTImage code='rgb(cos(y),sum(cos(y),x),x)' resolution="250" />
+          </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> How does <b>cos</b> change how a function looks? </Container>
 
           }]
       }]
@@ -1080,17 +1090,20 @@ const sections = [
           [{
             question:
               <Container> 
-                <p1>Try making the following image:</p1>
+                <p1>Try making the following image: <br /></p1>
                 <MISTImage code='neg(sign(wsum(square(x),square(y))))' resolution="250" />
                  </Container>,
             hint:
-              <Container> This is a hint 1 </Container>
+              <Container> What block inverses images? </Container>
           },
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+              <Container> 
+                <p1>Try making the following image: <br /></p1>
+                <MISTImage code='wsum(sum(mult(x,x),mult(y,y),t.s),t.s)' resolution="250" />
+              </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> How does adding time work? </Container>
 
           }]
       },
@@ -1128,7 +1141,10 @@ const sections = [
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
+            <Container>
+              <p1>Try making the following image: <br /></p1>
+              <MISTImage code='sign(sum(x,negate(y)))' resolution="250" />
+            </Container>,
             hint:
               <Container> This is a hint 1 </Container>
           },
@@ -1487,8 +1503,11 @@ const sections = [
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
-            hint:
+            <Container>
+              <p1>Try making the following image:  <br /></p1>
+              <MISTImage code='rgb(cos(sin(sin(x))),sum(cos(sin(sin(x))),y),y)' resolution="250" />
+            </Container>,
+             hint:
               <Container> This is a hint 1 </Container>
           },
           {
@@ -1546,15 +1565,22 @@ const sections = [
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
+              <Container> 
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='sin(sin(sum(m.x,x)))' resolution="250" />
+               </Container>,
+              
             hint:
-              <Container> This is a hint 1 </Container>
+              <Container> How does sin change the image? </Container>
           },
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+              <Container> 
+                <p1>For a super challenge, try this image:  <br /></p1>
+                <MISTImage code='wsum(cos(mult(x,x,x)),cos(mult(x,x,x)),cos(mult(x,x,x)))' resolution="250" />
+              </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> What happens when you use <b>cos</b> and <b>wsum</b>? </Container>
 
           }]
       },
