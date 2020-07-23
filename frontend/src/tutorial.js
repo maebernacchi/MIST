@@ -804,11 +804,12 @@ const sections = [
           [{
             question:
               <Container> 
-                
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='mult(x,y,t.s)' resolution="250" /> 
               </Container>,
              
             hint:
-              <Container> This is a hint 1 </Container>
+              <Container> What happens when some variables get multipled? </Container>
           },
           {
             question:
@@ -857,7 +858,7 @@ const sections = [
             question:
             <Container> 
               <p1>Try making the following image:  <br /></p1>
-              <MISTImage code='wsum(sin(x),cos(y),m.y,m.x)' resolution="250" />
+              <MISTImage code='mult(y,sum(x,m.x))' resolution="250" />
             </Container>,
               
             hint:
@@ -865,9 +866,12 @@ const sections = [
           },
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+              <Container> 
+                <p1>For a harder image, try this:  <br /></p1>
+                <MISTImage code='wsum(sin(x),cos(y),m.y,m.x)' resolution="250" />
+              </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> Try using <b>wsum</b> instead of <b>sum</b> </Container>
 
           }]
       }]
@@ -1307,26 +1311,22 @@ const sections = [
         {
           title: "Resizing", id: 'resizing',
           keywords: ["size", "shape", "grayscale"],
-          image: <MISTImage code='x' resolution="250" />,
+          image: <MISTImage code='sign(sum(x,y,-0.5))' resolution="250" />,
           isAnimated: false,
           //Text
           text:
             <Container>
               Resizing can be useful when trying to get an image to look a certain way. The easiest way to alter the size of an image inside the canvas is to include a constant. Let's go through an example of that!
               <br />
-              1. Start by adding an <b>x</b> and <b>y</b> variable to the workspace.
+              1. Start by making a triangle. Click <Link to='#triangle'>here </Link> for the triangle tutorial!
               <br />
-              2. Add a <b>cos</b> block and connect the <b>x</b> to it.
+              2. Add a constant and set it equal to <b>-0.5</b>.
               <br />
-              3. Drag a <b>sin</b> block to the space and connect the <b>y</b>.
+              3. Connect this to the <b>sum</b> block.
               <br />
-              4. Bring in a <b>wsum</b> block.
+              4. Bring a <b>sign</b> block into the workspace. 
               <br />
-              5. Add a <b>constant</b> and set it equal to 0.5. The 0 must be included in the front in order for it to work!
-              <br />
-              6. Connect the <b>cos</b> and <b>sin</b> to the <b>wsum</b>. Take a look at the preview to see how it looks now.
-              <br />
-              7. Finally, connect the <b>0.5</b> to <b>wsum</b> and see how the size changes!
+              5. Connect the <b>sum</b> block to it. See how the triangle got smaller!
               </Container>,
 
           //Video
@@ -1341,7 +1341,11 @@ const sections = [
           challenges:
             [{
               question:
-                <Container> This is a Challenge 1 </Container>,
+              <Container>
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='sign(wsum(square(x),square(y),0.5))' resolution="250" />
+              </Container>,
+                
               hint:
                 <Container> This is a hint 1 </Container>
             },
@@ -1515,16 +1519,17 @@ const sections = [
             question:
             <Container>
               <p1>Try making the following image:  <br /></p1>
-              <MISTImage code='rgb(cos(sin(sin(x))),sum(cos(sin(sin(x))),y),y)' resolution="250" />
+              <MISTImage code='rgb(sin(x),cos(y),t.s)' resolution="250" />
             </Container>,
              hint:
-              <Container> This is a hint 1 </Container>
-          },
+              <Container> What does <b>sin</b> and <b>cos</b> look like? </Container>
+          }, 
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+              <Container> <p1>Try making the following image:  <br /></p1>
+              <MISTImage code='rgb(cos(sin(sin(x))),sum(cos(sin(sin(x))),y),y)' resolution="250" /> </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> What happens when you combine multiple <b>sin</b> and <b>cos</b> blocks? </Container>
 
           }]
       },
