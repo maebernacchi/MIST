@@ -97,14 +97,14 @@ function _make_template_string(node, params, templates, macros) {
  *
  * The first parameter is a macro.
  */
-function make_template_string({code, params}, templates, macros) {
+export function make_template_string({code, params}, templates, macros) {
   return _make_template_string(parse(code), new Set(params), templates, macros);
 }
 
 /*
  * replace_all replaces all occurences of old_s in s with new_s
  */
-function replace_all(s, old_s, new_s) {
+export function replace_all(s, old_s, new_s) {
   while (s.indexOf(old_s) !== -1) {
     s = s.replace(old_s, new_s);
   }

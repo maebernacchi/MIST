@@ -263,6 +263,7 @@ class Expert extends Component {
                     />
                     <CanvasCard
                         code={this.getFormValue('code')}
+                        default_params={this.getFormValue('default_params')}
                         expertRef={this.expertRef}
                         getFormState={() => this.getFormState()}
                         getStateFunctions={() => this.getStateFunctions()}

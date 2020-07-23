@@ -9,7 +9,7 @@
  * written in the central panel.
  */
 
-import expand_macros from '../macros';
+import expand_macros, { make_template_string, replace_all } from '../macros';
 import PropTypes from 'prop-types';
 import React, { Component, createRef } from 'react';
 import {
@@ -63,7 +63,27 @@ class CanvasCard extends Component {
         const MIST = window.MIST;
         if (this.animator) { this.animator.stop(); }
         try {
-            const expand_code = expand_macros(this.props.code, this.props.getStateFunctions());
+            let expand_code = this.props.code;
+            // check the user has specified default parameters
+            if (this.props.default_params) {
+                
+                const params = this.props.params.replace(/\s/g, "").split(",");
+                const default_params = this.props.default_params.replace(/\s/g, "").split(",");;
+                
+                // check that default_params match params in count
+                if(params.length === default_params.length){
+                    // surround parameters with brackets
+                    expand_code = make_template_string({ code: expand_code, params: this.props.params }, {}, {});
+                    // replace parameters with default parameters
+                    params.forEach((param, idx) => {
+                        console.log('here')
+                        expand_code = replace_all(expand_code, `{${param}}`, default_params[idx])
+                    });
+                }else{
+                    throw 'There is a mismatch between default_params and params';
+                }
+            }
+            expand_code = expand_macros(expand_code, this.props.getStateFunctions());
             this.props.setMessage(""); // Clear out any previous errors
             this.animator = new MIST.ui.Animator(expand_code, "", {}, this.canvas.current, (txt) => {
                 this.props.setMessage(txt);
