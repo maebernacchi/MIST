@@ -63,9 +63,14 @@ module.exports = (app, passport, database) => {
 
     //------------------------------------------------
 
-    app.get('/api/challenges', (req, res) => {
-        
-        database.getChallenges("Beginning, Greyscale, Static", (challenges, error) => {
+    app.get('/api/challenges/', (req, res) => {
+
+        // grab URL parameters 
+        let search = req.query.level + ', ' +
+        req.query.color + ', ' + req.query.animation;
+        //console.log("search: ", search)
+
+        database.getChallenges(search, (challenges, error) => {
             if (error) {
                 console.log(error);
                 res.json([]);

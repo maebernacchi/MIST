@@ -6,7 +6,7 @@ import {
   Row, Form, Col,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from "./MISTImageGallery"
+import MISTImage from "./MISTImageGallery";
 
 //Challenges; header, spacing between drop down
 //menus, and the challenges displayed on the screen
@@ -14,29 +14,27 @@ import MISTImage from "./MISTImageGallery"
 const Challenges = () => {
 
   const [challenges, setChallenges] = useState([]);
-  const [level, setLevel] = useState("Beginning");
+  const [level, setLevel] = useState("Beginner");
   const [color, setColor] = useState("Grayscale");
   const [animation, setAnimation] = useState("Static");
 
   function handleChange(event) {
     let name = event.target.name;
     let value = event.target.value;
-    if (name === "level") {
-      setLevel(value)
-    } else if (name === "color") {
-      setColor(value)
-    } else {
-      setAnimation(value)
-    }
+    if (name === "level") setLevel(value);
+    else if (name === "color") setColor(value);
+    else setAnimation(value);
   };
 
-  // this url needs parameters for the back-end challenge query
-  // ex: '/api/challenges?level='Beginner'&color='Color'&animation='Static''
+  //fetches everytime level, color, or animation changes
   useEffect(() => {
-    fetch('/api/challenges')
+    // create url with the parameters we need to search
+    let url = 'api/challenges?level=' + level + "&color="
+    + color + "&animation=" + animation;
+    fetch(url)
       .then(req => req.json())
       .then(challenges => { setChallenges(challenges) });
-  }, [])
+  }, [level, color, animation])
 
   return (
     <Container fluid>
