@@ -83,7 +83,8 @@ export const MIST_builtin_functions = {
         "class": "MIST.FunInfo",
         "name": "negate",
         "display": "neg",
-        "about": "negates value"
+        "about": "negates value",
+        "params": "a",
     },
     "rgb": {
         "class": "MIST.FunInfo",
