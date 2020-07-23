@@ -93,7 +93,7 @@ class Expert extends Component {
     }
 
     loadFunction(functionToLoad) {
-        const fun = functionToLoad;
+        const fun = {...functionToLoad};
         if(Array.isArray(fun.params)){
             fun.params = fun.params.toString();
         }
