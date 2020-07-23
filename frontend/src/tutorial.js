@@ -628,7 +628,7 @@ const sections = [
         //+------------------+
         {
           title: "The Website", ref: '#website', id: 'website',
-          keywords: ["graph", "grayscale", "axis"],
+          keywords: ["graph", "grayscale", "introduction"],
           image: <MISTImage code='x' resolution="250" />,
           isAnimated: false,
           //Text
@@ -724,7 +724,7 @@ const sections = [
     subsections:
       [{
         title: "X, Y, and Constants", id: 'x-y-constants',
-        keywords: ["graph", "grayscale", "axis"],
+        keywords: ["introduction", "grayscale", "MIST"],
         image: <MISTImage code='x' resolution="250" />,
         isAnimated: false,
         //Text
@@ -803,7 +803,10 @@ const sections = [
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
+              <Container> 
+                
+              </Container>,
+             
             hint:
               <Container> This is a hint 1 </Container>
           },
@@ -852,9 +855,13 @@ const sections = [
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
+            <Container> 
+              <p1>Try making the following image:  <br /></p1>
+              <MISTImage code='wsum(sin(x),cos(y),m.y,m.x)' resolution="250" />
+            </Container>,
+              
             hint:
-              <Container> This is a hint 1 </Container>
+              <Container> Try using <b>wsum</b> instead of <b>sum</b></Container>
           },
           {
             question:
@@ -1146,13 +1153,16 @@ const sections = [
               <MISTImage code='sign(sum(x,negate(y)))' resolution="250" />
             </Container>,
             hint:
-              <Container> This is a hint 1 </Container>
+              <Container> What inverts colors? </Container>
           },
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+              <Container> 
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='wsum(x,y,t.s)' resolution="250" />
+              </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> How do you get it to move? </Container>
 
           }]
       },
