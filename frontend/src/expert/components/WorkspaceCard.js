@@ -79,6 +79,17 @@ function WorkspaceCard(props) {
                         />
                     </Form.Group>
                     <Form.Group>
+                        <Form.Label>Default Params</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            className="formTextbox"
+                            onChange={(e) => props.setDefaultParams(e.target.value)}
+                            placeholder="Please pick your default params, separated by commas and no spaces"
+                            rows="1"
+                            value={props.default_params}
+                        />
+                    </Form.Group>
+                    <Form.Group>
                         <Form.Label>Description</Form.Label>
                         <Form.Control
                             as="textarea"
