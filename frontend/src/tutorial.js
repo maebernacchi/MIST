@@ -91,7 +91,6 @@
 // | IMPORTS |
 // +---------+
 import React from "react";
-import "./styleSheets/tutorial.css";
 
 import { Nav, Accordion, Card, Button, Container, Row, Col, Jumbotron, Modal, DropdownButton, Dropdown } from "react-bootstrap";
 

@@ -2,9 +2,9 @@
 
 import React from "react";
 import "./styleSheets/navBar.css";
-
+import {Link} from "react-router-dom"
 /* Imports for images / logos */
-import MistLogo from "./Logos/Negative/negative40.png";
+import MistLogo from "./Logos/logoFinal.png";
 import FacebookIcon from "./icons/icons8-facebook-30.png";
 import GoogleIcon from "./icons/icons8-google-48.png";
 
@@ -51,11 +51,12 @@ const BaseHeader = (props) => {
  */
 function Logo() {
   return (
-    <NavLink to="/">
-      <img src={MistLogo} alt="MIST Logo"></img>
-    </NavLink>
+    <Link to="/" style={{width: "5%"}}>
+      <img src={MistLogo} alt="MIST Logo" style={{maxWidth: "100%"}}></img>
+    </Link>
   );
 }
+
 
 /**
  * returns the searchBar
