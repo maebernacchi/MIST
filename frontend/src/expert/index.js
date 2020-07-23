@@ -36,6 +36,7 @@ class Expert extends Component {
             form: {
                 name: "",
                 params: "",
+                default_params: "",
                 description: "",
                 code: "",
                 message: "",
@@ -252,8 +253,11 @@ class Expert extends Component {
                         nameRef={this.nameRef}
                         message={this.getFormValue('message')}
                         params={this.getFormValue('params')}
+                        default_params={this.getFormValue('default_params')}
                         setCode={(code) => this.setFormValue("code", code)}
                         setDescription={(description) => this.setFormValue("description", description)}
+                        setDefaultParams={(default_params) => this.setFormValue("default_params", default_params)}
+                        
                         setName={(name) => this.setFormValue("name", name)}
                         setParams={(params) => this.setFormValue("params", params)}
                     />
@@ -262,6 +266,7 @@ class Expert extends Component {
                         expertRef={this.expertRef}
                         getFormState={() => this.getFormState()}
                         getStateFunctions={() => this.getStateFunctions()}
+                        params={this.getFormValue('params')}
                         setMessage={(message) => this.setFormValue("message", message)}
                     />
                 </ResizablePanels>
