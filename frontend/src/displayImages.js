@@ -111,7 +111,7 @@ function Gallery(props) {
                 {card.isAnimated ? (
                   <BsClock size={15} style={{ margin: "1vh" }} />
                 ) : (
-                    ""
+                  ""
                   )}
               </Card.Title>
 
@@ -208,6 +208,215 @@ function Gallery(props) {
   );
 }
 
+function PageCounter() {
+  return (
+    <Pagination className="pagination-style">
+      <Pagination.First />
+      <Pagination.Prev />
+      <Pagination.Item active>{1}</Pagination.Item>
+      <Pagination.Ellipsis />
+
+      <Pagination.Item>{10}</Pagination.Item>
+      <Pagination.Item>{11}</Pagination.Item>
+      <Pagination.Item>{12}</Pagination.Item>
+      <Pagination.Item>{13}</Pagination.Item>
+
+      <Pagination.Ellipsis />
+      <Pagination.Item>{20}</Pagination.Item>
+      <Pagination.Next />
+      <Pagination.Last />
+    </Pagination>
+  );
+}
+
+/**************************************************************************
+ *                      4. IMAGE VIEW
+ *
+ **************************************************************************
+ * What it looks like when someone tries to reach the image through the URL
+ *      -- so it has it's own webpage
+ **************************************************************************/
+
+function ImageView(props) {
+
+  let { id } = useParams();
+  let card = props.cards.find(elem => elem._id === id);
+  if (!card) return <div>Image not found</div>;
+
+  return (
+    <div>
+      <div style={{ width: "65%", margin: "auto", marginTop: "1em" }}>
+        <Col>
+          <h1 style={{ textAlign: "left" }}>{card.title}</h1>
+          <Row>
+            <Col>
+              {/* IMAGE */}
+              <MISTImage code={card.code} resolution="300" />
+              {/* USERNAME + DESCRIPTION */}
+              <Button variant="light" href="/user">
+                {<b>{card.userId}</b>}
+              </Button>
+              {/*<b>{card.username}</b> */} {card.caption}
+              {/* PIXEL SLIDE / RANGE FORM */}
+              <Form>
+                <Form.Control
+                  type="range"
+                  custom
+                  style={{ marginTop: "1em" }}
+                />
+              </Form>
+            </Col>
+            <Container style={{ width: "50%" }}>
+              {/* COMMENTS */}
+              <ModalComments card={card} />
+            </Container>
+          </Row>
+        </Col>
+      </div>
+    </div>
+  );
+}
+
+/********************************************************************
+ *                       5. IMAGE MODAL
+ *
+ * ******************************************************************
+ *  Comes up when someone clicks on the image from the page
+ ********************************************************************/
+
+/* Calls the Modal */
+function ImageModal(props) {
+  let history = useHistory();
+
+  let { id } = useParams();
+  let card = props.cards.find(elem => elem._id === id);
+
+  const [modalShow] = React.useState(true);
+
+  if (!card) return null;
+
+  return (
+    <MyVerticallyCenteredModal
+      show={modalShow}
+      onHide={() => history.goBack()}
+      card={card}
+    />
+  );
+}
+
+/***************************************************
+ * Overlay Modal
+ ***************************************************/
+function MyVerticallyCenteredModal(props) {
+
+  let card = props.card;
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      style={{
+        width: "100%",
+      }}
+    >
+      {/* HEADER */}
+      <Modal.Header>
+        <Container>
+          <Modal.Title>{card.title}</Modal.Title>
+          <Button variant="light" href="/user">
+            {card.userId}
+          </Button>
+          {/*card.username*/}
+        </Container>
+        <Link to={{ pathname: "/gallery" }}>Close</Link>
+      </Modal.Header>
+
+      {/* BODY */}
+      <Container>
+        <SideView card={card} />
+      </Container>
+
+      {/* FOOTER */}
+      <Modal.Footer style={{ minHeight: "3em" }}></Modal.Footer>
+    </Modal>
+  );
+}
+
+/***********************************************************************
+ *                        The BODY OF THE MODAL
+ *
+ * *********************************************************************
+ * SideView is the only one being used right now
+ *    StackedView works, but need to connect it with a button in the end
+ ***********************************************************************/
+
+//Returns a Body that puts the image NEXT TO the comments
+function SideView(props) {
+
+  let card = props.card;
+
+  return (
+    <Modal.Body>
+      <Row>
+        <Col>
+          {/* IMAGE */}
+          <div rounded style={{ width: "100%" }}>
+            <MISTImage code={card.code} resolution="250" />
+          </div>
+          {/* USERNAME + DESCRIPTION (optional) */}
+          { /* <Button size="sm" variant="light" href="/user">
+          {<b>{card.username}</b>} </Button> */}
+          {/*<b>{card.username}</b>*/} {card.caption}
+          {/* FORM - RANGE - RESOLUTION (?)
+           *   need to connect the position to the Image */}
+          <Form>
+            <Form.Control type="range" custom style={{ marginTop: "1em" }} />
+          </Form>
+        </Col>
+
+        {/* COMMENT SECTION */}
+        <Container style={{ width: "50%" }}>
+          <div style={{ paddingLeft: "1em" }}></div>
+          <ModalComments card={card} />
+        </Container>
+      </Row>
+    </Modal.Body>
+  );
+}
+
+/*********************************************************
+ *                      COMMENTS
+ *
+ *********************************************************
+ * Used in the Overlay and the new page Views
+ *********************************************************/
+
+function ModalComments(props) {
+
+  return (
+    <Form.Group>
+      <Col>
+        {/* COMMENTS */}
+        <Comment />
+        <Comment />
+        <Comment />
+
+        {/* HORIZONTAL LINE */}
+        <hr />
+
+        {/* ICONS */}
+
+        <ModalIcons card={props.card} />
+
+        {/* Form to write comment */}
+        <MakeComment imageId={props.card._id}/>
+      </Col>
+    </Form.Group>
+  );
+}
+
 /**
  * Component for making and submitting a comment
  * posts comment to database
@@ -271,244 +480,6 @@ function MakeComment(props) {
         </Col>
       </Form.Row>
     </Form>
-  );
-}
-
-function PageCounter() {
-  return (
-    <Pagination className="pagination-style">
-      <Pagination.First />
-      <Pagination.Prev />
-      <Pagination.Item active>{1}</Pagination.Item>
-      <Pagination.Ellipsis />
-
-      <Pagination.Item>{10}</Pagination.Item>
-      <Pagination.Item>{11}</Pagination.Item>
-      <Pagination.Item>{12}</Pagination.Item>
-      <Pagination.Item>{13}</Pagination.Item>
-
-      <Pagination.Ellipsis />
-      <Pagination.Item>{20}</Pagination.Item>
-      <Pagination.Next />
-      <Pagination.Last />
-    </Pagination>
-  );
-}
-
-/**************************************************************************
- *                      4. IMAGE VIEW
- *
- **************************************************************************
- * What it looks like when someone tries to reach the image through the URL
- *      -- so it has it's own webpage
- **************************************************************************/
-
-function ImageView(props) {
-
-  let { id } = useParams();
-  let card = props.cards.find(elem => elem._id === id);
-  if (!card) return <div>Image not found</div>;
-
-  return (
-    <div>
-      <div style={{ width: "65%", margin: "auto", marginTop: "1em" }}>
-        <Col>
-          <h1 style={{ textAlign: "left" }}>{card.title}</h1>
-          <Row>
-            <Col>
-              {/* IMAGE */}
-              <MISTImage code={card.code} resolution="300" />
-              {/* USERNAME + DESCRIPTION */}
-              <Button variant="light" href="/user">
-                {<b>{card.userId}</b>}
-              </Button>
-              {/*<b>{card.username}</b> */} {card.caption}
-              {/* PIXEL SLIDE / RANGE FORM */}
-              <Form>
-                <Form.Control
-                  type="range"
-                  custom
-                  style={{ marginTop: "1em" }}
-                />
-              </Form>
-            </Col>
-            <Container style={{ width: "50%" }}>
-              {/* COMMENTS */}
-              <ModalComments imageId={id} cards={props.cards} />
-            </Container>
-          </Row>
-        </Col>
-      </div>
-    </div>
-  );
-}
-
-/********************************************************************
- *                       5. IMAGE MODAL
- *
- * ******************************************************************
- *  Comes up when someone clicks on the image from the page
- ********************************************************************/
-
-/* Calls the Modal */
-function ImageModal(props) {
-  let history = useHistory();
-
-  let { id } = useParams();
-  let card = props.cards.find(elem => elem._id === id);
-
-  const [modalShow] = React.useState(true);
-
-  if (!card) return null;
-
-  return (
-    <MyVerticallyCenteredModal
-      show={modalShow}
-      onHide={() => history.goBack()}
-      cards={props.cards}
-    />
-  );
-}
-
-/***************************************************
- * Overlay Modal
- ***************************************************/
-function MyVerticallyCenteredModal(props) {
-
-  let { id } = useParams();
-  let card = props.cards.find(elem => elem._id === id);
-
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      style={{
-        width: "100%",
-      }}
-    >
-      {/* HEADER */}
-      <Modal.Header>
-        <Container>
-          <Modal.Title>{card.title}</Modal.Title>
-          <Button variant="light" href="/user">
-            {card.userId}
-          </Button>
-          {/*card.username*/}
-        </Container>
-        <Link to={{ pathname: "/gallery" }}>Close</Link>
-      </Modal.Header>
-
-      {/* BODY */}
-      <Container>
-        <SideView cards={props.cards} />
-      </Container>
-
-      {/* FOOTER */}
-      <Modal.Footer style={{ minHeight: "3em" }}></Modal.Footer>
-    </Modal>
-  );
-}
-
-/***********************************************************************
- *                        The BODY OF THE MODAL
- *
- * *********************************************************************
- * SideView is the only one being used right now
- *    StackedView works, but need to connect it with a button in the end
- ***********************************************************************/
-
-//Returns a Body that puts the image NEXT TO the comments
-function SideView(props) {
-
-  let { id } = useParams();
-  let card = props.cards.find(elem => elem._id === id);
-
-  return (
-    <Modal.Body>
-      <Row>
-        <Col>
-          {/* IMAGE */}
-          <div rounded style={{ width: "100%" }}>
-            <MISTImage code={card.code} resolution="250" />
-          </div>
-          {/* USERNAME + DESCRIPTION (optional) */}
-          { /* <Button size="sm" variant="light" href="/user">
-          {<b>{card.username}</b>} </Button> */}
-          {/*<b>{card.username}</b>*/} {card.caption}
-          {/* FORM - RANGE - RESOLUTION (?)
-           *   need to connect the position to the Image */}
-          <Form>
-            <Form.Control type="range" custom style={{ marginTop: "1em" }} />
-          </Form>
-        </Col>
-
-        {/* COMMENT SECTION */}
-        <Container style={{ width: "50%" }}>
-          <div style={{ paddingLeft: "1em" }}></div>
-          <ModalComments imageId={id} cards={props.cards} />
-        </Container>
-      </Row>
-    </Modal.Body>
-  );
-}
-
-//Returns a Body that puts the image ON TOP OF the comments
-/* function StackedView(props) {
-                  let {id} = useParams();
-  let cards = props.cards;
-  let card = cards[parseInt(id, 10)];
-
-  return (
-    <Modal.Body>
-                  <Col>
-                    <Col> */
-/*
-<Image src={card.image} rounded style={{ width: "100%" }} />
-*/
-/*
-{card.description}
-                      <Form>
-                        <Form.Control type="range" custom style={{ marginTop: "1em" }} />
-                      </Form>
-                    </Col>
-                    <Container style={{ width: "50%" }}>
-                      <ModalComments />
-                    </Container>
-                  </Col>
-                </Modal.Body>
-);
-} */
-
-/*********************************************************
- *                      COMMENTS
- *
- *********************************************************
- * Used in the Overlay and the new page Views
- *********************************************************/
-
-function ModalComments(props) {
-
-  return (
-    <Form.Group>
-      <Col>
-        {/* COMMENTS */}
-        <Comment />
-        <Comment />
-        <Comment />
-
-        {/* HORIZONTAL LINE */}
-        <hr />
-
-        {/* ICONS */}
-
-        <ModalIcons cards={props.cards} />
-
-        {/* Form to write comment */}
-        <MakeComment imageId={props.imageId}/>
-      </Col>
-    </Form.Group>
   );
 }
 
@@ -659,8 +630,7 @@ function SaveIcon() {
 
 function ModalIcons(props) {
 
-  let { id } = useParams();
-  let card = props.cards.find(elem => elem._id === id);
+  let card = props.card;
 
   return (
     <Row style={{ justifyContent: "flex-start" }}>
