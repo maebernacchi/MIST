@@ -2176,19 +2176,7 @@ MIST.renderAt = (function() {
 
   let bufferContext;
   let contextIsWebGL = false;
-  let vertex_shader;
-  bufferContext = buffer.getContext("webgl") || buffer.getContext("experimental-webgl");
-  if (bufferContext) {
-    contextIsWebGL = true;
-    vertex_shader = `
-      attribute vec4 a_position;
-      void main() {
-        gl_Position = a_position;
-      }
-    `;
-  } else {
-    bufferContext = buffer.getContext("2d");
-  }
+  bufferContext = buffer.getContext("2d");
 
   return function(t, exp, context, canvas, 
     renderWidth, renderHeight, imgLeft, imgTop, imgWidth, imgHeight,
@@ -2213,88 +2201,55 @@ MIST.renderAt = (function() {
     // Get context for the canvas
     const canvasContext = canvas.getContext("2d");
 
-    if (contextIsWebGL) {
-      if (!renderData) {
-        const programInfo = twgl.createProgramInfo(bufferContext, [vertex_shader,
-          MIST.expToGL(exp)]);
-        const arrays = {
-          // a_position holds the positions of six vertices
-          // that define two triangles, which take up the entire screen
-          a_position: [-1, -1, 0, -1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1,
-            0]
-        };
-        const bufferInfo = twgl.createBufferInfoFromArrays(bufferContext,
-          arrays);
-        renderData = {programInfo, bufferInfo};
-      }
+    // Set up how much we change x and y each time.
+    const deltaX = 2.0/renderWidth;
+    const deltaY = 2.0/renderHeight;
 
-      bufferContext.canvas.width = renderWidth;
-      bufferContext.canvas.height = renderHeight;
-      bufferContext.viewport(0, 0, bufferContext.canvas.width,
-        bufferContext.canvas.height);
+    // Set up the image data
+    const region = bufferContext.createImageData(renderWidth,renderHeight);
 
-      const uniforms = {
-        u_resolution: [bufferContext.canvas.width, bufferContext.canvas.height],
-        u_mouse: [MIST.mouseX, MIST.mouseY],
-        u_time: [t.s, t.m, t.h, t.d]
-      };
+    // Set up the mouse (we don't want it changing while rendering).
+    const m = {
+      x: MIST.mouseX,
+      y: MIST.mouseY,
+      X: MIST.clickX,
+      Y: MIST.clickY
+    };
 
-      bufferContext.useProgram(renderData.programInfo.program);
-      twgl.setBuffersAndAttributes(bufferContext, renderData.programInfo,
-        renderData.bufferInfo);
-      twgl.setUniforms(renderData.programInfo, uniforms);
-      twgl.drawBufferInfo(bufferContext, renderData.bufferInfo);
-    } else {
-      // Set up how much we change x and y each time.
-      const deltaX = 2.0/renderWidth;
-      const deltaY = 2.0/renderHeight;
-
-      // Set up the image data
-      const region = bufferContext.createImageData(renderWidth,renderHeight);
-
-      // Set up the mouse (we don't want it changing while rendering).
-      const m = {
-        x: MIST.mouseX,
-        y: MIST.mouseY,
-        X: MIST.clickX,
-        Y: MIST.clickY
-      };
-
-      if (!renderData) {
-        // Build the function
-        renderData = {fun: MIST.expToRGB("untitled image", exp, context)};
-      }
-      const fun = renderData.fun;
-      // Set up our main variables
-      let x = -1;
-      let y = -1 - deltaY;
-
-      // Loop through all of the pixels
-      for (let i = 0; i < region.data.length; i+= 4)
-        {
-          // When we reach the end of the row, move on to the next row
-          if ((i % (4*renderWidth)) == 0)
-            { 
-              x = -1;
-              y += deltaY;
-            } // if (i % (4*imgWidth)) == 0
-
-          // Evaluate the function
-          const rgb = fun(x,y,t,m);
-
-          // Copy the pixels
-          region.data[i+0] = rgb[0];
-          region.data[i+1] = rgb[1];
-          region.data[i+2] = rgb[2];
-          region.data[i+3] = 255;
-     
-          // And advance to the next pixel
-          x += deltaX;
-        } // for
-
-      // Draw and scale
-      bufferContext.putImageData(region, 0, 0);
+    if (!renderData) {
+      // Build the function
+      renderData = {fun: MIST.expToRGB("untitled image", exp, context)};
     }
+    const fun = renderData.fun;
+    // Set up our main variables
+    let x = -1;
+    let y = -1 - deltaY;
+
+    // Loop through all of the pixels
+    for (let i = 0; i < region.data.length; i+= 4)
+      {
+        // When we reach the end of the row, move on to the next row
+        if ((i % (4*renderWidth)) == 0)
+          { 
+            x = -1;
+            y += deltaY;
+          } // if (i % (4*imgWidth)) == 0
+
+        // Evaluate the function
+        const rgb = fun(x,y,t,m);
+
+        // Copy the pixels
+        region.data[i+0] = rgb[0];
+        region.data[i+1] = rgb[1];
+        region.data[i+2] = rgb[2];
+        region.data[i+3] = 255;
+   
+        // And advance to the next pixel
+        x += deltaX;
+      } // for
+
+    // Draw and scale
+    bufferContext.putImageData(region, 0, 0);
     canvasContext.drawImage(buffer, imgLeft, imgTop, imgWidth, imgHeight);
     return renderData;
   }
