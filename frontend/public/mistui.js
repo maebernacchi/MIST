@@ -327,23 +327,11 @@ MIST.ui.Animator.prototype.frame = function() {
 
   // Make the frame: if we are recording, we need to simulate time
   try {
-    if ($("#recorder").html() == "gif") {
-
-//      var tempTim = incTime(this.simTime);
-
-      this.time = MIST.renderGIF(incTime(this.simTime), this.expParsed, this.context, this.canvas,
-          this.renderWidth, this.renderHeight, this.left, this.top,
-          this.width, this.height, this.renderData);
-
-      console.log(encoder.addFrame(this.canvas.getContext('2d')));   
-    }
-    else {
-      const result = MIST.render(this.expParsed, this.context, this.canvas,
-        this.renderWidth, this.renderHeight, this.left, this.top, this.width,
-        this.height, this.renderData);
-      this.time = result.time;
-      this.renderData = result.renderData;
-    }
+    const result = MIST.render(this.expParsed, this.context, this.canvas,
+      this.renderWidth, this.renderHeight, this.left, this.top, this.width,
+      this.height, this.renderData);
+    this.time = result.time;
+    this.renderData = result.renderData;
   }  
   catch(err) {
     this.log(err);
