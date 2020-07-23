@@ -52,7 +52,7 @@
  * ES6 style modules, but until then, we can grab the parse method from the
  * global MIST object.
  */
-const {parse} = window.MIST;
+const {parse, Val} = window.MIST;
 
 /*
  * _make_template_string takes an AST for a macro and converts into a template
@@ -68,14 +68,21 @@ function _make_template_string(node, params, templates, macros) {
         return `{${node.name}}`;
       }
       // Allow 0 parameter macros to be input without parentheses
-      if (node.name in macros && macros[node.name].params.length === 0) {
-        return _expand_macros(parse(macros[node.name].code), templates, macros);
+      if (node.name in templates && macros[node.name].params.length === 0) {
+        return templates[node.name];
       }
       return node.name;
     case "MIST.App":
       const {operation, operands} = node;
       if (operation in templates) {
-        return _expand_macros(node, templates, macros);
+        node.operands = operands.map(operand => (
+          new Val(_make_template_string(operand, params, templates, macros))
+        ));
+        return _expand_macros(
+          node,
+          templates,
+          macros
+        );
       }
       return `${operation}(${operands.map(operand => (
         _make_template_string(operand, params, templates, macros)
