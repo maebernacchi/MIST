@@ -515,19 +515,21 @@ const sections = [
 
           //Challenges
           challenges:
-            [{
-              question:
-                <Container>This is a Challenge 1 </Container>,
-              hint:
-                <Container>This is a hint 1 </Container>
-            },
-            {
-              question:
-                <Container> This is a Challenge 2 </Container>,
-              hint:
-                <Container> This is a hint 2</Container>
+            [
+            //   {
+            //   question:
+            //     <Container>This is a Challenge 1 </Container>,
+            //   hint:
+            //     <Container>This is a hint 1 </Container>
+            // },
+            // {
+            //   question:
+            //     <Container> This is a Challenge 2 </Container>,
+            //   hint:
+            //     <Container> This is a hint 2</Container>
 
-            }]
+            // }
+          ]
 
         },
 
@@ -568,59 +570,21 @@ const sections = [
 
           //Challenges
           challenges:
-            [{
-              question:
-                <Container> This is a Challenge 1 </Container>,
-              hint:
-                <Container> This is a hint 1 </Container>
-            },
-            {
-              question:
-                <Container> This is a Challenge 2</Container>,
-              hint:
-                <Container> This is a hint 2</Container>
+            [
+            //{
+            //   question:
+            //     <Container> This is a Challenge 1 </Container>,
+            //   hint:
+            //     <Container> This is a hint 1 </Container>
+            // },
+            // {
+            //   question:
+            //     <Container> This is a Challenge 2</Container>,
+            //   hint:
+            //     <Container> This is a hint 2</Container>
 
-            }]
-        },
-
-        //+------------------+----------------------------------------------------------------------------------------------------------------------
-        //| The Expert UI    |
-        //+------------------+
-
-        {
-          title: "The Expert UI", id: 'expert-ui',
-          keywords: ["graph", "grayscale", "axis"],
-          image: <MISTImage code='x' resolution="250" />,
-          isAnimated: false,
-          //Text
-          text:
-            <Container>
-              This section is about the Expert UI!
-          </Container>,
-
-          //Video
-          video:
-            <Container>This is a video </Container>,
-
-          //Final
-          final:
-            <Container> This is the final image </Container>,
-
-          //Challenges
-          challenges:
-            [{
-              question:
-                <Container> This is a Challenge 1 </Container>,
-              hint:
-                <Container>This is a hint 1 </Container>
-            },
-            {
-              question:
-                <Container> This is a Challenge 2 </Container>,
-              hint:
-                <Container> This is a hint 2</Container>
-
-            }]
+            // }
+          ]
         },
 
         //+------------------+----------------------------------------------------------------------------------------------------------------------
@@ -668,11 +632,53 @@ const sections = [
 
           //Challenges
           challenges:
+            [
+            //   {
+            //   question:
+            //     <Container> This is a Challenge 1 </Container>,
+            //   hint:
+            //     <Container> This is a hint 1 </Container>
+            // },
+            // {
+            //   question:
+            //     <Container> There's no challenge for this tutorial! </Container>,
+            //   hint:
+            //     <Container> This is a hint 2</Container>
+
+            // }
+          ]
+        },
+        
+        //+------------------+----------------------------------------------------------------------------------------------------------------------
+        //| The Expert UI    |
+        //+------------------+
+
+        {
+          title: "The Expert UI", id: 'expert-ui',
+          keywords: ["graph", "grayscale", "axis"],
+          image: <MISTImage code='x' resolution="250" />,
+          isAnimated: false,
+          //Text
+          text:
+            <Container>
+              This section is about the Expert UI!
+          </Container>,
+
+          //Video
+          video:
+            <Container>This is a video </Container>,
+
+          //Final
+          final:
+            <Container> This is the final image </Container>,
+
+          //Challenges
+          challenges:
             [{
               question:
                 <Container> This is a Challenge 1 </Container>,
               hint:
-                <Container> This is a hint 1 </Container>
+                <Container>This is a hint 1 </Container>
             },
             {
               question:
@@ -1255,9 +1261,9 @@ const sections = [
               <Container> 
                 <p1> Try making a rhombus using a different equation:  <br /></p1>
                 <MISTImage code='neg(sign(wsum(abs(y),abs(x),0.5)))' resolution="250" />  
-                </Container>,
+              </Container>,
             hint:
-              <Container> How do you invert the color and change shape size? </Container>
+              <Container> How do you invert the color and change shape size? <br /> Click <Link to='#resizing'>here </Link> for the resizing tutorial!</Container>
 
           }]
       }]
@@ -1307,16 +1313,12 @@ const sections = [
           challenges:
             [{
               question:
-                <Container> This is a Challenge 1 </Container>,
+                <Container> 
+                  <p1> Try making a rhombus using a different equation:  <br /></p1>
+                  <MISTImage code='sum(sin(x),sin(y),-0.5)' resolution="250" />  
+                </Container>,
               hint:
-                <Container> This is a hint 1 </Container>
-            },
-            {
-              question:
-                <Container> This is a Challenge 2 </Container>,
-              hint:
-                <Container> This is a hint 2</Container>
-
+                <Container> Try adding <b>sin</b> with <b>x</b> or <b>y</b> and then how do you change the size of that? </Container>
             }]
         },
 
@@ -1356,19 +1358,12 @@ const sections = [
           challenges:
             [{
               question:
-              <Container>
-                <p1>Try making the following image:  <br /></p1>
-                <MISTImage code='sign(wsum(square(x),square(y),0.5))' resolution="250" />
-              </Container>,
-                
+                <Container> 
+                  <p1>Try making the following image:  <br /></p1>
+                  <MISTImage code='sign(wsum(square(x),square(y),0.5))' resolution="250" />
+                </Container>,
               hint:
-                <Container> This is a hint 1 </Container>
-            },
-            {
-              question:
-                <Container> This is a Challenge 2 </Container>,
-              hint:
-                <Container> This is a hint 2</Container>
+                <Container> Does making the constant bigger than 0 shrink the circle? </Container>
 
             }]
         },
@@ -1386,11 +1381,11 @@ const sections = [
             <Container>
               You are familiar with the following circle:In this tutorial, you will learn how to move this image along the x and y axis (vertically and horizontally).
               <br />
-              1. To move the circle horizontally, we have to add or subtract some value from the x value. In this case we are adding 0.5.
+              1. To move the circle horizontally, we have to add or subtract some value from the <b>x</b> value. In this case we are adding <b>0.5</b>.
               <br />
               2. When finishing this up, you get a circle that is slightly to the left. Now try moving it to the right!
               <br />
-              3. Similarly to the horizontal example, to move the circle vertically, we have to add or subtract some value from the y value. In this case we are adding 0.5 to y.
+              3. Similarly to the horizontal example, to move the circle vertically, we have to add or subtract some value from the <b>y</b>y value. In this case we are adding <b>0.5</b> to <b>y</b>.
               <br />
               4. When finishing this up, you get a circle that is slightly up. Now try moving it down!
             </Container>,
@@ -1407,16 +1402,12 @@ const sections = [
           challenges:
             [{
               question:
-                <Container> This is a Challenge 1 </Container>,
+              <Container>
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='sum(sign(sum(x,0.5)),sign(sum(y,0.5)))' resolution="250" />
+              </Container>,
               hint:
-                <Container> This is a hint 1 </Container>
-            },
-            {
-              question:
-                <Container> This is a Challenge 2 </Container>,
-              hint:
-                <Container> This is a hint 2</Container>
-
+                <Container> Try making the <b>y</b> shape and <b>x</b> shape and then combing them. </Container>
             }]
         },
 
@@ -1456,9 +1447,9 @@ const sections = [
               <br />
               1. Make each of these shapes:
               <br />
-              2. Then connect the upper 2 together with an if function, and the bottom 2 together with an if function, while using y as the first image in both cases. You can see that the upper image is made up of the upper two images, and the bottom one is made up of the bottom two images. They are also being divided up horizontally in the middle. This is how it would look like:
+              2. Then connect the upper 2 together with an <b>if</b> function, and the bottom 2 together with an <b>if</b> function, while using <b>y</b> as the first image in both cases. You can see that the upper image is made up of the upper two images, and the bottom one is made up of the bottom two images. They are also being divided up horizontally in the middle. This is how it would look like:
               <br />
-              3. Now, we can connect these two images together based on the x image. Since the x function divides the image up vertically in the middle, it uses the first image’s right part, and the second image’s left part.
+              3. Now, we can connect these two images together based on the <b>x</b> image. Since the <b>x</b> function divides the image up vertically in the middle, it uses the first image’s right part, and the second image’s left part.
             </Container>,
 
           //Video
@@ -1473,16 +1464,11 @@ const sections = [
           challenges:
             [{
               question:
-                <Container> This is a Challenge 1 </Container>,
-              hint:
-                <Container> This is a hint 1 </Container>
-            },
-            {
-              question:
-                <Container> This is a Challenge 2 </Container>,
-              hint:
-                <Container> This is a hint 2</Container>
+                <Container> <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='mistif(x,mistif(y,cos(sin(x)),sign(sum(x,y))),mistif(y,wsum(square(x),square(y)),y))' resolution="250" /> </Container>,
 
+              hint:
+                <Container> Try making each quadrant seperately first! </Container>
             }]
         }]
   },
