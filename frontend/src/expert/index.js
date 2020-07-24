@@ -17,12 +17,15 @@
 import '../styleSheets/expert.css';
 import CanvasCard from './components/CanvasCard';
 import Menu from './components/Menu';
+import Popup from './components/Popup';
 import WorkspaceCard from './components/WorkspaceCard';
 import SidePanelCard from './components/SidePanelCard';
 import { getInitialForm, getInitialState } from './initial-state';
 import expand_macros from './macros';
 import React, { Component, createRef } from 'react';
 import ResizablePanels from "resizable-panels-react";
+
+import {Button} from 'react-bootstrap';
 
 // +---------------------------------
 // | Expert |
@@ -164,10 +167,31 @@ class Expert extends Component {
         }
     } //addUserDefinedFunction
 
+
+    togglePopup({message, onConfirm}){
+        this.setState((state)=>({
+            popup: {
+                ...state.popup,
+                isOpen: !(state.popup.isOpen),
+                message: message,
+                onConfirm: onConfirm,
+            }
+        }))
+    }
+    
     render() {
         return (
             <div id='expert' ref={this.expertRef} >
                 {console.log('rendering expert')}
+                <Button onClick={this.togglePopup.bind(this)}>
+                    Here
+                </Button>
+                <Popup 
+                      isOpen={this.state.popup.isOpen}
+                      message={this.state.popup.message}
+                      onConfirm={this.state.popup.onConfirm}
+                      onClose={this.togglePopup.bind(this)}
+                />
                 <Menu
                     addUserDefinedFunction={() => this.addUserDefinedFunction()}
                     clearFunction={this.clearFunction.bind(this)}

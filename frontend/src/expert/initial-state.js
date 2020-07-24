@@ -7,7 +7,13 @@ const initialForm = {
     params: "",
 };
 
-export function getInitialForm(){
+const initialPopup = {
+    isOpen: false,
+    message: 'STUB',
+    onConfirm: ()=>{console.log('STUB')},
+}
+
+export function getInitialForm() {
     return {
         ...initialForm
     }
@@ -21,5 +27,8 @@ export function getInitialState() {
         functions: {
             order: [],
         },
+        popup: {
+            ...initialPopup,
+        }
     }
 }
