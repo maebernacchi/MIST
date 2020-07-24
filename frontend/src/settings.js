@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "./styleSheets/tutorial.css";
 
 import {
@@ -6,6 +6,7 @@ import {
   Card,
   Col,
   Button,
+  ButtonGroup,
   Collapse,
   Container,
   Form,
@@ -15,7 +16,6 @@ import {
 } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.css";
-
 
 //Page Header
 function Contact() {
@@ -40,12 +40,25 @@ function SettingsTable() {
         </Accordion.Toggle>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
-            <Button>Privacy </Button>
-            <OverlayTrigger trigger="click" placement="right" overlay={popover}>
-              <Button>Change Email</Button>
-            </OverlayTrigger>
-            <Button>Password </Button>
-            <Button>Blocked Content</Button>
+            <ButtonGroup vertical>
+              <Button>Privacy</Button>
+              <OverlayTrigger
+                trigger="click"
+                placement="right"
+                overlay={popover}
+              >
+                <Button>Change Email</Button>
+              </OverlayTrigger>
+
+              <OverlayTrigger
+                trigger="click"
+                placement="right"
+                overlay={password}
+              >
+                <Button>Password</Button>
+              </OverlayTrigger>
+              <Button>Blocked Content</Button>
+            </ButtonGroup>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
@@ -56,9 +69,11 @@ function SettingsTable() {
         </Accordion.Toggle>
         <Accordion.Collapse eventKey="1">
           <Card.Body>
-            <Button>Text Size </Button>
-            <Button>Magnifier </Button>
-            <Button>Animations </Button>
+            <ButtonGroup vertical>
+              <Button>Text Size </Button>
+              <Button>Magnifier </Button>
+              <Button>Animations </Button>
+            </ButtonGroup>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
@@ -71,9 +86,32 @@ function SettingsTable() {
           <Card.Body>
             {" "}
             Recieve Messages From:
-            <Button> People who I follow</Button>
-            <Button> People who follow me</Button>
-            <Button> Anyone</Button>
+            <Form>
+              {["radio"].map((type) => (
+                <div key={`default-${type}`} className="mb-3">
+                  <Form.Check
+                    name="radio"
+                    type={type}
+                    id={`default-${type}`}
+                    label={`Anyone`}
+                  />
+
+                  <Form.Check
+                    name="radio"
+                    type={type}
+                    id={`default-${type}`}
+                    label={`Friends`}
+                  />
+
+                  <Form.Check
+                    name="radio"
+                    type={type}
+                    id={`default-${type}`}
+                    label={`No Messages`}
+                  />
+                </div>
+              ))}
+            </Form>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
@@ -85,11 +123,46 @@ function SettingsTable() {
         <Accordion.Collapse eventKey="3">
           <Card.Body>
             Recieve Notifications for:
-            <Button>Someone liking your Image </Button>
-            <Button> New Badge</Button>
-            <Button> New Follower</Button>
-            <Button> Someone you follow made a new image</Button>
-            <Button> New MIST Updates</Button>
+            <Form>
+              {["checkbox"].map((type) => (
+                <div key={`default-${type}`} className="mb-3">
+                  <Form.Check
+                    type={type}
+                    id={`default-${type}`}
+                    label={`Someone Liking Your Image`}
+                    defaultChecked
+                  />
+
+                  <Form.Check
+                    type={type}
+                    id={`default-${type}`}
+                    label={`New Badge`}
+                    defaultChecked
+                  />
+
+                  <Form.Check
+                    type={type}
+                    id={`default-${type}`}
+                    label={`New Follower`}
+                    defaultChecked
+                  />
+
+                  <Form.Check
+                    type={type}
+                    id={`default-${type}`}
+                    label={`Someone You Follow Made a New Image`}
+                    defaultChecked
+                  />
+
+                  <Form.Check
+                    type={type}
+                    id={`inline`}
+                    label={`New MIST Updates`}
+                    defaultChecked
+                  />
+                </div>
+              ))}
+            </Form>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
@@ -103,6 +176,21 @@ const popover = (
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email Address</Form.Label>
           <Form.Control type="email" placeholder="Enter new email" />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+      </Form>
+    </Popover.Content>
+  </Popover>
+);
+
+const password = (
+  <Popover id="popover-basic">
+    <Popover.Title as="h3"> Change Password</Popover.Title>
+    <Popover.Content>
+      <Form>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Control type="password" placeholder="Enter old password" />
+          <Form.Control type="password" placeholder="Enter new password" />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
       </Form>
