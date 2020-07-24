@@ -19,6 +19,7 @@ import CanvasCard from './components/CanvasCard';
 import Menu from './components/Menu';
 import WorkspaceCard from './components/WorkspaceCard';
 import SidePanelCard from './components/SidePanelCard';
+import { getInitialForm, getInitialState } from './initial-state';
 import expand_macros from './macros';
 import React, { Component, createRef } from 'react';
 import ResizablePanels from "resizable-panels-react";
@@ -32,19 +33,7 @@ class Expert extends Component {
         super(props);
         this.codeRef = createRef("code");
         this.expertRef = createRef("expert");
-        this.state = {
-            form: {
-                name: "",
-                params: "",
-                default_params: "",
-                description: "",
-                code: "",
-                message: "",
-            },
-            functions: {
-                order: [],
-            },
-        };
+        this.state = getInitialState();
     }
 
     getFormState() {
@@ -60,7 +49,7 @@ class Expert extends Component {
             const form = {
                 form: {
                     ...state.form,
-                    [key] : to,
+                    [key]: to,
                 }
             }
             return form;
@@ -93,45 +82,26 @@ class Expert extends Component {
     }
 
     loadFunction(functionToLoad) {
-        const fun = {...functionToLoad};
-        if(Array.isArray(fun.params)){
+        const fun = { ...functionToLoad };
+        if (Array.isArray(fun.params)) {
             fun.params = fun.params.toString();
         }
         this.setState({
             form: {
-                name: fun.name,
-                params: fun.params,
-                description: fun.about,
-                code: fun.code,
-                message: "",
+                ...fun
             },
         })
     }
 
     resetWorkspace() {
         this.setState({
-            form: {
-                name: "",
-                params: "",
-                description: "",
-                code: "",
-                message: "",
-            },
-            functions: {
-                order: [],
-            }
+            ...getInitialState()
         });
     }
 
     clearFunction() {
         this.setState({
-            form: {
-                name: "",
-                params: "",
-                description: "",
-                code: "",
-                message: "",
-            },
+            form: {...getInitialForm()}
         });
     }
 
@@ -210,10 +180,10 @@ class Expert extends Component {
                     getFormState={() => this.getFormState()}
                     getStateFunctions={() => this.getStateFunctions()}
                     setMessage={(message) => this.setFormValue("message", message)}
-                    
+
                     requestFullscreen={() => {
-                      console.log(this.expertRef);
-                      this.expertRef.current.requestFullscreen()
+                        console.log(this.expertRef);
+                        this.expertRef.current.requestFullscreen()
                     }}
                     exitFullscreen={() => document.exitFullscreen()}
                 />
@@ -243,7 +213,7 @@ class Expert extends Component {
                         getCurrentWorkspace={() => this.state}
                         loadFunction={this.loadFunction.bind(this)}
                         functions={this.state.functions.order}
-                        doesFunctionExist={(fun_name)=>(Boolean(this.state.functions[fun_name]))}
+                        doesFunctionExist={(fun_name) => (Boolean(this.state.functions[fun_name]))}
 
                         code={this.getFormValue('code')}
                         codeRef={this.codeRef}
@@ -257,7 +227,7 @@ class Expert extends Component {
                         setCode={(code) => this.setFormValue("code", code)}
                         setDescription={(description) => this.setFormValue("description", description)}
                         setDefaultParams={(default_params) => this.setFormValue("default_params", default_params)}
-                        
+
                         setName={(name) => this.setFormValue("name", name)}
                         setParams={(params) => this.setFormValue("params", params)}
                     />
