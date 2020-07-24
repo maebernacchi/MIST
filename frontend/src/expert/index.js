@@ -72,7 +72,7 @@ class Expert extends Component {
      * Gets the names of functions that has currently been saved and returns them in an array.
      */
     getFunctions() {
-        return this.getStateFunctions().order;
+        return this.getStateFunctions()._order;
     } // getFunctions()
 
     /**
@@ -177,26 +177,26 @@ class Expert extends Component {
         this.setState((state) => {
             const new_functions = {
                 ...state.functions,
-                order: state.functions.order.filter((name) => name !== fun_name)
+                _order: state.functions._order.filter((name) => name !== fun_name)
             };
             delete new_functions[fun_name];
             return { functions: new_functions };
         })
     }
 
-    setFunctionsOrder(_order) {
+    setFunctionsOrder(order) {
         this.setState(state => ({
             functions: {
                 ...state.functions,
-                order: _order,
+                _order: order,
             },
         }))
     }
 
     addFunctionToState(new_function) {
         const new_function_name = Object.keys(new_function)[0];
-        const new_order = [...this.getStateFunctions().order.filter(name => name !== new_function_name), new_function_name];
-        const new_state_functions = Object.assign({}, this.getStateFunctions(), { order: new_order }, new_function);
+        const new_order = [...this.getStateFunctions()._order.filter(name => name !== new_function_name), new_function_name];
+        const new_state_functions = Object.assign({}, this.getStateFunctions(), { _order: new_order }, new_function);
         this.setState({ functions: new_state_functions });
     }
 
@@ -302,7 +302,7 @@ class Expert extends Component {
                         getFunctions={() => this.getFunctions()}
                         loadFunction={this.loadFunction.bind(this)}
                         setCode={(txt) => { this.setFormValue('code', txt) }}
-                        setFunctionsOrder={(_order) => this.setFunctionsOrder(_order)}
+                        setFunctionsOrder={order => this.setFunctionsOrder(order)}
 
                         triggerPopup={this.triggerPopup.bind(this)}
                     />
@@ -311,7 +311,7 @@ class Expert extends Component {
                         clearFunction={this.clearFunction.bind(this)}
                         getCurrentWorkspace={() => this.state}
                         loadFunction={this.loadFunction.bind(this)}
-                        functions={this.state.functions.order}
+                        functions={this.state.functions._order}
                         doesFunctionExist={(fun_name) => (Boolean(this.state.functions[fun_name]))}
 
                         code={this.getFormValue('code')}

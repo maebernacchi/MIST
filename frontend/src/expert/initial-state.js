@@ -51,7 +51,7 @@ export function getInitialState() {
             ...initialForm,
         },
         functions: {
-            order: [],
+            _order: [],
         },
         popup: {
             ...initialPopup,
