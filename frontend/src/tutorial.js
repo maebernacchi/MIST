@@ -916,24 +916,30 @@ const sections = [
         //Video
         video:
           <Container> This is a video </Container>,
-
+          
         //Final
         final:
-          <Container> This is the final image </Container>,
+          <Container> This is a final image </Container>,
 
         //Challenges
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
+              <Container> 
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='sum(x,x,y)' resolution="250" />
+              </Container>,
             hint:
-              <Container> This is a hint 1 </Container>
+              <Container> What variable changes thing horizontally? </Container>
           },
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+              <Container> 
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='avg(mult(x,x)y)' resolution="250" /> 
+              </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> How does <b>avg</b> change images? </Container>
 
           }]
       },
@@ -989,13 +995,16 @@ const sections = [
               </Container>,
               
             hint:
-              <Container> This is a hint 1 </Container>
+              <Container> How do you change images from vertical to horizonally? </Container>
           },
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+              <Container> 
+                <p1>Try making the following image:  <br /></p1>
+                <MISTImage code='cos(sin(x))' resolution="250" /> 
+              </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> What happens when you combine <b>sin</b> and <b>cos</b>? </Container>
 
           }]
       },
@@ -1234,15 +1243,21 @@ const sections = [
         challenges:
           [{
             question:
-              <Container> This is a Challenge 1 </Container>,
+              <Container> 
+                <p1> Try making a rhombus using a different equation:  <br /></p1>
+                <MISTImage code='sign(wsum(abs(y),abs(x)))' resolution="250" /> 
+              </Container>,
             hint:
               <Container> This is a hint 1 </Container>
           },
           {
             question:
-              <Container> This is a Challenge 2 </Container>,
+              <Container> 
+                <p1> Try making a rhombus using a different equation:  <br /></p1>
+                <MISTImage code='neg(sign(wsum(abs(y),abs(x),0.5)))' resolution="250" />  
+                </Container>,
             hint:
-              <Container> This is a hint 2</Container>
+              <Container> How do you invert the color and change shape size? </Container>
 
           }]
       }]
