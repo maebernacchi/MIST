@@ -18,7 +18,6 @@ import {
     ButtonGroup,
     Card,
     Form,
-    Modal,
     OverlayTrigger,
     Row,
     Tab,

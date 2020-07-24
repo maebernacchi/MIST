@@ -25,8 +25,6 @@ import expand_macros from './macros';
 import React, { Component, createRef } from 'react';
 import ResizablePanels from "resizable-panels-react";
 
-import { Button } from 'react-bootstrap';
-
 // +---------------------------------
 // | Expert |
 // +--------+
