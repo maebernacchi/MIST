@@ -25,7 +25,7 @@ import expand_macros from './macros';
 import React, { Component, createRef } from 'react';
 import ResizablePanels from "resizable-panels-react";
 
-import {Button} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 // +---------------------------------
 // | Expert |
@@ -104,7 +104,7 @@ class Expert extends Component {
 
     clearFunction() {
         this.setState({
-            form: {...getInitialForm()}
+            form: { ...getInitialForm() }
         });
     }
 
@@ -167,9 +167,17 @@ class Expert extends Component {
         }
     } //addUserDefinedFunction
 
+    togglePopup() {
+        this.setState((state) => ({
+            popup: {
+                ...state.popup,
+                isOpen: !(state.popup.isOpen),
+            }
+        }))
+    }
 
-    togglePopup({message, onConfirm}){
-        this.setState((state)=>({
+    triggerPopup({ message, onConfirm }) {
+        this.setState((state) => ({
             popup: {
                 ...state.popup,
                 isOpen: !(state.popup.isOpen),
@@ -178,19 +186,19 @@ class Expert extends Component {
             }
         }))
     }
-    
+
     render() {
         return (
             <div id='expert' ref={this.expertRef} >
                 {console.log('rendering expert')}
-                <Button onClick={this.togglePopup.bind(this)}>
+                <Button onClick={this.triggerPopup.bind(this)}>
                     Here
                 </Button>
-                <Popup 
-                      isOpen={this.state.popup.isOpen}
-                      message={this.state.popup.message}
-                      onConfirm={this.state.popup.onConfirm}
-                      onClose={this.togglePopup.bind(this)}
+                <Popup
+                    isOpen={this.state.popup.isOpen}
+                    message={this.state.popup.message}
+                    onConfirm={this.state.popup.onConfirm}
+                    onClose={this.togglePopup.bind(this)}
                 />
                 <Menu
                     addUserDefinedFunction={() => this.addUserDefinedFunction()}
@@ -230,6 +238,8 @@ class Expert extends Component {
                         loadFunction={this.loadFunction.bind(this)}
                         setCode={(txt) => { this.setFormValue('code', txt) }}
                         setFunctionsOrder={(_order) => this.setFunctionsOrder(_order)}
+
+                        triggerPopup={this.triggerPopup.bind(this)}
                     />
                     <WorkspaceCard
                         addUserDefinedFunction={() => this.addUserDefinedFunction()}
