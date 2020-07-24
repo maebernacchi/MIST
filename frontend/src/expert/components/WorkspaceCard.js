@@ -33,7 +33,7 @@ function WorkspaceCard(props) {
     // Class toggles are used to force a highlight update when moving through the code
     // TODO: see if there's a better way to do this
     const [, setHighlightSwitch] = useState(true);
-    const [key, setKey] = useState('saveFunction');
+    const [key, setKey] = useState('createFunction');
     const updateHighlight = () => setHighlightSwitch(hs => !hs);
 
     useEffect(() => {
@@ -52,7 +52,7 @@ function WorkspaceCard(props) {
                 activeKey={key}
                 onSelect={(k) => setKey(k)}
             >
-                <Tab eventKey="saveFunction" title="Save your custom function">
+                <Tab eventKey="createFunction" title="Create Function">
                     <Card.Body>
                         <FunctionHeader
                             addUserDefinedFunction={props.addUserDefinedFunction}
@@ -143,7 +143,7 @@ function WorkspaceCard(props) {
                     </Card.Body>
                 </Tab>
 
-                <Tab eventKey="writeFunction" title="Write your custom function">
+                <Tab eventKey="createImage" title="Create Image">
                     <Form>
                         <Form.Group>
                             <Form.Label>Code</Form.Label>
