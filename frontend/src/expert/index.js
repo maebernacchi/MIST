@@ -1,15 +1,39 @@
 // +-------+------------------------------------------------------------------------
 // | Notes |
 // +-------+
-/*
+/**
+ * 2020-07-24 Version 1.0
+ *
  * index.js
  * This is the main file used to create the MIST expert page located at the /expert
  * route. 
  * 
+ * Basic Layout: 
+ * 
+ * Working Definitions: 
+ * 1. Function
+ * 
+ * 2. Workspace
+ * 
  * Here we build the Expert component which manages the state of the form on
  * the expert page as well as the function-macros defined by the user. We divide the
  * page into four React Components: Menu, SidePanelCard, WorkspaceCard, CanvasCard;
- * whose corresponding files are located in './components'.
+ * whose corresponding files are located in './components'. We go into more detail
+ * of each Component in the list below as well as in the Notes Headers of the respective
+ * files.
+ * 
+ * 1. Menu
+ * 
+ * 2. SidePanelCard
+ * 
+ * 3. WorkspaceCard
+ * 
+ * 4. CanvasCard
+ * 
+ * We also rely on a Popup Component, whose contents will be modified at
+ * shown whenever a popup is needed via the triggerPopup() function.
+ * 
+ * The initialState of th Expert Component is stored under './initial-state.js
  * 
  * We handle macros using the expand_macros function from the './macros' module.
  */
@@ -37,14 +61,48 @@ class Expert extends Component {
         this.state = getInitialState();
     }
 
+    /**
+     * Gets the state of the Function Form.
+     */
     getFormState() {
         return this.state.form;
-    }
+    } // getFormState()
 
+    /**
+     * Gets the names of functions that has currently been saved and returns them in an array.
+     */
+    getFunctions() {
+        return this.getStateFunctions().order;
+    } // getFunctions()
+
+    /**
+     * Gets the functions field of the state.
+     */
+    getStateFunctions() {
+        return this.state.functions;
+    } // getStateFunctions()
+
+
+    /**
+     * Gets the value of field on the Function Form, where 'key' is one of the valid
+     * Form fields which can be found in the WorkspaceCard Component definition, the
+     * Expert UI page, as well as the initialForm object in './initial-state.js'.
+     * 
+     * @param {String} key 
+     */
     getFormValue(key) {
         return this.state.form[key];
-    }
+    } // getFormValue(String)
 
+    /**
+     * Sets the value of 'key' field of the form object in the state to 'to'. 
+     * We should avoid directly modifying the actual object, so we return a newly
+     * created object to the setState function as per React recommendations to 
+     * never directly mutate the state and treat the state as an immutable object. 
+     * 
+     * @param {String} key 
+     * @param {String} to 
+     */
     setFormValue(key, to) {
         this.setState((state) => {
             const form = {
@@ -55,8 +113,33 @@ class Expert extends Component {
             }
             return form;
         });
-    }
+    } // setFormValue(String, String)
 
+    /**
+     * Loads the given 'functionToLoad' into the Expert UI's Form.
+     * 
+     * @param {Object} functionToLoad, whose keys matches the initialForm object found in
+     * './initial-state.js'
+     */
+    loadFunction(functionToLoad) {
+        const fun = { ...functionToLoad };
+        if (Array.isArray(fun.params)) {
+            fun.params = fun.params.toString();
+        }
+        this.setState({
+            form: {
+                ...fun
+            },
+        })
+    } // loadFunction(Object)
+
+    /**
+     * Loads the stored user-saved functions (while preserving order) and the stored form
+     * values stored in workspaceToLoad.
+     * 
+     * @param {Object} workspaceToLoad, whose keys matches the initialState object found in
+     * './initial-state.js' 
+     */
     loadWorkspace(workspaceToLoad) {
         const fun = workspaceToLoad.fun;
         this.setState({
@@ -69,7 +152,26 @@ class Expert extends Component {
             },
             functions: workspaceToLoad.userFuns,
         });
-    }
+    } // loadWorkspace(Object)
+
+    /**
+     * Clears the Function Form in the Expert UI.
+     */
+    clearFunction() {
+        this.setState({
+            form: { ...getInitialForm() }
+        });
+    } // clearFunction()
+
+    /**
+     * Clears the entire Expert UI Workspace.
+     */
+    resetWorkspace() {
+        this.setState({
+            ...getInitialState()
+        });
+    } // resetWorkspace()
+
 
     deleteFunction(fun_name) {
         this.setState((state) => {
@@ -80,38 +182,6 @@ class Expert extends Component {
             delete new_functions[fun_name];
             return { functions: new_functions };
         })
-    }
-
-    loadFunction(functionToLoad) {
-        const fun = { ...functionToLoad };
-        if (Array.isArray(fun.params)) {
-            fun.params = fun.params.toString();
-        }
-        this.setState({
-            form: {
-                ...fun
-            },
-        })
-    }
-
-    resetWorkspace() {
-        this.setState({
-            ...getInitialState()
-        });
-    }
-
-    clearFunction() {
-        this.setState({
-            form: { ...getInitialForm() }
-        });
-    }
-
-    getStateFunctions() {
-        return this.state.functions;
-    }
-
-    getFunctions() {
-        return this.getStateFunctions().order;
     }
 
     setFunctionsOrder(_order) {

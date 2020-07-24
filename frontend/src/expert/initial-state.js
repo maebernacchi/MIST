@@ -1,3 +1,16 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/**
+ * Here we have two constants where we store the initial state of the function form
+ * and the initial state of the Popup Modal. These objects should be readOnly. Thus,
+ * we only export getter functions which return objects with the same key-value
+ * assignments.
+ */
+
+/**
+ * The initial state of the function form
+ */
 const initialForm = {
     code: "",
     default_params: "",
@@ -5,20 +18,31 @@ const initialForm = {
     message: "",
     name: "",
     params: "",
-};
+}
 
+/** 
+ * The initial state of the Popup
+ */
 const initialPopup = {
     isOpen: false,
     message: 'STUB',
-    onConfirm: ()=>{console.log('STUB')},
+    onConfirm: () => { console.log('STUB') },
 }
 
+/**
+ * The returns an object identical to initialForm
+ */
 export function getInitialForm() {
     return {
         ...initialForm
     }
-}
+} // getInitialForm()
 
+
+/**
+ * The returns an object identical that represents the intended initial state of
+ * the Expert Component.
+ */
 export function getInitialState() {
     return {
         form: {
@@ -31,4 +55,4 @@ export function getInitialState() {
             ...initialPopup,
         }
     }
-}
+} // getInitialState()
