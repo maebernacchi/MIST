@@ -62,6 +62,8 @@ function WorkspaceCard(props) {
                             doesFunctionExist={props.doesFunctionExist}
                             expertRef={props.expertRef}
                             loadFunction={props.loadFunction}
+
+                            triggerPopup={props.triggerPopup}
                         />
 
                         <Form>
@@ -182,11 +184,7 @@ WorkspaceCard.propTypes = {
 // Contains all actions related directly to the function form
 function FunctionHeader(props) {
 
-    const [clearFunctionModalShow, setClearFunctionModalShow] = useState(false);
-    const [addUserDefinedFunctionShow, setAddUserDefinedFunctionShow] = useState(false);
-
     // check if form is in use
-
     const checkIfFormInUse = () => {
         const currentForm = props.currentForm;
         return (currentForm.name || currentForm.params || currentForm.description || currentForm.code);
@@ -195,9 +193,7 @@ function FunctionHeader(props) {
     // check if workspace is in use
 
     return (
-
         <Row style={{ justifyContent: 'space-between' }}>
-
             <ButtonGroup>
                 <OverlayTrigger
                     container={props.expertRef}
@@ -210,40 +206,21 @@ function FunctionHeader(props) {
                     }>
                     <Button onClick={() => {
                         const fun_name = props.currentForm.name;
+                        const warning_message = 'You are about to overwrite a previous custom function. Are you sure that you want to continue?'
                         if (props.doesFunctionExist(fun_name)) {
-                            setAddUserDefinedFunctionShow(true);
+                            props.triggerPopup({
+                                message: warning_message,
+                                onConfirm: () => props.addUserDefinedFunction(),
+                            });
                         } else {
                             props.addUserDefinedFunction();
                         }
                     }}><FiSave /></Button>
                 </OverlayTrigger>
 
-                <Modal
-                    container={props.expertRef}
-                    show={addUserDefinedFunctionShow}
-                    onHide={() => setAddUserDefinedFunctionShow(false)}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add Custom Function</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body> You are about to overwrite a previous custom function. Are you sure that you want
-                    to continue?
-                </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            onClick={() => setAddUserDefinedFunctionShow(false)}
-                            variant="secondary">Close</Button>
-                        <Button
-                            onClick={() => { props.addUserDefinedFunction(); setAddUserDefinedFunctionShow(false); }}
-                            variant="primary">
-                            Continue</Button>
-                    </Modal.Footer>
-                </Modal>
-
             </ButtonGroup>
 
             <ButtonGroup>
-
                 <OverlayTrigger
                     container={props.expertRef}
                     key={'clearFunction'}
@@ -255,38 +232,19 @@ function FunctionHeader(props) {
                     }>
                     <Button
                         onClick={() => {
+                            const warning_message = ' Your function form is currently in use. Are you sure that you want to clear it?'
                             if (checkIfFormInUse())
-                                setClearFunctionModalShow(true);
+                                props.triggerPopup({
+                                    message: warning_message,
+                                    onConfirm: () => props.clearFunction(),
+                                });
                         }}
                     >
                         <GrPowerReset />
                     </Button>
                 </OverlayTrigger>
-
-                <Modal
-                    container={props.expertRef}
-                    show={clearFunctionModalShow}
-                    onHide={() => setClearFunctionModalShow(false)}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Clear your function</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body> Your function form is currently in use. Are you sure that you want
-                    to clear it?
-                </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            onClick={() => setClearFunctionModalShow(false)}
-                            variant="secondary">Close</Button>
-                        <Button
-                            onClick={() => { props.clearFunction(); setClearFunctionModalShow(false); }}
-                            variant="primary">
-                            Clear</Button>
-                    </Modal.Footer>
-                </Modal>
-
             </ButtonGroup>
-        </Row>
+        </Row >
     )
 }
 

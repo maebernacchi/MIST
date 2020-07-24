@@ -264,6 +264,8 @@ class Expert extends Component {
 
                         setName={(name) => this.setFormValue("name", name)}
                         setParams={(params) => this.setFormValue("params", params)}
+
+                        triggerPopup={this.triggerPopup.bind(this)}
                     />
                     <CanvasCard
                         code={this.getFormValue('code')}
