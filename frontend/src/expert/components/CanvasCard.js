@@ -69,12 +69,12 @@ class CanvasCard extends Component {
                 
                 const params = this.props.params.replace(/\s/g, "").split(",");
                 const default_params = this.props.default_params.replace(/\s/g, "").split(",");;
-                
                 // check that default_params match params in count
                 if(params.length === default_params.length){
                     // surround parameters with brackets
-                    expand_code = make_template_string({ code: expand_code, params: this.props.params }, {}, {});
+                    expand_code = make_template_string({ code: expand_code, params: params }, {}, {});
                     // replace parameters with default parameters
+                    console.log(expand_code);
                     params.forEach((param, idx) => {
                         console.log('here')
                         expand_code = replace_all(expand_code, `{${param}}`, default_params[idx])
