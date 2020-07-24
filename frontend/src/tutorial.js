@@ -742,8 +742,9 @@ const sections = [
               <br />
               The <b>Y</b> variable ranges from -1 to 1 based on the y-values. Remember that for <b>Y</b>, -1 starts at the top and 1 is at the bottom. Therefore, white is at the top and slowly turns black, which comes from y-values changing hoizontally.
               <br />
-              A constant is a value that doesn't change, hence the name constant. For example, if we had the value <b>2</b>, it would always remain as <b>2</b>. //need to add how to change.
+              A constant is a value that doesn't change, hence the name constant. For example, if we had the value <b>2</b>, it would always remain as <b>2</b>. 
           </Container>,
+          //need to add how to change.
 
         //Video
         video:
@@ -755,19 +756,21 @@ const sections = [
 
         //Challenges
         challenges:
-          [{
-            question:
-              <Container> This is a Challenge 1 </Container>,
-            hint:
-              <Container> This is a hint 1 </Container>
-          },
-          {
-            question:
-              <Container> This is a Challenge 2 </Container>,
-            hint:
-              <Container> This is a hint 2</Container>
+          [
+          //   {
+          //   question:
+          //     <Container> This is a Challenge 1 </Container>,
+          //   hint:
+          //     <Container> This is a hint 1 </Container>
+          // },
+          // {
+          //   question:
+          //     <Container> This is a Challenge 2 </Container>,
+          //   hint:
+          //     <Container> This is a hint 2</Container>
 
-          }]
+          // }
+        ]
       },
 
       //+---------------------+------------------------------------------------------------------------------------------------------------------
