@@ -6,96 +6,124 @@ import gui from "./mistgui-globals.js";
 import MISTImage from "./MISTImageCreate";
 import "./styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
+import { BsReverseLayoutSidebarInsetReverse } from "react-icons/bs";
+import { render } from "react-dom";
 
 function FunBar(props) {
-  const [imageButtonClicked, setImageButtonClicked] = useState(false);
-  const [imageButtonHovered, setImageButtonHovered] = useState(false);
-  const [functionButtonHovered, setFunctionButtonHovered] = useState(false);
-
-  function clk() {
-    console.log(props.top);
-  }
-
   return (
     <Group x={0} y={gui.height - gui.funBarHeight}>
-      <Rect
-        x={0}
-        y={0}
-        width={gui.funBarWidth}
-        height={gui.funBarHeight}
-        fill={props.bg}
-      />
-      <Rect // render function background
-        x={gui.funBarOffset}
-        y={gui.funBarOffset}
-        width={gui.funBarTextAreaWidth}
-        height={gui.funBarTextAreaHeight}
-        fill={props.functionBoxBg}
-      />
-      <Text // render function display
-        text={props.renderFunction.renderFunction}
-        x={gui.funBarTextOffset}
-        y={gui.funBarTextOffset}
-        width={gui.funBarTextAreaWidth - gui.funBarTextOffset}
-        height={gui.funBarTextAreaHeight - 2 * gui.funBarOffset}
-        fill={props.functionTextColor}
-        fontFamily={"Courier New"}
-        fontSize={gui.funBarDisplayFontSize}
-      />
-      <Text
-        text={"Save as..."}
-        x={gui.funBarTextAreaWidth + 2 * gui.funBarOffset}
-        y={gui.funBarHeight / 2 - gui.funBarFontSize / 2}
-        width={gui.funBarWidth * (3 / 25)}
-        fill={"white"}
-        fontSize={gui.funBarFontSize}
-      />
-      <Group
-        x={
-          gui.funBarTextAreaWidth +
-          gui.funBarWidth * (2 / 25) +
-          gui.funBarOffset
-        }
-        y={gui.funBarOffset}
-      >
-        <Spring // animates function button fill
-          native
-          from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a"}}
-          to={{ fill: props.renderFunction.isRenderable
-            ? (functionButtonHovered ? "white" : 'orange')
-            :  "#f79f6a"}}
-        >
-          {(props) => (
-            <animated.Rect // function button
-              {...props}
-              x={0}
-              y={0}
-              width={gui.funBarIconTextWidth}
-              height={gui.funBarTextAreaHeight}
-              stroke={"#424874"}
-              cornerRadius={8}
-            />
-          )}
-        </Spring>
-        <Text // function button
-          text={"Function"}
-          onClick = {clk}
+      <BarBase {...props}/>
+      <FunctionButton {...props}/>
+      <ImageButton {...props}/>
+    </Group>
+  );
+}
+
+function BarBase(props) {
+
+  return (
+    <Group>
+    <Rect // Blue bar at bottom of workspace
+      x={0}
+      y={0}
+      width={gui.funBarWidth}
+      height={gui.funBarHeight}
+      fill={props.bg}
+    />
+    <Rect // Render function white background
+      x={gui.funBarOffset}
+      y={gui.funBarOffset}
+      width={gui.funBarTextAreaWidth}
+      height={gui.funBarTextAreaHeight}
+      fill={props.functionBoxBg}
+    />
+    <Text // Render function text display
+      text={props.renderFunction.renderFunction}
+      x={gui.funBarTextOffset}
+      y={gui.funBarTextOffset}
+      width={gui.funBarTextAreaWidth - gui.funBarTextOffset}
+      height={gui.funBarTextAreaHeight - 2 * gui.funBarOffset}
+      fill={props.functionTextColor}
+      fontFamily={"Courier New"}
+      fontSize={gui.funBarDisplayFontSize}
+    />
+    <Text // "Save as..." display in blue bar
+      text={"Save as..."}
+      x={gui.funBarTextAreaWidth + 2 * gui.funBarOffset}
+      y={gui.funBarHeight / 2 - gui.funBarFontSize / 2}
+      width={gui.funBarWidth * (3 / 25)}
+      fill={"white"}
+      fontSize={gui.funBarFontSize}
+    />
+    </Group>
+  );
+}
+
+function FunctionButton(props) {
+  const [functionButtonHovered, setFunctionButtonHovered] = useState(false);
+
+  return(
+    <Group // Function Button on blue bar
+    x={
+      gui.funBarTextAreaWidth +
+      gui.funBarWidth * (2 / 25) +
+      gui.funBarOffset
+    }
+    y={gui.funBarOffset}
+  >
+    <Spring // animates function button fill
+      native
+      from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a" }}
+      to={{
+        fill: props.renderFunction.isRenderable
+          ? (functionButtonHovered ? "white" : 'orange')
+          : "#f79f6a"
+      }}
+    >
+      {(props) => (
+        <animated.Rect // function button
+          {...props}
           x={0}
-          y={gui.funBarOffset}
+          y={0}
           width={gui.funBarIconTextWidth}
           height={gui.funBarTextAreaHeight}
-          align={"center"}
-          fill={!functionButtonHovered ? "white" : "grey"}
-          fontSize={gui.funBarFontSize}
-          onMouseOver={() => {
-            setFunctionButtonHovered(true);
-          }}
-          onMouseOut={() => {
-            setFunctionButtonHovered(false);
-          }}
+          stroke={"#424874"}
+          cornerRadius={8}
         />
-      </Group>
-      <Group // image button
+      )}
+    </Spring>
+    <Text // function button
+      text={"Function"}
+      x={0}
+      y={gui.funBarOffset}
+      width={gui.funBarIconTextWidth}
+      height={gui.funBarTextAreaHeight}
+      align={"center"}
+      fill={!functionButtonHovered ? "white" : "grey"}
+      fontSize={gui.funBarFontSize}
+      onMouseOver={() => {
+        setFunctionButtonHovered(true);
+      }}
+      onMouseOut={() => {
+        setFunctionButtonHovered(false);
+      }}
+    />
+  </Group>
+
+  );
+}
+
+function ImageButton(props) {
+
+  const [imageButtonClicked, setImageButtonClicked] = useState(false);
+  const [imageButtonHovered, setImageButtonHovered] = useState(false);
+
+  function closePortal() {
+    setImageButtonClicked(false);
+  }
+
+  return(
+    <Group // Image Button on blue bar
         x={
           gui.funBarTextAreaWidth +
           gui.funBarWidth * (2 / 25) +
@@ -107,10 +135,12 @@ function FunBar(props) {
       >
         <Spring // animates image button fill
           native
-          from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a"}}
-          to={{ fill: props.renderFunction.isRenderable
-            ? (imageButtonHovered ? "white" : 'orange')
-            :  "#f79f6a"}}
+          from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a" }}
+          to={{
+            fill: props.renderFunction.isRenderable
+              ? (imageButtonHovered ? "white" : 'orange')
+              : "#f79f6a"
+          }}
         >
           {(props) => (
             <animated.Rect // function button
@@ -125,7 +155,38 @@ function FunBar(props) {
           )}
         </Spring>
         {imageButtonClicked ? ( //temp; remove ! later
-          <Portal>
+          <ImagePortal {...props} closePortal={closePortal}/>
+        ) : (      
+            <Text
+              text={"Image"}
+              x={0}
+              y={gui.funBarOffset}
+              width={gui.funBarIconTextWidth}
+              align={"center"}
+              fill={imageButtonHovered ? "gray" : "white"}
+              fontSize={gui.funBarFontSize}
+              onClick={() => {
+                if (props.renderFunction.isRenderable) {
+                  setImageButtonClicked(true);
+                  setImageButtonHovered(false);
+                }
+              }}
+              onMouseOver={() => {
+                setImageButtonHovered(true);
+              }}
+              onMouseOut={() => {
+                setImageButtonHovered(false);
+              }}
+            />
+          )}
+      </Group>
+
+  );
+}
+
+function ImagePortal(props) {
+  return(
+    <Portal>
             <div
               style={{
                 position: "absolute",
@@ -213,7 +274,7 @@ function FunBar(props) {
                     class="button button2"
                     onClick={() => {
                       if (u === "Cancel") {
-                        setImageButtonClicked(false);
+                        props.closePortal();
                       }
                     }}
                   >
@@ -223,32 +284,9 @@ function FunBar(props) {
               })}
             </div>
           </Portal>
-        ) : (
-          <Text
-            text={"Image"}
-            x={0}
-            y={gui.funBarOffset}
-            width={gui.funBarIconTextWidth}
-            align={"center"}
-            fill={imageButtonHovered ? "gray" : "white"}
-            fontSize={gui.funBarFontSize}
-            onClick={() => {
-              if (props.renderFunction.isRenderable) {
-                setImageButtonClicked(true);
-                setImageButtonHovered(false);
-              }
-            }}
-            onMouseOver={() => {
-              setImageButtonHovered(true);
-            }}
-            onMouseOut={() => {
-              setImageButtonHovered(false);
-            }}
-          />
-        )}
-      </Group>
-    </Group>
+
   );
 }
 
 export default FunBar;
+
