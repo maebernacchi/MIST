@@ -191,9 +191,6 @@ class Expert extends Component {
         return (
             <div id='expert' ref={this.expertRef} >
                 {console.log('rendering expert')}
-                <Button onClick={this.triggerPopup.bind(this)}>
-                    Here
-                </Button>
                 <Popup
                     isOpen={this.state.popup.isOpen}
                     message={this.state.popup.message}
