@@ -21,6 +21,8 @@ import {
     Modal,
     OverlayTrigger,
     Row,
+    Tab,
+    Tabs,
     Tooltip,
 } from 'react-bootstrap';
 import { FiSave } from 'react-icons/fi';
@@ -32,6 +34,7 @@ function WorkspaceCard(props) {
     // Class toggles are used to force a highlight update when moving through the code
     // TODO: see if there's a better way to do this
     const [, setHighlightSwitch] = useState(true);
+    const [key, setKey] = useState('saveFunction');
     const updateHighlight = () => setHighlightSwitch(hs => !hs);
 
     useEffect(() => {
@@ -45,91 +48,125 @@ function WorkspaceCard(props) {
     return (
         <Card className='scroll panel' id='expert-workspace'>
             <Card.Title >Create Your Custom Function</Card.Title>
-            <Card.Body>
-                <FunctionHeader
-                    addUserDefinedFunction={props.addUserDefinedFunction}
-                    clearFunction={props.clearFunction}
-                    currentForm={props.getCurrentWorkspace().form}
-                    doesFunctionExist={props.doesFunctionExist}
-                    expertRef={props.expertRef}
-                    loadFunction={props.loadFunction}
-                />
+            <Tabs
+                id="controlled-center-body"
+                activeKey={key}
+                onSelect={(k) => setKey(k)}
+            >
+                <Tab eventKey="saveFunction" title="Save your custom function">
+                    <Card.Body>
+                        <FunctionHeader
+                            addUserDefinedFunction={props.addUserDefinedFunction}
+                            clearFunction={props.clearFunction}
+                            currentForm={props.getCurrentWorkspace().form}
+                            doesFunctionExist={props.doesFunctionExist}
+                            expertRef={props.expertRef}
+                            loadFunction={props.loadFunction}
+                        />
 
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            className="formTextbox"
-                            onChange={(e) => props.setName(e.target.value)}
-                            placeholder="Please name your MIST Function"
-                            rows="1"
-                            value={props.name}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Params</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            className="formTextbox"
-                            onChange={(e) => props.setParams(e.target.value)}
-                            placeholder="Please list your params, separated by commas and no spaces"
-                            rows="1"
-                            value={props.params}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Default Params</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            className="formTextbox"
-                            onChange={(e) => props.setDefaultParams(e.target.value)}
-                            placeholder="Please pick your default params, separated by commas and no spaces"
-                            rows="1"
-                            value={props.default_params}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            className="formTextbox"
-                            onChange={(e) => props.setDescription(e.target.value)}
-                            placeholder="Please describe your MIST image"
-                            rows="2"
-                            value={props.description}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Code</Form.Label>
+                        <Form>
+                            <Form.Group>
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    className="formTextbox"
+                                    onChange={(e) => props.setName(e.target.value)}
+                                    placeholder="Please name your MIST Function"
+                                    rows="1"
+                                    value={props.name}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Params</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    className="formTextbox"
+                                    onChange={(e) => props.setParams(e.target.value)}
+                                    placeholder="Please list your params, separated by commas and no spaces"
+                                    rows="1"
+                                    value={props.params}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Default Params</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    className="formTextbox"
+                                    onChange={(e) => props.setDefaultParams(e.target.value)}
+                                    placeholder="Please pick your default params, separated by commas and no spaces"
+                                    rows="1"
+                                    value={props.default_params}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    className="formTextbox"
+                                    onChange={(e) => props.setDescription(e.target.value)}
+                                    placeholder="Please describe your MIST image"
+                                    rows="2"
+                                    value={props.description}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Code</Form.Label>
 
-                        <Editor
-                            className='formTextbox'
-                            highlight={code => (
-                              highlight(code, "code-editor")
-                            )}
-                            id='expert-code'
-                            onKeyUp={updateHighlight}
-                            onValueChange={code => props.setCode(code)}
-                            padding={10}
-                            ref={props.codeRef}
-                            tabSize={4}
-                            textareaId='code-editor'
-                            value={props.code}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Control
-                            as="textarea"
-                            id="message"
-                            className="formTextbox"
-                            value={props.message}
-                            readOnly
-                            rows="3" />
-                    </Form.Group>
+                                <Editor
+                                    className='formTextbox'
+                                    highlight={code => (
+                                        highlight(code, "code-editor")
+                                    )}
+                                    id='expert-code'
+                                    onKeyUp={updateHighlight}
+                                    onValueChange={code => props.setCode(code)}
+                                    padding={10}
+                                    ref={props.codeRef}
+                                    tabSize={4}
+                                    textareaId='code-editor'
+                                    value={props.code}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Control
+                                    as="textarea"
+                                    id="message"
+                                    className="formTextbox"
+                                    value={props.message}
+                                    readOnly
+                                    rows="3" />
+                            </Form.Group>
 
-                </Form>
-            </Card.Body>
+                        </Form>
+
+                    </Card.Body>
+                </Tab>
+
+                <Tab eventKey="writeFunction" title="Write your custom function">
+                    <Form>
+                        <Form.Group>
+                            <Form.Label>Code</Form.Label>
+
+                            <Editor
+                                className='formTextbox'
+                                highlight={code => (
+                                    highlight(code, "code-editor")
+                                )}
+                                id='expert-code'
+                                onKeyUp={updateHighlight}
+                                onValueChange={code => props.setCode(code)}
+                                padding={10}
+                                ref={props.codeRef}
+                                tabSize={4}
+                                textareaId='code-editor'
+                                value={props.code}
+                            />
+                        </Form.Group>
+                    </Form>
+                </Tab>
+
+            </Tabs>
+
         </Card>
     )
 }
