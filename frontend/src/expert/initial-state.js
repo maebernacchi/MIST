@@ -2,6 +2,8 @@
 // | Notes |
 // +-------+
 /**
+ * 2020-07-24 Version 1.0
+ * 
  * Here we have two constants where we store the initial state of the function form
  * and the initial state of the Popup Modal. These objects should be readOnly. Thus,
  * we only export getter functions which return objects with the same key-value
