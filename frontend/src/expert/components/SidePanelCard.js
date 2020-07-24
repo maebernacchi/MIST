@@ -10,7 +10,7 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Draggable,
     DragDropContext,
@@ -39,6 +39,7 @@ function SidePanelCard(props) {
         let keys = specifiedKeys || Object.keys(functions).sort();
 
         const wrap_user_defined_button = (button, fun_name, userDefined) => {
+            const _warningMessage = 'You are about to delete the saved function ' + fun_name + '. Are you sure you want to continue?';
             if (userDefined) {
                 return (
                     <>
@@ -47,7 +48,12 @@ function SidePanelCard(props) {
                                 value={{ style: { color: 'white', cursor: 'pointer' } }}
                             >
                                 <div>
-                                    <FaRegTrashAlt onClick={() => props.deleteFunction(fun_name)} />
+                                    <FaRegTrashAlt onClick={() => {
+                                        props.triggerPopup({
+                                            message: _warningMessage,
+                                            onConfirm: ()=>props.deleteFunction(fun_name),
+                                        }); 
+                                    }} />
                                 </div>
                             </IconContext.Provider>
                         </Col>
@@ -78,45 +84,46 @@ function SidePanelCard(props) {
             let fun_signature = fun_name + "(" + fun.params + ")";
 
             return (
-                <Draggable
-                    draggableId={fun_name}
-                    index={idx}
-                    key={fun_name}
-                >
-                    {(provided) =>
-                        (<div
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
-                        >
-                            <Row style={{ justifyContent: "space-between", marginBottom: '6px'}}>
-                                {wrap_user_defined_button(<OverlayTrigger
-                                    container={props.expertRef}
-                                    key={idx}
-                                    placement="right"
-                                    overlay={
-                                        <Tooltip>
-                                            {fun.about + '\n'}
-                                            <hr />
-                                            {fun_signature}
-                                        </Tooltip>
-                                    }>
-
-                                    <Button
-                                        block
-                                        className='insertButton'
-                                        variant='dark'
+                <>
+                    <Draggable
+                        draggableId={fun_name}
+                        index={idx}
+                        key={fun_name}
+                    >
+                        {(provided) =>
+                            (<div
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                ref={provided.innerRef}
+                            >
+                                <Row style={{ justifyContent: "space-between", marginBottom: '6px' }}>
+                                    {wrap_user_defined_button(<OverlayTrigger
+                                        container={props.expertRef}
                                         key={idx}
-                                        onClick={() => { insertText(fun_signature) }}>
-                                        {fun_name}
-                                    </Button>
+                                        placement="right"
+                                        overlay={
+                                            <Tooltip>
+                                                {fun.about + '\n'}
+                                                <hr />
+                                                {fun_signature}
+                                            </Tooltip>
+                                        }>
 
-                                </OverlayTrigger>, fun_name, userDefined)}
-                            </Row>
-                        </div>)
-                    }
+                                        <Button
+                                            block
+                                            className='insertButton'
+                                            variant='dark'
+                                            key={idx}
+                                            onClick={() => { insertText(fun_signature) }}>
+                                            {fun_name}
+                                        </Button>
 
-                </Draggable>
+                                    </OverlayTrigger>, fun_name, userDefined)}
+                                </Row>
+                            </div>)
+                        }
+                    </Draggable>
+                </>
             )
         }))
     }; // insertFunctions
