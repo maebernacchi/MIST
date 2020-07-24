@@ -29,14 +29,17 @@ import MISTImage from "./MISTImageGallery"
 import React, { useState, useRef, useEffect } from "react";
 import { Card, Button, Pagination, Container, Row,
   Col, Nav, NavDropdown, Popover, Overlay, Form,
-  Modal, OverlayTrigger, Dropdown } from "react-bootstrap";
+  Modal, OverlayTrigger, Dropdown
+} from "react-bootstrap";
 import { AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
-import {  FaRegShareSquare, FaRegComments, FaFacebook,
-  FaSnapchat } from "react-icons/fa";
+import {
+  FaRegShareSquare, FaRegComments, FaFacebook,
+  FaSnapchat
+} from "react-icons/fa";
 import { FiSave, FiCode, FiSend, FiMoreHorizontal } from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
-import { BrowserRouter as Router, Switch, Route, Link,
+import {BrowserRouter as Router, Switch, Route, Link,
   useHistory, useLocation, useParams } from "react-router-dom";
 import "./styleSheets/gallery.css";
 
@@ -48,7 +51,7 @@ allow users to change views on the overlay modal. */
 // | Routers |
 // +---------+
 
-/** DisplayImages makes the router and calls the switcher between the URLs.
+/** DisplayImages returns the router and ModalSwitch.
  *  Note: We should keep DisplayImages() and ModalSwitch() as 
  *  two separate functions. Combining them creates issues
  *  with transitioning between the Gallery and Modal View.
@@ -101,110 +104,82 @@ function Gallery(props) {
     <div>
       <Row style={{ justifyContent: "space-between" }}>
         {cards.map((card) => (
-          <Card
-            style={{ padding: "1em", width: "30%", margin: "1em" }}
-          >
-            {/* TITLE + IsANIMATED? */}
-            <Card.Header>
-              <Card.Title style={{ margin: "auto" }}>
-                {card.title}
-                {card.isAnimated ? (
-                  <BsClock size={15} style={{ margin: "1vh" }} />
-                ) : (
-                  ""
-                  )}
-              </Card.Title>
-
-              {/* IMAGE */}
-              <Link
-                to={{
-                  pathname: `/img/${card._id}`,
-                  state: { background: location },
-                }}
-              >
-                <div variant="top" style={{ marginTop: "1em", marginBottom: "1em" }}>
-                  <MISTImage code={card.code} resolution="250" />
-                </div>
-              </Link>
-
-              {/* ICONS */}
-              <Card.Body style={{ justifyContent: "space-between" }}>
-                <Col>
-                  {/************************
-                   * username + description ROW
-                   *************************/}
-                  <Row style={{ justifyContent: "space-between" }}>
-                    {/* USERNAME + description*/}
-
-                    <div>
-                      {" "}
-                      { /*<b>{card.username} </b> */}
-                      <Button variant="light" href="/user">
-                        {card.userId}
-                      </Button>
-                      {card.caption}
-                    </div>
-                  </Row>
-
-                  {/************************
-                   * ICONS
-                   *************************/}
-                  <Row
-                    style={{
-                      justifyContent: "space-between",
-                      marginTop: "1em",
-                    }}
-                  >
-                    {/* Rating */}
-
-                    {/** need to add that onClick,
-                     *      if signed in, the star changes to a filled version of it,
-                     *      else, alerts that "please sign in" and a sign in option in*/}
-
-                    <Nav.Link
-                      style={{ color: "black", display: "inline-block" }}
-                    >
-                      <AiOutlineStar />
-                      {card.ratings}
-                    </Nav.Link>
-
-                    <CodeIcon code={card.code} />
-                    <SaveIcon />
-
-                    {/* Comment Icon */}
-                    <Link
-                      to={{
-                        pathname: `/img/${card._id}`,
-                        // This is the trick! This link sets
-                        // the `background` in location state.
-                        state: { background: location },
-                      }}
-                      style={{ paddingTop: "0.5em" }}
-                    >
-                      <FaRegComments
-                        style={{ color: "black", display: "inline-block" }}
-                      />
-                    </Link>
-
-                    <ShareIcon />
-                    <MoreIcon />
-
-                  </Row>
-
-                  {/*****************************
-                   * TYPE COMMENT HERE SECTION
-                   *******************************/}
-                   <MakeComment imageId={card._id}/>
-                   {console.log("card._id: ", card._id)}
-                </Col>
-              </Card.Body>
-            </Card.Header>
+          <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
+            <CardHeader card={card} />
+            <CardImage card={card} />
+            <CardBody card={card}/>
           </Card>
         ))}
-        {/* Counting the page */}
         <PageCounter style={{ margin: "auto" }} />
       </Row>
     </div>
+  );
+}
+
+function CardHeader(props) {
+  return (
+    <Card.Header>
+      <Card.Title style={{ margin: "auto" }}>
+        {props.card.title}
+        {props.card.isAnimated ? (
+          <BsClock size={15} style={{ margin: "1vh" }} />
+        ) : ("")}
+      </Card.Title>
+    </Card.Header>
+  );
+}
+
+function CardImage(props) {
+  let location = useLocation();
+
+  return (
+    <Link
+      to={{
+        pathname: `/img/${props.card._id}`,
+        state: { background: location },
+      }}
+    >
+      <div variant="top" style={{ marginTop: "1em", marginBottom: "1em" }}>
+        <MISTImage code={props.card.code} resolution="250" />
+      </div>
+    </Link>
+  );
+}
+
+function CardBody(props) {
+  let card = props.card;
+  return(
+  <Card.Body style={{ justifyContent: "space-between" }}>
+  <Col>
+  
+    {/* Row 1: Username & Description */}
+    <Row style={{ justifyContent: "space-between" }}>
+      {/* USERNAME + description*/}
+      <div>
+        <Button variant="light" href="/user">
+          {card.userId}
+        </Button>
+        {card.caption}
+      </div>
+    </Row>
+
+    {/* Row 2: Icons */}
+    <Row style={{ justifyContent: "space-between", marginTop: "1em",}}>
+      <Nav.Link style={{ color: "black", display: "inline-block" }}>
+        <AiOutlineStar />
+        {card.ratings}
+      </Nav.Link>
+      <CodeIcon code={card.code} />
+      <SaveIcon />
+      <FaRegComments style={{ color: "black", display: "inline-block" }}/>
+      <ShareIcon />
+      <MoreIcon />  
+    </Row>
+     
+     {/* Row 3: Comment Box */}
+    <MakeComment imageId={card._id} />
+  </Col>
+</Card.Body>
   );
 }
 
@@ -229,13 +204,10 @@ function PageCounter() {
   );
 }
 
-/**************************************************************************
- *                      4. IMAGE VIEW
- *
- **************************************************************************
- * What it looks like when someone tries to reach the image through the URL
- *      -- so it has it's own webpage
- **************************************************************************/
+// +---------+---------+------------------------------------------------------------
+// | Single Image Page |
+// +---------+---------+
+
 
 function ImageView(props) {
 
@@ -244,57 +216,43 @@ function ImageView(props) {
   if (!card) return <div>Image not found</div>;
 
   return (
-    <div>
       <div style={{ width: "65%", margin: "auto", marginTop: "1em" }}>
         <Col>
           <h1 style={{ textAlign: "left" }}>{card.title}</h1>
           <Row>
             <Col>
-              {/* IMAGE */}
               <MISTImage code={card.code} resolution="300" />
-              {/* USERNAME + DESCRIPTION */}
               <Button variant="light" href="/user">
                 {<b>{card.userId}</b>}
               </Button>
-              {/*<b>{card.username}</b> */} {card.caption}
-              {/* PIXEL SLIDE / RANGE FORM */}
               <Form>
-                <Form.Control
-                  type="range"
-                  custom
-                  style={{ marginTop: "1em" }}
-                />
+                <Form.Control type="range" custom style={{ marginTop:"1em"}}/>
               </Form>
             </Col>
             <Container style={{ width: "50%" }}>
-              {/* COMMENTS */}
               <ModalComments card={card} />
             </Container>
           </Row>
         </Col>
       </div>
-    </div>
   );
 }
 
-/********************************************************************
- *                       5. IMAGE MODAL
- *
- * ******************************************************************
- *  Comes up when someone clicks on the image from the page
- ********************************************************************/
+// +-------------+-----------------------------------------------------------
+// | Image Modal |
+// +-------------+
 
-/* Calls the Modal */
+/*
+ImageModal is a pop-up image view. h
+It appears when the image is clicked from the gallery.
+*/
 function ImageModal(props) {
   let history = useHistory();
-
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
-
   const [modalShow] = React.useState(true);
 
   if (!card) return null;
-
   return (
     <MyVerticallyCenteredModal
       show={modalShow}
@@ -304,9 +262,9 @@ function ImageModal(props) {
   );
 }
 
-/***************************************************
- * Overlay Modal
- ***************************************************/
+/*
+MyVerticallyCenteredModal returns the display portion of ImageModal.
+*/
 function MyVerticallyCenteredModal(props) {
 
   let card = props.card;
@@ -321,7 +279,6 @@ function MyVerticallyCenteredModal(props) {
         width: "100%",
       }}
     >
-      {/* HEADER */}
       <Modal.Header>
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
@@ -333,105 +290,81 @@ function MyVerticallyCenteredModal(props) {
         <Link to={{ pathname: "/gallery" }}>Close</Link>
       </Modal.Header>
 
-      {/* BODY */}
       <Container>
         <SideView card={card} />
       </Container>
 
-      {/* FOOTER */}
       <Modal.Footer style={{ minHeight: "3em" }}></Modal.Footer>
     </Modal>
   );
 }
 
-/***********************************************************************
- *                        The BODY OF THE MODAL
- *
- * *********************************************************************
- * SideView is the only one being used right now
- *    StackedView works, but need to connect it with a button in the end
- ***********************************************************************/
 
-//Returns a Body that puts the image NEXT TO the comments
+/* SideView returns the main body of the modal view.
+It places the image side by side with the comments. */
 function SideView(props) {
-
   let card = props.card;
 
   return (
     <Modal.Body>
       <Row>
         <Col>
-          {/* IMAGE */}
           <div rounded style={{ width: "100%" }}>
             <MISTImage code={card.code} resolution="250" />
           </div>
-          {/* USERNAME + DESCRIPTION (optional) */}
-          { /* <Button size="sm" variant="light" href="/user">
-          {<b>{card.username}</b>} </Button> */}
-          {/*<b>{card.username}</b>*/} {card.caption}
-          {/* FORM - RANGE - RESOLUTION (?)
-           *   need to connect the position to the Image */}
+          {card.caption}
           <Form>
             <Form.Control type="range" custom style={{ marginTop: "1em" }} />
           </Form>
         </Col>
 
-        {/* COMMENT SECTION */}
         <Container style={{ width: "50%" }}>
           <div style={{ paddingLeft: "1em" }}></div>
           <ModalComments card={card} />
         </Container>
+
       </Row>
     </Modal.Body>
   );
 }
 
-/*********************************************************
- *                      COMMENTS
- *
- *********************************************************
- * Used in the Overlay and the new page Views
- *********************************************************/
+// +-------------+-----------------------------------------------------------
+// | Image Modal |
+// +-------------+
+
 
 function ModalComments(props) {
 
   return (
     <Form.Group>
       <Col>
-        {/* COMMENTS */}
         <Comment />
         <Comment />
         <Comment />
 
-        {/* HORIZONTAL LINE */}
+        {/* Horizontal Line */}
         <hr />
 
-        {/* ICONS */}
-
         <ModalIcons card={props.card} />
-
-        {/* Form to write comment */}
-        <MakeComment imageId={props.card._id}/>
+        <MakeComment imageId={props.card._id} />
       </Col>
     </Form.Group>
   );
 }
 
 /**
- * Component for making and submitting a comment
- * posts comment to database
+ * Allows users to write and submit comments.
  */
 function MakeComment(props) {
-  console.log("imageId: ", props.imageId);
   const [comment, setComment] = useState("");
 
-  //update the comment(state) as the user types it
+  //Update the comment (state) as the user types it
   const handleChange = (event) => {
     const comment = event.target.value;
     setComment(comment);
   };
 
-  // when the user submits the comment, post to database
+  // When the user submits the comment, post to database
   const handleSubmit = (event) => {
     // prevent the page from refreshing 
     event.preventDefault();
@@ -463,6 +396,7 @@ function MakeComment(props) {
         justifyContent: "space-between",
         marginTop: "1em",
       }}>
+
         <Col xs={9}>
           <Form.Control
             name="comment"
@@ -473,17 +407,19 @@ function MakeComment(props) {
             onChange={handleChange}
           />
         </Col>
+
         <Col>
           <Button variant="light" type="submit">
             <FiSend style={{ color: "black" }} />
           </Button>
         </Col>
+
       </Form.Row>
     </Form>
   );
 }
 
-/* 1 example comment */
+/* Example comment */
 export function Comment() {
   return (
     <Row>
@@ -505,14 +441,34 @@ export function Comment() {
   );
 }
 
-/*******************************
- *            ICONS
- *
- *******************************
- * Code, Share, Save, ModalIcons
- *******************************/
+// +-------------+-----------------------------------------------------------
+// | Icons       |
+// +-------------+
 
-//Code
+function ModalIcons(props) {
+
+  let card = props.card;
+
+  return (
+    <Row style={{ justifyContent: "flex-start" }}>
+      {/* Rating */}
+      {/** need to add that onClick,
+       *      if signed in, the star changes to a filled version of it,
+       *      else, alerts that "please sign in" and a sign in option in */}
+
+      <Nav.Link style={{ color: "black", display: "inline-block" }}>
+        <AiOutlineStar />
+        {card.ratings}
+      </Nav.Link>
+
+      <CodeIcon code={card.code} />
+      <SaveIcon />
+      <ShareIcon />
+      <MoreIcon />
+    </Row>
+  );
+}
+
 function CodeIcon(props) {
   const [show, setShow] = useState(false);
   const [target, setTarget] = useState(null);
@@ -594,7 +550,6 @@ function MoreIcon() {
 
 }
 
-//Share
 function ShareIcon() {
   return (
     <Nav>
@@ -615,7 +570,7 @@ function ShareIcon() {
   );
 }
 
-//Save
+
 function SaveIcon() {
   return (
     <Nav>
@@ -628,33 +583,3 @@ function SaveIcon() {
 }
 
 
-function ModalIcons(props) {
-
-  let card = props.card;
-
-  return (
-    <Row style={{ justifyContent: "flex-start" }}>
-      {/* Rating */}
-      {/** need to add that onClick,
-       *      if signed in, the star changes to a filled version of it,
-       *      else, alerts that "please sign in" and a sign in option in */}
-
-      <Nav.Link style={{ color: "black", display: "inline-block" }}>
-        <AiOutlineStar />
-        {card.ratings}
-      </Nav.Link>
-
-      {/* Code Icon */}
-      <CodeIcon code={card.code} />
-
-      {/* Save Icon */}
-      <SaveIcon />
-
-      {/* Share Icon */}
-      <ShareIcon />
-
-      {/* More Icon */}
-      <MoreIcon />
-    </Row>
-  );
-}
