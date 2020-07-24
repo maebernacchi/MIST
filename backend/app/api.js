@@ -1,8 +1,10 @@
 
 const path = require("path");
 const database = require('./database');
+const bcrypt = require('bcrypt');
 
 module.exports = (app, passport, database) => {
+    require("./passportConfig")(passport);
 
     app.get('/api', function (req, res) {
 
@@ -94,21 +96,61 @@ module.exports = (app, passport, database) => {
 
     })
 
-    app.post('/api/signup',
 
-    )
+    app.post("/api/signup", (req, res) => {
+        database.User.findOne({ username: req.body.username }, async (err, doc) => {
+            if (err) throw err;
+            if (doc) res.send("User Already Exists");
+            if (!doc) {
+                const hashedPassword = await bcrypt.hash(req.body.password, 10);
+                let user = req.body;
+                const newUser = new database.User({
+                    forename: user.firstname,
+                    surname: user.lastname,
+                    username: user.username,
+                    password: hashedPassword,
+                    email: user.email,
+                    verified: true,
+                    admin: false,
+                    moderator: false
+                });
+                await newUser.save();
+                res.send("User Created");
+            }
+        });
+    });
+
 
     //------------------------------------------------
 
 
-    app.get("/api/login", (req, res) => {
 
+    app.post("/api/login", (req, res, next) => {
+        console.log("user: ", req.body);
+        passport.authenticate("local", (err, user, info) => {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+            if (!user) {
+                console.log("no user found");
+                res.send("No User Exists");
+            }
+            else {
+                console.log("api/login else");
+                req.logIn(user, (err) => {
+                    if (err) throw err;
+                    res.send("Successfully Authenticated");
+                    console.log(req.user);
+                });
+            }
+        })(req, res, next);
     });
 
-    app.post(
-        "/api/login",
-
-    );
+    app.get("/api/user", (req, res) => {
+        console.log("user: ", req.user);
+        res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
+    });
 
 
     // Provides MIST image codes. This is a placeholder

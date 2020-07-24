@@ -67,6 +67,9 @@ const SignUp = () => {
       },
       body: JSON.stringify(user)
     })
+      .then(res => {
+        console.log(res);
+      })
       //redirect user to home page
       .then(setRedirect("/"))
   };

@@ -11,7 +11,7 @@ const database = require('./app/database');
 const path = require("path");
 const app = express();
 const cors = require("cors");
-app.use(cors());
+const cookieParser = require('cookie-parser');
 
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, '/../design-app')));
@@ -20,7 +20,12 @@ app.use(express.static(path.join(__dirname, '/../design-app')));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.use(
+  cors({
+    origin: "http://localhost:3000", 
+    credentials: true,
+  })
+);
 app.use(flash());
 
 app.use(
@@ -30,10 +35,13 @@ app.use(
     saveUninitialized: false
   })
 );
+app.use(cookieParser("some"));
+
 
 //=================== Setup Passport =======================
 app.use(passport.initialize());
 app.use(passport.session());
+require("./app/passportConfig")(passport);
 
 /*
 Note: We commented the following four lines because they
