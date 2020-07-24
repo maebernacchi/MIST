@@ -171,10 +171,11 @@ function SettingsTable() {
 }
 const popover = (
   <Popover id="popover-basic">
+    <Popover.Title as="h3"> Change Email</Popover.Title>
+
     <Popover.Content>
       <Form>
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email Address</Form.Label>
           <Form.Control type="email" placeholder="Enter new email" />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
