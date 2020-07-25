@@ -133,6 +133,24 @@ class Expert extends Component {
         })
     } // loadFunction(Object)
 
+        /**
+     * Loads the saved function into the Expert UI's Form.
+     * 
+     * @param {String} function_name, whose keys matches the initialForm object found in
+     * './initial-state.js'
+     */
+    loadSavedFunction(function_name) {
+        const fun = { ...this.state.functions[function_name] };
+        if (Array.isArray(fun.params)) {
+            fun.params = fun.params.toString();
+        }
+        this.setState({
+            form: {
+                ...fun
+            },
+        })
+    } // loadSavedFunction(String)
+
     /**
      * Loads the stored user-saved functions (while preserving order) and the stored form
      * values stored in workspaceToLoad.
@@ -270,7 +288,7 @@ class Expert extends Component {
                     clearFunction={this.clearFunction.bind(this)}
                     getCurrentWorkspace={() => this.state}
                     deleteFunction={this.deleteFunction.bind(this)}
-                    loadFunction={this.loadFunction.bind(this)}
+                    loadSavedFunction={this.loadSavedFunction.bind(this)}
                     loadWorkspace={this.loadWorkspace.bind(this)}
                     resetWorkspace={() => this.resetWorkspace()}
 
