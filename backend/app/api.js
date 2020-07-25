@@ -70,7 +70,6 @@ module.exports = (app, passport, database) => {
         // grab URL parameters 
         let search = req.query.level + ', ' +
             req.query.color + ', ' + req.query.animation;
-        //console.log("search: ", search)
 
         database.getChallenges(search, (challenges, error) => {
             if (error) {
@@ -85,7 +84,6 @@ module.exports = (app, passport, database) => {
 
     app.post('/api/gallery', (req, res) => {
         let data = req.body;
-        console.log("comment: ", data);
         database.saveComment(req, res);
 
     })
@@ -126,30 +124,25 @@ module.exports = (app, passport, database) => {
 
 
     app.post("/api/login", (req, res, next) => {
-        console.log("user: ", req.body);
         passport.authenticate("local", (err, user, info) => {
             if (err) {
-                console.log(err);
                 throw err;
             }
             if (!user) {
-                console.log("no user found");
                 res.send("No User Exists");
             }
             else {
-                console.log("api/login else");
                 req.logIn(user, (err) => {
                     if (err) throw err;
                     res.send("Successfully Authenticated");
-                    console.log(req.user);
                 });
             }
         })(req, res, next);
     });
 
     app.get("/api/user", (req, res) => {
-        console.log("user: ", req.user);
-        res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
+        var user = req.user;
+        res.json(user); // The req.user stores the entire user that has been authenticated inside of it.
     });
 
 

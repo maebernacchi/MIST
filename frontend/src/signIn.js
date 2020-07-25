@@ -3,12 +3,16 @@ import FacebookIcon from './icons/icons8-facebook-30.png';
 import GoogleIcon from './icons/icons8-google-48.png';
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom'
 import './styleSheets/signInUp.css';
 
 const SignIn = () => {
+
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [data, setData] = useState(null);
+  const [redirect, setRedirect] = useState(null);
+
 
   const login = (e) => {
 
@@ -24,34 +28,32 @@ const SignIn = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      //credentials: true,
+      credentials: 'include',
       body: JSON.stringify(user)
     })
-      .then(res => {
-        console.log(res);
-      })
     //redirect user to home page
-    //.then(setRedirect("/"))
+    .then(setRedirect("/"))
   };
 
   const getUser = () => {
     fetch('/api/user', {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
       },
-      //credentials: true
+      credentials: 'include'
     }) 
-    .then(res => res.json())
-      .then(res => {
-        console.log("are we here");
-        setData(res.data);
-        console.log(res.data);
+      .then(res => res.json())
+      .then(user => {
+        setData(user);
       })
   };
 
-
-  return (
+  if (redirect) {
+    return <Redirect to={{ pathname: redirect }} />
+  }
+  else {
+    return (
     <Container className="signIn-center">
       <h1 >Sign In</h1>
       <Button onClick={getUser} variant="outline-dark" style={{ margin: "auto" }}>
@@ -95,6 +97,7 @@ const SignIn = () => {
       </Form>
     </Container>
   )
+}
 }
 
 

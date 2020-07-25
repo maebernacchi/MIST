@@ -1,16 +1,10 @@
-import React, { useState } from 'react';
-import './styleSheets/signInUp.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import FacebookIcon from './icons/icons8-facebook-30.png';
 import GoogleIcon from './icons/icons8-google-48.png';
+import React, { useState } from 'react';
+import {Form, Button, Container} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom'
-
-import {
-  Form,
-  Button,
-  Container
-} from 'react-bootstrap';
-
-import 'bootstrap/dist/css/bootstrap.css';
+import './styleSheets/signInUp.css';
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -20,7 +14,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [redirect, setRedirect] = useState(null);
 
-  //update the form as the user types
+  //Updates the state as the user types
   const handleChange = (event) => {
     let value = event.target.value;
     let name = event.target.name;
@@ -42,7 +36,6 @@ const SignUp = () => {
         setEmail(value)
         break;
     }
-
   };
 
   // when the user submits the form, post to database
@@ -62,14 +55,9 @@ const SignUp = () => {
     //post user
     fetch('/api/signup', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(user)
     })
-      .then(res => {
-        console.log(res);
-      })
       //redirect user to home page
       .then(setRedirect("/"))
   };
