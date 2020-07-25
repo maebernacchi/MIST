@@ -169,3 +169,41 @@ export const MIST_builtin_functions = {
 }
 
 
+export const MIST_builtin_values = {
+    "x": {
+        "name": "x",
+        "about": "ranges from -1 to 1 basesd on the x-value"
+    },
+    "y": {
+        "name": "y",
+        "about": "ranges from -1 to 1 basesd on the y-value"
+    },
+    "second": {
+        "name": "t.s",
+        "about": "goes through values -1 to 1 every second"
+    },
+    "minute": {
+        "name": "t.m",
+        "about": "goes through values -1 to 1 every minute"
+    },
+    "hour": {
+        "name": "t.h",
+        "about": "goes through values -1 to 1 every hour"
+    },
+    "day": {
+        "name": "t.d",
+        "about": "goes through values -1 to 1 every day"
+    },
+    "mouseX": {
+        "name": "m.x",
+        "about": "takes the x-value of the position of the mouse on the image"
+    },
+    "mouseY": {
+        "name": "m.y",
+        "about": "takes the y-value of the position of the mouse on the image"
+    },
+    "constant": {
+        "name": "#",
+        "about": "enter your own number"
+    },
+};
