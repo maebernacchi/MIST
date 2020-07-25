@@ -47,7 +47,7 @@ require('./app/loginStrategy')(passport, database.User);
 require('./app/signupStrategy')(passport, database.User); */
 
 //=================== Routes ================================
-require('./app/api')(app, passport, database);
+require('./app/routes')(app, passport, database);
 
 //=================== Serving Static Files ==================
 //app.use(express.static("public"));
