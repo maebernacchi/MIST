@@ -5,9 +5,10 @@ const api = require('./api');
 
 module.exports = (app, passport, database) => {
 
-    app.get('/api/home', function (req, res) {
+    //------------------------------------------------
+    // HOME
 
-        console.log("entered api/home");
+    app.get('/api/home', function (req, res) {
 
         database.getFeaturedImagesLoggedOut(4, (images, error) => {
             if (error) {
@@ -19,6 +20,7 @@ module.exports = (app, passport, database) => {
     });
 
     //------------------------------------------------
+    // GALLERY
 
     app.get('/api/gallery/random', (req, res) => {
 
@@ -64,7 +66,12 @@ module.exports = (app, passport, database) => {
         })
     })
 
+    app.post('/api/gallery', (req, res) => {
+        database.saveComment(req, res);
+    })
+
     //------------------------------------------------
+    // CHALLENGES    
 
     app.get('/api/challenges/', (req, res) => {
 
@@ -81,16 +88,9 @@ module.exports = (app, passport, database) => {
         })
     })
 
-    //------------------------------------------------
-
-    app.post('/api/gallery', (req, res) => {
-        let data = req.body;
-        console.log("comment: ", data);
-        database.saveComment(req, res);
-
-    })
 
     //------------------------------------------------
+    // SIGN UP
 
     app.get('/api/signup', (req, res) => {
 
@@ -101,6 +101,22 @@ module.exports = (app, passport, database) => {
     )
 
     //------------------------------------------------
+    // IMAGE
+
+    app.get("/api/img", (req, res) => {
+        database.getComments(req.query.id, (comments, error) => {
+            if (error) {
+                console.log(error);
+                res.json([]);
+            } else if (!comments) res.json([]);
+            else res.json(comments);
+        })
+
+    });
+
+
+    //------------------------------------------------
+    // FAKE DATA    
 
     // Check whether user is signed in
     app.get('/api/getIsSignedIn', (req, res) => {
@@ -199,5 +215,11 @@ module.exports = (app, passport, database) => {
     app.get('/api/create', function (req, res) {
 
     });
+
+      // Handles any requests that don't match the ones above
+      app.get('*', (req, res) => {
+        //res.sendFile(path.join(__dirname + '../../frontend/public/index.html'));
+    });
+
 
 }

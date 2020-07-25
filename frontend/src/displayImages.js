@@ -27,7 +27,8 @@
 
 import MISTImage from "./MISTImageGallery"
 import React, { useState, useRef, useEffect } from "react";
-import { Card, Button, Pagination, Container, Row,
+import {
+  Card, Button, Pagination, Container, Row,
   Col, Nav, NavDropdown, Popover, Overlay, Form,
   Modal, OverlayTrigger, Dropdown
 } from "react-bootstrap";
@@ -39,9 +40,14 @@ import {
 } from "react-icons/fa";
 import { FiSave, FiCode, FiSend, FiMoreHorizontal } from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
-import {BrowserRouter as Router, Switch, Route, Link,
-  useHistory, useLocation, useParams } from "react-router-dom";
+import {
+  BrowserRouter as Router, Switch, Route, Link,
+  useHistory, useLocation, useParams
+} from "react-router-dom";
 import "./styleSheets/gallery.css";
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+TimeAgo.addLocale(en)
 
 /* Note: We'll eventually need to add BsViewStacked
 and BsLayout Split as imports. They will 
@@ -107,7 +113,7 @@ function Gallery(props) {
           <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
             <CardHeader card={card} />
             <CardImage card={card} />
-            <CardBody card={card}/>
+            <CardBody card={card} />
           </Card>
         ))}
         <PageCounter style={{ margin: "auto" }} />
@@ -148,38 +154,38 @@ function CardImage(props) {
 
 function CardBody(props) {
   let card = props.card;
-  return(
-  <Card.Body style={{ justifyContent: "space-between" }}>
-  <Col>
-  
-    {/* Row 1: Username & Description */}
-    <Row style={{ justifyContent: "space-between" }}>
-      {/* USERNAME + description*/}
-      <div>
-        <Button variant="light" href="/user">
-          {card.userId}
-        </Button>
-        {card.caption}
-      </div>
-    </Row>
+  return (
+    <Card.Body style={{ justifyContent: "space-between" }}>
+      <Col>
 
-    {/* Row 2: Icons */}
-    <Row style={{ justifyContent: "space-between", marginTop: "1em",}}>
-      <Nav.Link style={{ color: "black", display: "inline-block" }}>
-        <AiOutlineStar />
-        {card.ratings}
-      </Nav.Link>
-      <CodeIcon code={card.code} />
-      <SaveIcon />
-      <FaRegComments style={{ color: "black", display: "inline-block" }}/>
-      <ShareIcon />
-      <MoreIcon />  
-    </Row>
-     
-     {/* Row 3: Comment Box */}
-    <MakeComment imageId={card._id} />
-  </Col>
-</Card.Body>
+        {/* Row 1: Username & Description */}
+        <Row style={{ justifyContent: "space-between" }}>
+          {/* USERNAME + description*/}
+          <div>
+            <Button variant="light" href="/user">
+              {card.userId.username}
+            </Button>
+            {card.caption}
+          </div>
+        </Row>
+
+        {/* Row 2: Icons */}
+        <Row style={{ justifyContent: "space-between", marginTop: "1em", }}>
+          <Nav.Link style={{ color: "black", display: "inline-block" }}>
+            <AiOutlineStar />
+            {card.ratings}
+          </Nav.Link>
+          <CodeIcon code={card.code} />
+          <SaveIcon />
+          <FaRegComments style={{ color: "black", display: "inline-block" }} />
+          <ShareIcon />
+          <MoreIcon />
+        </Row>
+
+        {/* Row 3: Comment Box */}
+        <MakeComment imageId={card._id} />
+      </Col>
+    </Card.Body>
   );
 }
 
@@ -216,25 +222,25 @@ function ImageView(props) {
   if (!card) return <div>Image not found</div>;
 
   return (
-      <div style={{ width: "65%", margin: "auto", marginTop: "1em" }}>
-        <Col>
-          <h1 style={{ textAlign: "left" }}>{card.title}</h1>
-          <Row>
-            <Col>
-              <MISTImage code={card.code} resolution="300" />
-              <Button variant="light" href="/user">
-                {<b>{card.userId}</b>}
-              </Button>
-              <Form>
-                <Form.Control type="range" custom style={{ marginTop:"1em"}}/>
-              </Form>
-            </Col>
-            <Container style={{ width: "50%" }}>
-              <ModalComments card={card} />
-            </Container>
-          </Row>
-        </Col>
-      </div>
+    <div style={{ width: "65%", margin: "auto", marginTop: "1em" }}>
+      <Col>
+        <h1 style={{ textAlign: "left" }}>{card.title}</h1>
+        <Row>
+          <Col>
+            <MISTImage code={card.code} resolution="300" />
+            <Button variant="light" href="/user">
+              {<b>{card.userId.username}</b>}
+            </Button>
+            <Form>
+              <Form.Control type="range" custom style={{ marginTop: "1em" }} />
+            </Form>
+          </Col>
+          <Container style={{ width: "50%" }}>
+            <ModalComments card={card} />
+          </Container>
+        </Row>
+      </Col>
+    </div>
   );
 }
 
@@ -283,7 +289,7 @@ function MyVerticallyCenteredModal(props) {
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
           <Button variant="light" href="/user">
-            {card.userId}
+            {card.userId.username}
           </Button>
           {/*card.username*/}
         </Container>
@@ -335,16 +341,24 @@ function SideView(props) {
 
 function ModalComments(props) {
 
+  const [comments, setComments] = useState([])
+
+  // fetch the comments for this image 
+  useEffect(() => {
+    fetch('/api/img?id=' + props.card._id)
+      .then(req => req.json())
+      .then(comments => { setComments(comments); });
+  }, [comments])
+
+
   return (
     <Form.Group>
       <Col>
-        <Comment />
-        <Comment />
-        <Comment />
-
+        {comments.map((comment) => (
+          <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
+        ))}
         {/* Horizontal Line */}
         <hr />
-
         <ModalIcons card={props.card} />
         <MakeComment imageId={props.card._id} />
       </Col>
@@ -373,6 +387,7 @@ function MakeComment(props) {
     let fullcomment = {
       "active": true,
       "flags": [],
+      // NOTE: This needs to be a real user id you have on your local DB
       "userId": "5f09091de2990f3b98e18f85",
       "body": comment,
       "imageId": props.imageId
@@ -420,19 +435,39 @@ function MakeComment(props) {
 }
 
 /* Example comment */
-export function Comment() {
+export function Comment(props) {
+
+  function convertTime(date) {
+    const timeAgo = new TimeAgo('en-US')
+    if (typeof date === 'string')
+      date = parseInt(date);
+    return timeAgo.format(date);
+  }
+
   return (
+
     <Row>
       <Card style={{ width: "100%", margin: "0.5vh" }}>
-        <Card.Body style={{ display: "flex", flexFlow: "row nowrap", justifyContent: "space-around" }}>
-          <div>
-            {/*<b>@username</b> */}
-            <Button size="sm" variant="light" href="/user">
-              @username
+        <Card.Body style={{
+          display: "flex",
+          flexFlow: "row nowrap",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}>
+          <div style={{
+            display: "flex",
+            flexFlow: "column nowrap",
+            justifyContent: "flex-start"
+          }}>
+            <Button size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start" }}>
+              {props.username}
             </Button>
+            <div style={{ fontSize: "15px" }}>
+              {convertTime(props.date)}
+            </div>
           </div>
-          <div style={{ flexGrow: "2", paddingLeft: "10px" }}>
-            This is a comment
+          <div style={{ flexGrow: "2", paddingLeft: "15px", fontSize: "18px" }}>
+            {props.comment}
           </div>
           <MoreIcon />
         </Card.Body>

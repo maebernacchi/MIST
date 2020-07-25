@@ -25,7 +25,7 @@ const imagesSchema = new mongoose.Schema({
     title: { type: String, required: true, },
     code: { type: String, required: true, },
     ratings: { type: Number, default: 0, },
-    createdAt: { type: Date, default: Date.now, },
+    createdAt: { type: String, default: Date.now, },
     updatedAt: {
         type: Date,
         default: Date.now,
@@ -57,7 +57,7 @@ const commentsSchema = new mongoose.Schema({
     },
     body: String,
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     active: {
@@ -105,11 +105,11 @@ const albumsSchema = new mongoose.Schema({
         ref: "Image",
     }],                      // (of Ids)
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     public: Boolean, // true = public, false = private
@@ -127,11 +127,11 @@ const workspacesSchema = new mongoose.Schema({
         required: true,
     },
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     active: {
@@ -163,11 +163,11 @@ const usersSchema = new mongoose.Schema({
         required: true,
     },              //hashed
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     verified: Boolean,
@@ -223,11 +223,11 @@ const challengeSchema = new mongoose.Schema({
         require: true,
     },
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     active: {
@@ -298,20 +298,6 @@ const Models = {
 // |   Images   |
 // +------------+
 
-/**
- * grab featured images for logged out user
- * @param count: the max amount of images returned
- * @param callback: returns either the images or the error 
- */
-module.exports.getFeaturedImagesLoggedOut = (count, callback) => {
-    Image.find({ featured: true, active: true }).limit(count).exec((err, images) => {
-        if (err)
-            callback(null, err)
-        else {
-            callback(images, null)
-        }
-    })
-}
 
 // +------------+-------------------------------------------------
 // |   Gallery  |
@@ -326,6 +312,7 @@ module.exports.getRandomImagesLoggedOut = (count, callback) => {
     Image.aggregate([
         { $match: { public: true, active: true } },
         { $sample: { size: count } }])
+        .populate('userId')
         .exec((err, images) => {
             if (err)
                 callback(null, err)
@@ -346,6 +333,7 @@ module.exports.getRecentImagesLoggedOut = (count, page, callback) => {
     Image.find({ public: true, active: true })
         .sort({ createdAt: -1 })
         .limit(count)
+        .populate('userId')
         .exec((err, images) => {
             if (err)
                 callback(null, null, err);
@@ -364,7 +352,10 @@ module.exports.getRecentImagesLoggedOut = (count, page, callback) => {
  * @param callback: returns either the images or the error 
  */
 module.exports.getFeaturedImagesLoggedOut = (count, callback) => {
-    Image.find({ featured: true, active: true }).limit(count).exec((err, images) => {
+    Image.find({ featured: true, active: true })
+    .limit(count)
+    .populate('userId')
+    .exec((err, images) => {
         if (err)
             callback(null, err)
         else {
@@ -386,6 +377,7 @@ module.exports.getTopRatedLoggedOut = (count, page, callback) => {
     Image.find({ public: true, active: true })
         .sort({ ratings: -1 })
         .limit(count)
+        .populate('userId')
         .exec((err, images) => {
             if (err)
                 callback(null, null, err); // might need to be null
@@ -424,11 +416,9 @@ module.exports.saveComment = function (req, res) {
     //let imageID = sanitize(req.params.imageid)
     let imageID = req.body.imageId;
     let comment = Comment({
-        //userId: userID,
         userId: userID,
         //body: sanitize(req.body.newComment),
         body: req.body.body,
-        //active: true
         active: req.body.active,
         imageId: imageID,
         flags: req.body.flags
@@ -468,6 +458,78 @@ module.exports.saveComment = function (req, res) {
             res.end(JSON.stringify(error));
         })
 }
+
+
+//NOTE: This does not check if the comments are hidden from the user
+// the commented out commentInfo does
+/**
+ * grab comment information
+ * only returns active comments
+ * @param imageid 
+ * @param callback 
+ */
+module.exports.getComments = (imageid, callback) => {
+    imageid = sanitize(imageid);
+
+    // search the comments collection for documents that with imageid that match image._id
+    Comment.
+        find({
+            imageId: mongoose.Types.ObjectId(imageid),
+            active: true,
+        }).
+        populate('userId').
+        exec((err, comments) => {
+            if (err) {
+                console.log(err);
+                callback(null, err);
+            } else {
+                callback(comments, null);
+            }
+        });
+};
+
+
+/**
+ * grab comment information
+ * returns active, un-hidden comments
+ * @param userid 
+ * @param imageid 
+ * @param callback 
+ */
+/*
+module.exports.commentInfo = (userid, imageid, callback) => {
+    imageid = sanitize(imageid);
+    userid = sanitize(userid);
+  
+    module.exports.getHiddenAndBlockedIDs(userid, "comment", (contentIds, blockedUsers, err) => {
+      if (err)
+        callback(null, err)
+      else {
+        // how to return five at time? because rn we are returning all comments
+        // username!!!!!
+        // look into aggregation
+        Comment.
+          find({
+            //exclude hidden comments and blocked users
+            _id: { $nin: contentIds },
+            userId: { $nin: blockedUsers },
+            imageId: mongoose.Types.ObjectId(imageid),
+            //include only active comments
+            active: true,
+          }).
+          populate('userId').
+          exec((err, comments) => {
+            if (err) {
+              console.log(err);
+              callback(null, err);
+            } else {
+              callback(comments, null);
+            }
+          });
+      }
+    })
+  };  
+  */
 
 
 // +------------+-------------------------------------------------
