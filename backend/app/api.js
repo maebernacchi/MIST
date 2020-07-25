@@ -4,6 +4,8 @@ const database = require('./database');
 
 module.exports = (app, passport, database) => {
 
+    // HOME 
+
     app.get('/api', function (req, res) {
 
         database.getFeaturedImagesLoggedOut(4, (images, error) => {
@@ -16,6 +18,7 @@ module.exports = (app, passport, database) => {
     });
 
     //------------------------------------------------
+    // GALLERY
 
     app.get('/api/gallery/random', (req, res) => {
 
@@ -61,7 +64,12 @@ module.exports = (app, passport, database) => {
         })
     })
 
+    app.post('/api/gallery', (req, res) => {
+        database.saveComment(req, res);
+    })
+
     //------------------------------------------------
+    // CHALLENGES
 
     app.get('/api/challenges/', (req, res) => {
 
@@ -80,15 +88,7 @@ module.exports = (app, passport, database) => {
     })
 
     //------------------------------------------------
-
-    app.post('/api/gallery', (req, res) => {
-        let data = req.body;
-        console.log("comment: ", data);
-        database.saveComment(req, res);
-
-    })
-
-    //------------------------------------------------
+    // SIGN UP
 
     app.get('/api/signup', (req, res) => {
 
@@ -99,6 +99,7 @@ module.exports = (app, passport, database) => {
     )
 
     //------------------------------------------------
+    // LOG IN
 
 
     app.get("/api/login", (req, res) => {
@@ -110,6 +111,24 @@ module.exports = (app, passport, database) => {
 
     );
 
+    //------------------------------------------------
+    // IMAGE
+
+    app.get("/api/img", (req, res) => {
+        database.getComments(req.query.id, (comments, error) => {
+            if (error) {
+                console.log(error);
+                res.json([]);
+            } else if (!comments) res.json([]);
+            else res.json(comments);
+        })
+
+    });
+
+
+
+    //------------------------------------------------
+    // FAKE DATA
 
     // Provides MIST image codes. This is a placeholder
     // so that we can display images before we connect
