@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Rect, Group, Text} from "react-konva";
 import gui from "./mistgui-globals.js";
-import "../styleSheets/FunBar.css";
+import "../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import PopupCanvas from "./PopupCanvas";
 

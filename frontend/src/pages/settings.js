@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./styleSheets/tutorial.css";
+import "./../design/styleSheets/tutorial.css";
 
 import {
   Accordion,

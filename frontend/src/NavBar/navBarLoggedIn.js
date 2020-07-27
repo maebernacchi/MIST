@@ -17,7 +17,7 @@ import MistLogo from "./../design/Logos/Negative/negative40.png";
 import React from "react";
 import { Navbar, Nav, NavDropdown, Form,
   FormControl, Button, NavLink} from "react-bootstrap";
-import "./../styleSheets/navBar.css";
+import "./../design/styleSheets/navBar.css";
 
 // +------------+----------------------------------------------------------
 // | UserHeader |

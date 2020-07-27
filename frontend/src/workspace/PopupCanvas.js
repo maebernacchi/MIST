@@ -3,7 +3,7 @@ import Portal from "./Portal";
 import { Rect, Group, Text } from "react-konva";
 import gui from "./mistgui-globals.js";
 import MISTImage from "./MISTImageCreate";
-import "../styleSheets/FunBar.css";
+import "./../design/styleSheets/FunBar.css";
 
 
 function PopupCanvas(props) {

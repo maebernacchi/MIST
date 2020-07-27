@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import DisplayImages from "./displayImages";
+import DisplayImages from "./../displayImages";
 
 /**
  * Gallery Page

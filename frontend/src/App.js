@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import "./styleSheets/generalStyles.css";
+import "./design/styleSheets/generalStyles.css";
 import { UserContext } from './Contexts/UserContext';
 
 import Home from "./pages/home";
@@ -8,7 +8,7 @@ import About from "./pages/about";
 import Faq from "./pages/faq";
 import Tutorial from "./pages/tutorial";
 import SignUp from "./pages/signUp";
-import Gallery from "./Gallery";
+import Gallery from "./pages/Gallery";
 import Challenges from "./pages/challenges";
 import Footer from "./footer";
 import Contact from "./pages/contact";
@@ -17,7 +17,7 @@ import License from "./pages/license";
 import Development from "./pages/development";
 import SignIn from "./pages/signIn";
 import Settings from "./pages/settings";
-import UserProfile from "./profile";
+import UserProfile from "./pages/profile";
 import Expert from "./expert/";
 
 import Community from "./pages/community";

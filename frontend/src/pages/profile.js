@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import DisplayImages from "./displayImages";
-import "./styleSheets/profile.css";
-import "./styleSheets/generalStyles.css";
+import DisplayImages from "./../displayImages";
+import "./../design/styleSheets/profile.css";
+import "./../design/styleSheets/generalStyles.css";
 import {
   Container,
   Row,
@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 /** 6745662 */
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from "./MISTImageGallery"
+import MISTImage from "./../MISTImageGallery"
 
 import {
   AiOutlinePicture,

@@ -1,10 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import FacebookIcon from './icons/icons8-facebook-30.png';
-import GoogleIcon from './icons/icons8-google-48.png';
+import FacebookIcon from './../design/icons/icons8-facebook-30.png';
+import GoogleIcon from './../design/icons/icons8-google-48.png';
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom'
-import './styleSheets/signInUp.css';
+import './../design/styleSheets/signInUp.css';
 
 const SignIn = () => {
 
