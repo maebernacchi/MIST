@@ -1,30 +1,29 @@
-//Navigation bar when logged in
+// +---------+----------------------------------------------------------
+// | Notes   |
+// +---------+
 
-import React from "react";
-import "./styleSheets/navBar.css";
+/*
+This file, navBarLoggedIn.js, creates the navigation bar for users
+who are signed in. The navigation bar is returned by the
+function UserHeader.
+*/
 
-/* Imports for images / logos */
-import MistLogo from "./Logos/Negative/negative40.png";
-
-/* Imports for bootstrap */
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Form,
-  FormControl,
-  Button,
-  NavLink,
-} from "react-bootstrap";
+// +---------+----------------------------------------------------------
+// | Imports |
+// +---------+
 
 import "bootstrap/dist/css/bootstrap.css";
+import MistLogo from "./../Logos/Negative/negative40.png";
+import React from "react";
+import { Navbar, Nav, NavDropdown, Form,
+  FormControl, Button, NavLink} from "react-bootstrap";
+import "./../styleSheets/navBar.css";
 
-/**
- * returns the whole header
- */
+// +------------+----------------------------------------------------------
+// | UserHeader |
+// +------------+
 
-const UserHeader = (props) => {
-
+function UserHeader(props) {
   return (
     <div>
       {/* variant is the styling of it, see more on bootstrap */}
@@ -32,11 +31,9 @@ const UserHeader = (props) => {
         <Logo />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
             <NavBar />
-          </Nav>
-          <Search />
         </Navbar.Collapse>
+        <Search />
       </Navbar>
     </div>
   );
@@ -95,22 +92,6 @@ function NavBar() {
     </Nav>
   );
 }
-
-/* User Nav Bar */
-
-/* Username button (dropdown) */
-/*
-function UserButton(props) {
-  return (
-    <NavDropdown title="Account" id="basic-nav-dropdown">
-      <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
-      <NavDropdown.Item href="#action/3.2">Settings</NavDropdown.Item>
-      <NavDropdown.Divider />
-      <SignOutButton />
-    </NavDropdown>
-  );
-}
-*/
 
 /* Sign Out Bar */
 
