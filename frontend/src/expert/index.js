@@ -342,7 +342,7 @@ class Expert extends Component {
                         getCurrentWorkspace={() => this.state}
                         loadFunction={this.loadFunction.bind(this)}
                         functions={this.state.functions._order}
-                        doesFunctionExist={(fun_name) => (Boolean(this.state.functions[fun_name]))}
+                        doesFunctionExist={(fun_name) => (fun_name in this.state.functions)}
 
                         code={this.getFormValue('code')}
                         codeRef={this.codeRef}

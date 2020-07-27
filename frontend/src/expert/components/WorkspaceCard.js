@@ -83,7 +83,7 @@ function WorkspaceCard(props) {
                                         as="textarea"
                                         className="formTextbox"
                                         onChange={(e) => props.setParams(e.target.value)}
-                                        placeholder="Please list your params, separated by commas and no spaces"
+                                        placeholder="Please list your params, separated by commas"
                                         rows="1"
                                         value={props.params}
                                     />
@@ -94,7 +94,7 @@ function WorkspaceCard(props) {
                                         as="textarea"
                                         className="formTextbox"
                                         onChange={(e) => props.setDefaultParams(e.target.value)}
-                                        placeholder="Please pick your default params, separated by commas and no spaces"
+                                        placeholder="Please pick your default params, separated by commas"
                                         rows="1"
                                         value={props.default_params}
                                     />
