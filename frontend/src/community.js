@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 
 function Community() {
   return (
-    <Container>
+    <Container fluid id="page-container" >
       <h1>Community Guidelines</h1>
       <div>
         Community Info

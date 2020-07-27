@@ -20,7 +20,7 @@ the Intro, ButtonContainer, BottomText, and Featured Images.
 class PageContent extends React.Component {
   render() {
     return (
-      <Container style={{ padding: "1%" }}>
+      <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
         <Intro />
 
         <ButtonContainer />

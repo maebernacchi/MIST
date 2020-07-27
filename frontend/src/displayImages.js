@@ -102,7 +102,7 @@ function Gallery(props) {
   let cards = props.cards;
   let location = useLocation();
   return (
-    <div>
+    <div style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <Row style={{ justifyContent: "space-between" }}>
         {cards.map((card) => (
           <Card
@@ -155,7 +155,7 @@ function Gallery(props) {
                    *************************/}
                   <Row
                     style={{
-                      justifyContent: "space-between",
+                      justifyContent: "center",
                       marginTop: "1em",
                     }}
                   >

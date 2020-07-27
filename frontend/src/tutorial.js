@@ -109,7 +109,7 @@ import WorkSpace from "./Workspace";
 //Tutorial Header
 function Tutorial() {
   return (
-
+<Container fluid id="page-container">
     <Row style={{ marginLeft: "1em", marginRight: "1em", alignItems: "flex-start" }}>
       <Col xs="3" style={{ position: "sticky", top: "2rem" }}>
         {/* Table of Contents */}
@@ -121,6 +121,7 @@ function Tutorial() {
       </Col>
 
     </Row>
+    </Container>
   );
 };
 
@@ -133,8 +134,8 @@ function TableContents() {
     <Card>
 
       {/* Title -- Table of Contents */}
-      <Card.Header style={{ margin: "auto" }}>
-        <h3>Table of Contents </h3>
+      <Card.Header>
+        <h3 style={{fontSize: "170%"}}>Table of Contents </h3>
       </Card.Header>
       {/* All the sections and subsections */}
       <Accordion>

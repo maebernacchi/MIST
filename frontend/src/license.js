@@ -1,9 +1,10 @@
 import React from 'react';
+import {Container} from 'react-bootstrap';
 
 function License() {
     return (
-        <div style={{padding: 20}}> license info
-        </div>
+        <Container fluid id="page-container"> license info
+        </Container>
     )
 }
 

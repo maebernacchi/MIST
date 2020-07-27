@@ -5,7 +5,7 @@ import { Container } from "react-bootstrap";
 
 function Privacy() {
   return (
-    <Container>
+    <Container fluid id="page-container">
       <h1>Privacy Policy </h1>
       <div>
         We at Glimmer Labs take your privacy very seriously. We believe that

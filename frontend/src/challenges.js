@@ -37,7 +37,7 @@ const Challenges = () => {
   }, [level, color, animation])
 
   return (
-    <Container fluid>
+    <Container fluid id="page-container" >
       <Container>
         <h1>Challenges</h1>
         <p>Start of challenges</p>

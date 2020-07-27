@@ -7,7 +7,7 @@ import { Container } from "react-bootstrap";
 //page contents
 const About = () => {
   return (
-    <Container fluid>
+    <Container fluid id="page-container">
       <AboutHeader />
       <AboutContent />
     </Container>
