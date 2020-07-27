@@ -3,7 +3,8 @@ import './styleSheets/styles.css';
 import './styleSheets/about.css';
 import { Container } from 'react-bootstrap';
 
-
+//FAQ about MIST; with links to forms to report bugs, 
+//request features, and how to reach MIST admin
 const Faq = () => {
     return (
         <Container fluid className="clear:left;">

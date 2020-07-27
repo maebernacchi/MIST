@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import DisplayImages from "./displayImages";
 
+/**
+ * Gallery Page
+ */
+
 export default function Gallery() {
 
   const [cards, setCards] = useState([]);
