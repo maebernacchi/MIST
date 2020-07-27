@@ -270,8 +270,8 @@ function Tutorials() {
                               Hover over for animation!
                             </p>
                           ) : (
-                            ""
-                          )}
+                              ""
+                            )}
                         </Row>
                       </Col>
                     </Row>
@@ -283,10 +283,17 @@ function Tutorials() {
                 <Text text={subsection.text} id={subsection.id} />
                 <Video video={subsection.video} id={subsection.id} />
                 <Final final={subsection.final} id={subsection.id} />
-                <Challenges
-                  challenges={subsection.challenges}
-                  id={subsection.id}
-                />
+                {subsection.isChallenge ? (
+
+                  <Challenges
+                    challenges={subsection.challenges}
+                    id={subsection.id}
+                  />
+
+                ) : (
+                    ""
+                  )}
+
               </Container>
             </section>
           ))}
@@ -399,7 +406,7 @@ function Final(props) {
 
 /* Challenges section */
 function Challenges(props) {
-  const [modalShow, setModalShow] = React.useState(false);
+
   return (
     <Card
       id={props.id + "-challenges"}
@@ -415,23 +422,12 @@ function Challenges(props) {
           <Col xs="11">
             <Container>Challenges</Container>
             <Container>
+
               {/* Maps each challenges */}
               {props.challenges.map((challenge) => (
-                <Container>
-                  {challenge.question}
-
-                  {/* Help Icon Button */}
-                  <Nav.Link onClick={() => setModalShow(true)}>
-                    <BsQuestionCircle />
-                  </Nav.Link>
-
-                  <HelpModal
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                    hint={challenge.hint}
-                  />
-                </Container>
+                <Challenge question={challenge.question} hint={challenge.hint} />
               ))}
+
             </Container>
           </Col>
 
@@ -443,6 +439,28 @@ function Challenges(props) {
       </Card.Body>
     </Card>
   );
+}
+
+/* Challenge */
+function Challenge(props) {
+  const [modalShow, setModalShow] = React.useState(false);
+  return (
+    <Container>
+      {props.question}
+
+      {/* Help Icon Button */}
+      <Nav.Link onClick={() => setModalShow(true)}>
+        <BsQuestionCircle />
+      </Nav.Link>
+      
+      {/* Callse Help Modal*/}
+      <HelpModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        hint={props.hint}
+      />
+    </Container>
+  )
 }
 
 /**
@@ -573,6 +591,8 @@ const sections = [
           //Final
           final: <Container> This is the final imaget </Container>,
 
+          isChallenge: false,
+
           //Challenges
           challenges: [
             //   {
@@ -623,6 +643,7 @@ const sections = [
           //Final
           final: <Container> This is the final image </Container>,
 
+          isChallenge: false,
           //Challenges
           challenges: [
             //{
@@ -698,6 +719,7 @@ const sections = [
           //Final
           final: <Container> This is the final image </Container>,
 
+          isChallenge: false,
           //Challenges
           challenges: [
             //   {
@@ -734,6 +756,7 @@ const sections = [
           //Final
           final: <Container> This is the final image </Container>,
 
+          isChallenge: true,
           //Challenges
           challenges: [
             {
@@ -818,7 +841,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: false,
         //Challenges
         challenges: [
           //   {
@@ -882,7 +905,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -948,7 +971,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1046,7 +1069,7 @@ const sections = [
 
         //Final
         final: <Container> This is a final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1142,7 +1165,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1232,7 +1255,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1313,7 +1336,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1379,7 +1402,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1485,7 +1508,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1563,7 +1586,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1622,7 +1645,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1689,7 +1712,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1792,8 +1815,8 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
-        //Challenges
+        isChallenge: true,
+        //Challenges  
         challenges: [
           {
             question: (
@@ -1876,7 +1899,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
@@ -1969,7 +1992,7 @@ const sections = [
 
         //Final
         final: <Container> This is the final image </Container>,
-
+        isChallenge: true,
         //Challenges
         challenges: [
           {
