@@ -197,7 +197,10 @@ const usersSchema = new mongoose.Schema({
     }], // of (of flag_ids)
     liked: [{ type: mongoose.Schema.Types.ObjectId }],   // of image _ids
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],                 //(of comment _ids)
-    about: String,
+    about: {
+        String,
+        default: ""
+    }
 });
 
 const challengeSchema = new mongoose.Schema({

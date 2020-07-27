@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./styleSheets/generalStyles.css";
+import { UserContext } from './Contexts/UserContext';
 
 import Home from "./home";
 import About from "./about";
@@ -25,26 +26,21 @@ import User from "./user";
 import WorkSpace from "./Workspace";
 
 /** New option for navigation bars*/
-import BaseNavigation from "./navBarBase";
-import UserNavigation from "./navBarUser";
+import BaseNavigation from "./NavBar/navBarLoggedOut";
+import UserNavigation from "./NavBar/navBarLoggedIn";
 
 import { Container } from "react-bootstrap";
 
 
 export default function App() {
 
-const [isSignedIn, setIsSignedIn] = useState(false);
- 
- useEffect(() => {
- fetch('/api/getIsSignedIn')
- .then(req => req.json())
- .then(isSignedIn => { setIsSignedIn(isSignedIn) });
- }, [])
+const data = useContext(UserContext);
+console.log(data);
  
     return (
       <div id="page-container">
         <BrowserRouter>
-          {isSignedIn ? <UserNavigation /> : <BaseNavigation />}
+          {data ? <UserNavigation /> : <BaseNavigation />}
           <Container fluid id="content-wrap">
             <Switch>
               <Route path="/" component={Home} exact />

@@ -113,8 +113,35 @@ module.exports = (app, passport, database) => {
 
     });	
 
+    //------------------------------------------------
 
-    //------------------------------------------------	
+    app.post("/api/login", (req, res, next) => {
+        passport.authenticate("local", (err, user, info) => {
+            if (err) {
+                throw err;
+            }
+            if (!user) {
+                res.send("No User Exists");
+            }
+            else {
+                req.logIn(user, (err) => {
+                    if (err) throw err;
+                    res.send("Successfully Authenticated");
+                });
+            }
+        })(req, res, next);
+    });
+
+    app.get("/api/user", (req, res) => {
+        if (!req.user) res.json([]);
+        else {
+            user = req.user;
+            res.json(user);
+        }
+    });
+
+
+    //------------------------------------------------	                
     // FAKE DATA    	
 
     // Check whether user is signed in	
