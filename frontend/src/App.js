@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import "./styleSheets/generalStyles.css";
 
 import Home from "./home";
@@ -28,51 +28,53 @@ import WorkSpace from "./Workspace";
 import BaseNavigation from "./navBarBase";
 import UserNavigation from "./navBarUser";
 
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 
 
 export default function App() {
 
-const [isSignedIn, setIsSignedIn] = useState(false);
- 
- useEffect(() => {
- fetch('/api/getIsSignedIn')
- .then(req => req.json())
- .then(isSignedIn => { setIsSignedIn(isSignedIn) });
- }, [])
- 
-    return (
-      <div id="page-container">
-        <BrowserRouter>
-          {isSignedIn ? <UserNavigation /> : <BaseNavigation />}
-          <Container fluid id="content-wrap">
-            <Switch>
-              <Route path="/" component={Home} exact />
-              <Route path="/about" component={About} />
-              <Route path="/tutorial" component={Tutorial} />
-              <Route path="/challenges" component={Challenges} />
-              <Route path="/gallery" component={Gallery} />
-              <Route path="/signUp" component={SignUp} />
-              <Route path="/contact" component={Contact} />
-              <Route path="/license" component={License} />
-              <Route path="/privacy" component={Privacy} />
-              <Route path="/faq" component={Faq} />
-              <Route path="/development" component={Development} />
-              <Route path="/signIn" component={SignIn} />
-              <Route path="/settings" component={Settings} />
-              <Route path="/profile" component={UserProfile} />
-              <Route path="/community" component={Community} />
-              <Route path="/report" children={ReportForm} />
-              {/*change this to be dependent on user id's like images*/ }
-              <Route path="/user" children={User} /> 
-              <Route path="/img/:url" children={<Gallery />} />
-              <Route path="/createWorkspace" children = {<WorkSpace />}/>
-              <Route path="/expert" children={<Expert />} />
-            </Switch>
-          </Container>
-          <Footer id="footer" />
-        </BrowserRouter>
-      </div>
-    );
-  }
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/getIsSignedIn')
+      .then(req => req.json())
+      .then(isSignedIn => { setIsSignedIn(isSignedIn) });
+  }, [])
+
+  return (
+    <div id="page-container">
+      <BrowserRouter>
+        {isSignedIn ? <UserNavigation /> : <BaseNavigation />}
+        <Container fluid id="content-wrap">
+          <Switch>
+            <Route path="/" component={Home} exact />
+            <Route path="/about" component={About} />
+            <Route path="/tutorial" component={Tutorial} />
+            <Route path="/challenges" component={Challenges} />
+            <Route path="/gallery" component={Gallery} />
+            <Route path="/signUp" component={SignUp} />
+            <Route path="/contact" component={Contact} />
+            <Route path="/license" component={License} />
+            <Route path="/privacy" component={Privacy} />
+            <Route path="/faq" component={Faq} />
+            <Route path="/development" component={Development} />
+            <Route path="/signIn" component={SignIn} />
+            <Route path="/settings" component={Settings} />
+            <Route path="/profile" component={UserProfile} />
+            <Route path="/community" component={Community} />
+            <Route path="/report" children={ReportForm} />
+            {/*change this to be dependent on user id's like images*/}
+            <Route path="/user" children={User} />
+            <Route path="/img/:url" children={<Gallery />} />
+            <Route path="/createWorkspace" children={<WorkSpace />} />
+            <Route path="/expert/:code" render={(props)=> <Expert {...props} />} />
+            <Route path="/expert" render={(props)=> <Expert {...props} />} />
+
+          </Switch>
+        </Container>
+        <Footer id="footer" />
+      </BrowserRouter>
+    </div>
+  );
+}
 
