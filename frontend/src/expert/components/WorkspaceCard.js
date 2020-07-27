@@ -24,6 +24,7 @@ import {
     Tabs,
     Tooltip,
 } from 'react-bootstrap';
+import { BsQuestionCircle } from 'react-icons/bs'
 import { FiSave } from 'react-icons/fi';
 import { GrPowerReset } from 'react-icons/gr'
 import Editor from 'react-simple-code-editor';
@@ -67,29 +68,38 @@ function WorkspaceCard(props) {
 
                             <Form>
                                 <Form.Group>
-                                    <Form.Label>Name</Form.Label>
+                                    <Form.Label>
+                                        Name&nbsp;
+                                        <HelpText text="The name of your MIST function. Your function name can include numbers and capital or lowercase letters. The name should not conflict with a MIST builtin function." id="mist-function-name-tooltip" />
+                                    </Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         className="formTextbox"
-                                        onChange={(e) => props.setName(e.target.value)}
+                                        onChange={(e) => props.setName(e.target.value.replace(/[^ a-zA-Z0-9]/g, ""))}
                                         placeholder="Please name your MIST Function"
                                         rows="1"
                                         value={props.name}
                                     />
                                 </Form.Group>
                                 <Form.Group>
-                                    <Form.Label>Params</Form.Label>
+                                    <Form.Label>
+                                        Parameters&nbsp;
+                                        <HelpText text="The parameters to your MIST function. Separate parameters with commas. Parameter names can include numbers and capital or lowercase letters." id="mist-function-params-tooltip"/>
+                                    </Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         className="formTextbox"
-                                        onChange={(e) => props.setParams(e.target.value)}
+                                        onChange={(e) => props.setParams(e.target.value.replace(/[^ a-zA-Z0-9,]/g, ""))}
                                         placeholder="Please list your params, separated by commas"
                                         rows="1"
                                         value={props.params}
                                     />
                                 </Form.Group>
                                 <Form.Group>
-                                    <Form.Label>Default Params</Form.Label>
+                                    <Form.Label>
+                                        Testing Parameters&nbsp;
+                                        <HelpText text="Parameter values that are used when rendering your function directly. Separate testing parameters with commas." id="mist-function-test-params-tooltip" />
+                                    </Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         className="formTextbox"
@@ -255,6 +265,18 @@ function FunctionButtons(props) {
             </Row>
         </>
     )
+}
+
+function HelpText(props) {
+    return (
+        <OverlayTrigger
+            container={props.expertRef}
+            overlay={<Tooltip id={props.id}>{props.text}</Tooltip>}
+            placement="right"
+        >
+            <BsQuestionCircle />
+        </OverlayTrigger>
+    );
 }
 
 export default WorkspaceCard;
