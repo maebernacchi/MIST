@@ -38,10 +38,10 @@ export const valGroup = function (
           scaleY: 1,
         });
         if (e.currentTarget.y() > global.menuHeight) {
-          setTimeout(function () {
+          //setTimeout(function () {
             addNode("val", valName, e.target._lastPos.x, e.target._lastPos.y);
             changeKey();
-          }, 200);
+          //}, 200);
         }
         else {
           changeKey();

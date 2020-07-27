@@ -6,13 +6,13 @@ import MISTImage from "./MISTImageCreate";
 import "../styleSheets/FunBar.css";
 
 
-function ImagePortal(props) {
+function PopupCanvas(props) {
 
     const [imageName, setImageName] = useState("");
 
     return (
         <Portal>
-            <PortalBase {...props} />
+            <Background {...props} />
             <PortalImage {...props} />
             <PortalFunction {...props} />
             <PortalTextBox {...props} setImageName={setImageName} />
@@ -21,7 +21,7 @@ function ImagePortal(props) {
     );
 }
 
-function PortalBase(props) {
+function Background(props) {
     return (
         <Group>
             <div // div makes workspace background dark
@@ -154,9 +154,9 @@ function SaveButton(props) {
     const [imageExists, setImageExists] = useState("initial");
 
     function SaveImage() {
-        var newName = props.imageName;
-        newName = removeOuterWhiteSpace(newName);
-        var response = getImageExists(newName);
+        //var newName = props.imageName;
+        //newName = removeOuterWhiteSpace(newName);
+        //var response = getImageExists(newName);
         console.log("response = " + imageExists);
     }
 
@@ -200,4 +200,4 @@ var removeOuterWhiteSpace = function (string) {
     return string;
 }; 
 
-export default ImagePortal  
+export default PopupCanvas  

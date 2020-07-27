@@ -130,6 +130,7 @@ function FunNode(props) {
               scaleX: 1.07,
               scaleY: 1.07
             })
+            return 0;
           })
           setHovered(true);
         }}
@@ -142,6 +143,7 @@ function FunNode(props) {
               scaleX: 1,
               scaleY: 1
             })
+            return 0;
           })
         }}
       >
@@ -220,7 +222,7 @@ function FunNode(props) {
           shadowOffsetX={1}
           shadowOffsetY={1}
           expanded={false}
-          visible={props.renderFunction}
+          visible={typeof props.renderFunction === 'string'}
         />
       )}
       {name === "rgb"

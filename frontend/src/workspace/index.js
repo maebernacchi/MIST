@@ -904,6 +904,7 @@ class WorkspaceComponent extends Component {
                   line && (
                     <DrawArrow
                       index={index}
+                      key={index}
                       sourceX={line.headPosition.x}
                       sourceY={line.headPosition.y}
                       sinkX={line.tailPosition.x}

@@ -3,7 +3,7 @@ import { Rect, Group, Text} from "react-konva";
 import gui from "./mistgui-globals.js";
 import "../styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
-import ImagePortal from "./ImagePortal";
+import PopupCanvas from "./PopupCanvas";
 
 
 function FunBar(props) {
@@ -151,8 +151,8 @@ function ImageButton(props) {
           />
         )}
       </Spring>
-      {imageButtonClicked ? ( //temp; remove ! later
-        <ImagePortal {...props} closePortal={closePortal} />
+      {imageButtonClicked ? (
+        <PopupCanvas {...props} closePortal={closePortal} />
       ) : (
           <Text
             text={"Image"}

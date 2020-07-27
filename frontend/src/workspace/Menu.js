@@ -10,10 +10,8 @@ import Portal from "./Portal";
 import MakeMenuButton from "./MakeMenuButton";
 import { funcGroup } from "./MakeFunction";
 import { valGroup } from "./MakeValue";
-import global, { width, height, valueWidth, functionWidth } from "./globals.js";
+import global, { width, valueWidth, functionWidth } from "./globals.js";
 import menuDimensions from "./globals-menu-dimensions";
-import Konva from "konva";
-import { Spring, animated } from "react-spring/renderprops-konva";
 
 function Menu(props) {
   //keeps track if the menus are open
@@ -121,10 +119,10 @@ function Menu(props) {
                 context.fillStrokeShape(this);
               }}
               fill={
-                u.name === 'Values' && props.valTabColor ||
-                u.name === 'Functions' && props.funTabColor ||
-                u.name === 'Custom' && props.customTabColor ||
-                u.name === 'Saved' && props.savedTabColor}
+                ((u.name === 'Values') && props.valTabColor) ||
+                ((u.name === 'Functions') && props.funTabColor) ||
+                ((u.name === 'Custom') && props.customTabColor) ||
+                ((u.name === 'Saved') && props.savedTabColor)}
               strokeWidth={0}
               shadowOffsetX={1}
               shadowOffsetY={-2}

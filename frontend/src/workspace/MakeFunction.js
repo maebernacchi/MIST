@@ -38,10 +38,10 @@ export const funcGroup = function makeFunctionGroup(
           scaleY: 1,
         });
         if (e.currentTarget.y() > global.menuHeight) {
-          setTimeout(function () {
+          //setTimeout(function () {
             addNode("fun", funName, e.target._lastPos.x, e.target._lastPos.y);
             changeKey();
-          }, 200);
+          //}, 200);
         } else {
           changeKey();
         }

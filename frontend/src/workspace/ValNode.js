@@ -122,6 +122,7 @@ function ValNode(props) {
               scaleX: 1.07,
               scaleY: 1.07,
             });
+            return 0;
           });
           setHovered(true);
         }}
@@ -134,6 +135,7 @@ function ValNode(props) {
               scaleX: 1,
               scaleY: 1,
             });
+            return 0;
           });
         }}
       >
