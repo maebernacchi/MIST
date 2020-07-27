@@ -29,9 +29,7 @@ import WorkspaceComponent from './workspace/';
 /** New option for navigation bars*/
 import BaseNavigation from "./NavBar/navBarLoggedOut";
 import UserNavigation from "./NavBar/navBarLoggedIn";
-
 import { Container } from "react-bootstrap";
-
 
 function App() {
 

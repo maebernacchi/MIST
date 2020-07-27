@@ -32,8 +32,12 @@ const SignIn = () => {
       body: JSON.stringify(user)
     })
     //redirect user to home page
-    .then(setRedirect("/"))
-  };
+    .then(res => res.json())
+    .then(message => {
+      console.log("message = " + message);
+      if (message == "Success") window.location.href = "/";
+    })
+  }
 
   const getUser = () => {
     fetch('/api/user', {
@@ -45,7 +49,7 @@ const SignIn = () => {
     }) 
       .then(res => res.json())
       .then(user => {
-        setData(user);
+        if (user) setData(user);
       })
   };
 
@@ -53,6 +57,7 @@ const SignIn = () => {
     return <Redirect to={{ pathname: redirect }} />
   }
   else {
+    console.log("data = " + data);
     return (
     <Container className="signIn-center">
       <h1 >Sign In</h1>

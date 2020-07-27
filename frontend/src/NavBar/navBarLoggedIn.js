@@ -97,10 +97,23 @@ function NavBar() {
 
 function SignOutButton(props) {
   return (
-    <NavDropdown.Item href="#" onClick={props.onClick}>
+    <NavDropdown.Item href="#" onClick={signout}>
       Sign Out
     </NavDropdown.Item>
   );
+}
+
+
+function signout() {
+  fetch('/api/logout', {
+    method: 'GET',
+    headers: {
+    'Content-Type': 'application/json',
+    },
+    credentials: 'include'
+  }).then(res => {
+    window.location.href = "/";
+  })
 }
 
 export default UserHeader;

@@ -121,19 +121,26 @@ module.exports = (app, passport, database) => {
                 throw err;
             }
             if (!user) {
-                res.send("No User Exists");
+                var message = "No User Exists";
+                res.json(message);
             }
             else {
                 req.logIn(user, (err) => {
                     if (err) throw err;
-                    res.send("Successfully Authenticated");
+                    var message = "Success";
+                    res.json(message);
                 });
             }
         })(req, res, next);
     });
 
+    app.get('/api/logout', (req, res) => {
+        req.logout();
+        res.json("Sucess");
+    })
+
     app.get("/api/user", (req, res) => {
-        if (!req.user) res.json([]);
+        if (!req.user) res.json(null);
         else {
             user = req.user;
             res.json(user);
