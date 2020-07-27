@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./styleSheets/home.css";
 import LinkButton from "./LinkButton";
 import { NavLink } from "react-router-dom";
-import MistLogo from "./Logos/Positive/nobackground300.png";
+//import MistLogo from "./Logos/Positive/nobackground300.png";
 import { Container } from "react-bootstrap";
 import { BsClock } from "react-icons/bs";
 import MISTImage from "./MISTImageGallery"
@@ -38,7 +38,7 @@ function Intro() {
   return (
     <div id="intro">
       <div id="logoImage">
-        <img src={MistLogo} alt="MIST Logo"></img>
+        {/*<img src={MistLogo} alt="MIST Logo"></img>*/}
       </div>
       <div id="about">
         <p>Create abstract images and animations using simple math functions</p>
