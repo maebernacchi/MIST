@@ -1,11 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 import "./styleSheets/home.css";
 import LinkButton from "./LinkButton";
 import { NavLink } from "react-router-dom";
-import MistLogo from "./Logos/Positive/nobackground300.png";
-import { Container } from "react-bootstrap";
+// import images
+import MistLogo from "./design/Logos/Postivie/nobackground300.png";
+import FeaturedImage1 from "./featuredImages/pic1.png";
+import FeaturedImage2 from "./featuredImages/pic2.png";
+import FeaturedImage3 from "./featuredImages/pic3.png";
+import FeaturedImage4 from "./featuredImages/pic4.png";
+
+import { Container, Button } from "react-bootstrap";
+
 import { BsClock } from "react-icons/bs";
-import MISTImage from "./MISTImageGallery"
 
 const home = () => {
   return <PageContent />;
@@ -20,9 +26,9 @@ class PageContent extends React.Component {
     return (
       <Container id="main" className="content-wrap">
         <Intro />
-        <h1 style={{ fontSize: "170%" }}>
+        <h style={{ fontSize: "170%" }}>
           The Mathematical Image Synthesis Toolkit
-        </h1>
+        </h>
         <ButtonContainer />
         <BottomText />
         <FeaturedImages />
@@ -92,58 +98,41 @@ function BottomText() {
   FeaturedImages returns a display of images previously created 
   with MIST at the bottom of the screen.
   */
-class FeaturedImages extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      featuredImages: []
-    }
-  }
-
-  //Fetch the list on first mount
-  componentDidMount() {
-    this.getFeaturedImages();
-  }
-
-
-  // Retrieves the list of items from the Express app
-  getFeaturedImages = () => {
-    fetch('/api/home')
-      .then(res => res.json())
-      .then(featuredImages => this.setState({ featuredImages }));
-  } 
-
+class FeaturedImages extends React.Component {
   render() {
-    const featuredImages = this.state.featuredImages;
-
     return (
       <div className="featuredImagesContainer">
         <div>
-          <h1>Featured Images:</h1>
+          <h>Featured Images:</h>
           <p>
             Images with <BsClock /> will animate when you hover over them
           </p>
         </div>
         <div className="featuredImagesFlex">
-          {featuredImages.length ? (
-            <div>
-              {featuredImages.map((featuredImage) => {
-                return (
-                  <div>
-                    {/* the two lines below are placeholders, we need to pass in MIST images instead */}
-                    <MISTImage code={featuredImage.code} resolution="150"/>
-                    <p> {featuredImage.code}</p>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-              <div>
-                <h2> No Image Found </h2>
-              </div>
-            )
-          }
+          {/*
+            NOTE: We still need to think about which featured images
+            we want to display. The ones used here are placeholders.
+            */}
+          <img
+            src={FeaturedImage1}
+            alt="temporary example 1"
+            className="featuredImage"
+          ></img>
+          <img
+            src={FeaturedImage2}
+            alt="temporary example 2"
+            className="featuredImage"
+          ></img>
+          <img
+            src={FeaturedImage3}
+            alt="temporary example 3"
+            className="featuredImage"
+          ></img>
+          <img
+            src={FeaturedImage4}
+            alt="temporary example 4"
+            className="featuredImage"
+          ></img>
         </div>
       </div>
     );

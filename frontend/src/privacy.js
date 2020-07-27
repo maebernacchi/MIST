@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container, Nav } from "react-bootstrap";
 
 //Page header + contents
 

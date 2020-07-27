@@ -1,6 +1,9 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import "./styleSheets/generalStyles.css";
 import { Container, Nav } from "react-bootstrap";
+
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
 /**

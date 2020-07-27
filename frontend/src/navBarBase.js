@@ -4,7 +4,7 @@ import React from "react";
 import "./styleSheets/navBar.css";
 
 /* Imports for images / logos */
-import MistLogo from "./Logos/Negative/negative40.png";
+import MistLogo from "./design/Logos/Negative/negative40.png";
 import FacebookIcon from "./icons/icons8-facebook-30.png";
 import GoogleIcon from "./icons/icons8-google-48.png";
 
@@ -21,6 +21,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
 /**
@@ -28,6 +29,9 @@ import "bootstrap/dist/css/bootstrap.css";
  */
 
 const BaseHeader = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => setIsOpen(!isOpen);
 
   return (
     <div>
@@ -107,8 +111,10 @@ class NavBar extends React.Component {
     return (
       <div>
         {(() => {
+          {
             /* if the user is in the base navigation bar
                  show the base navBar, and handle the singIn/Up button on click */
+          }
           if (nav === "base") {
             return (
               <Nav className="mr-auto">
@@ -116,8 +122,11 @@ class NavBar extends React.Component {
                 <SignInUpButton onClick={this.handleBaseClick} />
               </Nav>
             );
+
+            {
               /* else if the user is in the singIn navigation Bar
                  show the Sign In navBar, and handle the SignIn, SignUp, and Cancel buttons on click */
+            }
           } else {
             return (
               <Nav className="mr-auto">

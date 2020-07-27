@@ -19,59 +19,25 @@ import {
 import {
     Button,
     Card,
-    Col,
     Container,
     OverlayTrigger,
-    Row,
-    Tooltip,
+    Tooltip
 } from 'react-bootstrap';
-import { IconContext } from "react-icons";
-import {
-    FaPen,
-    FaRegTrashAlt,
-} from 'react-icons/fa';
-import { MIST_builtin_functions } from '../Utilities';
 
 function SidePanelCard(props) {
 
     // add functions
-    const insertFunctions = (functions, specifiedKeys = null, userDefined = false) => {
+    const insertFunctions = (functions, specifiedKeys = null, removable = false) => {
         let keys = specifiedKeys || Object.keys(functions).sort();
-
-        const wrap_user_defined_button = (button, fun_name, userDefined) => {
-            if (userDefined) {
-                return (
-                    <>
-                        <Col>
-                            <IconContext.Provider
-                                value={{ style: { color: 'white', cursor: 'pointer' } }}
-                            >
-                                <div>
-                                    <FaRegTrashAlt onClick={() => props.deleteFunction(fun_name)} />
-                                </div>
-                            </IconContext.Provider>
-                        </Col>
-                        <Col xs={6} padding={0}>
-                            {button}
-                        </Col>
-                        <Col>
-                            <IconContext.Provider
-                                value={{ color: 'white', style: { cursor: 'pointer' } }}
-                            >
-                                <div>
-                                    <FaPen onClick={() => props.loadFunction(functions[fun_name])} />
-                                </div>
-                            </IconContext.Provider>
-                        </Col>
-
-
-
-                    </>
-                )
-            } else {
-                return button;
-            }
-        }
+        const removable_button = removable ?
+            (fun_name) =>
+                (<Button
+                    variant="danger"
+                    onClick={() => { props.deleteFunction(fun_name) }}
+                >
+                    x
+                </Button>)
+            : () => { };
 
         return (keys.map((fun_name, idx) => {
             let fun = functions[fun_name];
@@ -84,36 +50,32 @@ function SidePanelCard(props) {
                     key={fun_name}
                 >
                     {(provided) =>
-                        (<div
+                        (<Container
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             ref={provided.innerRef}
                         >
-                            <Row style={{ justifyContent: "space-between", marginBottom: '6px'}}>
-                                {wrap_user_defined_button(<OverlayTrigger
-                                    container={props.expertRef}
+                            <OverlayTrigger
+                                key={idx}
+                                placement="right"
+                                overlay={
+                                    <Tooltip>
+                                        {fun.about + '\n'}
+                                        <hr />
+                                        {fun_signature}
+                                    </Tooltip>
+                                }>
+                                <Button
+                                    className='insertButton'
+                                    variant='dark'
                                     key={idx}
-                                    placement="right"
-                                    overlay={
-                                        <Tooltip>
-                                            {fun.about + '\n'}
-                                            <hr />
-                                            {fun_signature}
-                                        </Tooltip>
-                                    }>
+                                    onClick={() => { insertText(fun_signature) }}>
+                                    {fun_name}
+                                </Button>
+                            </OverlayTrigger>
 
-                                    <Button
-                                        block
-                                        className='insertButton'
-                                        variant='dark'
-                                        key={idx}
-                                        onClick={() => { insertText(fun_signature) }}>
-                                        {fun_name}
-                                    </Button>
-
-                                </OverlayTrigger>, fun_name, userDefined)}
-                            </Row>
-                        </div>)
+                            {removable_button(fun_name)}
+                        </Container>)
                     }
 
                 </Draggable>
@@ -188,7 +150,7 @@ function SidePanelCard(props) {
                                 {provided.placeholder}
                             </Container>)}
                     </Droppable>
-                    <hr style={{ backgroundColor: 'white' }} />
+                    <hr />
                     <Droppable
                         droppableId='built_in_functions'
                     >
@@ -197,7 +159,7 @@ function SidePanelCard(props) {
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}>
                                 {
-                                    insertFunctions(MIST_builtin_functions)
+                                    insertFunctions(window.MIST.builtins.functions.values)
                                 }
 
                                 {provided.placeholder}

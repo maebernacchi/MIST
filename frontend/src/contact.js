@@ -1,6 +1,7 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
 // Nothing so far, to be developed

@@ -2,9 +2,13 @@ import React from "react";
 import "./styleSheets/profile.css";
 import "./styleSheets/generalStyles.css";
 import {
+    Card,
     Button,
+    Pagination,
     Container,
     Row,
+    Dropdown,
+    ButtonGroup,
     Form,
     Col,
     Image,
@@ -15,12 +19,20 @@ import {
 /** 6745662 */
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from './MISTImageGallery'
+import UserIcon from "./icons/user.png";
+import DisplayImages from "./displayImages";
 
+/* Plaeholder images */
+import FeaturedImage1 from "./featuredImages/pic1.png";
+import FeaturedImage2 from "./featuredImages/pic2.png";
+import FeaturedImage3 from "./featuredImages/pic3.png";
+import FeaturedImage4 from "./featuredImages/pic4.png";
 import {
     AiOutlinePicture,
     AiOutlineStar,
+    AiOutlineSetting,
 } from "react-icons/ai";
+import { BsEnvelope } from "react-icons/bs";
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 
@@ -74,7 +86,8 @@ function FirstPart() {
         </Row> */ }
             <Row style={{ justifyContent: "space-between" }}>
                 <Container style={{ width: "30%", justifyContent: "center" }}>
-                    <MISTImage code="sin(x)" resolution="300" />
+                    <Image src={FeaturedImage2}
+                     style={{ paddingBottom: "40px" }} />
                     <OverlayTrigger trigger="hover" placement="right" overlay={blockPopover}>
                         <Button variant="secondary" onClick={() => block()}>
                             {blocked ? "Blocked" : "Block"}

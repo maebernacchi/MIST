@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./styleSheets/generalStyles.css";
 
@@ -9,6 +9,7 @@ import Tutorial from "./tutorial";
 import SignUp from "./signUp";
 import Gallery from "./Gallery";
 import Challenges from "./challenges";
+import Navigation from "./navBar";
 import Footer from "./footer";
 import Contact from "./contact";
 import Privacy from "./privacy";
@@ -22,7 +23,8 @@ import Expert from "./expert/";
 import Community from "./community";
 import ReportForm from "./report";
 import User from "./user";
-import WorkSpace from "./Workspace";
+//import WorkSpace from "./Workspace";
+import WorkspaceComponent from './workspace/';
 
 /** New option for navigation bars*/
 import BaseNavigation from "./navBarBase";
@@ -31,18 +33,14 @@ import UserNavigation from "./navBarUser";
 import { Container } from "react-bootstrap";
 
 
-export default function App() {
-
-const [isSignedIn, setIsSignedIn] = useState(false);
- 
- useEffect(() => {
- fetch('/api/getIsSignedIn')
- .then(req => req.json())
- .then(isSignedIn => { setIsSignedIn(isSignedIn) });
- }, [])
- 
+class App extends Component {
+  render() {
+    /* Authentication if user is signed in -- from database? */
+    const isSignedIn = false;
     return (
       <div id="page-container">
+        
+        
         <BrowserRouter>
           {isSignedIn ? <UserNavigation /> : <BaseNavigation />}
           <Container fluid id="content-wrap">
@@ -63,10 +61,9 @@ const [isSignedIn, setIsSignedIn] = useState(false);
               <Route path="/profile" component={UserProfile} />
               <Route path="/community" component={Community} />
               <Route path="/report" children={ReportForm} />
-              {/*change this to be dependent on user id's like images*/ }
               <Route path="/user" children={User} /> 
               <Route path="/img/:url" children={<Gallery />} />
-              <Route path="/createWorkspace" children = {<WorkSpace />}/>
+              <Route path="/createWorkspace" children = {<WorkspaceComponent/>}/>
               <Route path="/expert" children={<Expert />} />
             </Switch>
           </Container>
@@ -75,4 +72,6 @@ const [isSignedIn, setIsSignedIn] = useState(false);
       </div>
     );
   }
+}
 
+export default App;

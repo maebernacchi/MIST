@@ -3,8 +3,10 @@ import "./styleSheets/tutorial.css";
 
 import { Accordion, Card, Button, Container, Row } from "react-bootstrap";
 
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
+import { Link } from "react-router-dom";
 
 //Tutorial Header
 const Tutorial = () => {

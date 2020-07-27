@@ -13,26 +13,18 @@ import expand_macros from '../macros';
 import PropTypes from 'prop-types';
 import React, { Component, createRef } from 'react';
 import {
-    Button,
-    ButtonGroup,
     Card,
-    OverlayTrigger,
-    Row,
-    Tooltip,
+    Button,
 } from 'react-bootstrap';
 import RangeSlider from 'react-bootstrap-range-slider';
-import {
-    FiDownload,
-    FiPlay,
-    FiStopCircle,
-} from 'react-icons/fi';
+
 
 class CanvasCard extends Component {
     constructor(props) {
         super(props);
         this.animator = null;
         this.canvas = createRef("canvas");
-        this.state = { resolution: 200 };
+        this.state = { resolution: 400 };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -47,9 +39,6 @@ class CanvasCard extends Component {
         if (this.state.resolution !== resolution) {
             this.setState({ resolution: resolution });
             if (this.animator) {
-                this.canvas.current.width = this.state.resolution;
-                this.canvas.current.height = this.state.resolution;
-                this.animator.bounds();
                 this.animator.setResolution(resolution, resolution);
                 this.animator.frame();
             }
@@ -64,7 +53,6 @@ class CanvasCard extends Component {
         if (this.animator) { this.animator.stop(); }
         try {
             const expand_code = expand_macros(this.props.code, this.props.getStateFunctions());
-            this.props.setMessage(""); // Clear out any previous errors
             this.animator = new MIST.ui.Animator(expand_code, "", {}, this.canvas.current, (txt) => {
                 this.props.setMessage(txt);
             });
@@ -85,6 +73,13 @@ class CanvasCard extends Component {
     } // stopAnimator()
 
     /**
+     * Saves the MIST Image into the authenticated user's account
+     */
+    saveImage() {
+        //STUB
+    } // saveImage()
+
+    /**
      * Downloads the image seen in the canvas element.
      */
     downloadImage() {
@@ -101,82 +96,44 @@ class CanvasCard extends Component {
                 id='expert-canvas'
                 className={(this.props.size ? 'col-' + this.props.size : ' ') + ' scroll panel'}>
                 {console.log('rendering canvascard')}
-                <Card.Title style={{ color: 'white' }}>Final Image</Card.Title>
-                <Card.Body>
-                    <Row style={{ justifyContent: 'space-between' }}>
-                        <ButtonGroup>
-                            <OverlayTrigger
-                                container={this.props.expertRef}
-                                key={'startAnimation'}
-                                placement="right"
-                                overlay={
-                                    <Tooltip>
-                                        Start image animation
-                                    </Tooltip>
-                                }>
-
-                                <Button
-                                    className='canvasButton'
-                                    onClick={this.startAnimator.bind(this)}
-                                >
-                                    <FiPlay />
-                                </Button>
-                            </OverlayTrigger>
-
-
-                            <OverlayTrigger
-                                container={this.props.expertRef}
-                                key={'stopAnimation'}
-                                placement="right"
-                                overlay={
-                                    <Tooltip>
-                                        Stop image animation
-                                    </Tooltip>
-                                }>
-                                <Button
-                                    className='canvasButton'
-                                    onClick={this.stopAnimator.bind(this)}
-                                >
-                                    <FiStopCircle />
-                                </Button>
-                            </OverlayTrigger>
-
-
-                        </ButtonGroup>
-                        <CanvasSlider
-                            min={1}
-                            max={Math.round(this.canvas.current?.getClientRects()[0].width ?? 400)}
-                            step={1}
-                            setResolution={(res) => this.setResolution(res)}
-                            resolution={this.state.resolution}
-                        />
-                        <ButtonGroup>
-                            <OverlayTrigger
-                                container={this.props.expertRef}
-                                key={'downloadImagePng'}
-                                placement="left"
-                                overlay={
-                                    <Tooltip>
-                                        Locally download the image as a .png
-                                    </Tooltip>
-                                }>
-                                <Button
-                                    className='canvasButton'
-                                    onClick={() => this.downloadImage()}
-                                >
-                                    <FiDownload />
-                                </Button>
-                            </OverlayTrigger>
-                        </ButtonGroup>
-                    </Row>
-                    <Card.Img
-                        as="canvas"
-                        id="expert-canvas-image"
-                        ref={this.canvas}
-                        width={200}
-                        height={200} />
-
-                </Card.Body>
+                
+                <Card.Img
+                    as="canvas"
+                    id="expert-canvas-image"
+                    ref={this.canvas}
+                    width="400"
+                    height="400" />
+                <CanvasSlider
+                    min={1}
+                    max={400}
+                    step={1}
+                    setResolution={(res) => this.setResolution(res)}
+                    resolution={this.state.resolution}
+                />
+                <Button
+                    className='canvasButton'
+                    onClick={() => this.startAnimator()}
+                >
+                    Start
+                </Button>
+                <Button
+                    className='canvasButton'
+                    onClick={() => this.stopAnimator()}
+                >
+                    Stop
+                </Button>
+                <Button
+                    className='canvasButton'
+                    onClick={() => this.saveImage()}
+                >
+                    Save Image
+                </Button>
+                <Button
+                    className='canvasButton'
+                    onClick={() => this.downloadImage()}
+                >
+                    Download Image
+                </Button>
             </Card>
         )
     }
@@ -196,9 +153,6 @@ function CanvasSlider(props) {
             min={props.min}
             max={props.max}
             step={props.step}
-            tooltip={'on'}
-            tooltipStyle={{ color: 'white' }}
-            tooltipLabel={(value) => ('Resolution: ' + value)}
             onChange={(e) => props.setResolution(parseInt(e.target.value, 10))}
         />
     );

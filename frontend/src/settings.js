@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import "./styleSheets/tutorial.css";
 
 import {
@@ -6,7 +6,6 @@ import {
   Card,
   Col,
   Button,
-  Collapse,
   Container,
   Form,
   OverlayTrigger,
@@ -14,8 +13,10 @@ import {
   Row,
 } from "react-bootstrap";
 
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
+import { Link } from "react-router-dom";
 
 //Page Header
 function Contact() {
@@ -213,75 +214,6 @@ function OptionThree() {
 function OptionFour() {
   return (
     <Container>
-      <Button
-        variant="outline-dark"
-        onClick={() => sethiddenImages(!hiddenImages)}
-        aria-controls="hiddenImages"
-        aria-expanded={hiddenImages}
-        style={{
-          marginTop: "1em",
-          marginBottom: "1em"
-        }}
-        size="sm"
-      >
-        Hidden Images
-      </Button>
-      <Collapse in={hiddenImages}>
-        <div id="hiddenImages">
-          {exampleListOfImages.map((image) => (
-            <div>
-              <img src={image} alt="example" style={{ padding: "10px" }}/> <br/>
-              <BlockAndHideButton name="hide" />
-            </div>
-          ))}
-        </div>
-      </Collapse>
-      <br />
-      <Button
-        variant="outline-dark"
-        onClick={() => sethiddenAlbums(!hiddenAlbums)}
-        aria-controls="hiddenAlbums"
-        aria-expanded={hiddenAlbums}
-        style={{
-          marginBottom: "1em"
-        }}
-        size="sm"
-      >
-        Hidden Albums
-      </Button>
-      <Collapse in={hiddenAlbums}>
-        <div id="hiddenAlbums">
-          {exampleListOfAlbums.map((album) => (
-            <Row style={{ padding: "10px" }}>
-              <text style={{ padding: "10px" }}>{album}</text>
-              <BlockAndHideButton name="hide" />
-            </Row>
-          ))}
-        </div>
-      </Collapse>
-      <br />
-      <Button
-        variant="outline-dark"
-        onClick={() => sethiddenComments(!hiddenComments)}
-        aria-controls="hiddenComments"
-        aria-expanded={hiddenComments}
-        style={{
-          marginBottom: "1em"
-        }}
-        size="sm"
-      >
-        Hidden Comments
-      </Button>
-      <Collapse in={hiddenComments}>
-        <div id="hiddenComments">
-          {exampleListOfComments.map((comment) => (
-            <Row style={{ padding: "10px" }}>
-              <text style={{ padding: "10px" }}>{comment}</text>
-              <BlockAndHideButton name="hide" />
-            </Row>
-          ))}
-        </div>
-      </Collapse>
       <p>
         {" "}
         People who I follow can send messages People who follow me can send
