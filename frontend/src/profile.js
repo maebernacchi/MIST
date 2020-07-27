@@ -12,6 +12,7 @@ import {
   Card,
   Carousel
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
 /** 6745662 */
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./MISTImageGallery"
@@ -55,7 +56,7 @@ export default function Profile() {
   }, [])
 
   return (
-    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
+    <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
       <Container>
         <h1> Profile </h1>
       </Container>
@@ -174,6 +175,7 @@ function IconsBar() {
 
 function ProfileNav(props) {
   return (
+    <Container>
     <Tab.Container>
       <Nav fill variant="tabs" defaultActiveKey="images">
         <Nav.Item>
@@ -217,8 +219,11 @@ function ProfileNav(props) {
             ))}
           </Row>
         </Tab.Pane>
+
+
       </Tab.Content>
     </Tab.Container>
+    </Container>
   );
 }
 
@@ -235,9 +240,9 @@ function Album(props) {
         </Card.Title>
         {/* ICONS */}
         <Card.Body style={{ justifyContent: "space-between" }}>
-          <ControlledCarousel/>
-          <p>Description: {props.description}</p>
-          <p>created: {props.date}</p>
+          <ControlledCarousel />
+          <p>{props.description}</p>
+          <p>{props.date}</p>
         </Card.Body>
       </Card.Header>
     </Card>
@@ -254,29 +259,31 @@ function ControlledCarousel() {
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
       <Carousel.Item >
-        <Row style={{justifyContent: "center"}}>
-        <MISTImage
-          code="x"
-          resolution="250"
-        />
+        <Row style={{ justifyContent: "center" }}>
+          <MISTImage
+            code="x"
+            resolution="250"
+          />
         </Row>
         <Carousel.Caption>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-      <Row style={{justifyContent: "center"}}>
-      <MISTImage
-          code="x"
-          resolution="250"
-        />
+
+        <Row style={{ justifyContent: "center" }}>
+          <MISTImage
+            code="x"
+            resolution="250"
+          />
         </Row>
+
       </Carousel.Item>
       <Carousel.Item>
-      <Row style={{justifyContent: "center"}}>
-      <MISTImage
-          code="x"
-          resolution="250"
-        />
+        <Row style={{ justifyContent: "center" }}>
+          <MISTImage
+            code="x"
+            resolution="250"
+          />
         </Row>
       </Carousel.Item>
     </Carousel>

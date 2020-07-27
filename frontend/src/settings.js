@@ -20,7 +20,7 @@ import "bootstrap/dist/css/bootstrap.css";
 //Page Header
 function Contact() {
   return (
-    <Container>
+    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <Container>
         <h1>Account Settings</h1>
       </Container>

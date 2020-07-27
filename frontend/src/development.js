@@ -6,7 +6,7 @@ import { Container } from "react-bootstrap";
 //Disclaimer about how MIST is still in developmental phases
 const Development = () => {
   return (
-    <Container fluid id="page-container">
+    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <h1>Development</h1>
       <Container className="clear:left;">
         <p>

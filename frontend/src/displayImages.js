@@ -24,15 +24,20 @@
 
 import React, { useState, useRef } from "react";
 import "./styleSheets/gallery.css";
-import { Card, Button, Pagination, Container, Row, Col, Nav, NavDropdown,
-  Popover, Overlay, Form, Modal, OverlayTrigger, Dropdown }
+import {
+  Card, Button, Pagination, Container, Row, Col, Nav, NavDropdown,
+  Popover, Overlay, Form, Modal, OverlayTrigger, Dropdown
+}
   from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route, Link, useHistory,
-  useLocation, useParams} from "react-router-dom";
+import {
+  BrowserRouter as Router, Switch, Route, Link, useHistory,
+  useLocation, useParams
+} from "react-router-dom";
 import { BsClock } from "react-icons/bs";
 import { AiOutlineStar } from "react-icons/ai";
 import { FiSave, FiCode, FiSend, FiMoreHorizontal } from "react-icons/fi";
-import { FaRegShareSquare, FaRegComments, FaFacebook, FaSnapchat,
+import {
+  FaRegShareSquare, FaRegComments, FaFacebook, FaSnapchat,
 } from "react-icons/fa";
 import { TiSocialInstagram } from "react-icons/ti";
 import MISTImage from "./MISTImageGallery"
@@ -102,7 +107,7 @@ function Gallery(props) {
   let cards = props.cards;
   let location = useLocation();
   return (
-    <div style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
+    <div style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
       <Row style={{ justifyContent: "space-between" }}>
         {cards.map((card) => (
           <Card
@@ -110,14 +115,18 @@ function Gallery(props) {
           >
             {/* TITLE + IsANIMATED? */}
             <Card.Header>
-              <Card.Title style={{ margin: "auto" }}>
-                <p>{card.title}
-                {card.isAnimated ? (
-                  <BsClock size={15} style={{ margin: "1vh" }} />
-                ) : (
-                    ""
-                  )}
-                  </p>
+              <Card.Title >
+                <Row style={{ justifyContent: "space-between" }}>
+                  <p1>{card.title}
+                    {card.isAnimated ? (
+                      <BsClock size={15} style={{ margin: "1vh" }} />
+                    ) : (
+                        ""
+                      )}</p1>
+                  {/* More Icon */}
+                  <MoreIcon />
+
+                </Row>
               </Card.Title>
 
               {/* IMAGE */}
@@ -127,12 +136,13 @@ function Gallery(props) {
                   state: { background: location },
                 }}
               >
-                <div variant="top" style={{ marginTop: "1em", marginBottom: "1em" }}>
-                  <Row style={{justifyContent: "center"}}>
-                  <MISTImage code={card.code} resolution="250" />
+                <div variant="top">
+                  <Row style={{ justifyContent: "center" }}>
+                    <MISTImage code={card.code} resolution="250" />
                   </Row>
                 </div>
               </Link>
+
 
               {/* ICONS */}
               <Card.Body style={{ justifyContent: "space-between" }}>
@@ -147,7 +157,7 @@ function Gallery(props) {
                       {" "}
                       { /*<b>{card.username} </b> */}
                       <Button variant="light" href="/user">
-                        {card.userId}
+                        <b>{card.username}</b>
                       </Button>
                       {card.caption}
                     </div>
@@ -156,10 +166,11 @@ function Gallery(props) {
                   {/************************
                    * ICONS
                    *************************/}
+                  <div>
                   <Row
                     style={{
                       justifyContent: "center",
-                      marginTop: "1em",
+                     
                     }}
                   >
                     {/* Rating */}
@@ -167,43 +178,44 @@ function Gallery(props) {
                     {/** need to add that onClick,
                      *      if signed in, the star changes to a filled version of it,
                      *      else, alerts that "please sign in" and a sign in option in*/}
-
-                    <Nav.Link
-                      style={{ color: "black", display: "inline-block" }}
-                    >
-                      <AiOutlineStar />
-                      {card.ratings}
-                    </Nav.Link>
-
-                    {/* Code Icon */}
-                    <CodeIcon code={card.code} />
-
-                    {/* Save Icon */}
-                    <SaveIcon />
-
+                    
+                      <Nav.Link
+                        style={{ color: "black", paddingLeft: "0" }}
+                      >
+                       <p><AiOutlineStar />
+                        {card.rating}</p> 
+                      </Nav.Link>
+                    
+                      {/* Code Icon */}
+                      <CodeIcon code={card.code} />
+                   
+                      {/* Save Icon */}
+                      <SaveIcon />
+                    
                     {/* Comment Icon */}
-                    <Link
-                      to={{
-                        pathname: `/img/${card._id}`,
-                        // This is the trick! This link sets
-                        // the `background` in location state.
-                        state: { background: location },
-                      }}
-                      style={{ paddingTop: "0.5em" }}
-                    >
-                      <FaRegComments
-                        style={{ color: "black", display: "inline-block" }}
-                      />
-                    </Link>
+                   
+                      <Link
+                        to={{
+                          pathname: `/img/${card._id}`,
+                          // This is the trick! This link sets
+                          // the `background` in location state.
+                          state: { background: location },
+                        }}
+                        style={{ paddingTop: "0.5em" }}
+                      >
 
-                    {/* Share Icon */}
-                    <ShareIcon />
+                        <FaRegComments
+                          style={{ color: "black", display: "inline-block" }}
+                        />
 
-                    {/* More Icon */}
-                    <MoreIcon />
+                      </Link>
+                    
+                      {/* Share Icon */}
+                      <ShareIcon />
+                  
 
                   </Row>
-
+                  </div>
                   {/*****************************
                    * TYPE COMMENT HERE SECTION
                    *******************************/}
@@ -270,7 +282,7 @@ function ImageView(props) {
 
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
-  if (!card) return <div>Image not found</div>; 
+  if (!card) return <div>Image not found</div>;
 
   return (
     <div>
@@ -283,7 +295,7 @@ function ImageView(props) {
               <MISTImage code={card.code} resolution="300" />
               {/* USERNAME + DESCRIPTION */}
               <Button variant="light" href="/user">
-                {<b>{card.userId}</b>}
+                {<b>{card.username}</b>}
               </Button>
               {/*<b>{card.username}</b> */} {card.caption}
               {/* PIXEL SLIDE / RANGE FORM */}
@@ -356,7 +368,7 @@ function MyVerticallyCenteredModal(props) {
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
           <Button variant="light" href="/user">
-            {card.userId}
+            {card.username}
           </Button>
           {/*card.username*/}
         </Container>
@@ -530,7 +542,7 @@ function CodeIcon(props) {
 
   return (
     <div ref={ref}>
-      <Nav.Link onClick={handleClick} style={{ color: "black" }}>
+      <Nav.Link onClick={handleClick} style={{ color: "black" , paddingLeft: "0", paddingRight:"0"}}>
         <FiCode />
       </Nav.Link>
       <Overlay
@@ -602,7 +614,7 @@ function MoreIcon() {
 //Share
 function ShareIcon() {
   return (
-    <Nav>
+    <Nav >
       <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown">
         <NavDropdown.Item eventKey="4.1">
           {" "}

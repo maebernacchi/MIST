@@ -139,6 +139,7 @@ class FeaturedImages extends Component {
     const featuredImages = this.state.featuredImages;
 
     return (
+      <Container>
       <Col className="featuredImagesContainer"
         style={{
           border: "solid",
@@ -190,6 +191,7 @@ class FeaturedImages extends Component {
           }
         </div>
       </Col>
+      </Container>
     );
   }
 }
