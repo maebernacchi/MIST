@@ -682,7 +682,7 @@ const sections = [
               get to by clicking "create" on the top left of the page on the
               menu bar.
               <br />
-              <WorkSpace />
+              <WorkSpace /> 
               On the create page, you can make your own images using the
               workspace on it.
               <br />
