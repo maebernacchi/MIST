@@ -105,7 +105,7 @@ function WorkspaceCard(props) {
                                     as="textarea"
                                     className="formTextbox"
                                     onChange={(e) => props.setDescription(e.target.value)}
-                                    placeholder="Please describe your MIST image"
+                                    placeholder="Please describe your MIST function"
                                     rows="2"
                                     value={props.description}
                                 />
@@ -129,6 +129,7 @@ function WorkspaceCard(props) {
                                 />
                             </Form.Group>
                             <Form.Group>
+                                <Form.Label>Message Box</Form.Label>
                                 <Form.Control
                                     as="textarea"
                                     id="message"

@@ -210,8 +210,8 @@ function SidePanelCard(props) {
     return (
         <Card className='scroll panel'>
             {console.log('rendering sidepanelcard')}
-
             <Card.Body>
+                <Card.Title style={{ color: 'white' }}>WS Functions</Card.Title>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable
                         droppableId='user_defined_functions'
