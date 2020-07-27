@@ -113,7 +113,6 @@ function FileDropdown(props) {
                     resetWorkspace={props.resetWorkspace}
                 />
                 <DeleteWorkspace />
-                <SaveWorkspace />
                 <Dropdown.Divider />
 
                 <ImportWorkspace
