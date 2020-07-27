@@ -16,6 +16,7 @@ import {
 
 import "bootstrap/dist/css/bootstrap.css";
 
+//User settings page
 
 //Page Header
 function Contact() {
@@ -31,6 +32,7 @@ function Contact() {
   );
 }
 
+//Tables with all setting options
 function SettingsTable() {
   return (
     <Accordion defaultActiveKey="0">
@@ -96,6 +98,8 @@ function SettingsTable() {
     </Accordion>
   );
 }
+
+//Popover bubble to change email
 const popover = (
   <Popover id="popover-basic">
     <Popover.Content>
