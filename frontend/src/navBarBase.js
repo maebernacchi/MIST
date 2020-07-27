@@ -140,7 +140,10 @@ class NavBar extends React.Component {
 function BaseNavBar() {
   return (
     <Nav>
-      <Nav.Link href="/createWorkspace">Create</Nav.Link>
+      <NavDropdown title="Create" id="basic-nav-dropdown">
+        <NavDropdown.Item href="/createWorkspace">GUI Workspace</NavDropdown.Item>
+        <NavDropdown.Item href="/expert">Expert UI</NavDropdown.Item>
+      </NavDropdown>
       <Nav.Link href="/challenges">Challenges</Nav.Link>
       <Nav.Link href="/tutorial">Tutorial</Nav.Link>
       <Nav.Link href="/gallery">Gallery</Nav.Link>
