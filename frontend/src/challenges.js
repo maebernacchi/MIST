@@ -1,49 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./styleSheets/challenges.css";
 import "./styleSheets/generalStyles.css";
 import {
-  Card,
-  Button,
-  Pagination,
-  Container,
-  Row,
-  Dropdown,
-  ButtonGroup,
-  Form,
-  Col,
+  Card, Button, Pagination, Container,
+  Row, Form, Col,
 } from "react-bootstrap";
-
-import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-
-/* Plaeholder images */
-import FeaturedImage1 from "./featuredImages/pic1.png";
-import FeaturedImage2 from "./featuredImages/pic2.png";
-import FeaturedImage3 from "./featuredImages/pic3.png";
-import FeaturedImage4 from "./featuredImages/pic4.png";
-
-import { BsClock } from "react-icons/bs";
+import MISTImage from "./MISTImageGallery";
 
 //Challenges; header, spacing between drop down
 //menus, and the challenges displayed on the screen
 
 const Challenges = () => {
+
+  const [challenges, setChallenges] = useState([]);
+  const [level, setLevel] = useState("Beginner");
+  const [color, setColor] = useState("Grayscale");
+  const [animation, setAnimation] = useState("Static");
+
+  function handleChange(event) {
+    let name = event.target.name;
+    let value = event.target.value;
+    if (name === "level") setLevel(value);
+    else if (name === "color") setColor(value);
+    else setAnimation(value);
+  };
+
+  //fetches everytime level, color, or animation changes
+  useEffect(() => {
+    // create url with the parameters we need to search
+    let url = 'api/challenges?level=' + level + "&color="
+    + color + "&animation=" + animation;
+    fetch(url)
+      .then(req => req.json())
+      .then(challenges => { setChallenges(challenges) });
+  }, [level, color, animation])
+
   return (
     <Container fluid>
       <Container>
         <h1>Challenges</h1>
         <p>Start of challenges</p>
+        {/* This line is for testing */}
+        <p>Level: {level}, Color: {color}, Animation: {animation}</p>
       </Container>
       <Container style={{ marginTop: "1em" }}>
         <Container style={{ marginBottom: "1em" }}>
-          <Filters />
+          <Filters handleChange={handleChange}
+            level={level}
+            color={color}
+            animation={animation}
+          />
         </Container>
         <Container>
           <Row style={{ justifyContent: "space-between" }}>
-            <ChallengeCard />
-            <ChallengeCard />
-            <ChallengeCard />
-            <ChallengeCard />
+            {challenges.map((challenge) => (
+              <ChallengeCard challenge={challenge} />
+            ))}
           </Row>
         </Container>
         <Container>
@@ -54,23 +67,51 @@ const Challenges = () => {
   );
 };
 
+//format for (all) challenge cards
+function ChallengeCard(props) {
+  return (
+    <Card style={{ width: "30%", margin: "1em", padding: "1em" }}>
+      <Card.Title style={{ margin: "auto", marginBottom: "1em" }}>
+        {props.challenge.title}
+      </Card.Title>
+      <div variant="top" style={{ margin: "1em" }}>
+        <MISTImage code={props.challenge.code} resolution="250" />
+      </div>
+      <Card.Body>
+        <Row style={{ justifyContent: "flex-end" }}>
+          <Button variant="outline-dark">Do challenge!</Button>
+        </Row>
+      </Card.Body>
+    </Card>
+  );
+}
+
 //drop down menus; level, color, and animation options
-function Filters() {
+function Filters(props) {
+
   return (
     <Form>
       <Form.Row style={{ width: "50%" }}>
         <Form.Group as={Col} controlId="formGridState">
           <Form.Label>Level</Form.Label>
-          <Form.Control as="select" defaultValue="Choose...">
-            <option>Beginner</option>
-            <option>Intermediate</option>
-            <option>Advanced</option>
+          <Form.Control
+            name="level"
+            as="select"
+            defaultValue={props.level}
+            onChange={(e) => props.handleChange(e)}>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
           </Form.Control>
         </Form.Group>
 
         <Form.Group as={Col} controlId="formGridState">
           <Form.Label>Color</Form.Label>
-          <Form.Control as="select" defaultValue="Choose...">
+          <Form.Control
+            name="color"
+            as="select"
+            defaultValue={props.color}
+            onChange={(e) => props.handleChange(e)}>
             <option>Grayscale</option>
             <option>RGB</option>
           </Form.Control>
@@ -78,30 +119,17 @@ function Filters() {
 
         <Form.Group as={Col} controlId="formGridState">
           <Form.Label>Animation</Form.Label>
-          <Form.Control as="select" defaultValue="Choose...">
+          <Form.Control
+            name="animation"
+            as="select"
+            defaultValue={props.animation}
+            onChange={(e) => props.handleChange(e)}>
             <option>Static</option>
             <option>Animated</option>
           </Form.Control>
         </Form.Group>
       </Form.Row>
     </Form>
-  );
-}
-
-//format for (all) challenge cards
-function ChallengeCard() {
-  return (
-    <Card style={{ width: "30%", marginBottom: "1em", padding: "1em" }}>
-      <Card.Title style={{ margin: "auto", marginBottom: "1em" }}>
-        Challenge name
-      </Card.Title>
-      <Card.Img variant="top" src={FeaturedImage1} />
-      <Card.Body>
-        <Row style={{ justifyContent: "flex-end" }}>
-          <Button variant="outline-dark">Do challenge!</Button>
-        </Row>
-      </Card.Body>
-    </Card>
   );
 }
 

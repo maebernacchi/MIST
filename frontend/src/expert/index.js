@@ -31,6 +31,7 @@ class Expert extends Component {
     constructor(props) {
         super(props);
         this.codeRef = createRef("code");
+        this.expertRef = createRef("expert");
         this.state = {
             form: {
                 name: "",
@@ -55,8 +56,12 @@ class Expert extends Component {
 
     setFormValue(key, to) {
         this.setState((state) => {
-            const form = state.form;
-            form[key] = to;
+            const form = {
+                form: {
+                    ...state.form,
+                    [key] : to,
+                }
+            }
             return form;
         });
     }
@@ -79,7 +84,7 @@ class Expert extends Component {
         this.setState((state) => {
             const new_functions = {
                 ...state.functions,
-                order: state.functions.order.filter((name) => name != fun_name)
+                order: state.functions.order.filter((name) => name !== fun_name)
             };
             delete new_functions[fun_name];
             return { functions: new_functions };
@@ -88,6 +93,9 @@ class Expert extends Component {
 
     loadFunction(functionToLoad) {
         const fun = functionToLoad;
+        if(Array.isArray(fun.params)){
+            fun.params = fun.params.toString();
+        }
         this.setState({
             form: {
                 name: fun.name,
@@ -158,12 +166,12 @@ class Expert extends Component {
         if (name && code) {
             let params;
             if (funct.params)
-                params = funct.params.split(",");
+                params = funct.params.replace(/\s/g, "").split(",");
             else
                 params = [];
             try {
-                //check if code can be expanded
-                const expanded_code = expand_macros(code, this.state.functions);
+                // try expanding the code
+                expand_macros(code, this.state.functions);
                 // if no error then...
                 const about = funct.description;
                 const new_function =
@@ -181,13 +189,13 @@ class Expert extends Component {
             }
 
         } else {
-            alert('We need both name and code filled out!!!')
+            alert('We need both name and code filled out!')
         }
     } //addUserDefinedFunction
 
     render() {
         return (
-            <div id='expert' >
+            <div id='expert' ref={this.expertRef} >
                 {console.log('rendering expert')}
                 <Menu
                     addUserDefinedFunction={() => this.addUserDefinedFunction()}
@@ -201,6 +209,12 @@ class Expert extends Component {
                     getFormState={() => this.getFormState()}
                     getStateFunctions={() => this.getStateFunctions()}
                     setMessage={(message) => this.setFormValue("message", message)}
+                    
+                    requestFullscreen={() => {
+                      console.log(this.expertRef);
+                      this.expertRef.current.requestFullscreen()
+                    }}
+                    exitFullscreen={() => document.exitFullscreen()}
                 />
                 <ResizablePanels
                     bkcolor="#353b48"
@@ -209,22 +223,31 @@ class Expert extends Component {
                     height="100vh"
                     panelsSize={[15, 43, 42]}
                     sizeUnitMeasure="%"
-                    resizerColor="#353b48"
                     resizerSize="10px"
                 >
                     <SidePanelCard
                         codeRef={this.codeRef}
                         deleteFunction={this.deleteFunction.bind(this)}
+                        expertRef={this.expertRef}
                         getFormState={() => this.getFormState()}
                         getStateFunctions={() => this.getStateFunctions()}
                         getFunctions={() => this.getFunctions()}
+                        loadFunction={this.loadFunction.bind(this)}
                         setCode={(txt) => { this.setFormValue('code', txt) }}
                         setFunctionsOrder={(_order) => this.setFunctionsOrder(_order)}
                     />
                     <WorkspaceCard
+                        addUserDefinedFunction={() => this.addUserDefinedFunction()}
+                        clearFunction={this.clearFunction.bind(this)}
+                        getCurrentWorkspace={() => this.state}
+                        loadFunction={this.loadFunction.bind(this)}
+                        functions={this.state.functions.order}
+                        doesFunctionExist={(fun_name)=>(Boolean(this.state.functions[fun_name]))}
+
                         code={this.getFormValue('code')}
                         codeRef={this.codeRef}
                         description={this.getFormValue('description')}
+                        expertRef={this.expertRef}
                         name={this.getFormValue('name')}
                         nameRef={this.nameRef}
                         message={this.getFormValue('message')}
@@ -236,6 +259,7 @@ class Expert extends Component {
                     />
                     <CanvasCard
                         code={this.getFormValue('code')}
+                        expertRef={this.expertRef}
                         getFormState={() => this.getFormState()}
                         getStateFunctions={() => this.getStateFunctions()}
                         setMessage={(message) => this.setFormValue("message", message)}

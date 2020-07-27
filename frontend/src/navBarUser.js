@@ -4,9 +4,7 @@ import React from "react";
 import "./styleSheets/navBar.css";
 
 /* Imports for images / logos */
-import MistLogo from "./design/Logos/Negative/negative40.png";
-import FacebookIcon from "./icons/icons8-facebook-30.png";
-import GoogleIcon from "./icons/icons8-google-48.png";
+import MistLogo from "./Logos/Negative/negative40.png";
 
 /* Imports for bootstrap */
 import {
@@ -17,11 +15,8 @@ import {
   FormControl,
   Button,
   NavLink,
-  Image,
-  InputGroup,
 } from "react-bootstrap";
 
-import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
 /**
@@ -29,9 +24,6 @@ import "bootstrap/dist/css/bootstrap.css";
  */
 
 const UserHeader = (props) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => setIsOpen(!isOpen);
 
   return (
     <div>
@@ -107,6 +99,7 @@ function NavBar() {
 /* User Nav Bar */
 
 /* Username button (dropdown) */
+/*
 function UserButton(props) {
   return (
     <NavDropdown title="Account" id="basic-nav-dropdown">
@@ -117,6 +110,7 @@ function UserButton(props) {
     </NavDropdown>
   );
 }
+*/
 
 /* Sign Out Bar */
 

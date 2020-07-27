@@ -9,7 +9,7 @@
  */
 
 import PropTypes from 'prop-types';
-import React, { createRef, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import {
     Button,
     ButtonGroup,
@@ -20,10 +20,12 @@ import {
     Modal,
     Navbar,
 } from 'react-bootstrap';
+import { BsFullscreen, BsFullscreenExit } from 'react-icons/bs';
 
 function Menu(props) {
 
     const workspaceNameRef = createRef('workspaceName');
+
     return (
         <Navbar id='menu' bg="dark" variant="dark">
             <FileDropdown
@@ -31,12 +33,6 @@ function Menu(props) {
                 loadWorkspace={props.loadWorkspace}
                 resetWorkspace={props.resetWorkspace}
                 workspaceNameRef={workspaceNameRef}
-            />
-            <FunctionDropdown
-                addUserDefinedFunction={props.addUserDefinedFunction}
-                clearFunction={props.clearFunction}
-                currentForm={props.getCurrentWorkspace().form}
-                loadFunction={props.loadFunction}
             />
             <Form inline>
                 <FormControl
@@ -46,7 +42,10 @@ function Menu(props) {
                     type="text"
                 />
             </Form>
-
+            <FullscreenButton
+                requestFullscreen={props.requestFullscreen}
+                exitFullscreen={props.exitFullscreen}
+              />
         </Navbar>
     )
 }
@@ -55,6 +54,29 @@ Menu.propTypes = {
     getCurrentWorkspace: PropTypes.func.isRequired,
     loadWorkspace: PropTypes.func.isRequired,
     resetWorkspace: PropTypes.func.isRequired,
+    requestFullscreen: PropTypes.func.isRequired,
+    exitFullscreen: PropTypes.func.isRequired,
+}
+
+function FullscreenButton(props) {
+    const [fullscreen, setFullscreen] = useState(document.fullscreen);
+    useEffect(() => {
+      const listener = () => setFullscreen(document.fullscreen);
+      document.addEventListener('fullscreenchange', listener);
+      return () => {
+        document.removeEventListener('fullscreenchange', listener);
+      }
+    }, []);
+
+    if (fullscreen) {
+        return (
+            <Button onClick={props.exitFullscreen}><BsFullscreenExit /></Button>
+        );
+    } else {
+        return (
+          <Button onClick={props.requestFullscreen}><BsFullscreen /></Button>
+        );
+    }
 }
 
 function FileDropdown(props) {
@@ -62,6 +84,7 @@ function FileDropdown(props) {
         <>
             <DropdownButton
                 as={ButtonGroup}
+                className='menu-btn'
                 id="file"
                 title="File"
                 variant="primary"
@@ -74,7 +97,9 @@ function FileDropdown(props) {
                 <SaveWorkspace />
                 <Dropdown.Divider />
 
-                <ImportWorkspace loadWorkspace={props.loadWorkspace} />
+                <ImportWorkspace
+                    loadWorkspace={props.loadWorkspace}
+                    workspaceNameRef={props.workspaceNameRef} />
                 <ExportWorkspace
                     getCurrentWorkspace={props.getCurrentWorkspace}
                     workspaceNameRef={props.workspaceNameRef}
@@ -175,12 +200,12 @@ function ImportWorkspace(props) {
 
     const loadFile = (selectedFiles) => {
         if (selectedFiles) {
-            var reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function (event) {
-                var json = event.target.result;
-                var workspaceToLoad;
+                const json = event.target.result;
+                let workspaceToLoad;
                 try {
-                    var workspaceToLoad = JSON.parse(json);
+                    workspaceToLoad = JSON.parse(json);
                 }
                 catch (err) {
                     alert("File does not contain a MIST Workspace");
@@ -192,6 +217,7 @@ function ImportWorkspace(props) {
                 }
 
                 props.loadWorkspace(workspaceToLoad);
+                props.workspaceNameRef.current.value = workspaceToLoad.name;
             }; // reader.onload
             reader.readAsText(selectedFiles[0]);
         } // if (selectedFiles)
@@ -235,6 +261,7 @@ function ExportWorkspace(props) {
         const userFuns = currentWorkspace.functions;
 
         const workspace = {
+            name: fname,
             fun: fun,
             userFuns: userFuns,
         }
@@ -289,156 +316,6 @@ function SaveWorkspace() {
             </Modal>
         </>
     );
-}
-
-// FunctionDropdown
-// Contains all actions related directly to the function form
-function FunctionDropdown(props) {
-
-    const [importFunctionModalShow, setImportFunctionModalShow] = useState(false);
-    const [clearFunctionModalShow, setClearFunctionModalShow] = useState(false);
-
-    // Saves a function into the authenticated user's account
-    const saveFunction = () => {
-        alert('Not yet Implemented');
-    } // saveFunction()
-
-
-    // Deletes a function from the authenticated user's account
-    const deleteFunction = () => {
-        alert('Not yet Implemented');
-    } // deleteFunction()
-
-    // Imports a function into the Function form
-    const importFunction = (selectedFiles) => {
-        if (selectedFiles) {
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var json = event.target.result;
-                var fun;
-                try {
-                    var fun = JSON.parse(json);
-                }
-                catch (err) {
-                    alert("File does not contain a MIST Function");
-                    return;
-                }
-                if (fun.class !== "MIST.FunInfo") {
-                    alert("File does not contain a MIST Workspace");
-                    return;
-                }
-                props.loadFunction(fun);
-            }; // reader.onload
-            reader.readAsText(selectedFiles[0]);
-        } // if (selectedFiles)
-    } // importFunction(selectedFiles)
-
-    // Saves a functions into the local system
-    const exportFunction = () => {
-
-        const currentForm = props.currentForm;
-
-        // Extract the fields
-        const about = currentForm.description;
-        const code = currentForm.code;
-        const name = currentForm.name;
-        const params = currentForm.params;
-        const fname = (name ? name : "untitled") + ".fun";
-
-        // Build an appropriate object
-        const fun = new window.MIST.FunInfo(name, null, about, params, { code: code });
-
-        // Convert it to JSON
-        const json = JSON.stringify(fun);
-
-        // And save it
-        download(fname, "text/json", json);
-    } // exportFunction()
-
-    // check if form is in use
-
-    const checkIfFormInUse = () => {
-        const currentForm = props.currentForm;
-        return (currentForm.name || currentForm.params || currentForm.description || currentForm.code);
-    }
-
-    // check if workspace is in use
-
-    return (<>
-        <DropdownButton
-            as={ButtonGroup}
-            id="function"
-            variant="primary"
-            title="Function"
-        >
-
-            <Dropdown.Item
-                onClick={() => {
-                    if (checkIfFormInUse())
-                        setClearFunctionModalShow(true);
-                }}>
-                Clear Function
-            </Dropdown.Item>
-
-            <Modal show={clearFunctionModalShow} onHide={() => setClearFunctionModalShow(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Clear your function</Modal.Title>
-                </Modal.Header>
-                <Modal.Body> Your function form is currently in use. Are you sure that you want
-                to clear it?
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button
-                        onClick={() => setClearFunctionModalShow(false)}
-                        variant="secondary">Close</Button>
-                    <Button
-                        onClick={() => { props.clearFunction(); setClearFunctionModalShow(false); }}
-                        variant="primary">
-                        Clear</Button>
-                </Modal.Footer>
-            </Modal>
-
-            <Dropdown.Item
-                onClick={saveFunction}>
-                Save Function
-            </Dropdown.Item>
-
-            <Dropdown.Divider />
-
-            <Dropdown.Item
-                onClick={() => setImportFunctionModalShow(true)}>
-                Import Function
-            </Dropdown.Item>
-
-            <Modal show={importFunctionModalShow} onHide={() => setImportFunctionModalShow(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Loading your function</Modal.Title>
-                </Modal.Header>
-                <Modal.Body> Select the file to load. Note that MIST Functions
-                     are typically stored in files with a suffix of .fun. </Modal.Body>
-                <Form.File id="formcheck-api-regular">
-                    <Form.File.Label>Regular file input</Form.File.Label>
-                    <Form.File.Input onChange={(event) => {
-                        importFunction(event.target.files);
-                        setImportFunctionModalShow(false)
-                    }} />
-                </Form.File>
-            </Modal>
-
-            <Dropdown.Item
-                onClick={exportFunction}>
-                Export Function
-            </Dropdown.Item>
-
-            <Dropdown.Divider />
-
-            <Dropdown.Item
-                onClick={props.addUserDefinedFunction}>
-                Add Function to Workspace
-            </Dropdown.Item>
-
-        </DropdownButton>
-    </>)
 }
 
 // +-----------+---------------------
