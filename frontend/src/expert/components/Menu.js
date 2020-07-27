@@ -19,33 +19,52 @@ import {
     FormControl,
     Modal,
     Navbar,
+    OverlayTrigger,
+    Tooltip,
 } from 'react-bootstrap';
-import { BsFullscreen, BsFullscreenExit } from 'react-icons/bs';
+import { BsCloud, BsFullscreen, BsFullscreenExit } from 'react-icons/bs';
+import { FaRegShareSquare } from 'react-icons/fa';
 
 function Menu(props) {
 
     const workspaceNameRef = createRef('workspaceName');
 
     return (
-        <Navbar id='menu' bg="dark" variant="dark">
-            <FileDropdown
-                getCurrentWorkspace={props.getCurrentWorkspace}
-                loadWorkspace={props.loadWorkspace}
-                resetWorkspace={props.resetWorkspace}
-                workspaceNameRef={workspaceNameRef}
-            />
-            <Form inline>
-                <FormControl
-                    className="mr-sm-2"
-                    placeholder="Name your Workspace"
-                    ref={workspaceNameRef}
-                    type="text"
+        <Navbar id='menu' bg="dark" variant="dark" style={{ justifyContent: 'space-between', }}>
+            <ButtonGroup>
+                <FileDropdown
+                    getCurrentWorkspace={props.getCurrentWorkspace}
+                    loadWorkspace={props.loadWorkspace}
+                    resetWorkspace={props.resetWorkspace}
+                    workspaceNameRef={workspaceNameRef}
                 />
-            </Form>
-            <FullscreenButton
-                requestFullscreen={props.requestFullscreen}
-                exitFullscreen={props.exitFullscreen}
-              />
+                <Form inline>
+                    <FormControl
+                        className="mr-sm-2"
+                        placeholder="Name your Workspace"
+                        ref={workspaceNameRef}
+                        type="text"
+                    />
+                </Form>
+                <FullscreenButton
+                    requestFullscreen={props.requestFullscreen}
+                    exitFullscreen={props.exitFullscreen}
+                />
+            </ButtonGroup>
+            <ButtonGroup>
+                <OverlayTrigger
+                    placement='top'
+                    overlay={<Tooltip>Save your workspace</Tooltip>}
+                >
+                    <Button> <BsCloud /> Save</Button>
+                </OverlayTrigger>
+                <OverlayTrigger
+                    placement='top'
+                    overlay={<Tooltip>Publish your final image</Tooltip>}
+                >
+                    <Button><FaRegShareSquare /> Publish</Button>
+                </OverlayTrigger>
+            </ButtonGroup>
         </Navbar>
     )
 }
@@ -61,11 +80,11 @@ Menu.propTypes = {
 function FullscreenButton(props) {
     const [fullscreen, setFullscreen] = useState(document.fullscreen);
     useEffect(() => {
-      const listener = () => setFullscreen(document.fullscreen);
-      document.addEventListener('fullscreenchange', listener);
-      return () => {
-        document.removeEventListener('fullscreenchange', listener);
-      }
+        const listener = () => setFullscreen(document.fullscreen);
+        document.addEventListener('fullscreenchange', listener);
+        return () => {
+            document.removeEventListener('fullscreenchange', listener);
+        }
     }, []);
 
     if (fullscreen) {
@@ -74,7 +93,7 @@ function FullscreenButton(props) {
         );
     } else {
         return (
-          <Button onClick={props.requestFullscreen}><BsFullscreen /></Button>
+            <Button onClick={props.requestFullscreen}><BsFullscreen /></Button>
         );
     }
 }
