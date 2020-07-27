@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { BrowserRouter, Link } from "react-router-dom";
+
 import { Rect, Group, Text, Shape, useStrictMode } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
@@ -60,10 +62,12 @@ function FunBar(props) {
       >
         <Spring // animates function button fill
           native
-          from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a"}}
-          to={{ fill: props.renderFunction.isRenderable
-            ? (functionButtonHovered ? "white" : 'orange')
-            :  "#f79f6a"}}
+          from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a" }}
+          to={{
+            fill: props.renderFunction.isRenderable
+              ? (functionButtonHovered ? "white" : 'orange')
+              : "#f79f6a"
+          }}
         >
           {(props) => (
             <animated.Rect // function button
@@ -79,7 +83,7 @@ function FunBar(props) {
         </Spring>
         <Text // function button
           text={"Function"}
-          onClick = {clk}
+          onClick={clk}
           x={0}
           y={gui.funBarOffset}
           width={gui.funBarIconTextWidth}
@@ -107,10 +111,12 @@ function FunBar(props) {
       >
         <Spring // animates image button fill
           native
-          from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a"}}
-          to={{ fill: props.renderFunction.isRenderable
-            ? (imageButtonHovered ? "white" : 'orange')
-            :  "#f79f6a"}}
+          from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a" }}
+          to={{
+            fill: props.renderFunction.isRenderable
+              ? (imageButtonHovered ? "white" : 'orange')
+              : "#f79f6a"
+          }}
         >
           {(props) => (
             <animated.Rect // function button
@@ -221,31 +227,44 @@ function FunBar(props) {
                   </button>
                 );
               })}
+
+              <a href={'/expert/' + props.renderFunction.renderFunction}>
+                <button className='button button2'>
+                  Open in Expert UI
+                </button>
+              </a>
+
+              {/* <Link to={`/expert/${props.renderFunction.renderFunction}`}>
+                <button className='button button2'>
+                  Open in Expert UI
+                </button>
+              </Link> */}
+
             </div>
           </Portal>
         ) : (
-          <Text
-            text={"Image"}
-            x={0}
-            y={gui.funBarOffset}
-            width={gui.funBarIconTextWidth}
-            align={"center"}
-            fill={imageButtonHovered ? "gray" : "white"}
-            fontSize={gui.funBarFontSize}
-            onClick={() => {
-              if (props.renderFunction.isRenderable) {
-                setImageButtonClicked(true);
+            <Text
+              text={"Image"}
+              x={0}
+              y={gui.funBarOffset}
+              width={gui.funBarIconTextWidth}
+              align={"center"}
+              fill={imageButtonHovered ? "gray" : "white"}
+              fontSize={gui.funBarFontSize}
+              onClick={() => {
+                if (props.renderFunction.isRenderable) {
+                  setImageButtonClicked(true);
+                  setImageButtonHovered(false);
+                }
+              }}
+              onMouseOver={() => {
+                setImageButtonHovered(true);
+              }}
+              onMouseOut={() => {
                 setImageButtonHovered(false);
-              }
-            }}
-            onMouseOver={() => {
-              setImageButtonHovered(true);
-            }}
-            onMouseOut={() => {
-              setImageButtonHovered(false);
-            }}
-          />
-        )}
+              }}
+            />
+          )}
       </Group>
     </Group>
   );

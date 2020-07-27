@@ -273,6 +273,18 @@ class Expert extends Component {
         }))
     }
 
+    componentDidMount(){
+        const {code} = this.props.match.params;
+        if(code){
+            this.setState(state=>({
+                form: {
+                    ...state.form,
+                    code: code,
+                }
+            }))
+        }
+    }
+  
     render() {
         return (
             <div id='expert' ref={this.expertRef} >
