@@ -6,7 +6,7 @@ import {
   Row, Form, Col,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from "./MISTImageGallery";
+import MISTImage from "../MISTImageGallery";
 
 //Challenges; header, spacing between drop down
 //menus, and the challenges displayed on the screen
