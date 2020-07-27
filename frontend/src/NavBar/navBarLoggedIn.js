@@ -13,7 +13,7 @@ function UserHeader.
 // +---------+
 
 import "bootstrap/dist/css/bootstrap.css";
-import MistLogo from "./../Logos/Negative/negative40.png";
+import MistLogo from "./../design/Logos/Negative/negative40.png";
 import React from "react";
 import { Navbar, Nav, NavDropdown, Form,
   FormControl, Button, NavLink} from "react-bootstrap";

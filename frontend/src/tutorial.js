@@ -115,7 +115,7 @@ import { RiMenu2Line } from "react-icons/ri";
 
 import MISTImage from "./MISTImageGallery";
 
-import WorkSpace from "./Workspace";
+import WorkSpace from "./workspace/";
 
 //Tutorial Header
 function Tutorial() {

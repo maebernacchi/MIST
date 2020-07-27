@@ -251,15 +251,12 @@ function SettingOptions() {
             <Tab.Pane eventKey="first">
               <OptionOne />
             </Tab.Pane>
-
             <Tab.Pane eventKey="second">
               <OptionTwo />
             </Tab.Pane>
-
             <Tab.Pane eventKey="third">
               <OptionThree />
             </Tab.Pane>
-
             <Tab.Pane eventKey="fourth">
               <OptionFour />
             </Tab.Pane>
@@ -277,7 +274,6 @@ function OptionOne() {
     </Container>
   );
 }
-
 function OptionTwo() {
   return (
     <Container>
@@ -289,7 +285,6 @@ function OptionTwo() {
     </Container>
   );
 }
-
 function OptionThree() {
   return (
     <Container>
@@ -301,7 +296,6 @@ function OptionThree() {
     </Container>
   );
 }
-
 function OptionFour() {
   return (
     <Container>

@@ -166,5 +166,3 @@ export const MIST_builtin_functions = {
         "type": "GENERAL"
     },
 }
-
-
