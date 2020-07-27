@@ -4,7 +4,7 @@ import React from "react";
 import "./styleSheets/navBar.css";
 
 /* Imports for images / logos */
-//import MistLogo from "./Logos/Negative/negative40.png";
+import MistLogo from "./design/Logos/Negative/negative40.png";
 import FacebookIcon from "./icons/icons8-facebook-30.png";
 import GoogleIcon from "./icons/icons8-google-48.png";
 
@@ -52,7 +52,7 @@ const BaseHeader = (props) => {
 function Logo() {
   return (
     <NavLink to="/">
-      {/*<img src={MistLogo} alt="MIST Logo"></img>*/}
+      <img src={MistLogo} alt="MIST Logo"></img>
     </NavLink>
   );
 }
