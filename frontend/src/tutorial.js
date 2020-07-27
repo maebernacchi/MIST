@@ -96,8 +96,6 @@ import { Nav, Accordion, Card, Button, Container, Row, Col, Jumbotron, Modal, Dr
 
 import "bootstrap/dist/css/bootstrap.css";
 
-
-
 import { Link } from "react-router-dom"
 import { BsQuestionCircle, BsClock  } from "react-icons/bs";
 import { RiMenu2Line } from "react-icons/ri"

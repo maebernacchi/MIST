@@ -55,7 +55,7 @@ export default function Profile() {
   }, [])
 
   return (
-    <Container fluid id="page-container">
+    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <Container>
         <h1> Profile </h1>
       </Container>
@@ -231,7 +231,7 @@ function Album(props) {
     >
       <Card.Header>
         <Card.Title style={{ margin: "auto" }}>
-          {props.title}
+          <p>{props.title}</p>
         </Card.Title>
         {/* ICONS */}
         <Card.Body style={{ justifyContent: "space-between" }}>
@@ -253,25 +253,31 @@ function ControlledCarousel() {
 
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
-      <Carousel.Item>
+      <Carousel.Item >
+        <Row style={{justifyContent: "center"}}>
         <MISTImage
           code="x"
           resolution="250"
         />
+        </Row>
         <Carousel.Caption>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
+      <Row style={{justifyContent: "center"}}>
       <MISTImage
           code="x"
           resolution="250"
         />
+        </Row>
       </Carousel.Item>
       <Carousel.Item>
+      <Row style={{justifyContent: "center"}}>
       <MISTImage
           code="x"
           resolution="250"
         />
+        </Row>
       </Carousel.Item>
     </Carousel>
   );

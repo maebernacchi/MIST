@@ -111,23 +111,26 @@ function Gallery(props) {
             {/* TITLE + IsANIMATED? */}
             <Card.Header>
               <Card.Title style={{ margin: "auto" }}>
-                {card.title}
+                <p>{card.title}
                 {card.isAnimated ? (
                   <BsClock size={15} style={{ margin: "1vh" }} />
                 ) : (
                     ""
                   )}
+                  </p>
               </Card.Title>
 
               {/* IMAGE */}
               <Link
                 to={{
-                  pathname: `/img/${card._id}`,
+                  pathname: `/img/${card.id}`,
                   state: { background: location },
                 }}
               >
                 <div variant="top" style={{ marginTop: "1em", marginBottom: "1em" }}>
+                  <Row style={{justifyContent: "center"}}>
                   <MISTImage code={card.code} resolution="250" />
+                  </Row>
                 </div>
               </Link>
 
