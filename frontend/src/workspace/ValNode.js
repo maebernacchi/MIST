@@ -241,6 +241,7 @@ function ValNode(props) {
                 e.nativeEvent.stopImmediatePropagation();
                 if(parseFloat(formValue)!== null) {
                   setRenderFunction(formValue);
+                  props.updateHashValue(index, formValue);
                   setSubmitted(true);
                 } else {
                   console.log("Invalid Number");
@@ -317,3 +318,4 @@ function ValNode(props) {
 }
 
 export default ValNode;
+
