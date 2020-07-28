@@ -388,7 +388,7 @@ function MakeComment(props) {
       "active": true,
       "flags": [],
       // NOTE: This needs to be a real user id you have on your local DB
-      "userId": "5f09091de2990f3b98e18f85",
+      "userId": "5f1f6d77c28eda4d4c405161",
       "body": comment,
       "imageId": props.imageId
     };

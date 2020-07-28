@@ -43,12 +43,15 @@ export default function Profile() {
   const [userAlbums, setUserAlbums] = useState([]);
 
   useEffect(() => {
-    //fetch(`${process.env.REACT_APP_API_SERVER}/gallery`)
+   
+    fetch('/api/gallery/recent')
+        .then(req => req.json())
+        .then(cards => { setUserImages(cards)});
+
     fetch('/api/profile')
       .then(req => req.json())
       .then((userInfo) => {
         setUser(userInfo.user);
-        setUserImages(userInfo.userImages);
         setUserAlbums(userInfo.userAlbums);
       });
   }, [])
