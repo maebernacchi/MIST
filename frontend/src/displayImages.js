@@ -552,7 +552,7 @@ function CodeIcon(props) {
           <Popover.Content>
             <Container>{props.code}</Container>
             <Row style={{ justifyContent: "flex-end" }}>
-              <Nav.Link style={{ color: "black" }}> Copy</Nav.Link>
+              <Nav.Link style={{ color: "black" }} > Copy</Nav.Link>
             </Row>
           </Popover.Content>
         </Popover>

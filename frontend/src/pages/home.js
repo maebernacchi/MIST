@@ -6,7 +6,14 @@ import { NavLink } from "react-router-dom";
 //import MistLogo from "./Logos/Positive/nobackground300.png";
 import MistLogo from "./../design/Logos/logoFinal.png";
 import { Button, Container, Row, Col } from "react-bootstrap";
+import { AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
+import {
+  FaRegShareSquare, FaRegComments, FaFacebook,
+  FaSnapchat
+} from "react-icons/fa";
+import { FiSave, FiCode, FiSend, FiMoreHorizontal } from "react-icons/fi";
+import { TiSocialInstagram } from "react-icons/ti";
 import MISTImage from "../MISTImageGallery"
 
 const home = () => {
@@ -62,7 +69,7 @@ function ButtonContainer() {
       </LinkButton>
 
 
-      <LinkButton to="/" className="linkButton" id="middleButton">
+      <LinkButton to="/createWorkspace" className="linkButton" id="middleButton">
         Create
       </LinkButton>
 
@@ -156,7 +163,7 @@ class FeaturedImages extends Component {
           </div>
 
           <div>
-            <Button variant="outline-dark"> See More </Button>
+            <Button variant="outline-dark" href="/gallery"> See More </Button>
           </div>
         </Row>
         <Row className="featuredImagesFlex">
