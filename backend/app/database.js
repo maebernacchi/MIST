@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const passportLocal = require("passport-local-mongoose");
 const sanitize = require('mongo-sanitize');
+const bcrypt = require('bcryptjs');
 
 // why was this changed to acme??
 mongoose.connect("mongodb://localhost:27017/usersDB", {
@@ -25,7 +26,7 @@ const imagesSchema = new mongoose.Schema({
     title: { type: String, required: true, },
     code: { type: String, required: true, },
     ratings: { type: Number, default: 0, },
-    createdAt: { type: Date, default: Date.now, },
+    createdAt: { type: String, default: Date.now, },
     updatedAt: {
         type: Date,
         default: Date.now,
@@ -57,7 +58,7 @@ const commentsSchema = new mongoose.Schema({
     },
     body: String,
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     active: {
@@ -105,11 +106,11 @@ const albumsSchema = new mongoose.Schema({
         ref: "Image",
     }],                      // (of Ids)
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     public: Boolean, // true = public, false = private
@@ -127,11 +128,11 @@ const workspacesSchema = new mongoose.Schema({
         required: true,
     },
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     active: {
@@ -163,11 +164,11 @@ const usersSchema = new mongoose.Schema({
         required: true,
     },              //hashed
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     verified: Boolean,
@@ -197,7 +198,10 @@ const usersSchema = new mongoose.Schema({
     }], // of (of flag_ids)
     liked: [{ type: mongoose.Schema.Types.ObjectId }],   // of image _ids
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],                 //(of comment _ids)
-    about: String,
+    about: {
+        String,
+        default: ""
+    }
 });
 
 const challengeSchema = new mongoose.Schema({
@@ -223,11 +227,11 @@ const challengeSchema = new mongoose.Schema({
         require: true,
     },
     createdAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     updatedAt: {
-        type: Date,
+        type: String,
         default: Date.now,
     },
     active: {
@@ -298,20 +302,6 @@ const Models = {
 // |   Images   |
 // +------------+
 
-/**
- * grab featured images for logged out user
- * @param count: the max amount of images returned
- * @param callback: returns either the images or the error 
- */
-module.exports.getFeaturedImagesLoggedOut = (count, callback) => {
-    Image.find({ featured: true, active: true }).limit(count).exec((err, images) => {
-        if (err)
-            callback(null, err)
-        else {
-            callback(images, null)
-        }
-    })
-}
 
 // +------------+-------------------------------------------------
 // |   Gallery  |
@@ -326,6 +316,7 @@ module.exports.getRandomImagesLoggedOut = (count, callback) => {
     Image.aggregate([
         { $match: { public: true, active: true } },
         { $sample: { size: count } }])
+        .populate('userId')
         .exec((err, images) => {
             if (err)
                 callback(null, err)
@@ -346,6 +337,7 @@ module.exports.getRecentImagesLoggedOut = (count, page, callback) => {
     Image.find({ public: true, active: true })
         .sort({ createdAt: -1 })
         .limit(count)
+        .populate('userId')
         .exec((err, images) => {
             if (err)
                 callback(null, null, err);
@@ -364,7 +356,10 @@ module.exports.getRecentImagesLoggedOut = (count, page, callback) => {
  * @param callback: returns either the images or the error 
  */
 module.exports.getFeaturedImagesLoggedOut = (count, callback) => {
-    Image.find({ featured: true, active: true }).limit(count).exec((err, images) => {
+    Image.find({ featured: true, active: true })
+    .limit(count)
+    .populate('userId')
+    .exec((err, images) => {
         if (err)
             callback(null, err)
         else {
@@ -386,6 +381,7 @@ module.exports.getTopRatedLoggedOut = (count, page, callback) => {
     Image.find({ public: true, active: true })
         .sort({ ratings: -1 })
         .limit(count)
+        .populate('userId')
         .exec((err, images) => {
             if (err)
                 callback(null, null, err); // might need to be null
@@ -424,11 +420,9 @@ module.exports.saveComment = function (req, res) {
     //let imageID = sanitize(req.params.imageid)
     let imageID = req.body.imageId;
     let comment = Comment({
-        //userId: userID,
         userId: userID,
         //body: sanitize(req.body.newComment),
         body: req.body.body,
-        //active: true
         active: req.body.active,
         imageId: imageID,
         flags: req.body.flags
@@ -470,6 +464,78 @@ module.exports.saveComment = function (req, res) {
 }
 
 
+//NOTE: This does not check if the comments are hidden from the user
+// the commented out commentInfo does
+/**
+ * grab comment information
+ * only returns active comments
+ * @param imageid 
+ * @param callback 
+ */
+module.exports.getComments = (imageid, callback) => {
+    imageid = sanitize(imageid);
+
+    // search the comments collection for documents that with imageid that match image._id
+    Comment.
+        find({
+            imageId: mongoose.Types.ObjectId(imageid),
+            active: true,
+        }).
+        populate('userId').
+        exec((err, comments) => {
+            if (err) {
+                console.log(err);
+                callback(null, err);
+            } else {
+                callback(comments, null);
+            }
+        });
+};
+
+
+/**
+ * grab comment information
+ * returns active, un-hidden comments
+ * @param userid 
+ * @param imageid 
+ * @param callback 
+ */
+/*
+module.exports.commentInfo = (userid, imageid, callback) => {
+    imageid = sanitize(imageid);
+    userid = sanitize(userid);
+  
+    module.exports.getHiddenAndBlockedIDs(userid, "comment", (contentIds, blockedUsers, err) => {
+      if (err)
+        callback(null, err)
+      else {
+        // how to return five at time? because rn we are returning all comments
+        // username!!!!!
+        // look into aggregation
+        Comment.
+          find({
+            //exclude hidden comments and blocked users
+            _id: { $nin: contentIds },
+            userId: { $nin: blockedUsers },
+            imageId: mongoose.Types.ObjectId(imageid),
+            //include only active comments
+            active: true,
+          }).
+          populate('userId').
+          exec((err, comments) => {
+            if (err) {
+              console.log(err);
+              callback(null, err);
+            } else {
+              callback(comments, null);
+            }
+          });
+      }
+    })
+  };  
+  */
+
+
 // +------------+-------------------------------------------------
 // |    Misc    |
 // +------------+
@@ -482,4 +548,28 @@ module.exports.getUsername = (userId, callback) => {
             callback(user.username, null);
     })
 };
+
+module.exports.createUser = (req, callback) => {
+    let user = req.body;
+    User.findOne({ username: user.username }, async (err, doc) => {
+        if (err) throw err;
+        if (doc) callback("User Already Exists")
+        if (!doc) {
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            const newUser = new User({
+                forename: user.firstname,
+                surname: user.lastname,
+                username: user.username,
+                password: hashedPassword,
+                email: user.email,
+                verified: true,
+                admin: false,
+                moderator: false
+            });
+            await newUser.save();
+            callback("User Created");
+        }
+    });
+
+}
 

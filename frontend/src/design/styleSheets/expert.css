@@ -1,0 +1,85 @@
+#content-wrap {
+    margin:0;
+    padding:0;
+}
+
+#expert .scroll {
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+#expert .btn {
+    margin: 6px;
+}
+
+#expert-code {
+    background-color: #f8f8ff;
+}
+
+#expert-code, #expert-code textarea, #expert-code pre, #expert-code pre span {
+    caret-color: black;
+    color: #333;
+    font-variant-ligatures: common-ligatures;
+    /* Doesn't seem to work well with react-simple-code-editor
+     * font-family: "Fira code", "Fira Mono", monospace;
+     */
+    font-family: "Fira code", "Fira Mono", monospace;
+    font-size: 1rem;
+}
+
+#expert-code .keyword {
+    color: #007bff;
+}
+
+#expert-code .number {
+    color: #dc3545;
+}
+
+#expert-code .symbol {
+    color: #500650;
+}
+
+#expert {
+  /* Cancel out footer margin */
+  margin-bottom: -20px;
+}
+
+/*#expert-code-area {
+    tab-size: 4ch;
+    max-height: 400px;
+    overflow: auto;
+}*/
+
+#expert-canvas {
+    padding: 10px;
+}
+
+#expert-canvas-image {
+    padding: 20px;
+}
+
+#expert-workspace {
+    color: #f8f8ff;
+    padding: 20px;
+}
+
+#message {
+    background-color: #353b48;
+}
+
+.canvasButton {
+    background-color: #012968;
+}
+
+.insertButton {
+    border: #011d2e;
+    background-color: #013655;
+}
+
+.panel {
+    background-color: #272727;
+}
+
+.formTextbox {
+    background-color: #f8f8ff;
+}

@@ -76,7 +76,7 @@
 }
 
 #expert-code, #expert-code textarea, #expert-code pre, #expert-code pre span {
-    caret-color: black;
+    caret-color: rgb(180, 105, 105);
     color: #333;
     font-variant-ligatures: common-ligatures;
     font-family: "Fira code", "Fira Mono", monospace;

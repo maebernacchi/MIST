@@ -1,50 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
-import "./styleSheets/generalStyles.css";
+import React, { useState, useEffect, useContext } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import "./design/styleSheets/generalStyles.css";
+import { UserContext } from './Contexts/UserContext';
 
-import Home from "./home";
-import About from "./about";
-import Faq from "./faq";
-import Tutorial from "./tutorial";
-import SignUp from "./signUp";
-import Gallery from "./Gallery";
-import Challenges from "./challenges";
+import Home from "./pages/home";
+import About from "./pages/about";
+import Faq from "./pages/faq";
+import Tutorial from "./pages/tutorial";
+import SignUp from "./pages/signUp";
+import Gallery from "./pages/Gallery";
+import Challenges from "./pages/challenges";
 import Footer from "./footer";
-import Contact from "./contact";
-import Privacy from "./privacy";
-import License from "./license";
-import Development from "./development";
-import SignIn from "./signIn";
-import Settings from "./settings";
-import UserProfile from "./profile";
+import Contact from "./pages/contact";
+import Privacy from "./pages/privacy";
+import License from "./pages/license";
+import Development from "./pages/development";
+import SignIn from "./pages/signIn";
+import Settings from "./pages/settings";
+import UserProfile from "./pages/profile";
 import Expert from "./expert/";
 
-import Community from "./community";
+import Community from "./pages/community";
 import ReportForm from "./report";
 import User from "./user";
-import WorkSpace from "./Workspace";
+//import WorkSpace from "./Workspace";
+import WorkspaceComponent from './workspace';
 
 /** New option for navigation bars*/
-import BaseNavigation from "./navBarBase";
-import UserNavigation from "./navBarUser";
+import BaseNavigation from "./NavBar/navBarLoggedOut";
+import UserNavigation from "./NavBar/navBarLoggedIn";
+import { Container } from "react-bootstrap";
 
-import { Button, Container } from "react-bootstrap";
+function App() {
 
-
-export default function App() {
-
-  const [isSignedIn, setIsSignedIn] = useState(false);
-
-  useEffect(() => {
-    fetch('/api/getIsSignedIn')
-      .then(req => req.json())
-      .then(isSignedIn => { setIsSignedIn(isSignedIn) });
-  }, [])
+  const data = useContext(UserContext);
+  console.log(data);
 
   return (
     <div id="page-container">
       <BrowserRouter>
-        {isSignedIn ? <UserNavigation /> : <BaseNavigation />}
+        {data ? <UserNavigation /> : <BaseNavigation />}
         <Container fluid id="content-wrap">
           <Switch>
             <Route path="/" component={Home} exact />
@@ -63,13 +58,10 @@ export default function App() {
             <Route path="/profile" component={UserProfile} />
             <Route path="/community" component={Community} />
             <Route path="/report" children={ReportForm} />
-            {/*change this to be dependent on user id's like images*/}
             <Route path="/user" children={User} />
             <Route path="/img/:url" children={<Gallery />} />
-            <Route path="/createWorkspace" children={<WorkSpace />} />
-            <Route path="/expert/:code" render={(props)=> <Expert {...props} />} />
-            <Route path="/expert" render={(props)=> <Expert {...props} />} />
-
+            <Route path="/createWorkspace" children={<WorkspaceComponent />} />
+            <Route path="/expert" render={(props) => <Expert {...props}/>} />
           </Switch>
         </Container>
         <Footer id="footer" />
@@ -78,3 +70,5 @@ export default function App() {
   );
 }
 
+
+export default App;

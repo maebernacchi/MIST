@@ -1,6 +1,6 @@
 import React from "react";
-import "./styleSheets/profile.css";
-import "./styleSheets/generalStyles.css";
+import "./design/styleSheets/profile.css";
+import "./design/styleSheets/generalStyles.css";
 import {
     Button,
     Container,

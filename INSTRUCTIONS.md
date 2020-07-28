@@ -14,9 +14,9 @@ Prerequisites
 
 Running MIST locally
 --------------------
--Run "npm start" in the backend folder.
--When you see "running on port 8000" in the terminal, move to another terminal, and run "npm start" in the frontend folder.
--Open localhost:3000 to access MIST.
+- Run "npm start" in the backend folder.
+- When you see "running on port 8000" in the terminal, move to another terminal, and run "npm start" in the frontend folder.
+- Open localhost:3000 to access MIST.
 
 Runing MIST on a server
 -----------------------

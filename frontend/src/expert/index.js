@@ -38,7 +38,7 @@
  * We handle macros using the expand_macros function from the './macros' module.
  */
 
-import '../styleSheets/expert.css';
+import '../design/styleSheets/expert.css';
 import CanvasCard from './components/CanvasCard';
 import Menu from './components/Menu';
 import Popup from './components/Popup';
