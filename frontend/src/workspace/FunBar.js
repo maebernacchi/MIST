@@ -5,6 +5,7 @@ import "../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import PopupCanvas from "./PopupCanvas";
 import funbarDimensions from "./globals-funbar-dimensions";
+import fontGlobals from './globals-fonts';
 import { width, height, funBarHeight } from "./globals.js";
 
 function FunBar(props) {
@@ -31,7 +32,7 @@ function BarBase(props) {
         x={funbarDimensions.margin}
         y={funbarDimensions.margin}
         width={gui.funBarTextAreaWidth}
-        height={gui.funBarTextAreaHeight}
+        height={funbarDimensions.rfTextAreaHeight}
         fill={props.functionBoxBg}
       />
       <Text // Render function text display
@@ -39,7 +40,8 @@ function BarBase(props) {
         x={gui.funBarTextOffset}
         y={gui.funBarTextOffset}
         width={gui.funBarTextAreaWidth - gui.funBarTextOffset}
-        height={gui.funBarTextAreaHeight - 2 * gui.funBarOffset}
+        height={funbarDimensions.rfTextAreaHeight}
+        verticalAlign={'middle'}
         fill={props.functionTextColor}
         fontFamily={"Courier New"}
         fontSize={gui.funBarDisplayFontSize}
@@ -50,7 +52,7 @@ function BarBase(props) {
         y={gui.funBarHeight / 2 - gui.funBarFontSize / 2}
         width={gui.funBarWidth * (3 / 25)}
         fill={"white"}
-        fontSize={gui.funBarFontSize}
+        fontSize={fontGlobals.funBarFontSize}
       />
     </Group>
   );
@@ -82,8 +84,8 @@ function FunctionButton(props) {
             {...props}
             x={0}
             y={0}
-            width={gui.funBarIconTextWidth}
-            height={gui.funBarTextAreaHeight}
+            width={funbarDimensions.functionButtonWidth}
+            height={funbarDimensions.functionButtonHeight}
             stroke={"#424874"}
             cornerRadius={8}
           />
@@ -92,12 +94,12 @@ function FunctionButton(props) {
       <Text // function button
         text={"Function"}
         x={0}
-        y={funbarDimensions.margin}
-        width={gui.funBarIconTextWidth}
-        height={gui.funBarTextAreaHeight}
+        width={funbarDimensions.functionButtonWidth}
+        height={funbarDimensions.functionButtonHeight}
         align={"center"}
+        verticalAlign={'middle'}
         fill={!functionButtonHovered ? "white" : "grey"}
-        fontSize={gui.funBarFontSize}
+        fontSize={fontGlobals.funBarFontSize}
         onMouseOver={() => {
           setFunctionButtonHovered(true);
         }}
@@ -120,6 +122,7 @@ function ImageButton(props) {
   return (
     <Group // Image Button on blue bar
       x={funbarDimensions.imageButtonX}
+      y={funbarDimensions.margin}
     >
       <Spring // animates image button fill
         native
@@ -137,10 +140,8 @@ function ImageButton(props) {
         {(props) => (
           <animated.Rect // function button
             {...props}
-            x={0}
-            y={funbarDimensions.margin}
-            width={gui.funBarIconTextWidth}
-            height={gui.funBarTextAreaHeight}
+            width={funbarDimensions.imageButtonWidth}
+            height={funbarDimensions.imageButtonHeight}
             stroke={"#424874"}
             cornerRadius={8}
           />
@@ -148,12 +149,12 @@ function ImageButton(props) {
       </Spring>
       <Text
         text={"Image"}
-        x={0}
-        y={2 * gui.funBarOffset}
-        width={gui.funBarIconTextWidth}
+        width={funbarDimensions.imageButtonWidth}
+        height={funbarDimensions.imageButtonHeight}
         align={"center"}
+        verticalAlign={'middle'}
         fill={imageButtonHovered ? "gray" : "white"}
-        fontSize={gui.funBarFontSize}
+        fontSize={fontGlobals.funBarFontSize}
         onClick={() => {
           if (props.renderFunction.isRenderable) {
             setImageButtonClicked(true);
@@ -171,7 +172,7 @@ function ImageButton(props) {
         <PopupCanvas
           {...props}
           x={-funbarDimensions.imageButtonX}
-          y={-(height - funBarHeight)}
+          y={-(height - funBarHeight - funbarDimensions.margin)}
           closePortal={closePortal}
         />
       )}

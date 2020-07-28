@@ -28,8 +28,6 @@ function Background(props) {
   return (
     <Group x={props.x} y={props.y}>
       <Rect
-        x={0}
-        y={0}
         width={width}
         height={height}
         fill={"black"}
