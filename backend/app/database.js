@@ -598,43 +598,49 @@ module.exports.createUser = (req, callback) => {
  * where message is the message is our error message.
  */
 module.exports.userHasWorkspace = (userId, expertWorkspaceName, res) => {
-    User
-        .findById(userId).select('expertWorkspaces').exec()
-        .then(user => {
-            if (!user) {
+    const handleSuccess = (user) => {
+        if (!user) {
+            res.send({
+                success: false,
+                message: 'User could not be located in the database'
+            });
+        }
+        else {
+            if (!user.expertWorkspaces) {
                 res.send({
-                    success: false,
-                    message: 'User could not be located in the database'
+                    success: true,
+                    hasWorkspace: false,
+                });
+            } else {
+                let match = false;
+                user.expertWorkspaces.forEach(expertWorkspace => {
+                    if (expertWorkspace.name === expertWorkspaceName) {
+                        match = true;
+                        return;
+                    }
+                });
+                // if no workpace is matched
+                res.send({
+                    success: true,
+                    hasWorkspace: match,
                 });
             }
-            else {
-                if (!user.expertWorkspaces) {
-                    res.send({
-                        success: true,
-                        hasWorkspace: false,
-                    });
-                } else {
-                    user.expertWorkspaces.forEach(expertWorkspace => {
-                        if (expertWorkspace.name === expertWorkspaceName) {
-                            res.send({
-                                success: true,
-                                hasWorkspace: true,
-                            });
-                            return;
-                        }
-                    });
-                    // if no workpace is matched
-                    res.send({
-                        success: true,
-                        hasWorkspace: false,
-                    });
-                }
-            }
-        })
-        .catch(error => res.status(400).send({
+        }
+    }
+    const handleError = (error) => {
+        res.status(400).send({
             success: false,
             message: 'Failed to check due to ' + error
-        }))
+        })
+    }
+    User
+        .findById(userId).select('expertWorkspaces').exec((error, user)=>{
+            if(error)
+                handleError(error);
+            else
+                handleSuccess(user);
+        })
+        
 }
 
 /*
@@ -666,7 +672,6 @@ module.exports.saveExpertWorkspace = (userId, workspace, res) => {
     });
     bulk
         .execute((error, result) => {
-            console.log(result)
             if (error) {
                 res.status(400).send({
                     success: false,
@@ -679,12 +684,12 @@ module.exports.saveExpertWorkspace = (userId, workspace, res) => {
                     // is not different from what was already in the array.
                     // so we assume that when we have a match the update
                     // worked successfully
-                    res.send({
+                    res.json({
                         success: false,
                         message: 'Error: Unknown',
                     })
                 } else {
-                    res.send({
+                    res.json({
                         success: true,
                     })
                 }

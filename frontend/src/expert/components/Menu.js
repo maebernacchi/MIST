@@ -56,7 +56,7 @@ function Menu(props) {
                     placement='top'
                     overlay={<Tooltip>Save your workspace</Tooltip>}
                 >
-                    <Button> <BsCloud /> Save</Button>
+                    <Button onClick={()=>props.saveWorkspace(workspaceNameRef.current.value)}> <BsCloud /> Save</Button>
                 </OverlayTrigger>
                 <OverlayTrigger
                     placement='top'
