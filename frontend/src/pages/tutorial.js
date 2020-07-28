@@ -91,8 +91,6 @@
 // | IMPORTS |
 // +---------+
 import React from "react";
-import "./../design/styleSheets/tutorial.css";
-
 import {
   Nav,
   Accordion,
@@ -120,6 +118,12 @@ import WorkSpace from "../workspace";
 //Tutorial Header
 function Tutorial() {
   return (
+    <Container fluid 
+               style={{
+                 marginTop: "2vh",
+                 marginBottom: "0", 
+                 paddingBottom: "7.5rem"
+                }}>
     <Row
       style={{
         marginLeft: "1em",
@@ -136,6 +140,7 @@ function Tutorial() {
         <Tutorials />
       </Col>
     </Row>
+    </Container>
   );
 }
 
@@ -147,8 +152,10 @@ function TableContents() {
   return (
     <Card>
       {/* Title -- Table of Contents */}
-      <Card.Header style={{ margin: "auto" }}>
-        <h3>Table of Contents </h3>
+      <Card.Header style={{ marginTop: "2vh" }}>
+        <h3 style={{fontSize: "170%"}}>
+          Table of Contents 
+        </h3>
       </Card.Header>
       {/* All the sections and subsections */}
       <Accordion>
@@ -251,10 +258,7 @@ function Tutorials() {
                           <SubsectionButton id={subsection.id} type="text" />
                           <SubsectionButton id={subsection.id} type="video" />
                           <SubsectionButton id={subsection.id} type="final" />
-                          <SubsectionButton
-                            id={subsection.id}
-                            type="challenges"
-                          />
+                          <SubsectionButton id={subsection.id} type="challenges"/>
                         </Row>
                       </Col>
 
