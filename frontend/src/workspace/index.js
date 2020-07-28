@@ -92,6 +92,8 @@ class WorkspaceComponent extends Component {
     this.offsetY = 72;
     this.offsetX = 0;
 
+    this.footer = 85;
+
     // +--------+--------------------------------------------------------
     // | States |
     // +--------+
@@ -860,7 +862,7 @@ class WorkspaceComponent extends Component {
         id="workspace"
         style={{
           width: width,
-          height: height,
+          height: height + this.footer,
           backgroundColor: colors.workspaceBackground[this.state.theme]
         }}
       >
