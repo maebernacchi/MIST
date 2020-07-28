@@ -1,7 +1,6 @@
 import React from "react";
 import "./../design/styleSheets/styles.css";
 import "./../design/styleSheets/about.css";
-
 import { Container } from "react-bootstrap";
 
 //page contents

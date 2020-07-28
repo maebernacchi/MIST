@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import "./../design/styleSheets/tutorial.css";
 
 import {
   Accordion,
   Card,
-  Col,
   Button,
   ButtonGroup,
-  Collapse,
   Container,
   Form,
   OverlayTrigger,
-  Popover,
-  Row,
+  Popover
 } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -216,11 +213,12 @@ const password = (
   </Popover>
 );*/
 
+/*
 const Email = () => (
   <OverlayTrigger trigger="click" placement="right" overlay={popover}>
     <Button variant="success">Change Email</Button>
   </OverlayTrigger>
-);
+); */
 
 //render(<Email />);
 

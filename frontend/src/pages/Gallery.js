@@ -9,7 +9,7 @@ export default function Gallery() {
 
   const [cards, setCards] = useState([]);
   const [cardsLoaded, setCardsLoaded] = useState(false);
-  const [category, setCategory] = useState('top');
+  const [category] = useState('top');
 
   useEffect(() => {
     //fetch(`${process.env.REACT_APP_API_SERVER}/gallery`)

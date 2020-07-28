@@ -19,7 +19,7 @@ import MistLogo from "../../../design/Logos/logoFinal.png";
 import {Link} from "react-router-dom";
 import {
   Navbar, Nav, NavDropdown, Form, Image, InputGroup,
-  FormControl, Button, NavLink
+  FormControl, Button
 } from "react-bootstrap";
 import "../../../design/styleSheets/navBar.css";
 import "bootstrap/dist/css/bootstrap.css";
