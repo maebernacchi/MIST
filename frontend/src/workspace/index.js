@@ -167,9 +167,9 @@ class WorkspaceComponent extends Component {
         ).fill(false),
         parentNodes: [],
       };
-      newNodes.push(outermost);
       console.log("pushed operation " + outermost.name);
       evalFrom(sink, expression.operands, parentX, parentY);
+      newNodes.push(outermost);
     } else {
       // it's a value
       if (gui.values[expression.name] == undefined) {
@@ -241,6 +241,7 @@ class WorkspaceComponent extends Component {
             ).fill(false),
             parentNodes: [],
           };
+          evalFrom(sourceIndex, operands[i].operands, pX, pY);
           newNodes.push(sourceNode);
           newLines.push({
             sourceIndex: sourceIndex,
@@ -271,7 +272,6 @@ class WorkspaceComponent extends Component {
             newNodes[sinkIndex].activeOutlets.push(false);
           }
           newNodes[sinkIndex].activeOutlets[i] = lineIndex;
-          evalFrom(sourceIndex, operands[i].operands, pX, pY);
         } else {
           // value
           if (gui.values[operands[i].name] == undefined) {
