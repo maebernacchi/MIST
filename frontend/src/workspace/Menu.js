@@ -1,3 +1,20 @@
+/**
+ * This file creates the Menu Bar and calls subsequent create nodes files.
+ *
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // +----------------------------+------------------------------------
 // | All dependent files        |
 // +----------------------------+
@@ -13,8 +30,16 @@ import { valGroup } from "./MakeValue";
 import global, { width, valueWidth, functionWidth } from "./globals.js";
 import menuDimensions from "./globals-menu-dimensions";
 
+// +----------------------------+
+// | All dependent files        |
+// +----------------------------+------------------------------------
+
 function Menu(props) {
   //keeps track if the menus are open
+
+  // +--------+--------------------------------------------------------
+  // | States |
+  // +--------+
 
   const [isValueMenuOpen, setIsValueMenuOpen] = useState(true);
   const [isFunctionMenuOpen, setIsFunctionMenuOpen] = useState(false);
@@ -23,6 +48,10 @@ function Menu(props) {
   const [key, setKey] = useState(Math.random());
   const ref = useRef(null);
   const [formValue, setFormValue] = useState("Enter a MIST expression");
+
+  // +--------+
+  // | States |
+  // +--------+--------------------------------------------------------
 
   /**
    * This gets called from MakeFunctions and MakeValues to change the group's
@@ -119,10 +148,11 @@ function Menu(props) {
                 context.fillStrokeShape(this);
               }}
               fill={
-                ((u.name === 'Values') && props.valTabColor) ||
-                ((u.name === 'Functions') && props.funTabColor) ||
-                ((u.name === 'Custom') && props.customTabColor) ||
-                ((u.name === 'Saved') && props.savedTabColor)}
+                (u.name === "Values" && props.valTabColor) ||
+                (u.name === "Functions" && props.funTabColor) ||
+                (u.name === "Custom" && props.customTabColor) ||
+                (u.name === "Saved" && props.savedTabColor)
+              }
               strokeWidth={0}
               shadowOffsetX={1}
               shadowOffsetY={-2}
@@ -231,7 +261,6 @@ function Menu(props) {
           />
         ))}
       </Group>
-      
     </Group>
   );
 }
