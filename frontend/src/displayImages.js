@@ -44,7 +44,7 @@ import {
   BrowserRouter as Router, Switch, Route, Link,
   useHistory, useLocation, useParams
 } from "react-router-dom";
-import "./styleSheets/gallery.css";
+import "./design/styleSheets/gallery.css";
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 TimeAgo.addLocale(en)

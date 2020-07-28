@@ -91,13 +91,44 @@ module.exports = (app, passport, database) => {
     //------------------------------------------------	
     // SIGN UP	
 
-    app.get('/api/signup', (req, res) => {	
+    app.post("/api/signup", (req, res) => {
+        database.createUser(req, (message) => res.json(message))
+    });	
 
-    })	
+    //------------------------------------------------
+    // LOGIN
 
-    app.post('/api/signup',	
+    app.post("/api/login", (req, res, next) => {
+        passport.authenticate("local", (err, user, info) => {
+            if (err) {
+                throw err;
+            }
+            if (!user) {
+                var message = "No User Exists";
+                res.json(message);
+            }
+            else {
+                req.logIn(user, (err) => {
+                    if (err) throw err;
+                    var message = "Success";
+                    res.json(message);
+                });
+            }
+        })(req, res, next);
+    });
 
-    )	
+    app.get('/api/logout', (req, res) => {
+        req.logout();
+        res.json("Success");
+    })
+
+    app.get("/api/user", (req, res) => {
+        if (!req.user) res.json(null);
+        else {
+            user = req.user;
+            res.json(user);
+        }
+    });
 
     //------------------------------------------------	
     // IMAGE	
@@ -114,7 +145,7 @@ module.exports = (app, passport, database) => {
     });	
 
 
-    //------------------------------------------------	
+    //------------------------------------------------	                
     // FAKE DATA    	
 
     // Check whether user is signed in	

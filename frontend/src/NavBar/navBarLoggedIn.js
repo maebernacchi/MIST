@@ -1,29 +1,46 @@
-//Navigation bar when logged in
+// +---------+----------------------------------------------------------
+// | Notes   |
+// +---------+
 
-import React from "react";
-import "./styleSheets/navBar.css";
+/*
+This file, navBarLoggedIn.js, creates the navigation bar for users
+who are signed in. The navigation bar is returned by the
+function UserHeader.
+*/
 
-/* Imports for images / logos */
-import MistLogo from "./design/Logos/Negative/negative40.png";
-
-/* Imports for bootstrap */
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Form,
-  FormControl,
-  Button,
-  NavLink,
-} from "react-bootstrap";
+// +---------+----------------------------------------------------------
+// | Imports |
+// +---------+
 
 import "bootstrap/dist/css/bootstrap.css";
+import MistLogo from "./../design/Logos/Negative/negative40.png";
+import React, { useState, useEffect } from "react";
+import {
+  Navbar, Nav, NavDropdown, Form,
+  FormControl, Button, NavLink
+} from "react-bootstrap";
+import "./../design/styleSheets/navBar.css";
 
-/**
- * returns the whole header
- */
+// +------------+----------------------------------------------------------
+// | UserHeader |
+// +------------+
 
-const UserHeader = (props) => {
+function UserHeader(props) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/user', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include'
+    })
+      .then(res => res.json())
+      .then(user => {
+        if (user) setUser(user);
+      })
+  }, [user])
 
   return (
     <div>
@@ -32,11 +49,9 @@ const UserHeader = (props) => {
         <Logo />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <NavBar />
-          </Nav>
-          <Search />
+          <NavBar user={user} />
         </Navbar.Collapse>
+        <Search />
       </Navbar>
     </div>
   );
@@ -47,7 +62,7 @@ const UserHeader = (props) => {
  */
 function Logo() {
   return (
-    <NavLink to="/">
+    <NavLink href="/">
       <img src={MistLogo} alt="MIST Logo"></img>
     </NavLink>
   );
@@ -74,7 +89,14 @@ function Search() {
 /* Base Nav Bar */
 
 /* First part of the base navigation Bar (Create, Challenges, Tutorial, Gallery, About and its dropdowns) */
-function NavBar() {
+function NavBar(props) {
+
+  let username;
+  if (props.user)
+    username = props.user.username;
+  else
+    username = "Account"
+
   return (
     <Nav>
       <Nav.Link href="/createWorkspace">Create</Nav.Link>
@@ -86,7 +108,7 @@ function NavBar() {
         <NavDropdown.Item href="/development">Development</NavDropdown.Item>
         <NavDropdown.Item href="/faq">FAQ</NavDropdown.Item>
       </NavDropdown>
-      <NavDropdown title="Account" id="basic-nav-dropdown">
+      <NavDropdown title={username} id="basic-nav-dropdown">
         <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
         <NavDropdown.Item href="#action/3.2">Settings</NavDropdown.Item>
         <NavDropdown.Divider />
@@ -96,30 +118,27 @@ function NavBar() {
   );
 }
 
-/* User Nav Bar */
-
-/* Username button (dropdown) */
-/*
-function UserButton(props) {
-  return (
-    <NavDropdown title="Account" id="basic-nav-dropdown">
-      <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
-      <NavDropdown.Item href="#action/3.2">Settings</NavDropdown.Item>
-      <NavDropdown.Divider />
-      <SignOutButton />
-    </NavDropdown>
-  );
-}
-*/
-
 /* Sign Out Bar */
 
 function SignOutButton(props) {
   return (
-    <NavDropdown.Item href="#" onClick={props.onClick}>
+    <NavDropdown.Item href="#" onClick={signout}>
       Sign Out
     </NavDropdown.Item>
   );
+}
+
+
+function signout() {
+  fetch('/api/logout', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include'
+  }).then(res => {
+    window.location.href = "/";
+  })
 }
 
 export default UserHeader;

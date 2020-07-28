@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./styleSheets/challenges.css";
-import "./styleSheets/generalStyles.css";
+import "./../design/styleSheets/challenges.css";
+import "./../design/styleSheets/generalStyles.css";
 import {
   Card, Button, Pagination, Container,
   Row, Form, Col,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from "./MISTImageGallery";
+import MISTImage from "../MISTImageGallery";
 
 //Challenges; header, spacing between drop down
 //menus, and the challenges displayed on the screen

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import "./styleSheets/home.css";
-import LinkButton from "./LinkButton";
+import "./../design/styleSheets/home.css";
+import LinkButton from "../LinkButton";
 import { NavLink } from "react-router-dom";
-import MistLogo from "./design/Logos/Postivie/nobackground300.png";
+import MistLogo from "./../design/Logos/Postivie/nobackground300.png";
 import { Container } from "react-bootstrap";
 import { BsClock } from "react-icons/bs";
-import MISTImage from "./MISTImageGallery"
+import MISTImage from "../MISTImageGallery"
 
 const home = () => {
   return <PageContent />;

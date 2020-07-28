@@ -6,7 +6,7 @@ import gui from "./mistgui-globals.js";
 import { width, height } from "./globals";
 import popupDimensions from "./globals-popup_canvas-dimensions";
 import MISTImage from "./MISTImageCreate";
-import "../styleSheets/FunBar.css";
+import "./../design/styleSheets/FunBar.css";
 
 function PopupCanvas(props) {
   const [imageName, setImageName] = useState("");

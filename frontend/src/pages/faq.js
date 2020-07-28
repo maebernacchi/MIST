@@ -1,6 +1,6 @@
 import React from 'react';
-import './styleSheets/styles.css';
-import './styleSheets/about.css';
+import "./../design/styleSheets/styles.css";
+import "./../design/styleSheets/about.css";
 import { Container } from 'react-bootstrap';
 
 //FAQ about MIST; with links to forms to report bugs, 
