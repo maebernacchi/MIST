@@ -14,7 +14,7 @@ function UserHeader.
 
 
 import React, { useState, useEffect } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 /* Imports for images / logos */
 import MistLogo from "./../design/Logos/logoFinal.png";
 /* Imports for bootstrap */
@@ -66,8 +66,8 @@ function UserHeader(props) {
  */
 function Logo() {
   return (
-    <Link to="/" style={{width: "5%"}}>
-      <img src={MistLogo} alt="MIST Logo" style={{maxWidth: "100%"}}></img>
+    <Link to="/" style={{ width: "5%" }}>
+      <img src={MistLogo} alt="MIST Logo" style={{ maxWidth: "100%" }}></img>
     </Link>
   );
 }
@@ -102,8 +102,10 @@ function NavBar(props) {
 
   return (
     <Nav>
-      <Nav.Link href="/createWorkspace">Create</Nav.Link>
-      <Nav.Link href="/challenges">Challenges</Nav.Link>
+      <NavDropdown title="Create" id="basic-nav-dropdown">
+        <NavDropdown.Item href="/createWorkspace">GUI Workspace</NavDropdown.Item>
+        <NavDropdown.Item href="/expert">Expert UI</NavDropdown.Item>
+      </NavDropdown>      <Nav.Link href="/challenges">Challenges</Nav.Link>
       <Nav.Link href="/tutorial">Tutorial</Nav.Link>
       <Nav.Link href="/gallery">Gallery</Nav.Link>
       <NavDropdown title="About" id="basic-nav-dropdown">
