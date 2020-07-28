@@ -1,3 +1,62 @@
+/**
+ * The function nodes in the workspace for MIST.
+ *
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// +-------+---------------------------------------------------------
+// | Notes |
+// +-------+
+/* 1. The trashcan function creates a trashcan icon on the top left of the function node. The onClick
+      attrribute on that deletes the node from the workspace
+
+   2. Props received from the workspace contain the following:
+   - name : String; name of the node
+   - key : int; unique key attribute 
+   - index : int; index of the ndoe
+   - x : int; x coordinate
+   - y : int; y coordinate 
+   - offsetX : int; to account for the shift in the x-coordinate 
+   - offsetY : int; to account for the shift in the y-coordinate
+   - numInputs : int; number of lines coming into the node
+   - numOutlets : int; number of outlets of the node
+   - renderFunction : String; the expression in the node
+   - updateNodePosition : function; Updates node position in the workspace
+   - updateLinePosition : function; Updates line position in the workspace
+   - funClicked : function; Listens to clicks on the node
+   - outletClicked : function; Listens to clicks on the outlets
+   - dblClickHandler : function; Listens to double clicks on the function for generation of 
+                       temporary line 
+   - removeNode : function; removes node from the workspace
+   - hoverShadowColor : String; changes hover color based on theme
+
+   3. The dragBoundFunc attribute on the group helps keep the function node within the 
+      boundaries of the workspace. 
+
+   4. UseStrictMode is a good react-konva practice.
+  
+
+*/
+// +-------+
+// | Notes |
+// +-------+---------------------------------------------------------
+
+
+// +----------------------------+------------------------------------
+// | All dependent files        |
+// +----------------------------+
+
 import React, { useState, useEffect, useRef } from "react";
 import { Rect, Group, Text, Shape, Image } from "react-konva";
 import Konva from "konva";
@@ -8,10 +67,10 @@ import useImage from "use-image";
 import nodeDimensions from "./globals-nodes-dimensions.js";
 import globals from "./globals.js";
 
-/**
- *
- * @param props
- */
+// +----------------------------+
+// | All dependent files        |
+// +----------------------------+------------------------------------
+
 function FunNode(props) {
   const name = props.name;
   const index = props.index;
@@ -25,6 +84,10 @@ function FunNode(props) {
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
 
+// +----------------------------+------------------------------------
+// | Trashcan                   |
+// +----------------------------+
+
   function Trashcan() {
     return (
       <Image
@@ -35,7 +98,7 @@ function FunNode(props) {
         height={14}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
-        visible={hovered}
+        visible={hovered} //Only visible when hovering over node
         onMouseEnter={() => {
           setTrashHovered(true);
         }}
@@ -43,16 +106,24 @@ function FunNode(props) {
           setTrashHovered(false);
           setHovered(false);
         }}
-        onClick={() => props.removeNode(props.index)}
+        onClick={() => props.removeNode(props.index)} //Removes the node from the workspace
       />
     );
   }
+
+// +----------------------------+
+// | Trashcan                   |
+// +----------------------------+------------------------------------
 
   useEffect(() => {
     if (!props.renderFunction) {
       setShowImage(false);
     }
-  }, [props.renderFunction]);
+  }, [props.renderFunction]); //Re-renders whenever the render function changes
+
+// +----------------------------------------+------------------------
+// | Entire Function Group                  |
+// +----------------------------------------+
 
   return (
     <Group
@@ -60,6 +131,8 @@ function FunNode(props) {
       x={x}
       y={y}
       draggable
+
+      // helps keep the function nodes in the designated workspace area
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
           pos.x = 0;
@@ -83,6 +156,7 @@ function FunNode(props) {
         }
         return pos;
       }}
+
       onDragStart={(e) => {
         e.target.setAttrs({
           duration: 0.5,
@@ -95,6 +169,7 @@ function FunNode(props) {
           scaleY: 1.1,
         });
       }}
+
       onDragEnd={(e) => {
         e.target.to({
           duration: 0.5,
@@ -102,11 +177,15 @@ function FunNode(props) {
           scaleX: 1,
           scaleY: 1,
         });
+        // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(index, e.currentTarget.x(), e.currentTarget.y());
       }}
+
       onDragMove={(e) => {
+        // Updates the line position dynamically while the node is being dragged
         props.updateLinePosition(index, 'fun', e.currentTarget.x(), e.currentTarget.y());
       }}
+
       onClick={(e) => {
         if (e.target.attrs.name) {
           props.outletClicked(
@@ -117,7 +196,9 @@ function FunNode(props) {
           props.funClicked(index);
         }
       }}
+
       onDblClick={() => {
+        // Generates the temporary line when double clicked
         props.dblClickHandler(index);
       }}
     >
@@ -134,6 +215,7 @@ function FunNode(props) {
           })
           setHovered(true);
         }}
+
         onMouseLeave={(e) => {
           setHovered(false);
           groupRef.current.children.map((u, i) => {
@@ -188,7 +270,7 @@ function FunNode(props) {
       </Group>
       {showImage ? (
         <Portal>
-          <MISTImage
+          <MISTImage //Mini image that can be seen at the bottom right of the node
             onClick={() => setShowImage(false)}
             x={x + nodeDimensions.functionImageBoxOffset + props.offsetX}
             y={y + nodeDimensions.functionImageBoxOffset + props.offsetY}
@@ -327,5 +409,8 @@ function FunNode(props) {
           ))}
     </Group>
   );
+// +----------------------------------------+
+// | Entire Function Group                  |
+// +----------------------------------------+----------------------
 }
 export default FunNode;

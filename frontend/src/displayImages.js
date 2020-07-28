@@ -107,7 +107,7 @@ function Gallery(props) {
   let location = useLocation();
 
   return (
-    <div>
+    <div style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
       <Row style={{ justifyContent: "space-between" }}>
         {cards.map((card) => (
           <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
@@ -388,7 +388,7 @@ function MakeComment(props) {
       "active": true,
       "flags": [],
       // NOTE: This needs to be a real user id you have on your local DB
-      "userId": "5f09091de2990f3b98e18f85",
+      "userId": "5f1f6d77c28eda4d4c405161",
       "body": comment,
       "imageId": props.imageId
     };
@@ -516,7 +516,7 @@ function CodeIcon(props) {
 
   return (
     <div ref={ref}>
-      <Nav.Link onClick={handleClick} style={{ color: "black" }}>
+      <Nav.Link onClick={handleClick} style={{ color: "black" , paddingLeft: "0", paddingRight:"0"}}>
         <FiCode />
       </Nav.Link>
       <Overlay
@@ -587,7 +587,7 @@ function MoreIcon() {
 
 function ShareIcon() {
   return (
-    <Nav>
+    <Nav >
       <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown">
         <NavDropdown.Item eventKey="4.1">
           {" "}

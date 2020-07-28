@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import "./../design/styleSheets/home.css";
 import LinkButton from "../LinkButton";
 import { NavLink } from "react-router-dom";
-import MistLogo from "./../design/Logos/Postivie/nobackground300.png";
-import { Container } from "react-bootstrap";
+
+//import MistLogo from "./Logos/Positive/nobackground300.png";
+import MistLogo from "./../design/Logos/logoFinal.png";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import { BsClock } from "react-icons/bs";
 import MISTImage from "../MISTImageGallery"
 
@@ -18,11 +20,9 @@ the Intro, ButtonContainer, BottomText, and Featured Images.
 class PageContent extends React.Component {
   render() {
     return (
-      <Container id="main" className="content-wrap">
+      <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
         <Intro />
-        <h1 style={{ fontSize: "170%" }}>
-          The Mathematical Image Synthesis Toolkit
-        </h1>
+
         <ButtonContainer />
         <BottomText />
         <FeaturedImages />
@@ -31,19 +31,23 @@ class PageContent extends React.Component {
   }
 }
 
-/*
-  Intro returns the MIST logo and the MIST slogan.
-  */
+
 function Intro() {
   return (
-    <div id="intro">
-      <div id="logoImage">
-        <img src={MistLogo} alt="MIST Logo"></img>
-      </div>
-      <div id="about">
-        <p>Create abstract images and animations using simple math functions</p>
-      </div>
-    </div>
+    <Row style={{ justifyContent: "center" }}>
+      <img src={MistLogo} alt="MIST Logo" />
+      <p1 style={{ alignItems: "center", margin: "auto 0 auto 5vh" }}>
+        <p1 style={{ fontSize: "200%" }}>
+          The Mathematical Synthesis Toolkit
+        </p1>
+        <p1 style={{ fontSize: "150%", color: "grey" }}>
+          <hr />
+        Create abstract images and animations
+       <br />
+       using simple math functions
+       </p1>
+      </p1>
+    </Row>
   );
 }
 
@@ -52,17 +56,22 @@ function Intro() {
   */
 function ButtonContainer() {
   return (
-    <div id="homeButtons">
+    <Row id="homeButtons" style={{ justifyContent: "center" }}>
       <LinkButton to="/tutorial" className="linkButton">
         <b>Tutorials</b>
       </LinkButton>
+
+
       <LinkButton to="/" className="linkButton" id="middleButton">
         Create
       </LinkButton>
+
+
       <LinkButton to="/gallery" className="linkButton">
         Gallery
       </LinkButton>
-    </div>
+
+    </Row>
   );
 }
 
@@ -72,7 +81,7 @@ function ButtonContainer() {
   */
 function BottomText() {
   return (
-    <div>
+    <Container>
       <p>
         MIST is in public beta. Look <NavLink to="/about">here</NavLink> for
         more information.
@@ -84,7 +93,7 @@ function BottomText() {
         <br />
         For those with a history of epilepsy, viewer discretion is advised.
       </p>
-    </div>
+    </Container>
   );
 }
 
@@ -112,19 +121,44 @@ class FeaturedImages extends Component {
     fetch('/api/home')
       .then(res => res.json())
       .then(featuredImages => this.setState({ featuredImages }));
-  } 
+  }
 
   render() {
     const featuredImages = this.state.featuredImages;
 
     return (
-      <div className="featuredImagesContainer">
-        <div>
-          <h1>Featured Images:</h1>
-          <p>
-            Images with <BsClock /> will animate when you hover over them
-          </p>
-        </div>
+      <Container>
+      <Col className="featuredImagesContainer"
+        style={{
+          border: "solid",
+          borderWidth: "1px",
+          borderRadius: "10px",
+
+          width: "80%",
+
+          marginLeft: "auto",
+          marginRight: "auto",
+          marginTop: "1vh",
+          marginBottom: "1vh",
+
+          paddingTop: "2vh",
+          paddingBottom: "2vh",
+          paddingLeft: "5vh",
+          paddingRight: "5vh"
+        }}>
+
+        <Row style={{ justifyContent: "space-between" }}>
+          <div>
+            <h2 style={{ fontSize: "150%" }}>Featured Images:</h2>
+            <p1>
+              Images with <BsClock /> will animate when you hover over them
+            </p1>
+          </div>
+
+          <div>
+            <Button variant="outline-dark"> See More </Button>
+          </div>
+        </Row>
         <div className="featuredImagesFlex">
           {featuredImages.length ? (
             <div>
@@ -132,20 +166,20 @@ class FeaturedImages extends Component {
                 return (
                   <div>
                     {/* the two lines below are placeholders, we need to pass in MIST images instead */}
-                    <MISTImage code={featuredImage.code} resolution="150"/>
+                    <MISTImage code={featuredImage.code} resolution="150" />
                     <p> {featuredImage.code}</p>
                   </div>
                 );
               })}
             </div>
           ) : (
-              <div>
-                <h2> No Image Found </h2>
-              </div>
+              <h2> No Image Found </h2>
+
             )
           }
         </div>
-      </div>
+      </Col>
+      </Container>
     );
   }
 }

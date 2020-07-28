@@ -24,7 +24,7 @@ import Community from "./pages/community";
 import ReportForm from "./report";
 import User from "./user";
 //import WorkSpace from "./Workspace";
-import WorkspaceComponent from './workspace/';
+import WorkspaceComponent from './workspace';
 
 /** New option for navigation bars*/
 import BaseNavigation from "./NavBar/navBarLoggedOut";

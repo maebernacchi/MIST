@@ -12,16 +12,17 @@ function Header.
 // | Imports |
 // +---------+
 
-import "bootstrap/dist/css/bootstrap.css";
+import React, { useState } from "react";
 import FacebookIcon from "./../design/icons/icons8-facebook-30.png";
 import GoogleIcon from "./../design/icons/icons8-google-48.png";
-import MistLogo from "./../design/Logos/Negative/negative40.png";
-import React, { useState } from "react";
+import MistLogo from "./../design/Logos/logoFinal.png";
+import {Link} from "react-router-dom";
 import {
   Navbar, Nav, NavDropdown, Form, Image, InputGroup,
   FormControl, Button, NavLink
 } from "react-bootstrap";
 import "./../design/styleSheets/navBar.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 // +---------+----------------------------------------------------
 // | Header  |
@@ -45,9 +46,9 @@ function Header(props) {
 
 function Logo() {
   return (
-    <NavLink href="/">
-      <img src={MistLogo} alt="MIST Logo"></img>
-    </NavLink>
+    <Link to="/" style={{width: "5%"}}>
+      <img src={MistLogo} alt="MIST Logo" style={{maxWidth: "100%"}}></img>
+    </Link>
   );
 }
 

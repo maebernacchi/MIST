@@ -5,7 +5,7 @@ import { Container } from "react-bootstrap";
 
 function Community() {
   return (
-    <Container>
+    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <h1>Community Guidelines</h1>
       <div>
         Community Info

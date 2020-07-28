@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.css";
 
 // Nothing so far, to be developed
 function Contact() {
-  return <Container fluid> contact info</Container>;
+  return <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}> contact info</Container>;
 }
 
 export default Contact;
