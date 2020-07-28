@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import DisplayImages from "./../displayImages";
+import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
 import {
@@ -15,7 +15,7 @@ import {
 import { Link } from "react-router-dom";
 /** 6745662 */
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from "./../MISTImageGallery"
+import MISTImage from "./components/MISTImageGallery"
 
 import {
   AiOutlinePicture,

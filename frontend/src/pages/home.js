@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import "./../design/styleSheets/home.css";
-import LinkButton from "../LinkButton";
+import LinkButton from "./components/LinkButton";
 import { NavLink } from "react-router-dom";
 
 //import MistLogo from "./Logos/Positive/nobackground300.png";
 import MistLogo from "./../design/Logos/logoFinal.png";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { BsClock } from "react-icons/bs";
-import MISTImage from "../MISTImageGallery"
+import MISTImage from "./components/MISTImageGallery"
 
 const home = () => {
   return <PageContent />;

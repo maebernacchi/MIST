@@ -1,6 +1,6 @@
 import React from "react";
-import "./design/styleSheets/profile.css";
-import "./design/styleSheets/generalStyles.css";
+import "../design/styleSheets/profile.css";
+import "../design/styleSheets/generalStyles.css";
 import {
     Button,
     Container,
@@ -15,7 +15,7 @@ import {
 /** 6745662 */
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from './MISTImageGallery'
+import MISTImage from './components/MISTImageGallery'
 
 import {
     AiOutlinePicture,
