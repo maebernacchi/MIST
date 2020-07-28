@@ -1,5 +1,5 @@
 import React from "react";
-import "./styleSheets/generalStyles.css";
+import "./design/styleSheets/generalStyles.css";
 import { Container, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 

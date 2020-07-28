@@ -1,0 +1,92 @@
+/* 
+Styling for Intro
+*/
+
+#about {
+  color: #575757;
+  font-size: 1.4em;
+  align-items: center;
+}
+
+/*
+Styling for ButtonContainer
+*/
+
+
+
+.linkButton {
+  display: flex;
+  justify-content: center;
+  background-color: #2b7a78;
+  border: none;
+  color: white;
+  border-radius: 10px;
+
+  opacity: 0.6;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+
+  font-weight: bold;
+  text-align: center;
+  font-size: 130%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin: 2%;
+  width: 15%;
+}
+
+.linkButton:hover {
+  opacity: 1;
+}
+
+#middleButton {
+  background-color: #17252a;
+}
+
+#middleButton:hover {
+  opacity: 1;
+}
+
+/*
+Styling for FeaturedImages 
+*/
+.featuredImagesFlex {
+  display: flex;
+  margin: auto auto;
+  justify-content: center;
+  
+}
+.featuredImage {
+  width: 10%;
+  justify-content: center;
+  padding-left: 1%;
+  padding-right: 1%;
+}
+/*
+.featuredImagesContainer {
+  border-style: solid;
+  border-width: 0.5px;
+  border-color: #17252a;
+  text-align: left;
+  padding-left: 3%;
+  padding-right: 3%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin-top: 10vh;
+  width: 10%;
+  margin: auto;
+}*/
+
+/* NavLink styling*/
+.Nav_link:link {
+  text-decoration: none;
+}
+
+.Nav_link:visited {
+  color: #fff;
+}
+.Nav_link:hover {
+  color: black;
+}

@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Rect, Group, Text} from "react-konva";
+import { Rect, Group, Text } from "react-konva";
 import gui from "./mistgui-globals.js";
-import "../styleSheets/FunBar.css";
+import "../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import PopupCanvas from "./PopupCanvas";
-
+import funbarDimensions from "./globals-funbar-dimensions";
+import { width, height, funBarHeight } from "./globals.js";
 
 function FunBar(props) {
   return (
-    <Group x={0} y={gui.height - gui.funBarHeight}>
+    <Group y={funbarDimensions.funbarY}>
       <BarBase {...props} />
       <FunctionButton {...props} />
       <ImageButton {...props} />
@@ -17,19 +18,18 @@ function FunBar(props) {
 }
 
 function BarBase(props) {
-
   return (
     <Group>
       <Rect // Blue bar at bottom of workspace
         x={0}
         y={0}
-        width={gui.funBarWidth}
-        height={gui.funBarHeight}
+        width={width}
+        height={funBarHeight}
         fill={props.bg}
       />
       <Rect // Render function white background
-        x={gui.funBarOffset}
-        y={gui.funBarOffset}
+        x={funbarDimensions.margin}
+        y={funbarDimensions.margin}
         width={gui.funBarTextAreaWidth}
         height={gui.funBarTextAreaHeight}
         fill={props.functionBoxBg}
@@ -61,20 +61,20 @@ function FunctionButton(props) {
 
   return (
     <Group // Function Button on blue bar
-      x={
-        gui.funBarTextAreaWidth +
-        gui.funBarWidth * (2 / 25) +
-        gui.funBarOffset
-      }
-      y={gui.funBarOffset}
+      x={funbarDimensions.functionButtonX}
+      y={funbarDimensions.margin}
     >
       <Spring // animates function button fill
         native
-        from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a" }}
+        from={{
+          fill: props.renderFunction.isRenderable ? "orange" : "#f79f6a",
+        }}
         to={{
           fill: props.renderFunction.isRenderable
-            ? (functionButtonHovered ? "white" : 'orange')
-            : "#f79f6a"
+            ? functionButtonHovered
+              ? "white"
+              : "orange"
+            : "#f79f6a",
         }}
       >
         {(props) => (
@@ -92,7 +92,7 @@ function FunctionButton(props) {
       <Text // function button
         text={"Function"}
         x={0}
-        y={gui.funBarOffset}
+        y={funbarDimensions.margin}
         width={gui.funBarIconTextWidth}
         height={gui.funBarTextAreaHeight}
         align={"center"}
@@ -106,12 +106,10 @@ function FunctionButton(props) {
         }}
       />
     </Group>
-
   );
 }
 
 function ImageButton(props) {
-
   const [imageButtonClicked, setImageButtonClicked] = useState(false);
   const [imageButtonHovered, setImageButtonHovered] = useState(false);
 
@@ -121,29 +119,26 @@ function ImageButton(props) {
 
   return (
     <Group // Image Button on blue bar
-      x={
-        gui.funBarTextAreaWidth +
-        gui.funBarWidth * (2 / 25) +
-        gui.funBarOffset +
-        gui.funBarIconTextWidth +
-        2 * gui.funBarOffset
-      }
-      y={gui.funBarOffset}
+      x={funbarDimensions.imageButtonX}
     >
       <Spring // animates image button fill
         native
-        from={{ fill: props.renderFunction.isRenderable ? 'orange' : "#f79f6a" }}
+        from={{
+          fill: props.renderFunction.isRenderable ? "orange" : "#f79f6a",
+        }}
         to={{
           fill: props.renderFunction.isRenderable
-            ? (imageButtonHovered ? "white" : 'orange')
-            : "#f79f6a"
+            ? imageButtonHovered
+              ? "white"
+              : "orange"
+            : "#f79f6a",
         }}
       >
         {(props) => (
           <animated.Rect // function button
             {...props}
             x={0}
-            y={0}
+            y={funbarDimensions.margin}
             width={gui.funBarIconTextWidth}
             height={gui.funBarTextAreaHeight}
             stroke={"#424874"}
@@ -151,33 +146,36 @@ function ImageButton(props) {
           />
         )}
       </Spring>
-      {imageButtonClicked ? (
-        <PopupCanvas {...props} closePortal={closePortal} />
-      ) : (
-          <Text
-            text={"Image"}
-            x={0}
-            y={gui.funBarOffset}
-            width={gui.funBarIconTextWidth}
-            align={"center"}
-            fill={imageButtonHovered ? "gray" : "white"}
-            fontSize={gui.funBarFontSize}
-            onClick={() => {
-              if (props.renderFunction.isRenderable) {
-                setImageButtonClicked(true);
-                setImageButtonHovered(false);
-              }
-            }}
-            onMouseOver={() => {
-              setImageButtonHovered(true);
-            }}
-            onMouseOut={() => {
-              setImageButtonHovered(false);
-            }}
-          />
-        )}
+      <Text
+        text={"Image"}
+        x={0}
+        y={2 * gui.funBarOffset}
+        width={gui.funBarIconTextWidth}
+        align={"center"}
+        fill={imageButtonHovered ? "gray" : "white"}
+        fontSize={gui.funBarFontSize}
+        onClick={() => {
+          if (props.renderFunction.isRenderable) {
+            setImageButtonClicked(true);
+            setImageButtonHovered(false);
+          }
+        }}
+        onMouseOver={() => {
+          setImageButtonHovered(true);
+        }}
+        onMouseOut={() => {
+          setImageButtonHovered(false);
+        }}
+      />
+      {imageButtonClicked && (
+        <PopupCanvas
+          {...props}
+          x={-funbarDimensions.imageButtonX}
+          y={-(height - funBarHeight)}
+          closePortal={closePortal}
+        />
+      )}
     </Group>
-
   );
 }
 
