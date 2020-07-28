@@ -201,7 +201,8 @@ const usersSchema = new mongoose.Schema({
     about: {
         String,
         default: ""
-    }
+    },
+    expertWorkspaces: [Object],
 });
 
 const challengeSchema = new mongoose.Schema({
@@ -357,15 +358,15 @@ module.exports.getRecentImagesLoggedOut = (count, page, callback) => {
  */
 module.exports.getFeaturedImagesLoggedOut = (count, callback) => {
     Image.find({ featured: true, active: true })
-    .limit(count)
-    .populate('userId')
-    .exec((err, images) => {
-        if (err)
-            callback(null, err)
-        else {
-            callback(images, null)
-        }
-    })
+        .limit(count)
+        .populate('userId')
+        .exec((err, images) => {
+            if (err)
+                callback(null, err)
+            else {
+                callback(images, null)
+            }
+        })
 
 }
 
@@ -573,3 +574,120 @@ module.exports.createUser = (req, callback) => {
 
 }
 
+// +--------------+-------------------------------------------------
+// |    Expert    |
+// +--------------+
+
+/*
+ * Check if the user corresponding to userId has an expertWorkspace with the 
+ * name of expertWorkspaceName.
+ * 
+ * If user is sucessfully identified returns 
+ * {
+ *  success: true,
+ *  hasWorkspace: ...,
+ * }
+ * where hasWorkspace is true if the user has an expertWorksapce with the name
+ * expertWorkspaceName otherwise false.
+ * 
+ * If user is not successfully identified, returns
+ * {
+ *  sucess: false,
+ *  message: ...,
+ * }
+ * where message is the message is our error message.
+ */
+module.exports.userHasWorkspace = (userId, expertWorkspaceName, res) => {
+    User
+        .findById(userId).select('expertWorkspaces').exec()
+        .then(user => {
+            if (!user) {
+                res.send({
+                    success: false,
+                    message: 'User could not be located in the database'
+                });
+            }
+            else {
+                if (!user.expertWorkspaces) {
+                    res.send({
+                        success: true,
+                        hasWorkspace: false,
+                    });
+                } else {
+                    user.expertWorkspaces.forEach(expertWorkspace => {
+                        if (expertWorkspace.name === expertWorkspaceName) {
+                            res.send({
+                                success: true,
+                                hasWorkspace: true,
+                            });
+                            return;
+                        }
+                    });
+                    // if no workpace is matched
+                    res.send({
+                        success: true,
+                        hasWorkspace: false,
+                    });
+                }
+            }
+        })
+        .catch(error => res.status(400).send({
+            success: false,
+            message: 'Failed to check due to ' + error
+        }))
+}
+
+/*
+ * saves an expert workspace following the suggestion in the link below
+ * https://stackoverflow.com/questions/32549326/mongoose-push-or-replace-element-into-array
+ * 
+ * If successful, returns
+ * {
+ *  success: true
+ * }
+ * 
+ * Otherwise, returns
+ * {
+ *  success: false,
+ *  message: ....
+ * }
+ * where message, is our error message
+ * 
+ */
+module.exports.saveExpertWorkspace = (userId, workspace, res) => {
+    var bulk = User.collection.initializeOrderedBulkOp();
+
+    bulk.find({ "_id": mongoose.Types.ObjectId(userId), "expertWorkspaces.name": workspace.name }).updateOne({
+        "$set": { "expertWorkspaces.$": workspace }
+    })
+
+    bulk.find({ "_id": mongoose.Types.ObjectId(userId), "expertWorkspaces.name": { "$ne": workspace.name } }).updateOne({
+        "$push": { "expertWorkspaces": workspace }
+    });
+    bulk
+        .execute((error, result) => {
+            console.log(result)
+            if (error) {
+                res.status(400).send({
+                    success: false,
+                    message: 'Error failed to save expert-workspace because of Error: ' + error,
+                })
+            } else {
+                if (result.nMatched === 0) {
+                    // chose nMatched because somehow Mongo was choosing
+                    // to not modify a document and array if the object inserted
+                    // is not different from what was already in the array.
+                    // so we assume that when we have a match the update
+                    // worked successfully
+                    res.send({
+                        success: false,
+                        message: 'Error: Unknown',
+                    })
+                } else {
+                    res.send({
+                        success: true,
+                    })
+                }
+            }
+        })
+}
