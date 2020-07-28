@@ -107,7 +107,7 @@ function Gallery(props) {
   let location = useLocation();
 
   return (
-    <div style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
+    <Container style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
       <Row style={{ justifyContent: "space-between" }}>
         {cards.map((card) => (
           <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
@@ -118,18 +118,27 @@ function Gallery(props) {
         ))}
         <PageCounter style={{ margin: "auto" }} />
       </Row>
-    </div>
+    </Container>
   );
 }
 
 function CardHeader(props) {
   return (
     <Card.Header>
+
       <Card.Title style={{ margin: "auto" }}>
-        {props.card.title}
-        {props.card.isAnimated ? (
-          <BsClock size={15} style={{ margin: "1vh" }} />
-        ) : ("")}
+        <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
+          <Col>
+            <p1>
+              {props.card.title}
+              {props.card.isAnimated ? (
+                <BsClock size={15} style={{ margin: "1vh" }} />
+              ) : ("")}
+            </p1>
+          </Col>
+          <MoreIcon />
+        </Row>
+
       </Card.Title>
     </Card.Header>
   );
@@ -145,8 +154,10 @@ function CardImage(props) {
         state: { background: location },
       }}
     >
-      <div variant="top" style={{ marginTop: "1em", marginBottom: "1em" }}>
-        <MISTImage code={props.card.code} resolution="250" />
+      <div variant="top" >
+        <Row style={{ justifyContent: "center", marginTop: "1em" }}>
+          <MISTImage code={props.card.code} resolution="250" />
+        </Row>
       </div>
     </Link>
   );
@@ -177,9 +188,9 @@ function CardBody(props) {
           </Nav.Link>
           <CodeIcon code={card.code} />
           <SaveIcon />
-          <FaRegComments style={{ color: "black", display: "inline-block" }} />
+          <CommentIcon id={card._id} />
           <ShareIcon />
-          <MoreIcon />
+
         </Row>
 
         {/* Row 3: Comment Box */}
@@ -188,6 +199,7 @@ function CardBody(props) {
     </Card.Body>
   );
 }
+
 
 function PageCounter() {
   return (
@@ -222,25 +234,28 @@ function ImageView(props) {
   if (!card) return <div>Image not found</div>;
 
   return (
-    <div style={{ width: "65%", margin: "auto", marginTop: "1em" }}>
+    <Container style={{ width: "65%", justifyContent: "center", marginTop: "1em" }}>
       <Col>
-        <h1 style={{ textAlign: "left" }}>{card.title}</h1>
         <Row>
-          <Col>
-            <MISTImage code={card.code} resolution="300" />
+          <Col xs="4">
+          <h1 style={{ fontSize: "150%", textAlign: "left" }} >{card.title}</h1>
+              <MISTImage code={card.code} resolution="300" />
+              <Row>
             <Button variant="light" href="/user">
               {<b>{card.userId.username}</b>}
             </Button>
+            </Row>
             <Form>
-              <Form.Control type="range" custom style={{ marginTop: "1em" }} />
+              <Form.Control type="range" custom style={{ marginTop: "1em", width: "100%"}} />
             </Form>
           </Col>
-          <Container style={{ width: "50%" }}>
+
+          <Col xs="8">
             <ModalComments card={card} />
-          </Container>
+          </Col>
         </Row>
       </Col>
-    </div>
+    </Container>
   );
 }
 
@@ -288,9 +303,6 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Header>
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
-          <Button variant="light" href="/user">
-            {card.userId.username}
-          </Button>
           {/*card.username*/}
         </Container>
         <Link to={{ pathname: "/gallery" }}>Close</Link>
@@ -313,21 +325,25 @@ function SideView(props) {
 
   return (
     <Modal.Body>
-      <Row>
+      <Row >
         <Col>
-          <div rounded style={{ width: "100%" }}>
+          <Button variant="light" href="/user">
+            {card.userId.username}
+          </Button>
+          <Row style={{ justifyContent: "center", marginTop: "1em" }}>
             <MISTImage code={card.code} resolution="250" />
-          </div>
-          {card.caption}
+          </Row>
+          <Row>
+            {card.caption}
+          </Row>
           <Form>
             <Form.Control type="range" custom style={{ marginTop: "1em" }} />
           </Form>
         </Col>
-
-        <Container style={{ width: "50%" }}>
+        <Col style={{ width: "50%" }}>
           <div style={{ paddingLeft: "1em" }}></div>
           <ModalComments card={card} />
-        </Container>
+        </Col>
 
       </Row>
     </Modal.Body>
@@ -352,17 +368,22 @@ function ModalComments(props) {
 
 
   return (
-    <Form.Group>
-      <Col>
-        {comments.map((comment) => (
-          <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
-        ))}
+
+    <Col>
+      <Form.Group >
+        <Container style={{ overflowY: "scroll", height: "40vh" }}>
+          {comments.map((comment) => (
+            <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
+          ))}
+        </Container>
         {/* Horizontal Line */}
         <hr />
         <ModalIcons card={props.card} />
         <MakeComment imageId={props.card._id} />
-      </Col>
-    </Form.Group>
+
+      </Form.Group>
+    </Col>
+
   );
 }
 
@@ -412,7 +433,7 @@ function MakeComment(props) {
         marginTop: "1em",
       }}>
 
-        <Col xs={9}>
+        <Col xs={10}>
           <Form.Control
             name="comment"
             as="textarea"
@@ -516,7 +537,7 @@ function CodeIcon(props) {
 
   return (
     <div ref={ref}>
-      <Nav.Link onClick={handleClick} style={{ color: "black" , paddingLeft: "0", paddingRight:"0"}}>
+      <Nav.Link onClick={handleClick} style={{ color: "black", paddingLeft: "0", paddingRight: "0" }}>
         <FiCode />
       </Nav.Link>
       <Overlay
@@ -531,13 +552,34 @@ function CodeIcon(props) {
           <Popover.Content>
             <Container>{props.code}</Container>
             <Row style={{ justifyContent: "flex-end" }}>
-              <Nav.Link style={{ color: "black" }}> Copy</Nav.Link>
+              <Nav.Link style={{ color: "black" }} > Copy</Nav.Link>
             </Row>
           </Popover.Content>
         </Popover>
       </Overlay>
     </div>
   );
+}
+
+function CommentIcon(props) {
+  let location = useLocation();
+  return (
+    <Link
+      to={{
+        pathname: `/img/${props.id}`,
+        // This is the trick! This link sets
+        // the `background` in location state.
+        state: { background: location },
+      }}
+      style={{ paddingTop: "0.5em" }}
+    >
+
+      <FaRegComments
+        style={{ color: "black", display: "inline-block" }}
+      />
+
+    </Link>
+  )
 }
 
 //... = hide, block, report
