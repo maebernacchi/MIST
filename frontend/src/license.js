@@ -3,7 +3,8 @@ import {Container} from 'react-bootstrap';
 
 function License() {
     return (
-        <Container fluid id="page-container"> license info
+        <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}> 
+        license info
         </Container>
     )
 }
