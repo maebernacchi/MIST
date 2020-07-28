@@ -14,9 +14,11 @@ function UserHeader.
 
 import "bootstrap/dist/css/bootstrap.css";
 import MistLogo from "./../design/Logos/Negative/negative40.png";
-import React from "react";
-import { Navbar, Nav, NavDropdown, Form,
-  FormControl, Button, NavLink} from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import {
+  Navbar, Nav, NavDropdown, Form,
+  FormControl, Button, NavLink
+} from "react-bootstrap";
 import "./../design/styleSheets/navBar.css";
 
 // +------------+----------------------------------------------------------
@@ -24,6 +26,22 @@ import "./../design/styleSheets/navBar.css";
 // +------------+
 
 function UserHeader(props) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/user', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include'
+    })
+      .then(res => res.json())
+      .then(user => {
+        if (user) setUser(user);
+      })
+  }, [user])
+
   return (
     <div>
       {/* variant is the styling of it, see more on bootstrap */}
@@ -31,7 +49,7 @@ function UserHeader(props) {
         <Logo />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-            <NavBar />
+          <NavBar user={user} />
         </Navbar.Collapse>
         <Search />
       </Navbar>
@@ -71,7 +89,14 @@ function Search() {
 /* Base Nav Bar */
 
 /* First part of the base navigation Bar (Create, Challenges, Tutorial, Gallery, About and its dropdowns) */
-function NavBar() {
+function NavBar(props) {
+
+  let username;
+  if (props.user)
+    username = props.user.username;
+  else
+    username = "Account"
+
   return (
     <Nav>
       <Nav.Link href="/createWorkspace">Create</Nav.Link>
@@ -83,7 +108,7 @@ function NavBar() {
         <NavDropdown.Item href="/development">Development</NavDropdown.Item>
         <NavDropdown.Item href="/faq">FAQ</NavDropdown.Item>
       </NavDropdown>
-      <NavDropdown title="Account" id="basic-nav-dropdown">
+      <NavDropdown title={username} id="basic-nav-dropdown">
         <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
         <NavDropdown.Item href="#action/3.2">Settings</NavDropdown.Item>
         <NavDropdown.Divider />
@@ -108,7 +133,7 @@ function signout() {
   fetch('/api/logout', {
     method: 'GET',
     headers: {
-    'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
     },
     credentials: 'include'
   }).then(res => {

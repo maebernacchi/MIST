@@ -91,29 +91,12 @@ module.exports = (app, passport, database) => {
     //------------------------------------------------	
     // SIGN UP	
 
-    app.get('/api/signup', (req, res) => {	
-
-    })	
-
-    app.post('/api/signup',	
-
-    )	
-
-    //------------------------------------------------	
-    // IMAGE	
-
-    app.get("/api/img", (req, res) => {	
-        database.getComments(req.query.id, (comments, error) => {	
-            if (error) {	
-                console.log(error);	
-                res.json([]);	
-            } else if (!comments) res.json([]);	
-            else res.json(comments);	
-        })	
-
+    app.post("/api/signup", (req, res) => {
+        database.createUser(req, (message) => res.json(message))
     });	
 
     //------------------------------------------------
+    // LOGIN
 
     app.post("/api/login", (req, res, next) => {
         passport.authenticate("local", (err, user, info) => {
@@ -136,7 +119,7 @@ module.exports = (app, passport, database) => {
 
     app.get('/api/logout', (req, res) => {
         req.logout();
-        res.json("Sucess");
+        res.json("Success");
     })
 
     app.get("/api/user", (req, res) => {
@@ -146,6 +129,20 @@ module.exports = (app, passport, database) => {
             res.json(user);
         }
     });
+
+    //------------------------------------------------	
+    // IMAGE	
+
+    app.get("/api/img", (req, res) => {	
+        database.getComments(req.query.id, (comments, error) => {	
+            if (error) {	
+                console.log(error);	
+                res.json([]);	
+            } else if (!comments) res.json([]);	
+            else res.json(comments);	
+        })	
+
+    });	
 
 
     //------------------------------------------------	                
