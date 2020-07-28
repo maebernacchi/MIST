@@ -54,7 +54,7 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import { Rect, Group, Text, Image } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
@@ -67,7 +67,6 @@ import { width, height, funBarHeight, menuHeight } from "./globals.js";
 // +----------------------------+
 // | All dependent files        |
 // +----------------------------+------------------------------------
-
 
 function ValNode(props) {
   const name = props.name;
@@ -82,9 +81,9 @@ function ValNode(props) {
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
 
-// +----------------------------+------------------------------------
-// | Trashcan                   |
-// +----------------------------+
+  // +----------------------------+------------------------------------
+  // | Trashcan                   |
+  // +----------------------------+
 
   function Trashcan() {
     return (
@@ -109,13 +108,13 @@ function ValNode(props) {
     );
   }
 
-// +----------------------------+
-// | Trashcan                   |
-// +----------------------------+------------------------------------
+  // +----------------------------+
+  // | Trashcan                   |
+  // +----------------------------+------------------------------------
 
-// +----------------------------------------+------------------------
-// | Entire Value Group                     |
-// +----------------------------------------+
+  // +----------------------------------------+------------------------
+  // | Entire Value Group                     |
+  // +----------------------------------------+
 
   return (
     <Group
@@ -123,7 +122,6 @@ function ValNode(props) {
       y={y}
       ref={groupRef}
       draggable
-
       // helps keep the function nodes in the designated workspace area
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
@@ -140,7 +138,6 @@ function ValNode(props) {
         }
         return pos;
       }}
-
       onDragStart={(e) => {
         e.target.setAttrs({
           shadowOffset: {
@@ -151,7 +148,6 @@ function ValNode(props) {
           scaleY: 1.1,
         });
       }}
-
       onDragEnd={(e) => {
         e.target.to({
           duration: 0.5,
@@ -168,7 +164,6 @@ function ValNode(props) {
           e.currentTarget.y()
         );
       }}
-
       onDragMove={(e) => {
         // Updates the line position dynamically while the node is being dragged
         props.updateLinePosition(
@@ -178,11 +173,9 @@ function ValNode(props) {
           e.currentTarget.y()
         );
       }}
-
       onClick={(e) => {
         props.clickHandler(index);
       }}
-
       onDblClick={(e) => {
         // Generates the temporary line when double clicked
         props.dblClickHandler(index);
@@ -276,9 +269,9 @@ function ValNode(props) {
       )}
     </Group>
   );
-// +----------------------------------------+
-// | Entire Value Group                     |
-// +----------------------------------------+----------------------
+  // +----------------------------------------+
+  // | Entire Value Group                     |
+  // +----------------------------------------+----------------------
 }
 
 export default ValNode;

@@ -1,8 +1,32 @@
+/**
+ * This file creates the Menu Bar and calls subsequent create nodes files.
+ *
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// +----------------------------+------------------------------------
+// | All dependent files        |
+// +----------------------------+
+
 import React, { useState } from "react";
-import { Rect, Group, Text, Shape, useStrictMode } from "react-konva";
-import Konva from "konva";
+import { Group, Text } from "react-konva";
 import gui from "./mistgui-globals.js";
 import { Spring, animated } from "react-spring/renderprops-konva";
+
+// +----------------------------+
+// | All dependent files        |
+// +----------------------------+------------------------------------
 
 /**
  * Makes one of those "Reset Workspace", "Open Workspace", and "Save Workspace" buttons
@@ -10,27 +34,6 @@ import { Spring, animated } from "react-spring/renderprops-konva";
  */
 function MakeMenuButton(props) {
   const [hovered, setHover] = useState(false);
-
-  function handleMouse(e) {
-    e.target.to({
-      duration: 0.2,
-      shadowBlur: 2,
-      shadowColor: "blue",
-    });
-  }
-
-  function handleMouseOut(e) {
-    e.target.to({
-      duration: 0.1,
-      shadowBlur: 0,
-    });
-  }
-
-  function handleClick(e) {
-    if (props.text === "Reset Workspace") {
-      props.handleClick();
-    }
-  }
 
   return (
     <Group
