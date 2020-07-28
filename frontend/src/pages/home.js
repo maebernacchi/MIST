@@ -159,25 +159,25 @@ class FeaturedImages extends Component {
             <Button variant="outline-dark"> See More </Button>
           </div>
         </Row>
-        <div className="featuredImagesFlex">
+        <Row className="featuredImagesFlex">
           {featuredImages.length ? (
-            <div>
+            <Row >
               {featuredImages.map((featuredImage) => {
                 return (
-                  <div>
+                  <Col>
                     {/* the two lines below are placeholders, we need to pass in MIST images instead */}
                     <MISTImage code={featuredImage.code} resolution="150" />
-                    <p> {featuredImage.code}</p>
-                  </div>
+                    {/*<p> {featuredImage.code}</p>*/}
+                  </Col>
                 );
               })}
-            </div>
+            </Row>
           ) : (
               <h2> No Image Found </h2>
 
             )
           }
-        </div>
+        </Row>
       </Col>
       </Container>
     );
