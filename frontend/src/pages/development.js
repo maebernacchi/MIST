@@ -1,12 +1,12 @@
 import React from "react";
 import "./../design/styleSheets/styles.css";
 import "./../design/styleSheets/about.css";
-import { Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 //Disclaimer about how MIST is still in developmental phases
 const Development = () => {
   return (
-    <Container fluid>
+    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <h1>Development</h1>
       <Container className="clear:left;">
         <p>

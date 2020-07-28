@@ -12,14 +12,18 @@ function UserHeader.
 // | Imports |
 // +---------+
 
-import "bootstrap/dist/css/bootstrap.css";
-import MistLogo from "./../design/Logos/Negative/negative40.png";
+
 import React, { useState, useEffect } from "react";
+import {Link} from "react-router-dom";
+/* Imports for images / logos */
+import MistLogo from "./../design/Logos/logoFinal.png";
+/* Imports for bootstrap */
 import {
   Navbar, Nav, NavDropdown, Form,
   FormControl, Button, NavLink
 } from "react-bootstrap";
 import "./../design/styleSheets/navBar.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 // +------------+----------------------------------------------------------
 // | UserHeader |
@@ -62,12 +66,11 @@ function UserHeader(props) {
  */
 function Logo() {
   return (
-    <NavLink href="/">
-      <img src={MistLogo} alt="MIST Logo"></img>
-    </NavLink>
+    <Link to="/" style={{width: "5%"}}>
+      <img src={MistLogo} alt="MIST Logo" style={{maxWidth: "100%"}}></img>
+    </Link>
   );
 }
-
 /**
  * returns the searchBar
  */

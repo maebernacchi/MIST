@@ -36,7 +36,7 @@ export default function Gallery() {
     }}, [category])
 
   return (
-    <div>
+    <div style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <h1>Gallery</h1>
       <p>Get Inspired by others!</p>
       <DisplayImages cards={cards} cardsLoaded={cardsLoaded} />

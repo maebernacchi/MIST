@@ -9,8 +9,10 @@ import {
   Col,
   Nav,
   Tab,
-  Card
+  Card,
+  Carousel
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
 /** 6745662 */
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./../MISTImageGallery"
@@ -57,7 +59,7 @@ export default function Profile() {
   }, [])
 
   return (
-    <div>
+    <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
       <Container>
         <h1> Profile </h1>
       </Container>
@@ -71,30 +73,10 @@ export default function Profile() {
       </Container>
 
       <ProfileNav images={userImages} albums={userAlbums} />
-    </div>
+    </Container>
   );
 }
 
-// this is just a quick component I wrote
-// we need to implement an albums page and a real album component
-function Album(props) {
-  return (
-    <Card
-      style={{ padding: "1em", width: "30%", margin: "1em" }}
-    >
-      <Card.Header>
-        <Card.Title style={{ margin: "auto" }}>
-          {props.title}
-        </Card.Title>
-        {/* ICONS */}
-        <Card.Body style={{ justifyContent: "space-between" }}>
-          <p>Description: {props.description}</p>
-          <p>created: {props.date}</p>
-        </Card.Body>
-      </Card.Header>
-    </Card>
-  )
-}
 
 function FirstPart(props) {
   return (
@@ -196,8 +178,9 @@ function IconsBar() {
 
 function ProfileNav(props) {
   return (
+    <Container>
     <Tab.Container>
-      <Nav fill variant="tabs" defaultActiveKey="link-1">
+      <Nav fill variant="tabs" defaultActiveKey="images">
         <Nav.Item>
           <Nav.Link eventKey="images" style={{ color: "black" }}>
             Images
@@ -238,7 +221,73 @@ function ProfileNav(props) {
             ))}
           </Row>
         </Tab.Pane>
+
+
       </Tab.Content>
     </Tab.Container>
+    </Container>
+  );
+}
+
+// this is just a quick component I wrote
+// we need to implement an albums page and a real album component
+function Album(props) {
+  return (
+    <Card
+      style={{ padding: "1em", width: "30%", margin: "1em" }}
+    >
+      <Card.Header>
+        <Card.Title style={{ margin: "auto" }}>
+          <p>{props.title}</p>
+        </Card.Title>
+        {/* ICONS */}
+        <Card.Body style={{ justifyContent: "space-between" }}>
+          <ControlledCarousel />
+          <p>{props.description}</p>
+          <p>{props.date}</p>
+        </Card.Body>
+      </Card.Header>
+    </Card>
+  )
+}
+
+function ControlledCarousel() {
+  const [index, setIndex] = useState(0);
+
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
+
+  return (
+    <Carousel activeIndex={index} onSelect={handleSelect}>
+      <Carousel.Item >
+        <Row style={{ justifyContent: "center" }}>
+          <MISTImage
+            code="x"
+            resolution="250"
+          />
+        </Row>
+        <Carousel.Caption>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+
+        <Row style={{ justifyContent: "center" }}>
+          <MISTImage
+            code="x"
+            resolution="250"
+          />
+        </Row>
+
+      </Carousel.Item>
+      <Carousel.Item>
+        <Row style={{ justifyContent: "center" }}>
+          <MISTImage
+            code="x"
+            resolution="250"
+          />
+        </Row>
+      </Carousel.Item>
+    </Carousel>
   );
 }

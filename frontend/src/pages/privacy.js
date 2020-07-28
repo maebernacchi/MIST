@@ -5,7 +5,7 @@ import { Container, Nav } from "react-bootstrap";
 
 function Privacy() {
   return (
-    <Container>
+    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <h1>Privacy Policy </h1>
       <div>
         We at Glimmer Labs take your privacy very seriously. We believe that

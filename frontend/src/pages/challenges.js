@@ -37,7 +37,7 @@ const Challenges = () => {
   }, [level, color, animation])
 
   return (
-    <Container fluid>
+    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
       <Container>
         <h1>Challenges</h1>
         <p>Start of challenges</p>
