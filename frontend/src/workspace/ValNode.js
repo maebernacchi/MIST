@@ -1,4 +1,60 @@
-import React, { useState, useRef, useEffect } from "react";
+/**
+ * The value nodes in the workspace for MIST.
+ *
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// +-------+---------------------------------------------------------
+// | Notes |
+// +-------+
+/* 1. The trashcan function creates a trashcan icon on the top left of the function node. The onClick
+      attrribute on that deletes the node from the workspace
+
+   2. Props received from the workspace contain the following:
+   - name : String; name of the node
+   - key : int; unique key attribute 
+   - index : int; index of the ndoe
+   - x : int; x coordinate
+   - y : int; y coordinate 
+   - offsetX : int; to account for the shift in the x-coordinate 
+   - offsetY : int; to account for the shift in the y-coordinate
+   - numInputs : int; number of lines coming into the node
+   - numOutlets : int; number of outlets of the node
+   - renderFunction : String; the expression in the node
+   - updateNodePosition : function; Updates node position in the workspace
+   - updateLinePosition : function; Updates line position in the workspace
+   - outletClicked : function; Listens to clicks on the outlets
+   - dblClickHandler : function; Listens to double clicks on the function for generation of 
+                       temporary line 
+   - removeNode : function; removes node from the workspace
+
+   3. The dragBoundFunc attribute on the group helps keep the value node within the 
+      boundaries of the workspace. 
+
+   4. UseStrictMode is a good react-konva practice.
+  
+
+*/
+// +-------+
+// | Notes |
+// +-------+---------------------------------------------------------
+
+// +----------------------------+------------------------------------
+// | All dependent files        |
+// +----------------------------+
+
+import React, { useState, useRef} from "react";
 import { Rect, Group, Text, Image } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
@@ -8,10 +64,11 @@ import useImage from "use-image";
 import nodeDimensions from "./globals-nodes-dimensions.js";
 import { width, height, funBarHeight, menuHeight } from "./globals.js";
 
-/**
- *
- * @param props
- */
+// +----------------------------+
+// | All dependent files        |
+// +----------------------------+------------------------------------
+
+
 function ValNode(props) {
   const name = props.name;
   const x = props.x;
@@ -25,9 +82,9 @@ function ValNode(props) {
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
 
-  useEffect(() => {
-    console.log("valnode");
-  }, []);
+// +----------------------------+------------------------------------
+// | Trashcan                   |
+// +----------------------------+
 
   function Trashcan() {
     return (
@@ -52,12 +109,22 @@ function ValNode(props) {
     );
   }
 
+// +----------------------------+
+// | Trashcan                   |
+// +----------------------------+------------------------------------
+
+// +----------------------------------------+------------------------
+// | Entire Value Group                     |
+// +----------------------------------------+
+
   return (
     <Group
       x={x}
       y={y}
       ref={groupRef}
       draggable
+
+      // helps keep the function nodes in the designated workspace area
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
           pos.x = 0;
@@ -73,6 +140,7 @@ function ValNode(props) {
         }
         return pos;
       }}
+
       onDragStart={(e) => {
         e.target.setAttrs({
           shadowOffset: {
@@ -83,6 +151,7 @@ function ValNode(props) {
           scaleY: 1.1,
         });
       }}
+
       onDragEnd={(e) => {
         e.target.to({
           duration: 0.5,
@@ -92,13 +161,16 @@ function ValNode(props) {
           shadowOffsetX: 5,
           shadowOffsetY: 5,
         });
+        // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
           index,
           e.currentTarget.x(),
           e.currentTarget.y()
         );
       }}
+
       onDragMove={(e) => {
+        // Updates the line position dynamically while the node is being dragged
         props.updateLinePosition(
           index,
           "val",
@@ -106,10 +178,13 @@ function ValNode(props) {
           e.currentTarget.y()
         );
       }}
+
       onClick={(e) => {
         props.clickHandler(index);
       }}
+
       onDblClick={(e) => {
+        // Generates the temporary line when double clicked
         props.dblClickHandler(index);
       }}
     >
@@ -173,7 +248,7 @@ function ValNode(props) {
       </Group>
       {showImage ? (
         <Portal>
-          <MISTImage
+          <MISTImage //Mini image that can be seen at the bottom right of the node
             onClick={() => setShowImage(!showImage)}
             x={x + nodeDimensions.valueImageBoxOffset + props.offsetX}
             y={y + nodeDimensions.valueImageBoxOffset + props.offsetY}
@@ -201,6 +276,9 @@ function ValNode(props) {
       )}
     </Group>
   );
+// +----------------------------------------+
+// | Entire Value Group                     |
+// +----------------------------------------+----------------------
 }
 
 export default ValNode;
