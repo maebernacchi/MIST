@@ -124,7 +124,7 @@ function FileDropdown(props) {
                 <ImportWorkspace
                     loadWorkspace={props.loadWorkspace}
                     workspaceNameRef={props.workspaceNameRef} />
-                <DeleteWorkspace />
+                <Dropdown.Item onClick={()=>alert('Not yet implemented')}>Delete Workspace</Dropdown.Item>
                 <Dropdown.Divider />
 
             </DropdownButton>{' '}
@@ -137,26 +137,6 @@ FileDropdown.propTypes = {
     loadWorkspace: PropTypes.func.isRequired,
     resetWorkspace: PropTypes.func.isRequired,
     workspaceNameRef: PropTypes.object.isRequired,
-}
-
-function DeleteWorkspace() {
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    // STUB
-    return (
-        <>
-            <Dropdown.Item onClick={handleShow}>Delete Workspace</Dropdown.Item>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Do you want to delete a workspace?</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Not yet implemented</Modal.Body>
-            </Modal>
-        </>
-    );
 }
 
 function ImportWorkspace(props) {
