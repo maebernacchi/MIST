@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import "./design/styleSheets/generalStyles.css";
 import { UserContext } from './Contexts/UserContext';
 
@@ -41,6 +41,26 @@ function App() {
       <BrowserRouter>
         {data ? <UserNavigation /> : <BaseNavigation />}
         <Container fluid id="content-wrap">
+          <Link to={
+            {
+              pathname: '/expert',
+              state: {
+                code: 'yo'
+              }
+            }
+          }>
+            <div>CLick me for expert yo</div>
+          </Link>
+          <Link to={
+            {
+              pathname: '/expert',
+              state: {
+                code: 'bo'
+              }
+            }
+          }>
+            <div>CLick me for expert bo</div>
+          </Link>
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/about" component={About} />
@@ -61,7 +81,7 @@ function App() {
             <Route path="/user" children={User} />
             <Route path="/img/:url" children={<Gallery />} />
             <Route path="/createWorkspace" children={<WorkspaceComponent />} />
-            <Route path="/expert" render={(props) => <Expert {...props}/>} />
+            <Route path="/expert" render={(props) => <Expert {...props} />} />
           </Switch>
         </Container>
         <Footer id="footer" />
