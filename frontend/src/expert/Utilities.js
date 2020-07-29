@@ -159,7 +159,7 @@ export const MIST_builtin_functions = {
     "mistif": {
         "class": "MIST.FunInfo",
         "name": "mistif",
-        "display": "if",
+        "display": "mistif",
         "about": "if test is greater than or equal to zero, return pos, if test is less than zero, return neg",
         "params": "test, pos, neg",
         "minarity": 3,
