@@ -162,6 +162,8 @@ function ResetWorkspace(props) {
 
     const isWorkspaceInUse = () => {
         const currentWorkspace = props.getCurrentWorkspace();
+        console.log('checking workspace')
+        console.log(currentWorkspace)
         // check if form is in use
         const currentForm = currentWorkspace.form;
         if (currentForm.name || currentForm.params || currentForm.description || currentForm.code)

@@ -22,6 +22,10 @@ const initialForm = {
     params: "",
 }
 
+const initialMacros = {
+    _order: [],
+}
+
 /** 
  * The initial state of the Popup
  */
@@ -31,14 +35,6 @@ const initialPopup = {
     onConfirm: () => { console.log('STUB') },
 }
 
-/**
- * This returns an object identical to initialPopup
- */
-export function getInitialPopup(){
-    return {
-        ...initialPopup,
-    }
-}
 
 /**
  * The returns an object identical to initialForm
@@ -49,6 +45,23 @@ export function getInitialForm() {
     }
 } // getInitialForm()
 
+/**
+ * This returns an object identical to initialMacros
+ */
+export function getInitialMacros() {
+    return {
+        ...initialMacros
+    }
+}
+
+/**
+ * This returns an object identical to initialPopup
+ */
+export function getInitialPopup() {
+    return {
+        ...initialPopup,
+    }
+}
 
 /**
  * The returns an object identical that represents the intended initial state of

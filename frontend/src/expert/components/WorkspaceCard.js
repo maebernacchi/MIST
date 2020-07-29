@@ -47,6 +47,10 @@ function WorkspaceCard(props) {
 
     return (
         <Card className='scroll panel' id='expert-workspace'>
+
+            {
+                console.log('rendering workspace')
+            }
             <Card.Title >Create Your Custom Function</Card.Title>
             <Tabs
                 id="controlled-center-body"
@@ -84,7 +88,7 @@ function WorkspaceCard(props) {
                                 <Form.Group>
                                     <Form.Label>
                                         Parameters&nbsp;
-                                        <HelpText text="The parameters to your MIST function. Separate parameters with commas. Parameter names can include numbers and capital or lowercase letters." id="mist-function-params-tooltip"/>
+                                        <HelpText text="The parameters to your MIST function. Separate parameters with commas. Parameter names can include numbers and capital or lowercase letters." id="mist-function-params-tooltip" />
                                     </Form.Label>
                                     <Form.Control
                                         as="textarea"
@@ -208,7 +212,6 @@ function FunctionButtons(props) {
     return (
         <>
             <Row style={{ justifyContent: 'space-between', flexDirection: 'row-reverse' }}>
-
                 <ButtonGroup>
                     <OverlayTrigger
                         container={props.expertRef}
@@ -233,9 +236,7 @@ function FunctionButtons(props) {
                         </Button>
                     </OverlayTrigger>
                 </ButtonGroup>
-            </Row >
-            {props.children}
-            <Row style={{ justifyContent: 'space-between', flexDirection: 'row-reverse' }}>
+                
                 <ButtonGroup>
                     <OverlayTrigger
                         container={props.expertRef}
@@ -262,7 +263,8 @@ function FunctionButtons(props) {
 
                 </ButtonGroup>
 
-            </Row>
+            </Row >
+            {props.children}
         </>
     )
 }

@@ -292,7 +292,6 @@ function SidePanelCard(props) {
 }
 
 SidePanelCard.propTypes = {
-    codeRef: PropTypes.object.isRequired,
     getFormState: PropTypes.func.isRequired,
     getStateFunctions: PropTypes.func.isRequired,
     getFunctions: PropTypes.func.isRequired,
