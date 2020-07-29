@@ -34,8 +34,10 @@ function Menu(props) {
             <ButtonGroup>
                 <FileDropdown
                     getCurrentWorkspace={props.getCurrentWorkspace}
+                    isWorkspaceInUse={props.isWorkspaceInUse}
                     loadWorkspace={props.loadWorkspace}
                     resetWorkspace={props.resetWorkspace}
+                    triggerPopup={props.triggerPopup}
                     workspaceNameRef={workspaceNameRef}
                 />
                 <Form inline>
@@ -108,10 +110,17 @@ function FileDropdown(props) {
                 title="File"
                 variant="primary"
             >
-                <ResetWorkspace
-                    getCurrentWorkspace={props.getCurrentWorkspace}
-                    resetWorkspace={props.resetWorkspace}
-                />
+                <Dropdown.Item
+                    onClick={() => {
+                        if (props.isWorkspaceInUse()) {
+                            props.triggerPopup({
+                                message: 'Your workspace is currently in use. Are you sure that you want to reset it?',
+                                onConfirm: props.resetWorkspace,
+                            })
+                        }
+                    }}
+                >Reset Workspace</Dropdown.Item>
+
                 <ImportWorkspace
                     loadWorkspace={props.loadWorkspace}
                     workspaceNameRef={props.workspaceNameRef} />
@@ -128,57 +137,6 @@ FileDropdown.propTypes = {
     loadWorkspace: PropTypes.func.isRequired,
     resetWorkspace: PropTypes.func.isRequired,
     workspaceNameRef: PropTypes.object.isRequired,
-}
-
-function ResetWorkspace(props) {
-    const [resetWorkspaceModalShow, setResetWorkspaceModalShow] = useState(false);
-
-    const resetModal = (
-        <Modal show={resetWorkspaceModalShow} onHide={() => setResetWorkspaceModalShow(false)}>
-            <Modal.Header closeButton>
-                <Modal.Title>Reset your workspace</Modal.Title>
-            </Modal.Header>
-            <Modal.Body> Your workspace is currently in use. Are you sure that you want
-            to reset it?
-            </Modal.Body>
-            <Modal.Footer>
-                <Button
-                    onClick={() => setResetWorkspaceModalShow(false)}
-                    variant="secondary">Close</Button>
-                <Button
-                    onClick={() => { props.resetWorkspace(); setResetWorkspaceModalShow(false); }}
-                    variant="primary">
-                    Reset Workspace</Button>
-            </Modal.Footer>
-        </Modal>
-    )
-
-    const isWorkspaceInUse = () => {
-        const currentWorkspace = props.getCurrentWorkspace();
-        console.log('checking workspace')
-        console.log(currentWorkspace)
-        // check if form is in use
-        const currentForm = currentWorkspace.form;
-        if (currentForm.name || currentForm.params || currentForm.description || currentForm.code)
-            return true;
-        // check if there are any user defined functions
-        const functions = currentWorkspace.functions;
-        if (Object.keys(functions).length > 1)
-            return true;
-        return false;
-    }
-
-    return (
-        <>
-            <Dropdown.Item
-                onClick={() => {
-                    if (isWorkspaceInUse())
-                        setResetWorkspaceModalShow(true)
-                }}
-            >Reset Workspace</Dropdown.Item>
-            {resetModal}
-        </>
-    );
 }
 
 function DeleteWorkspace() {

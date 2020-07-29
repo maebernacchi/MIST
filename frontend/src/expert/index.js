@@ -44,9 +44,9 @@ import Menu from './components/Menu';
 import Popup from './components/Popup';
 import WorkspaceCard from './components/WorkspaceCard';
 import SidePanelCard from './components/SidePanelCard';
-import { getInitialForm, getInitialMacros, getInitialPopup, getInitialState, } from './initial-state';
+import { getInitialForm, getInitialMacros, getInitialPopup, } from './initial-state';
 import expand_macros from './macros';
-import React, { Component, createRef, useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import ResizablePanels from "resizable-panels-react";
 
 // +---------------------------------
@@ -103,6 +103,22 @@ function Expert(props) {
     const resetForm = () => {
         setForm(getInitialForm);
     }
+
+    /** 
+     * Returns true if the form is in use, false otherwise
+     */
+    const isFormInUse = () => {
+        const initialForm = getInitialForm();
+        let inUse = false;
+        Object.keys(form).forEach(field => {
+            if(form[field] !== initialForm[field]){
+                inUse = true;
+                return;
+            }
+        })
+        return inUse;
+    }
+
 
     /**
      * Loads the object (functionToLoad) into the form
@@ -287,6 +303,13 @@ function Expert(props) {
     }
 
     /**
+     * Return true if the workspace is in use, false otherwise.
+     */
+    const isWorkspaceInUse = () => {
+        return isFormInUse() || (macros._order.length !== 0);
+    }
+
+    /**
      * Returns the current workspace
      */
     const getCurrentWorkspace = () => {
@@ -307,6 +330,7 @@ function Expert(props) {
             />
             <Menu
                 getCurrentWorkspace={getCurrentWorkspace}
+                isWorkspaceInUse={isWorkspaceInUse}
                 loadWorkspace={loadWorkspace}
                 resetWorkspace={resetWorkspace}
 
@@ -316,6 +340,8 @@ function Expert(props) {
                 exitFullscreen={() => document.exitFullscreen()}
 
                 saveWorkspace={saveWSToUser}
+
+                triggerPopup={triggerPopup}
             />
 
             <ResizablePanels
