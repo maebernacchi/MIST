@@ -32,6 +32,15 @@ const initialPopup = {
 }
 
 /**
+ * This returns an object identical to initialPopup
+ */
+export function getInitialPopup(){
+    return {
+        ...initialPopup,
+    }
+}
+
+/**
  * The returns an object identical to initialForm
  */
 export function getInitialForm() {

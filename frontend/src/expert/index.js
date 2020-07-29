@@ -44,14 +44,58 @@ import Menu from './components/Menu';
 import Popup from './components/Popup';
 import WorkspaceCard from './components/WorkspaceCard';
 import SidePanelCard from './components/SidePanelCard';
-import { getInitialForm, getInitialState } from './initial-state';
+import { getInitialForm, getInitialPopup, getInitialState } from './initial-state';
 import expand_macros from './macros';
-import React, { Component, createRef } from 'react';
+import React, { Component, createRef, useEffect, useState } from 'react';
 import ResizablePanels from "resizable-panels-react";
 
 // +---------------------------------
 // | Expert |
 // +--------+
+function ExpertR(props) {
+    const codeRef = createRef("code");
+    const expertRef = createRef("expert");
+
+    /**
+     * 5. Popups  
+     * */
+    const [popup, setPopup] = useState(getInitialPopup());
+
+    /**
+     * Opens and Closes the current Popup 
+     * */
+    const togglePopup = () => {
+        setPopup({
+            ...popup,
+            isOpen: !popup.isOpen,
+        })
+    }
+
+    /**
+     * Opens a popup with the given message and a specific confirmation action
+     * @param {*} param0 
+     */
+    const triggerPopup = ({ message, onConfirm }) => {
+        setPopup({
+            ...popup,
+            isOpen: !popup.isOpen,
+            message: message,
+            onConfirm: onConfirm,
+        })
+    }
+
+    return (
+        <div id='expert' ref={expertRef} >
+            {console.log('rendering expert')}
+            <Popup
+                isOpen={popup.isOpen}
+                message={popup.message}
+                onConfirm={popup.onConfirm}
+                onClose={togglePopup}
+            />
+
+        </div>)
+}
 
 class Expert extends Component {
     constructor(props) {
