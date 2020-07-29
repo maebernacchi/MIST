@@ -1,3 +1,12 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * This file contains important global constants for our Expert UI.
+ * These are MIST_builtin_functions for default-builtin MIST functions and  
+ * MIST_builtin_values for default-builtin MIST values.
+ */
+
 export const MIST_builtin_functions = {
     "abs": {
         "class": "MIST.FunInfo",
