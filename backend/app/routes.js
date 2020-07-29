@@ -125,8 +125,10 @@ module.exports = (app, passport, database) => {
     app.get("/api/user", (req, res) => {
         if (!req.user) res.json(null);
         else {
-            user = req.user;
-            res.json(user);
+            let username = req.user.username; // for some reason, req.user only stores the username
+            database.User.findOne({username: username}, (err, user) => {
+                res.json(user);
+            })
         }
     });
 
