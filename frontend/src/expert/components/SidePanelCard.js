@@ -33,7 +33,7 @@ import {
 import {
     MIST_builtin_functions,
     MIST_builtin_values,
-} from '../Utilities';
+} from '../expertGlobals';
 
 function SidePanelCard(props) {
 
