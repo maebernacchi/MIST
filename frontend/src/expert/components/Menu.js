@@ -26,7 +26,7 @@ import { BsCloud, BsFullscreen, BsFullscreenExit } from 'react-icons/bs';
 import { FaRegShareSquare } from 'react-icons/fa';
 
 function Menu(props) {
-
+    // A reference to keep track of the name that the user picks for their workspace
     const workspaceNameRef = createRef('workspaceName');
 
     return (
@@ -79,6 +79,9 @@ Menu.propTypes = {
     exitFullscreen: PropTypes.func.isRequired,
 }
 
+/**
+ * Button for the user to toggle fullscreen
+ */
 function FullscreenButton(props) {
     const [fullscreen, setFullscreen] = useState(document.fullscreen);
     useEffect(() => {
@@ -100,6 +103,9 @@ function FullscreenButton(props) {
     }
 }
 
+/**
+ * Dropdown for where the user can perform actions related to workspaces other than saving
+ */
 function FileDropdown(props) {
     return (
         <>
@@ -139,6 +145,9 @@ FileDropdown.propTypes = {
     workspaceNameRef: PropTypes.object.isRequired,
 }
 
+/**
+ * Button for the user to load a saved workspace from the server 
+ */
 function ImportWorkspace(props) {
 
     // Done in part by following
