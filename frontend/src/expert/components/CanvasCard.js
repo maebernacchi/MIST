@@ -35,6 +35,9 @@ class CanvasCard extends Component {
         this.state = { resolution: 200 };
     }
 
+    /**
+     * We should only rerender the Canvas if the resolution changes
+     */
     shouldComponentUpdate(nextProps, nextState) {
         return (nextState.resolution !== this.state.resolution)
     }
@@ -66,11 +69,11 @@ class CanvasCard extends Component {
             let expand_code = this.props.code;
             // check the user has specified default parameters
             if (this.props.default_params) {
-                
+
                 const params = this.props.params.replace(/\s/g, "").split(",");
                 const default_params = this.props.default_params.replace(/\s/g, "").split(",");;
                 // check that default_params match params in count
-                if(params.length === default_params.length){
+                if (params.length === default_params.length) {
                     // surround parameters with brackets
                     expand_code = make_template_string({ code: expand_code, params: params }, {}, {});
                     // replace parameters with default parameters
@@ -79,7 +82,7 @@ class CanvasCard extends Component {
                         console.log('here')
                         expand_code = replace_all(expand_code, `{${param}}`, default_params[idx])
                     });
-                }else{
+                } else {
                     throw 'There is a mismatch between default_params and params';
                 }
             }
@@ -115,7 +118,6 @@ class CanvasCard extends Component {
     } // downloadImage()
 
     render() {
-
         return (
             <Card
                 id='expert-canvas'
