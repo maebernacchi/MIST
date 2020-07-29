@@ -76,6 +76,7 @@ import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
 import ValNode from "./ValNode";
 import nodeDimensions from "./globals-nodes-dimensions.js";
 
+
 // +----------------------------+
 // | All dependent files        |
 // +----------------------------+------------------------------------
@@ -606,6 +607,16 @@ class WorkspaceComponent extends Component {
   // +-------------------------------+
 
   /**
+   * 
+   * @param {int} index 
+   * @param {float} value 
+   * Updates the numeric value in the '#' node
+   */
+  updateHashValue = (index, value) => {
+    this.state.nodes[index].renderFunction.renderFunction = value;
+  }
+
+  /**
    * Updates the render function of the node at index as well as all the nodes that branch out of it
    * @param {int} index
    */
@@ -967,6 +978,7 @@ class WorkspaceComponent extends Component {
                     clickHandler={this.valClicked.bind(this)}
                     dblClickHandler={this.dblClicked.bind(this)}
                     removeNode={this.removeNode.bind(this)}
+                    updateHashValue = {this.updateHashValue.bind(this)}
                   />
                 ))
             )}

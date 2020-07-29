@@ -74,12 +74,14 @@ function ValNode(props) {
   const y = props.y;
   const index = props.index;
   const rep = gui.values[name].rep;
-  const renderFunction = gui.values[name].rep;
+  const [renderFunction, setRenderFunction] = useState(gui.values[name].rep);
   const [showImage, setShowImage] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
+  const [formValue, setFormValue] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   // +----------------------------+------------------------------------
   // | Trashcan                   |
@@ -224,19 +226,60 @@ function ValNode(props) {
           shadowOffsetY={1}
           _useStrictMode
         />
-        <Text
-          text={rep}
-          fontFamily={gui.globalFont}
-          fill={"black"}
-          fontSize={gui.nodeFontSize}
-          x={0}
-          y={0}
-          width={nodeDimensions.valueWidth}
-          height={nodeDimensions.valueWidth}
-          align={"center"}
-          verticalAlign={"middle"}
-          _useStrictMode
-        />
+        {rep === "#" && !submitted ? (
+          <Portal>
+            <form
+              id="form#"
+              style={{
+                position: "absolute",
+                left: x + props.offsetX + 10,
+                top: y + props.offsetY + 10,
+              }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.nativeEvent.stopImmediatePropagation();
+                if(parseFloat(formValue)!== null) {
+                  setRenderFunction(formValue);
+                  props.updateHashValue(index, formValue);
+                  setSubmitted(true);
+                } else {
+                  console.log("Invalid Number");
+                }
+                return false;
+              }}
+            >
+              <label>
+                <input
+                  type="text"
+                  placeholder="#"
+                  style={{
+                    width: 0.5 * nodeDimensions.valueWidth,
+                    height: 0.5 * nodeDimensions.valueWidth,
+                  }}
+                  onChange={(e) => {
+                    setFormValue(e.target.value);
+                  }}
+                />
+              </label>
+            </form>
+            <div></div>
+          </Portal>
+        ) : (
+          <Text
+            text={renderFunction}
+            fontFamily={gui.globalFont}
+            fill={"black"}
+            fontSize={gui.nodeFontSize}
+            x={0}
+            y={0}
+            width={nodeDimensions.valueWidth}
+            height={nodeDimensions.valueWidth}
+            align={"center"}
+            verticalAlign={"middle"}
+            _useStrictMode
+          />
+        )}
         <Trashcan />
       </Group>
       {showImage ? (
@@ -275,3 +318,4 @@ function ValNode(props) {
 }
 
 export default ValNode;
+

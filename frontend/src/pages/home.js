@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import "./../design/styleSheets/home.css";
-import LinkButton from "../LinkButton";
+import LinkButton from "./components/LinkButton";
 import { NavLink } from "react-router-dom";
-
-//import MistLogo from "./Logos/Positive/nobackground300.png";
 import MistLogo from "./../design/Logos/logoFinal.png";
 import { Button, Container, Row, Col } from "react-bootstrap";
+import { AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
-import MISTImage from "../MISTImageGallery"
+import MISTImage from "./components/MISTImageGallery"
 
 const home = () => {
   return <PageContent />;
@@ -62,7 +61,7 @@ function ButtonContainer() {
       </LinkButton>
 
 
-      <LinkButton to="/" className="linkButton" id="middleButton">
+      <LinkButton to="/createWorkspace" className="linkButton" id="middleButton">
         Create
       </LinkButton>
 
@@ -156,28 +155,28 @@ class FeaturedImages extends Component {
           </div>
 
           <div>
-            <Button variant="outline-dark"> See More </Button>
+            <Button variant="outline-dark" href="/gallery"> See More </Button>
           </div>
         </Row>
-        <div className="featuredImagesFlex">
+        <Row className="featuredImagesFlex">
           {featuredImages.length ? (
-            <div>
+            <Row >
               {featuredImages.map((featuredImage) => {
                 return (
-                  <div>
+                  <Col>
                     {/* the two lines below are placeholders, we need to pass in MIST images instead */}
                     <MISTImage code={featuredImage.code} resolution="150" />
-                    <p> {featuredImage.code}</p>
-                  </div>
+                    {/*<p> {featuredImage.code}</p>*/}
+                  </Col>
                 );
               })}
-            </div>
+            </Row>
           ) : (
               <h2> No Image Found </h2>
 
             )
           }
-        </div>
+        </Row>
       </Col>
       </Container>
     );

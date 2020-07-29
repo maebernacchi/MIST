@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./design/styleSheets/generalStyles.css";
-import { UserContext } from './Contexts/UserContext';
+import { UserContext } from './pages/components/Contexts/UserContext';
 
 import Home from "./pages/home";
 import About from "./pages/about";
@@ -10,7 +10,7 @@ import Tutorial from "./pages/tutorial";
 import SignUp from "./pages/signUp";
 import Gallery from "./pages/Gallery";
 import Challenges from "./pages/challenges";
-import Footer from "./footer";
+import Footer from "./pages/components/footer";
 import Contact from "./pages/contact";
 import Privacy from "./pages/privacy";
 import License from "./pages/license";
@@ -21,14 +21,14 @@ import UserProfile from "./pages/profile";
 import Expert from "./expert/";
 
 import Community from "./pages/community";
-import ReportForm from "./report";
-import User from "./user";
+import ReportForm from "./pages/report";
+import User from "./pages/user";
 //import WorkSpace from "./Workspace";
 import WorkspaceComponent from './workspace';
 
 /** New option for navigation bars*/
-import BaseNavigation from "./NavBar/navBarLoggedOut";
-import UserNavigation from "./NavBar/navBarLoggedIn";
+import BaseNavigation from "./pages/components/NavBar/navBarLoggedOut";
+import UserNavigation from "./pages/components/NavBar/navBarLoggedIn";
 import { Container } from "react-bootstrap";
 
 function App() {

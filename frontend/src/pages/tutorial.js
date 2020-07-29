@@ -111,7 +111,7 @@ import { Link } from "react-router-dom";
 import { BsQuestionCircle, BsClock } from "react-icons/bs";
 import { RiMenu2Line } from "react-icons/ri";
 
-import MISTImage from "../MISTImageGallery";
+import MISTImage from "./components/MISTImageGallery";
 
 import WorkSpace from "../workspace";
 

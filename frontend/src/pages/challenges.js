@@ -6,7 +6,7 @@ import {
   Row, Form, Col,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from "../MISTImageGallery";
+import MISTImage from "./components/MISTImageGallery";
 
 //Challenges; header, spacing between drop down
 //menus, and the challenges displayed on the screen
@@ -41,8 +41,6 @@ const Challenges = () => {
       <Container>
         <h1>Challenges</h1>
         <p>Start of challenges</p>
-        {/* This line is for testing */}
-        <p>Level: {level}, Color: {color}, Animation: {animation}</p>
       </Container>
       <Container style={{ marginTop: "1em" }}>
         <Container style={{ marginBottom: "1em" }}>
