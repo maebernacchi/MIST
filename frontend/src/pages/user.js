@@ -1,10 +1,25 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * user.js
+ * 
+ * This exports the user page, which is the page users see 
+ * when viewing other user's profile.
+ * Not yet developed:
+    * Albums are the user's public albums. Currently, what is displayed is fake data.
+    * Images are the user's public images. Currently, the images displayed are the same 
+    *   images from the gallery 
+    * blocking user works
+ * 
+ */
+
 import React from "react";
 import "../design/styleSheets/profile.css";
 import "../design/styleSheets/generalStyles.css";
-import { Button, Container, Row, Form, Col, Nav, OverlayTrigger, Popover} from "react-bootstrap";
-/** 6745662 */
+import { Button, Container, Row, Form, Col, Nav, OverlayTrigger, Popover } from "react-bootstrap";
 import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.css"; 
+import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from './components/MISTImageGallery'
 import {
     AiOutlinePicture,
@@ -13,6 +28,7 @@ import {
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 
+// full profile
 export default function User() {
     return (
         <div>
@@ -28,6 +44,7 @@ export default function User() {
     );
 }
 
+// user information: profile pic, username, name, email, member since, block, report
 function FirstPart() {
     let [blocked, setBlocked] = useState(false);
 
@@ -116,6 +133,7 @@ function FirstPart() {
     );
 }
 
+// icons (for images, likes, badges, challenges) underneath user information
 function IconsBar() {
     const icons = [
         { iconName: <AiOutlinePicture size={28} />, num: 8, category: "images" },
@@ -141,6 +159,7 @@ function IconsBar() {
     );
 }
 
+// images, albums
 function ProfileNav() {
     return (
         <Container>
@@ -155,16 +174,22 @@ function ProfileNav() {
                         Albums
           </Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="link-4" style={{ color: "black" }}>
-                        Badges
+                {/*  Not implemented in back-end 
+        <Nav.Item>
+          <Nav.Link eventKey="link-4" style={{ color: "black" }}>
+            Badges
           </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="link-3" style={{ color: "black" }}>
-                        Challenges
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="link-3" style={{ color: "black" }}>
+            Challenges
           </Nav.Link>
-                </Nav.Item>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="link-5" style={{ color: "black" }}>
+            Saved
+          </Nav.Link>
+  </Nav.Item> */}
             </Nav>
         </Container>
     );

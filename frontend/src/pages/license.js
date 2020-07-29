@@ -1,7 +1,15 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * license.js
+ * 
+ * This exports the license page, which is not yet developed.
+ * 
+ */
+
 import React from 'react';
 import {Container} from 'react-bootstrap';
-
-//Liscence information for MIST
 
 function License() {
     return (

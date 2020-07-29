@@ -1,9 +1,19 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * about.js
+ * 
+ * This exports the about page, which gives basic information about MIST.
+ * 
+ */
+
 import React from "react";
 import "./../design/styleSheets/styles.css";
 import "./../design/styleSheets/about.css";
 import { Container } from "react-bootstrap";
 
-//page contents
+//full page
 const About = () => {
   return (
     <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>

@@ -40,7 +40,6 @@ body {
 /*Keeps footer at the bottom of the page and sets its color*/
 #footer {
   background-color: #17252a;
-  position: absolute;
   margin-top: 20px;
   bottom: 0;
   width: 100%;

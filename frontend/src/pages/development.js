@@ -1,9 +1,20 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * development.js
+ * 
+ * This exports the development page, which gives a disclaimer about
+ * how MIST is still in developmental phases.
+ * 
+ */
+
 import React from "react";
 import "./../design/styleSheets/styles.css";
 import "./../design/styleSheets/about.css";
 import { Container } from "react-bootstrap";
 
-//Disclaimer about how MIST is still in developmental phases
+// full page
 const Development = () => {
   return (
     <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>

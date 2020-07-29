@@ -226,13 +226,13 @@ function ValNode(props) {
           shadowOffsetY={1}
           _useStrictMode
         />
-        {rep === "#" && !submitted ? (
+        {rep === "#" ? (
           <Portal>
             <form
               id="form#"
               style={{
                 position: "absolute",
-                left: x + props.offsetX + 10,
+                left: x + props.offsetX + 20,
                 top: y + props.offsetY + 10,
               }}
               onSubmit={(e) => {
@@ -254,8 +254,10 @@ function ValNode(props) {
                   type="text"
                   placeholder="#"
                   style={{
-                    width: 0.5 * nodeDimensions.valueWidth,
-                    height: 0.5 * nodeDimensions.valueWidth,
+                    width: 0.45 * nodeDimensions.valueWidth,
+                    height: 0.45 * nodeDimensions.valueWidth,
+                    backgroundColor: "#D8AB24",
+                    border: "none"
                   }}
                   onChange={(e) => {
                     setFormValue(e.target.value);

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const passportLocal = require("passport-local-mongoose");
 const sanitize = require('mongo-sanitize');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 // why was this changed to acme??
 mongoose.connect("mongodb://localhost:27017/usersDB", {
@@ -555,7 +555,7 @@ module.exports.createUser = (req, callback) => {
         if (err) throw err;
         if (doc) callback("User Already Exists")
         if (!doc) {
-            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            const hashedPassword = await bcrypt.hash(req.body.password, 12);
             const newUser = new User({
                 forename: user.firstname,
                 surname: user.lastname,

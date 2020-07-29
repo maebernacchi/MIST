@@ -1,9 +1,23 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * profile.js
+ * 
+ * This exports the profile page, which is the user's personal profile page.
+ * When a user views another user's profile page, they see user.js not profile.js.
+ * Not yet developed:
+    * Albums are the user's own albums. Currently, what is displayed is fake data.
+    * Images are the user's own images. Currently, the images displayed are the same 
+    *   images from the gallery 
+ * 
+ */
+
 import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
 import { Container, Row, Form, Col, Nav, Tab, Card, Carousel } from "react-bootstrap";
-/** 6745662 */
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
 
@@ -15,6 +29,7 @@ import {
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 
+// full profile page
 export default function Profile() {
 
   /**
@@ -34,8 +49,8 @@ export default function Profile() {
   const [userImages, setUserImages] = useState([]);
   const [userAlbums, setUserAlbums] = useState([]);
 
-  useEffect(() => {
-   
+  // grab user's information, images, and albums
+  useEffect(() => { 
     fetch('/api/gallery/recent')
         .then(req => req.json())
         .then(cards => { setUserImages(cards)});
@@ -67,7 +82,7 @@ export default function Profile() {
   );
 }
 
-
+// user information: profile pic, username, name, email, member since
 function FirstPart(props) {
   return (
     <Container style={{ width: "90%" }}>
@@ -84,7 +99,6 @@ function FirstPart(props) {
         </Container>
 
         {/** User informations + icon bar*/}
-
         <Container style={{ width: "50%", alignItems: "center" }}>
           <Form>
             <Form.Group as={Row} controlId="formPlaintextEmail">
@@ -141,6 +155,7 @@ function FirstPart(props) {
   );
 }
 
+// icons (for images, likes, badges, challenges) underneath user information
 function IconsBar() {
   const icons = [
     { iconName: <AiOutlinePicture size={28} />, num: 8, category: "images" },
@@ -166,6 +181,7 @@ function IconsBar() {
   );
 }
 
+// user images and albums
 function ProfileNav(props) {
   return (
     <Container>
@@ -219,8 +235,7 @@ function ProfileNav(props) {
   );
 }
 
-// this is just a quick component I wrote
-// we need to implement an albums page and a real album component
+// album component
 function Album(props) {
   return (
     <Card
@@ -241,6 +256,7 @@ function Album(props) {
   )
 }
 
+// carousel used for looking through albums
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 
