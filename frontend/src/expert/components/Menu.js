@@ -374,11 +374,4 @@ function download(fname, type, content) {
     link.click();
 } // download
 
-// Menu current never has to rerender
-// since we define all of its to be functions whose
-// definitions never change
-function areEqual(preProps, nextProps) {
-    return true;
-}
-
-export default React.memo(Menu, areEqual);
+export default React.memo(Menu);
