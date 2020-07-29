@@ -59,23 +59,18 @@
 import FunBar from "./FunBar";
 import FunNode from "./FunNode";
 import colors from "./globals-themes";
+import { Container } from "react-bootstrap";
 import DrawArrow from "./line";
+import { globalContext, GlobalContextProvider } from "./global-context.js";
+import { FontGlobals } from "./globals-fonts";
+import { ContextProvider } from "./ContextProvider";
 import Menu from "./Menu";
 import gui from "./mistgui-globals";
-import {
-  width,
-  height,
-  menuHeight,
-  funBarHeight,
-  functionWidth,
-  valueWidth,
-} from "./globals.js";
 import { MIST } from "./mist.js";
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect, useContext, Component } from "react";
 import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
 import ValNode from "./ValNode";
 import nodeDimensions from "./globals-nodes-dimensions.js";
-
 
 // +----------------------------+
 // | All dependent files        |
@@ -89,11 +84,12 @@ class WorkspaceComponent extends Component {
 
     this.themes = ["classic", "dusk", "dark"];
 
-    // the value 72 is kind of a temporary fix
-    this.offsetY = 72;
-    this.offsetX = 0;
-
-    this.footer = 85;
+    this.width = props.width;
+    this.height = props.height;
+    this.menuHeight = props.menuHeight;
+    this.funBarHeight = props.funBarHeight;
+    this.functionWidth = props.functionWidth;
+    this.valueWidth = props.valueWidth;
 
     // +--------+--------------------------------------------------------
     // | States |
@@ -112,15 +108,25 @@ class WorkspaceComponent extends Component {
       theme: "dusk",
       pos1: { x: 100, y: 200 },
       pos2: { x: 0, y: 100 },
+      offsetX: 0,
+      offsetY: 0,
     };
     // +--------+
     // | States |
     // +--------+--------------------------------------------------------
-
-    this.updateLinePosition = this.updateLinePosition.bind(this);
   }
 
   componentDidMount() {
+    const element = document.getElementById('workspace');
+    // (offsetX, offsetY) are the coords of the stage in relation to the document.
+    this.setState({
+      offsetX:
+        element.getBoundingClientRect().left +
+        (window.pageXOffset || document.documentElement.scrollLeft),
+      offsetY:
+        element.getBoundingClientRect().top +
+        (window.pageYOffset || document.documentElement.scrollTop),
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -152,9 +158,10 @@ class WorkspaceComponent extends Component {
 
     if (expression.class === "MIST.App") {
       const name = gui.repToFun[expression.operation];
-      const parentX = Math.random() * (0.8 * width);
-      const parentY = gui.menuHeight +
-      Math.random() * (height - menuHeight - 2 * funBarHeight);
+      const parentX = Math.random() * (0.8 * this.width);
+      const parentY =
+        gui.menuHeight +
+        Math.random() * (this.height - this.menuHeight - 2 * this.funBarHeight);
       const outermost = {
         // Creating a new node
         name: name,
@@ -181,9 +188,11 @@ class WorkspaceComponent extends Component {
       const val = {
         name: expression.name,
         type: "val",
-        x: Math.random() * (0.8 * width),
+        x: Math.random() * (0.8 * this.width),
         y:
-          menuHeight + Math.random() * (height - menuHeight - 2 * funBarHeight),
+          this.menuHeight +
+          Math.random() *
+            (this.height - this.menuHeight - 2 * this.funBarHeight),
         renderFunction: { renderFunction: expression.code, isRenderable: true },
         lineOut: [],
         numInputs: null,
@@ -227,8 +236,10 @@ class WorkspaceComponent extends Component {
         // checking if the operand is a function
         if (operands[i].class === "MIST.App") {
           const pX = parentX - 50;
-          const pY = menuHeight +
-          Math.random() * (height - menuHeight - 2 * funBarHeight);
+          const pY =
+            this.menuHeight +
+            Math.random() *
+              (this.height - this.menuHeight - 2 * this.funBarHeight);
           const sourceNode = {
             // Creating a new node
             name: gui.repToFun[operands[i].operation],
@@ -250,8 +261,8 @@ class WorkspaceComponent extends Component {
             sourceIndex: sourceIndex,
             sinkIndex: sinkIndex,
             headPosition: {
-              x: sourceNode.x + functionWidth / 2,
-              y: sourceNode.y + functionWidth / 2,
+              x: sourceNode.x + this.functionWidth / 2,
+              y: sourceNode.y + this.functionWidth / 2,
             },
             tailPosition: {
               x: newNodes[sinkIndex].x - nodeDimensions.outletXOffset * 2,
@@ -283,10 +294,11 @@ class WorkspaceComponent extends Component {
           const sourceNode = {
             name: operands[i].name,
             type: "val",
-            x: Math.random() * (0.8 * width),
+            x: Math.random() * (0.8 * this.width),
             y:
-              menuHeight +
-              Math.random() * (height - menuHeight - 2 * funBarHeight),
+              this.menuHeight +
+              Math.random() *
+                (this.height - this.menuHeight - 2 * this.funBarHeight),
             renderFunction: {
               renderFunction: operands[i].code,
               isRenderable: true,
@@ -302,8 +314,8 @@ class WorkspaceComponent extends Component {
             sourceIndex: sourceIndex,
             sinkIndex: sinkIndex,
             headPosition: {
-              x: sourceNode.x + functionWidth / 2,
-              y: sourceNode.y + functionWidth / 2,
+              x: sourceNode.x + this.functionWidth / 2,
+              y: sourceNode.y + this.functionWidth / 2,
             },
             tailPosition: {
               x: newNodes[sinkIndex].x - nodeDimensions.outletXOffset * 2,
@@ -400,8 +412,8 @@ class WorkspaceComponent extends Component {
         sourceIndex: source,
         sinkIndex: sink,
         headPosition: {
-          x: this.state.nodes[source].x + functionWidth / 2,
-          y: this.state.nodes[source].y + functionWidth / 2,
+          x: this.state.nodes[source].x + this.functionWidth / 2,
+          y: this.state.nodes[source].y + this.functionWidth / 2,
         },
         tailPosition: {
           x: this.state.nodes[sink].x - nodeDimensions.outletXOffset * 2,
@@ -486,8 +498,8 @@ class WorkspaceComponent extends Component {
         if (typeof this.state.nodes[nodeIndex].lineOut[i] === "number") {
           let lineIndex = this.state.nodes[nodeIndex].lineOut[i];
           newLines[lineIndex].headPosition = {
-            x: x + functionWidth / 2,
-            y: y + functionWidth / 2,
+            x: x + this.functionWidth / 2,
+            y: y + this.functionWidth / 2,
           };
         }
       }
@@ -607,14 +619,14 @@ class WorkspaceComponent extends Component {
   // +-------------------------------+
 
   /**
-   * 
-   * @param {int} index 
-   * @param {float} value 
+   *
+   * @param {int} index
+   * @param {float} value
    * Updates the numeric value in the '#' node
    */
   updateHashValue = (index, value) => {
     this.state.nodes[index].renderFunction.renderFunction = value;
-  }
+  };
 
   /**
    * Updates the render function of the node at index as well as all the nodes that branch out of it
@@ -869,185 +881,209 @@ class WorkspaceComponent extends Component {
 
   render() {
     return (
-      <div
-        id="workspace"
+      <Container
         style={{
-          width: width,
-          height: height + this.footer,
-          backgroundColor: colors.workspaceBackground[this.state.theme]
+          marginLeft: "0",
+          paddingLeft: "0",
+          marginBottom: "0",
+          paddingBottom: "7.5rem",
         }}
       >
-        <Stage
-          width={width}
-          height={height}
-          onClick={() => {
-            this.setState({
-              newSource: null,
-              tempLine: null,
-              mouseListenerOn: false,
-            });
-          }}
-          onMouseMove={(e) => {
-            if (this.state.mouseListenerOn) {
-              this.updateMousePosition(
-                e.evt.clientX -
-                  document.getElementById("workspace").getBoundingClientRect()
-                    .x,
-                e.evt.clientY -
-                  document.getElementById("workspace").getBoundingClientRect().y
-              );
-            }
+        <div
+          id="workspace"
+          style={{
+            width: this.width,
+            height: this.height,
+            backgroundColor: colors.workspaceBackground[this.state.theme],
           }}
         >
-          <Layer>
-            {this.state.tempLine && (
-              <DrawArrow
-                sourceX={this.state.tempLine.sourceX + functionWidth / 2}
-                sourceY={this.state.tempLine.sourceY + functionWidth / 2}
-                sinkX={this.state.mousePosition.x}
-                sinkY={this.state.mousePosition.y}
-                fill={colors.lineFill[this.state.theme]}
-              />
-            )}
-          </Layer>
-          <Layer>
-            {this.state.nodes.length !== 0 &&
-              this.state.lines.map(
-                (line, index) =>
-                  line && (
-                    <DrawArrow
+          <Stage
+            width={this.width}
+            height={this.height}
+            onClick={() => {
+              this.setState({
+                newSource: null,
+                tempLine: null,
+                mouseListenerOn: false,
+              });
+            }}
+            onMouseMove={(e) => {
+              if (this.state.mouseListenerOn) {
+                this.updateMousePosition(
+                  e.evt.clientX -
+                    document.getElementById("workspace").getBoundingClientRect()
+                      .x,
+                  e.evt.clientY -
+                    document.getElementById("workspace").getBoundingClientRect()
+                      .y
+                );
+              }
+            }}
+          >
+            <Layer>
+              {this.state.tempLine && (
+                <DrawArrow
+                  sourceX={this.state.tempLine.sourceX + this.functionWidth / 2}
+                  sourceY={this.state.tempLine.sourceY + this.functionWidth / 2}
+                  sinkX={this.state.mousePosition.x}
+                  sinkY={this.state.mousePosition.y}
+                  fill={colors.lineFill[this.state.theme]}
+                />
+              )}
+            </Layer>
+            <Layer>
+              {this.state.nodes.length !== 0 &&
+                this.state.lines.map(
+                  (line, index) =>
+                    line && (
+                      <DrawArrow
+                        index={index}
+                        key={index}
+                        sourceX={line.headPosition.x}
+                        sourceY={line.headPosition.y}
+                        sinkX={line.tailPosition.x}
+                        sinkY={line.tailPosition.y}
+                        removeLine={this.removeLine.bind(this)}
+                        fill={colors.lineFill[this.state.theme]}
+                        hoverShadowColor={
+                          colors.nodeHoverShadow[this.state.theme]
+                        }
+                      />
+                    )
+                )}
+            </Layer>
+            <Layer>
+              {this.state.nodes.map(
+                (node, index) =>
+                  (node && node.type === "fun" && (
+                    <FunNode
+                      name={node.name}
+                      key={index} // just to silence a warning message
                       index={index}
-                      key={index}
-                      sourceX={line.headPosition.x}
-                      sourceY={line.headPosition.y}
-                      sinkX={line.tailPosition.x}
-                      sinkY={line.tailPosition.y}
-                      removeLine={this.removeLine.bind(this)}
-                      fill={colors.lineFill[this.state.theme]}
+                      x={node.x}
+                      y={node.y}
+                      offsetX={this.state.offsetX}
+                      offsetY={this.state.offsetY}
+                      numInputs={node.numInputs}
+                      numOutlets={node.numOutlets}
+                      renderFunction={
+                        node.renderFunction.isRenderable
+                          ? node.renderFunction.renderFunction
+                          : false
+                      }
+                      updateNodePosition={this.updateNodePosition.bind(this)}
+                      updateLinePosition={this.updateLinePosition.bind(this)}
+                      funClicked={this.funClicked.bind(this)}
+                      outletClicked={this.outletClicked.bind(this)}
+                      dblClickHandler={this.dblClicked.bind(this)}
+                      removeNode={this.removeNode.bind(this)}
                       hoverShadowColor={
                         colors.nodeHoverShadow[this.state.theme]
                       }
                     />
-                  )
+                  )) ||
+                  (node && node.type === "val" && (
+                    <ValNode
+                      name={node.name}
+                      key={index}
+                      index={index}
+                      x={node.x}
+                      y={node.y}
+                      offsetX={this.state.offsetX}
+                      offsetY={this.state.offsetY}
+                      renderFunction={
+                        node.renderFunction.isRenderable
+                          ? node.renderFunction.renderFunction
+                          : false
+                      }
+                      updateNodePosition={this.updateNodePosition.bind(this)}
+                      updateLinePosition={this.updateLinePosition.bind(this)}
+                      clickHandler={this.valClicked.bind(this)}
+                      dblClickHandler={this.dblClicked.bind(this)}
+                      removeNode={this.removeNode.bind(this)}
+                      updateHashValue={this.updateHashValue.bind(this)}
+                    />
+                  ))
               )}
-          </Layer>
-          <Layer>
-            {this.state.nodes.map(
-              (node, index) =>
-                (node && node.type === "fun" && (
-                  <FunNode
-                    name={node.name}
-                    key={index} // just to silence a warning message
-                    index={index}
-                    x={node.x}
-                    y={node.y}
-                    offsetX={this.offsetX}
-                    offsetY={this.offsetY}
-                    numInputs={node.numInputs}
-                    numOutlets={node.numOutlets}
-                    renderFunction={
-                      node.renderFunction.isRenderable
-                        ? node.renderFunction.renderFunction
-                        : false
-                    }
-                    updateNodePosition={this.updateNodePosition.bind(this)}
-                    updateLinePosition={this.updateLinePosition.bind(this)}
-                    funClicked={this.funClicked.bind(this)}
-                    outletClicked={this.outletClicked.bind(this)}
-                    dblClickHandler={this.dblClicked.bind(this)}
-                    removeNode={this.removeNode.bind(this)}
-                    hoverShadowColor={colors.nodeHoverShadow[this.state.theme]}
-                  />
-                )) ||
-                (node && node.type === "val" && (
-                  <ValNode
-                    name={node.name}
-                    key={index}
-                    index={index}
-                    x={node.x}
-                    y={node.y}
-                    offsetX={this.offsetX}
-                    offsetY={this.offsetY}
-                    renderFunction={
-                      node.renderFunction.isRenderable
-                        ? node.renderFunction.renderFunction
-                        : false
-                    }
-                    updateNodePosition={this.updateNodePosition.bind(this)}
-                    updateLinePosition={this.updateLinePosition.bind(this)}
-                    clickHandler={this.valClicked.bind(this)}
-                    dblClickHandler={this.dblClicked.bind(this)}
-                    removeNode={this.removeNode.bind(this)}
-                    updateHashValue = {this.updateHashValue.bind(this)}
-                  />
-                ))
-            )}
-          </Layer>
-          <Layer>
-            {
-              <Menu
-                addNode={this.pushNode.bind(this)}
-                addLine={this.pushLine.bind(this)}
-                clearWorkspace={this.clearWorkspace.bind(this)}
-                createLayout={this.createLayout.bind(this)}
-                bgColor={colors.menuBackground[this.state.theme]}
-                wsButtonColor={colors.workspaceButton[this.state.theme]}
-                valueMenuColor={
-                  (this.state.theme === "classic" && colors.valueMenuColor1) ||
-                  (this.state.theme === "dusk" && colors.valueMenuColor2) ||
-                  (this.state.theme === "dark" && colors.valueMenuColor3)
-                }
-                funTabColor={colors.menuFunTab[this.state.theme]}
-                valTabColor={colors.menuValTab[this.state.theme]}
-                customTabColor={colors.menuCustomTab[this.state.theme]}
-                savedTabColor={colors.menuSavedTab[this.state.theme]}
-                top={this.offsetY}
-                left={this.offsetX}
+            </Layer>
+            <Layer>
+              {
+                <Menu
+                  addNode={this.pushNode.bind(this)}
+                  addLine={this.pushLine.bind(this)}
+                  clearWorkspace={this.clearWorkspace.bind(this)}
+                  createLayout={this.createLayout.bind(this)}
+                  bgColor={colors.menuBackground[this.state.theme]}
+                  wsButtonColor={colors.workspaceButton[this.state.theme]}
+                  valueMenuColor={
+                    (this.state.theme === "classic" &&
+                      colors.valueMenuColor1) ||
+                    (this.state.theme === "dusk" && colors.valueMenuColor2) ||
+                    (this.state.theme === "dark" && colors.valueMenuColor3)
+                  }
+                  funTabColor={colors.menuFunTab[this.state.theme]}
+                  valTabColor={colors.menuValTab[this.state.theme]}
+                  customTabColor={colors.menuCustomTab[this.state.theme]}
+                  savedTabColor={colors.menuSavedTab[this.state.theme]}
+                  top={this.state.offsetY}
+                  left={this.state.offsetX}
+                />
+              }
+            </Layer>
+            <Layer>
+              <ContextProvider
+                width={this.width}
+                height={this.height}
+                menuHeight={this.menuHeight}
+                funBarHeight={this.funBarHeight}
+                functionWidth={this.functionWidth}
+                valueWidth={this.valueWidth}
+              >
+                <FunBar
+                  renderFunction={
+                    this.state.currentNode !== null &&
+                    this.state.nodes[this.state.currentNode]
+                      ? this.state.nodes[this.state.currentNode].renderFunction
+                      : { renderFunction: "", isRenderable: false }
+                  }
+                  bg={colors.funBarBackground[this.state.theme]}
+                  onClick={() => {
+                    let i = (this.state.themeIndex + 1) % this.themes.length;
+                    this.setState({
+                      themeIndex: i,
+                      theme: this.themes[i],
+                    });
+                  }}
+                  functionBoxBg={
+                    this.state.theme === "dark" ? "darkgray" : "white"
+                  }
+                  functionTextColor={
+                    this.state.theme === "dark" ? "black" : "black"
+                  }
+                  top={this.state.offsetY}
+                  left={this.state.offsetX}
+                />
+              </ContextProvider>
+              <Text
+                x={10}
+                y={130}
+                width={200}
+                height={50}
+                text={"CHANGE THEME"}
+                fill={this.state.theme === "dark" ? "white" : "black"}
+                fontSize={14}
+                onClick={() => {
+                  let i = (this.state.themeIndex + 1) % this.themes.length;
+                  this.setState({
+                    themeIndex: i,
+                    theme: this.themes[i],
+                  });
+                }}
               />
-            }
-          </Layer>
-          <Layer>
-            <FunBar
-              renderFunction={
-                this.state.currentNode !== null &&
-                this.state.nodes[this.state.currentNode]
-                  ? this.state.nodes[this.state.currentNode].renderFunction
-                  : { renderFunction: "", isRenderable: false }
-              }
-              bg={colors.funBarBackground[this.state.theme]}
-              onClick={() => {
-                let i = (this.state.themeIndex + 1) % this.themes.length;
-                this.setState({
-                  themeIndex: i,
-                  theme: this.themes[i],
-                });
-              }}
-              functionBoxBg={this.state.theme === "dark" ? "darkgray" : "white"}
-              functionTextColor={
-                this.state.theme === "dark" ? "black" : "black"
-              }
-              top={this.offsetY}
-              left={this.offsetX}
-            />
-            <Text
-              x={10}
-              y={130}
-              width={200}
-              height={50}
-              text={"CHANGE THEME"}
-              fill={this.state.theme === "dark" ? "white" : "black"}
-              fontSize={14}
-              onClick={() => {
-                let i = (this.state.themeIndex + 1) % this.themes.length;
-                this.setState({
-                  themeIndex: i,
-                  theme: this.themes[i],
-                });
-              }}
-            />
-          </Layer>
-        </Stage>
-      </div>
+            </Layer>
+          </Stage>
+        </div>
+      </Container>
     );
   }
 }

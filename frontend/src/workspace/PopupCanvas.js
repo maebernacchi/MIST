@@ -3,7 +3,7 @@ import Portal from "./Portal";
 import { Rect, Group, Text } from "react-konva";
 import { Link } from "react-router-dom";
 import gui from "./mistgui-globals.js";
-import { width, height } from "./globals";
+import { width, height } from "./globals.js";
 import popupDimensions from "./globals-popup_canvas-dimensions";
 import MISTImage from "./MISTImageCreate";
 import "./../design/styleSheets/FunBar.css";

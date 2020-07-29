@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./design/styleSheets/generalStyles.css";
-import { UserContext } from './pages/components/Contexts/UserContext';
+import { UserContext } from "./pages/components/Contexts/UserContext";
 
 import Home from "./pages/home";
 import About from "./pages/about";
@@ -24,22 +24,27 @@ import Community from "./pages/community";
 import ReportForm from "./pages/report";
 import User from "./pages/user";
 //import WorkSpace from "./Workspace";
-import WorkspaceComponent from './workspace';
+import WorkspaceComponent from "./workspace";
 
 /** New option for navigation bars*/
 import BaseNavigation from "./pages/components/NavBar/navBarLoggedOut";
 import UserNavigation from "./pages/components/NavBar/navBarLoggedIn";
-import { Container } from "react-bootstrap";
+import { Container, Navbar } from "react-bootstrap";
 
 function App() {
-
+  const [navBarHeight, setNavBarHeight] = useState(null);
   const data = useContext(UserContext);
   console.log(data);
+
+  function foo(height) {
+    setNavBarHeight(height);
+    console.log("updated navBarHeight: " + navBarHeight);
+  }
 
   return (
     <div id="page-container">
       <BrowserRouter>
-        {data ? <UserNavigation /> : <BaseNavigation />}
+        {data ? <UserNavigation /> : <BaseNavigation sendHeight={foo} />}
         <Container fluid id="content-wrap">
           <Switch>
             <Route path="/" component={Home} exact />
@@ -60,7 +65,26 @@ function App() {
             <Route path="/report" children={ReportForm} />
             <Route path="/user" children={User} />
             <Route path="/img/:url" children={<Gallery />} />
-            <Route path="/createWorkspace" children={<WorkspaceComponent />} />
+            {navBarHeight !== null && (
+              <Route
+                path="/createWorkspace"
+                children={
+                  <WorkspaceComponent
+                    width={document.documentElement.clientWidth}
+                    height={
+                      document.documentElement.clientHeight - navBarHeight
+                    }
+                    menuHeight={document.documentElement.clientWidth / 12}
+                    funBarHeight={
+                      (document.documentElement.clientHeight - navBarHeight) /
+                      15
+                    }
+                    functionWidth={document.documentElement.clientWidth / 20}
+                    valueWidth={document.documentElement.clientWidth / 23}
+                  />
+                }
+              />
+            )}
             <Route path="/expert" children={<Expert />} />
           </Switch>
         </Container>
@@ -69,6 +93,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;

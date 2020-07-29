@@ -4,7 +4,7 @@
  *   within the object/prototype.)
  */
 
-import { width, height } from "./globals";
+import { width, height } from "./globals.js";
 
 const globalFont = "Arial";
 const functionFont = "Courier New";

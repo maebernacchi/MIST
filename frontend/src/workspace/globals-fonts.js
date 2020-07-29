@@ -1,12 +1,20 @@
-import { width, height } from "./globals";
+import React, { createContext } from "react";
 
+export const fontContext = createContext();
 // +--------------+--------------------------------------------------
 // | FunBar Fonts |
 // +--------------+
 
-const funBarFontSize = width / 75;
+export function FontGlobals(props) {
+  const funBarFontSize = props.width / 75;
 
-
-export default {
-    funBarFontSize,
+  return (
+    <fontContext.Provider
+      value={{
+          funBarFontSize: funBarFontSize
+        }}
+    >
+      {props.children}
+    </fontContext.Provider>
+  );
 }

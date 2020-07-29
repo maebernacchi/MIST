@@ -1,27 +1,37 @@
-import {width, height, funBarHeight} from './globals';
+import React, { createContext } from "react";
 
-const funbarY = height - funBarHeight;
+export const funBarContext = createContext();
 
-const margin = funBarHeight * 0.2;
+export function FunBarDimensions(props) {
+  const funbarY = props.height - props.funBarHeight;
 
-const rfTextAreaHeight = funBarHeight - 2 * margin;
+  const margin = props.funBarHeight * 0.2;
 
-const functionButtonX = width * 0.85;
-const functionButtonWidth = width * 0.06;
-const functionButtonHeight = funBarHeight - 2 * margin;
+  const rfTextAreaHeight = props.funBarHeight - 2 * margin;
 
-const imageButtonX = width * 0.92;
-const imageButtonWidth = width * 0.06;
-const imageButtonHeight = funBarHeight - 2 * margin;
+  const functionButtonX = props.width * 0.85;
+  const functionButtonWidth = props.width * 0.06;
+  const functionButtonHeight = props.funBarHeight - 2 * margin;
 
-export default {
-    funbarY,
-    margin,
-    rfTextAreaHeight,
-    functionButtonX,
-    functionButtonWidth,
-    functionButtonHeight,
-    imageButtonX,
-    imageButtonWidth,
-    imageButtonHeight
+  const imageButtonX = props.width * 0.92;
+  const imageButtonWidth = props.width * 0.06;
+  const imageButtonHeight = props.funBarHeight - 2 * margin;
+
+  return(
+      <funBarContext.Provider
+        value={{
+            funbarY: funbarY,
+            margin: margin,
+            rfTextAreaHeight: rfTextAreaHeight,
+            functionButtonX: functionButtonX,
+            functionButtonWidth: functionButtonWidth,
+            functionButtonHeight: functionButtonHeight,
+            imageButtonX: imageButtonX,
+            imageButtonWidth: imageButtonWidth,
+            imageButtonHeight: imageButtonHeight,
+        }}
+        >
+            {props.children}
+        </funBarContext.Provider>
+  )
 }

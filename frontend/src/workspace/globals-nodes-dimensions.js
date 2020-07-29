@@ -1,4 +1,4 @@
-import { width, functionWidth, valueWidth } from "./globals";
+import { width, functionWidth, valueWidth } from "./globals.js";
 
 // +----------------+------------------------------------------------
 // | Function Nodes |
