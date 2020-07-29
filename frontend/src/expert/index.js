@@ -88,7 +88,15 @@ function ExpertR(props) {
     // | Form |
     // +------+
     const [form, setForm] = useState(getInitialForm());
-
+    // For when we have a Link to the Expert UI from the GUI ready
+    useEffect(() => {
+        if (props.location.state && props.location.state.code) {
+            setForm({
+                ...getInitialForm(),
+                code: props.location.state.code,
+            })
+        }
+    }, [props.location])
     /**
      * Resets the form to the initial state
      */
