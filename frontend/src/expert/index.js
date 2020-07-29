@@ -84,7 +84,6 @@ function ExpertR(props) {
         })
     }
 
-
     // +------+------------------------------------------------------------------------
     // | Form |
     // +------+
@@ -194,7 +193,7 @@ function ExpertR(props) {
      * Removes the user defined function by the name fun_name
      */
     const deleteFunction = (fun_name) => {
-        const new_macros = {...macros, _order: macros._order.filter((name) => name !== fun_name)}
+        const new_macros = { ...macros, _order: macros._order.filter((name) => name !== fun_name) }
         delete macros[fun_name];
         setMacros(new_macros)
     }
@@ -234,6 +233,9 @@ function ExpertR(props) {
     const saveWSToUser = (name) => {
         // build the expert_workspace to save
         const workspace = { functions: macros, form: form, name: name };
+        console.log(form)
+        console.log(macros)
+        console.log(getCurrentWorkspace())
         // build the url
         let url = "api/?action=expertwsexists&name=" + name;
         fetch(url)
@@ -357,7 +359,15 @@ function ExpertR(props) {
 
                     triggerPopup={triggerPopup}
                 />
-                <div></div>
+                <CanvasCard
+                    code={getFormValue('code')}
+                    default_params={getFormValue('default_params')}
+                    expertRef={expertRef}
+                    getFormState={() => form}
+                    getStateFunctions={() => macros}
+                    params={getFormValue('params')}
+                    setMessage={(message) => setFormValue("message", message)}
+                />
             </ResizablePanels>
 
         </div>)
