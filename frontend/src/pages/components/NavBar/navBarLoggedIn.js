@@ -133,7 +133,7 @@ function SignOutButton(props) {
 
 
 function signout() {
-  fetch('/api/logout', {
+  fetch('/api?action=signOut', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

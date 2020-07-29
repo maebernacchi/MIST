@@ -29,7 +29,7 @@ const Challenges = () => {
   //fetches everytime level, color, or animation changes
   useEffect(() => {
     // create url with the parameters we need to search
-    let url = 'api/challenges?level=' + level + "&color="
+    let url = 'api?action=getChallenges&level=' + level + "&color="
     + color + "&animation=" + animation;
     fetch(url)
       .then(req => req.json())

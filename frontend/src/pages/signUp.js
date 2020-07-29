@@ -53,7 +53,7 @@ const SignUp = () => {
     };
 
     //post user to database
-    fetch('/api/signup', {
+    fetch('/api?action=signUp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user)
@@ -64,7 +64,7 @@ const SignUp = () => {
       })
 
     // login user
-    fetch('/api/login', {
+    fetch('/api?action=signUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

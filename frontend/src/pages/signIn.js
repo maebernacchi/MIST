@@ -19,7 +19,7 @@ const SignIn = () => {
       password: loginPassword,
     };
 
-    fetch('/api/login', {
+    fetch('/api?action=signIn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

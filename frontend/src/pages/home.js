@@ -117,7 +117,7 @@ class FeaturedImages extends Component {
 
   // Retrieves the list of items from the Express app
   getFeaturedImages = () => {
-    fetch('/api/home')
+    fetch('/api?action=getHomeImages')
       .then(res => res.json())
       .then(featuredImages => this.setState({ featuredImages }));
   }

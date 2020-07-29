@@ -361,7 +361,7 @@ function ModalComments(props) {
 
   // fetch the comments for this image 
   useEffect(() => {
-    fetch('/api/img?id=' + props.card._id)
+    fetch('/api?action=getImageComments&id=' + props.card._id)
       .then(req => req.json())
       .then(comments => { setComments(comments); });
   }, [comments])
@@ -415,7 +415,7 @@ function MakeComment(props) {
     };
 
     //post comment
-    fetch('/api/gallery', {
+    fetch('/api?action=postComment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

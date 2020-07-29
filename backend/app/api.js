@@ -24,6 +24,8 @@ handler.
 // +--------------------+
 
 var database = require('./database.js');
+const passport = require("passport");
+
 
 // +--------------------+--------------------------------------------
 // | Exported Functions |
@@ -103,19 +105,194 @@ handlers.imageexists = function (info, req, res) {
   }
 };
 
+/**
+ *   Get featured images for home pages
+ *   info.action: getHomeImages
+ */
+
+handlers.getHomeImages = function (info, req, res) {
+  database.getFeaturedImagesLoggedOut(4, (images, error) => {
+    if (error) {
+      console.log(error);
+      res.json([]);
+    } else if (!images) res.json([]);
+    else res.json(images);
+  })
+}
+
+// +----------------+--------------------------------------------------
+// | Gallery        |
+// +----------------+
+
+/**
+ *   Get 9 random public images
+ *   info.action: getRandomImages
+ */
+
+handlers.getRandomImages = function (info, req, res) {
+  database.getRandomImagesLoggedOut(9, (images, error) => {
+    if (error) {
+      console.log(error);
+      res.json([]);
+    } else if (!images) res.json([]);
+    else res.json(images);
+  })
+}
+
+/**
+ *   Get 9 top public images
+ *   info.action: getTopImages
+ */
+
+handlers.getTopImages = function (info, req, res) {
+  database.getTopRatedLoggedOut(9, 1, (images, error) => {
+    if (error) {
+      console.log(error);
+      res.json([]);
+    } else if (!images) res.json([]);
+    else res.json(images);
+  })
+}
+
+/**
+ *   Get 9 featured public images
+ *   info.action: getFeaturedImages
+ */
+
+handlers.getFeaturedImages = function (info, req, res) {
+  database.getFeaturedImagesLoggedOut(9, (images, error) => {
+    if (error) {
+      console.log(error);
+      res.json([]);
+    } else if (!images) res.json([]);
+    else res.json(images);
+  })
+}
+
+/**
+ *   Get 9 recent public images
+ *   info.action: getPopularImages
+ */
+
+handlers.getRecentImages = function (info, req, res) {
+  database.getRecentImagesLoggedOut(9, 1, (images, error) => {
+    if (error) {
+      console.log(error);
+      res.json([]);
+    } else if (!images) res.json([]);
+    else res.json(images);
+  })
+}
+
+// +----------------+--------------------------------------------------
+// | Comments       |
+// +----------------+
+
+/**
+ *   Post a comment on an image
+ *   info.action: postComment
+ */
+
+handlers.postComment = function (info, req, res) {
+  database.saveComment(req, res);
+}
+
+/**
+ *  Get all comments on an image
+ *  info.action = getComments
+ */
+
+ handlers.getImageComments = function (info, req, res) {
+  database.getComments(req.query.id, (comments, error) => {
+    if (error) {
+        console.log(error);
+        res.json([]);
+    } else if (!comments) res.json([]);
+    else res.json(comments);
+})
+ }
+
+// +----------------+--------------------------------------------------
+// | Challenges     |
+// +----------------+
+
+/*
+*   Load challenges to the page
+*   info.action: getChallenges
+*/
+
+handlers.getChallenges = function (info, req, res) {
+  // grab URL parameters 	
+  let search = req.query.level + ', ' +
+    req.query.color + ', ' + req.query.animation;
+
+  database.getChallenges(search, (challenges, error) => {
+    if (error) {
+      console.log(error);
+      res.json([]);
+    } else if (!challenges) res.json([]);
+    else res.json(challenges);
+  })
+}
+
+// +------------------+--------------------------------------------------
+// | Authentication   |
+// +------------------+
 
 
+/*
+*   Register user to the database
+*   info.action: signup
+*/
+
+handlers.signUp = function (info, req, res) {
+  database.createUser(req, (message) => res.json(message))
+}
+
+/*
+*   Log user in
+*   info.action: signIn
+*/
+
+handlers.signIn = function (info, req, res, next) {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      throw err;
+    }
+    if (!user) {
+      var message = "No User Exists";
+      res.json(message);
+    }
+    else {
+      req.logIn(user, (err) => {
+        if (err) throw err;
+        var message = "Success";
+        res.json(message);
+      });
+    }
+  })(req, res, next);
+}
 
 
+/*
+*   Log user out
+*   info.action: signOut
+*/
+handlers.signOut = function (info, req, res) {
+  req.logout();
+  res.json("Success");
+}
 
+/*
+*   Get user from Passport
+*   info.action: getUser
+*/
 
+handlers.getUser = function (info, req, res) {
+  if (!req.user) res.json(null);
+  else {
+      user = req.user;
+      res.json(user);
+  }
+}
 
-
-
-
-
-
-
-
-
-    
