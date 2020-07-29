@@ -1,8 +1,18 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * community.js
+ * 
+ * This exports the community guidelines page.
+ * 
+ */
+
 import React from "react";
 import { Container } from "react-bootstrap";
 import "./../design/styleSheets/community.css";
 
-//Community page
+// full community page
 function Community() {
   return (
     <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem", width: "70%" }}>
@@ -151,7 +161,6 @@ function Community() {
         <br/>
         <p>&copy;2020 Glimmer Labs</p>
       </div>
-
     </Container>
   );
 }

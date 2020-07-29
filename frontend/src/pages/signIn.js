@@ -1,3 +1,13 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * signIn.js
+ * 
+ * This exports the sign in page.
+ * 
+ */
+
 import 'bootstrap/dist/css/bootstrap.css';
 import FacebookIcon from './../design/icons/icons8-facebook-30.png';
 import GoogleIcon from './../design/icons/icons8-google-48.png';
@@ -5,6 +15,7 @@ import React, { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import './../design/styleSheets/signInUp.css';
 
+// full page
 const SignIn = () => {
 
   const [loginUsername, setLoginUsername] = useState("");
@@ -12,6 +23,7 @@ const SignIn = () => {
 
   const login = (e) => {
 
+    // prevents the page from refreshing on submit
     e.preventDefault();
 
     let user = {
@@ -19,6 +31,7 @@ const SignIn = () => {
       password: loginPassword,
     };
 
+    // log the user in
     fetch('/api/login', {
       method: 'POST',
       headers: {

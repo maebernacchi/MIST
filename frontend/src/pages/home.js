@@ -1,3 +1,13 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * home.js
+ * 
+ * This exports the home page
+ * 
+ */
+
 import React, { Component } from "react";
 import "./../design/styleSheets/home.css";
 import LinkButton from "./components/LinkButton";
@@ -21,7 +31,6 @@ class PageContent extends React.Component {
     return (
       <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
         <Intro />
-
         <ButtonContainer />
         <BottomText />
         <FeaturedImages />
@@ -109,13 +118,12 @@ class FeaturedImages extends Component {
     }
   }
 
-  //Fetch the list on first mount
+  //Fetch the data on first mount
   componentDidMount() {
     this.getFeaturedImages();
   }
 
-
-  // Retrieves the list of items from the Express app
+  // Retrieves the images from the database
   getFeaturedImages = () => {
     fetch('/api/home')
       .then(res => res.json())

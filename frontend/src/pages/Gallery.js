@@ -1,18 +1,25 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * gallery.js
+ * 
+ * This exports the gallery pages (featured, random, toprated, recent).
+ * Currently no buttons to switch pages, but the code for the pages is there.
+ * 
+ */
 import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 
-/**
- * Gallery Page
- */
 
 export default function Gallery() {
 
   const [cards, setCards] = useState([]);
   const [cardsLoaded, setCardsLoaded] = useState(false);
-  const [category] = useState('top');
+  const [category, setCategory] = useState('top');
 
+  // fetch the images, depending on what category is selected
   useEffect(() => {
-    //fetch(`${process.env.REACT_APP_API_SERVER}/gallery`)
     switch (category) {
       case 'recent':
         fetch('/api/gallery/recent')

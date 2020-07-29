@@ -1,7 +1,18 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * report.js
+ * 
+ * This exports the report form page.
+ * To be developed:
+    * submit button submits form into database 
+    * could use some styling
+ */
+
 import React from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 
-// will need to be styled
 function ReportForm() {
     return (
         <Container className="reportForm">

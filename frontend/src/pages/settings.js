@@ -1,3 +1,19 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * settings.js
+ * 
+ * This exports the settings page.
+ * To be developed:
+    * changing user info updates database
+    * accessibility options work
+    * unhiding/blocking content 
+    *   commented out is the interface for doing this, but it 
+    *   has not been incorporated into the refactored settings yet
+ * 
+ */
+
 import React from "react";
 import "./../design/styleSheets/tutorial.css";
 
