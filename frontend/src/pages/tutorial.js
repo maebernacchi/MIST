@@ -111,9 +111,14 @@ import { Link } from "react-router-dom";
 import { BsQuestionCircle, BsClock } from "react-icons/bs";
 import { RiMenu2Line } from "react-icons/ri";
 
-import MISTImage from "../MISTImageGallery";
+import MISTImage from "./components/MISTImageGallery";
 
 import WorkSpace from "../workspace";
+
+import Circle from "./../TutorialImages/CircleImages/circle.png";
+import Circle1 from "./../TutorialImages/CircleImages/circle1.png";
+import Circle2 from "./../TutorialImages/CircleImages/circle2.png";
+import Circle3 from "./../TutorialImages/CircleImages/circle3.png";
 
 //Tutorial Header
 function Tutorial() {
@@ -686,7 +691,7 @@ const sections = [
               get to by clicking "create" on the top left of the page on the
               menu bar.
               <br />
-              <WorkSpace />
+              <WorkSpace /> 
               On the create page, you can make your own images using the
               workspace on it.
               <br />
@@ -1321,25 +1326,35 @@ const sections = [
           <Container>
             Have you ever wanted to try making shapes? Here is an example of a
             circle!
-            <br />
+            <br /><br />
             1. Place an <b>x</b> and a <b>y</b> in the workspace.
-            <br />
+            <br /><br />
+            <img src={Circle} alt="Circle Step 1" style={{height:"75%", width:"75%" }} />
+            <br /><br />
             2. <b>Square</b> each of them! We square them because x<sup>2</sup>{" "}
             + y<sup>2</sup> is the equation of a circle.
-            <br />
+            <br /><br />
+            <img src={Circle1} alt="Circle Step 2" style={{height:"75%", width:"75%" }} />
+            <br /><br />
             3. Add <b>wsum</b>. And make sure it has a W!
-            <br />
+            <br /><br />
+            <img src={Circle2} alt="Circle Step 3" style={{height:"75%", width:"75%" }} />
+            <br /><br />
             4. Connect it to a <b>sign</b> function! This gets rid of all of the
             gray areas and makes it purely black and white.
-            <br />
+            <br /><br />
+            <img src={Circle3} alt="Circle Step 4" style={{height:"75%", width:"75%" }} />
           </Container>
         ),
 
         //Video
-        video: <Container> This is a video </Container>,
+        video: <Container> <iframe width="560" height="315" src="https://www.youtube.com/embed/YQwvc7hdggE" frameborder="0"
+         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> </Container>,
 
         //Final
-        final: <Container> This is the final image </Container>,
+        final: <Container> This is the final image: <br />
+                      <img src={Circle3} alt="Circle Final" style={{height:"75%", width:"75%" }} />
+               </Container>,
         isChallenge: true,
         //Challenges
         challenges: [

@@ -13,15 +13,15 @@ function Header.
 // +---------+
 
 import React, { useState } from "react";
-import FacebookIcon from "./../design/icons/icons8-facebook-30.png";
-import GoogleIcon from "./../design/icons/icons8-google-48.png";
-import MistLogo from "./../design/Logos/logoFinal.png";
+import FacebookIcon from "../../../design/icons/icons8-facebook-30.png";
+import GoogleIcon from "../../../design/icons/icons8-google-48.png";
+import MistLogo from "../../../design/Logos/logoFinal.png";
 import {Link} from "react-router-dom";
 import {
   Navbar, Nav, NavDropdown, Form, Image, InputGroup,
-  FormControl, Button, NavLink
+  FormControl, Button
 } from "react-bootstrap";
-import "./../design/styleSheets/navBar.css";
+import "../../../design/styleSheets/navBar.css";
 import "bootstrap/dist/css/bootstrap.css";
 
 // +---------+----------------------------------------------------

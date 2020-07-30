@@ -33,6 +33,8 @@ const SignUp = () => {
       case "email":
         setEmail(value)
         break;
+      default:
+        break;
     }
   };
 
@@ -74,7 +76,7 @@ const SignUp = () => {
       .then(res => res.json())
       .then(message => {
         console.log("message = " + message);
-        if (message == "Success") window.location.href = "/";
+        if (message === "Success") window.location.href = "/";
       })
   };
 

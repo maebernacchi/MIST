@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import UserContextProvider from './Contexts/UserContext';
+import UserContextProvider from './pages/components/Contexts/UserContext';
 
 ReactDOM.render(
   <UserContextProvider>

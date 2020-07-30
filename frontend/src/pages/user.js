@@ -1,22 +1,11 @@
 import React from "react";
-import "./design/styleSheets/profile.css";
-import "./design/styleSheets/generalStyles.css";
-import {
-    Button,
-    Container,
-    Row,
-    Form,
-    Col,
-    Image,
-    Nav,
-    OverlayTrigger,
-    Popover
-} from "react-bootstrap";
+import "../design/styleSheets/profile.css";
+import "../design/styleSheets/generalStyles.css";
+import { Button, Container, Row, Form, Col, Nav, OverlayTrigger, Popover} from "react-bootstrap";
 /** 6745662 */
 import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from './MISTImageGallery'
-
+import "bootstrap/dist/css/bootstrap.css"; 
+import MISTImage from './components/MISTImageGallery'
 import {
     AiOutlinePicture,
     AiOutlineStar,

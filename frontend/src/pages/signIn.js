@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import FacebookIcon from './../design/icons/icons8-facebook-30.png';
 import GoogleIcon from './../design/icons/icons8-google-48.png';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import './../design/styleSheets/signInUp.css';
 
@@ -31,7 +31,7 @@ const SignIn = () => {
       .then(res => res.json())
       .then(message => {
         console.log("message = " + message);
-        if (message == "Success") window.location.href = "/";
+        if (message === "Success") window.location.href = "/";
       })
   }
 
