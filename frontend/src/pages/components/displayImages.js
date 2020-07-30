@@ -238,15 +238,15 @@ function ImageView(props) {
       <Col>
         <Row>
           <Col xs="4">
-          <h1 style={{ fontSize: "150%", textAlign: "left" }} >{card.title}</h1>
-              <MISTImage code={card.code} resolution="300" />
-              <Row>
-            <Button variant="light" href="/user">
-              {<b>{card.userId.username}</b>}
-            </Button>
+            <h1 style={{ fontSize: "150%", textAlign: "left" }} >{card.title}</h1>
+            <MISTImage code={card.code} resolution="300" />
+            <Row>
+              <Button variant="light" href="/user">
+                {<b>{card.userId.username}</b>}
+              </Button>
             </Row>
             <Form>
-              <Form.Control type="range" custom style={{ marginTop: "1em", width: "100%"}} />
+              <Form.Control type="range" custom style={{ marginTop: "1em", width: "100%" }} />
             </Form>
           </Col>
 
@@ -361,7 +361,7 @@ function ModalComments(props) {
 
   // fetch the comments for this image 
   useEffect(() => {
-    fetch('/api/img?id=' + props.card._id)
+    fetch('/api?action=getImageComments&id=' + props.card._id)
       .then(req => req.json())
       .then(comments => { setComments(comments); });
   }, [comments])
@@ -404,26 +404,42 @@ function MakeComment(props) {
     // prevent the page from refreshing 
     event.preventDefault();
 
-    // build full comment
-    let fullcomment = {
-      "active": true,
-      "flags": [],
-      // NOTE: This needs to be a real user id you have on your local DB
-      "userId": "5f1f6d77c28eda4d4c405161",
-      "body": comment,
-      "imageId": props.imageId
-    };
-
-    //post comment
-    fetch('/api/gallery', {
-      method: 'POST',
+    // grab user information
+    fetch('/api?=getUser', {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(fullcomment)
+      credentials: 'include'
     })
-      //reset comment state
-      .then(setComment(""))
+      .then(res => res.json())
+      .then(user => {
+        if (user) {
+
+          console.log("user: ", user);
+          // build full comment
+          let fullcomment = {
+            "active": true,
+            "flags": [],
+            "userId": user._id,
+            "body": comment,
+            "imageId": props.imageId
+          };
+
+          //post comment
+          fetch('/api?action=postComment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(fullcomment)
+          })
+            //reset comment state
+            .then(setComment(""))
+        }
+        else
+          alert("You must be logged in to make comments")
+      })
   };
 
   return (

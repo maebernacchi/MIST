@@ -6,7 +6,7 @@ const UserContextProvider = (props) => {
     const [data, setData] = useState();
 
     useEffect(() => {
-        fetch('/api/user', {
+        fetch('/api?action=getUser', {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json',

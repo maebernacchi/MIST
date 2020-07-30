@@ -1,3 +1,13 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * faq.js
+ * 
+ * This exports the FAQ (frequently asked questions) page.
+ * 
+ */
+
 import React from 'react';
 import "./../design/styleSheets/styles.css";
 import "./../design/styleSheets/about.css";

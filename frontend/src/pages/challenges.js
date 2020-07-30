@@ -1,3 +1,14 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * challenges.js
+ * 
+ * This exports the challenges page, where users can view challenges.
+ * Attempting challenges is not yet implemented.
+ * 
+ */
+
 import React, { useState, useEffect } from "react";
 import "./../design/styleSheets/challenges.css";
 import "./../design/styleSheets/generalStyles.css";
@@ -8,9 +19,8 @@ import {
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery";
 
-//Challenges; header, spacing between drop down
-//menus, and the challenges displayed on the screen
 
+// full page
 const Challenges = () => {
 
   const [challenges, setChallenges] = useState([]);
@@ -26,10 +36,10 @@ const Challenges = () => {
     else setAnimation(value);
   };
 
-  //fetches everytime level, color, or animation changes
+  //fetches every time the level, color, or animation changes
   useEffect(() => {
     // create url with the parameters we need to search
-    let url = 'api/challenges?level=' + level + "&color="
+    let url = 'api?action=getChallenges&level=' + level + "&color="
     + color + "&animation=" + animation;
     fetch(url)
       .then(req => req.json())
@@ -131,6 +141,8 @@ function Filters(props) {
   );
 }
 
+// page counter at the bottom
+// no functionality yet
 function PageCounter() {
   return (
     <Pagination className="pagination-style">

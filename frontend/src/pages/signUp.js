@@ -1,3 +1,15 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * signUp.js
+ * 
+ * This exports the sign up page.
+ * To be developed:
+    * "re-enter password" checks that the passwords are equal
+    * passwords have criteria (ex: 8 characters long)
+ */
+
 import 'bootstrap/dist/css/bootstrap.css';
 import FacebookIcon from './../design/icons/icons8-facebook-30.png';
 import GoogleIcon from './../design/icons/icons8-google-48.png';
@@ -5,6 +17,7 @@ import React, { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import './../design/styleSheets/signInUp.css';
 
+// full page
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -53,7 +66,7 @@ const SignUp = () => {
     };
 
     //post user to database
-    fetch('/api/signup', {
+    fetch('/api?action=signUp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user)
@@ -64,7 +77,7 @@ const SignUp = () => {
       })
 
     // login user
-    fetch('/api/login', {
+    fetch('/api?action=signUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
