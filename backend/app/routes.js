@@ -5,7 +5,7 @@ module.exports = (app) => {
     // Path: /api	
     //  Dynamic content distribution - return raw data through Fetch	
     
-    app.post('/api', function (req, res) { api.run(req.body, req, res); });
+    app.post('/api', function (req, res) { api.run(req.query, req, res); });
     app.get('/api', function (req, res) { api.run(req.query, req, res); });
     //------------------------------------------------	                
 
