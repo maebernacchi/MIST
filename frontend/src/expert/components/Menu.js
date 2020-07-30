@@ -41,6 +41,7 @@ import {
 } from 'react-bootstrap';
 import { BsCloud, BsFullscreen, BsFullscreenExit, BsQuestionCircle } from 'react-icons/bs';
 import { FaRegShareSquare } from 'react-icons/fa';
+import { Link } from "react-router-dom";
 
 function Menu(props) {
     // A reference to keep track of the name that the user picks for their workspace
@@ -75,6 +76,9 @@ function Menu(props) {
                                         of the function that you are currently writing.
                                     </ListGroup.Item>
                                     </ListGroup>
+                                    <a href='/tutorial/#expert-ui'>
+                                        <Button>To Tutorials</Button>
+                                    </a>
                                 </div>
                             ),
                             title: 'MIST Expert UI Terminology',
@@ -121,7 +125,7 @@ function Menu(props) {
                     overlay={<Tooltip>Publish your final image</Tooltip>}
                 >
                     <Button className='menu-btn'
-                    variant='outline-light'
+                        variant='outline-light'
                     ><FaRegShareSquare /> Publish</Button>
                 </OverlayTrigger>
             </ButtonGroup>
