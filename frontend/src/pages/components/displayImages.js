@@ -441,7 +441,7 @@ function ModalComments(props) {
       <Form.Group >
         {/* All existing comments */}
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
-          {comments.map((comment) => {console.log(comment); return (
+          {comments.map((comment) => { return (
             <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
           )})}
         </Container>

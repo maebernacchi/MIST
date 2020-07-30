@@ -303,6 +303,71 @@ const Models = {
 // |   Images   |
 // +------------+
 
+/**
+ * checks whether the user owns an image with the same title
+ * @param username the username of the user 
+ * @param title the title of the image
+ * @param callback sends the error if there is one, true 
+ * if the image exists, and false if it does not
+ */
+module.exports.imageExists = (username, title, callback) => {
+    User.findOne({ username: username })
+        .populate("images")
+        .exec((err, user) => {
+            if (err)
+                callback(err, null)
+            else {
+                user.images.forEach((image) => {
+                    if (image.title === title) {
+                        callback(null, true)
+                    };
+                });
+                callback(null, false)
+            }
+        });
+}
+
+/**
+ * saves the new image in the database
+ * @param userId the user._id of the user  
+ * @param title title of the image
+ * @param code code for the image
+ * @param res the response
+ */
+module.exports.saveImage = (userId, title, code, res) => {
+
+    //build image
+    let image = Image({
+        userId: sanitize(userId),
+        title: sanitize(title),
+        code: sanitize(code),
+        public: true,
+        caption: ""
+    });
+
+    //save image
+    image.save()
+        .then(image => {
+            //push image to user's image array
+            User.updateOne({ _id: userId }, { $push: { images: image._id } })
+                .exec()
+                .then((writeOpResult) => {
+                    if (writeOpResult.nModified === 0) {
+                        console.log("Failed to insert image into user's array");
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                    res.end(JSON.stringify(error));
+                })
+        })
+        .catch(err => {
+            console.error(err)
+            res.end(JSON.stringify(error));
+        })
+
+}
+
 
 // +------------+-------------------------------------------------
 // |   Gallery  |
@@ -538,9 +603,10 @@ module.exports.commentInfo = (userid, imageid, callback) => {
 
 
 // +------------+-------------------------------------------------
-// |    Misc    |
+// |    Users   |
 // +------------+
 
+// given a userId, returns the username
 module.exports.getUsername = (userId, callback) => {
     User.findById(userId).exec((err, user) => {
         if (err)
@@ -550,6 +616,12 @@ module.exports.getUsername = (userId, callback) => {
     })
 };
 
+/**
+ * creates a new user in the database
+ * @param req the request, must contain a user object 
+ * with username, firstname, lastname, username, password, and email
+ * @param callback returns if the user exists already or if the user was created succesfully 
+ */
 module.exports.createUser = (req, callback) => {
     let user = req.body;
     User.findOne({ username: user.username }, async (err, doc) => {
@@ -571,8 +643,18 @@ module.exports.createUser = (req, callback) => {
             callback("User Created");
         }
     });
-
 }
+
+// given a username, returns the userId
+module.exports.getUserIdByUsername = (username, callback) => {
+    User.findOne({ username: username }, (err, user) => {
+        if (err)
+            return callback(err, null);
+        else
+            return callback(null, user._id);
+    })
+}
+
 
 // +--------------+-------------------------------------------------
 // |    Expert    |
