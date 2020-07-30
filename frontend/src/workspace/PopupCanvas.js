@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import Portal from "./Portal";
 import { Rect, Group, Text } from "react-konva";
-import { Link } from "react-router-dom";
 import gui from "./mistgui-globals.js";
 import { width, height } from "./globals";
 import popupDimensions from "./globals-popup_canvas-dimensions";
-import MISTImage from "./MISTImageCreate";
+import MISTImage from "./MISTImage";
 import "./../design/styleSheets/FunBar.css";
 
 function PopupCanvas(props) {
@@ -154,20 +153,46 @@ function PortalButtons(props) {
 }
 
 function SaveButton(props) {
-  const [imageExists, setImageExists] = useState("initial");
 
   function SaveImage() {
-    //var newName = props.imageName;
-    //newName = removeOuterWhiteSpace(newName);
-    //var response = getImageExists(newName);
-    console.log("response = " + imageExists);
-  }
 
-  function getImageExists(title) {
-    let url = "api/?action=imageexists&title=" + title;
+    let title = removeOuterWhiteSpace(props.imageName)
+
+    // check that the user has given a title
+    if (title === "")
+      alert("Please type a valid name")
+
+    // check if the user already has an image with that title
+    // or if the user is not logged in 
+    let url = "api?action=imageexists&title=" + title;
     fetch(url)
       .then((req) => req.json())
-      .then((exists) => setImageExists(exists));
+      .then((response) => {
+        if (response === "logged out")
+          alert("Please log in to save images.")
+        if (response === "image exists")
+          alert("You already have an image with this name; please name it something else.")
+        if (response === "image does not exist") {
+
+          let image = {
+            action: "saveimage",
+            title: title,
+            code: props.renderFunction.renderFunction
+          }
+
+          // save the image
+          fetch("api", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(image)
+          }).then(props.closePortal())
+            .then(alert("Image Saved!"))
+        }
+      });
+
   }
 
   return (
@@ -196,6 +221,7 @@ function SaveButton(props) {
     </Group>
   );
 }
+
 
 function ExpertButton(props) {
   return (
@@ -229,10 +255,10 @@ function ExpertButton(props) {
  * of the string, but not the white space in the middle of the string.
  * returns a string
  */
-var removeOuterWhiteSpace = function (string) {
-  string = string.replace(/^ */, "");
-  string = string.replace(/ *$/, "");
-  return string;
-};
+ var removeOuterWhiteSpace = function (string) {
+   string = string.replace(/^ */, "");
+   string = string.replace(/ *$/, "");
+   return string;
+ };
 
 export default PopupCanvas;

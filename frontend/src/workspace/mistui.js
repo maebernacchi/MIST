@@ -72,10 +72,10 @@ MIST.ui.startAnimation = function(exp,params,context,canvas,log)
 {
   // Set up a hash for the parameters
   MIST.ui.animator.params = {};
-  if (params != "") {
+  if (params !== "") {
     var tmp = params.split(",");
     for (var i = 0; i < tmp.length; i++) {
-      if (params[i] != "") {
+      if (params[i] !== "") {
         MIST.ui.animator.params[tmp[i]] = -1;
       } // if
     } // for
@@ -152,7 +152,7 @@ if (!MIST.ui) { MIST.ui = {}; }
  * The pattern to identify builtins (or lack thereof).  Used for the
  * simple validation strategy.
  */
-var builtinsPattern = /(?:abs|avg|cos|mult|rgb|sign|neg|signz|sin|square|sum|wsum|null|mistif|t.s|t.m|t.h|t.d|m.x|m.y)|[0-9xy().,\-]/g
+var builtinsPattern = /(?:abs|avg|cos|mult|rgb|sign|neg|signz|sin|square|sum|wsum|null|mistif|t.s|t.m|t.h|t.d|m.x|m.y)|[0-9xy().,]/g
 /**
  * Adding backwards compatibilty for request animation frame.
  */
@@ -282,30 +282,30 @@ MIST.ui.Animator.prototype.coords = function() {
 /**
  *Increment simulated time
  */
-var incTime = function(t) {
-t.ms += 33; 
- if (t.ms >= 1000) {
-        t.ms = 0;
-        t.s++;
-  }
-  if (t.s > 60) {
-        t.s = 0;
-        t.m++;
-  }
-  if (t.m > 60) {
-        t.m = 0;
-        t.h++
-  }
-  if (t.h > 24) {
-        t.h = 0;
-        t.d++;
-  }
-  if (t.d > 365) {
-        t.d = 0;
-        t.y++;
-  }
- return t;
-}
+// var incTime = function(t) {
+// t.ms += 33; 
+//  if (t.ms >= 1000) {
+//         t.ms = 0;
+//         t.s++;
+//   }
+//   if (t.s > 60) {
+//         t.s = 0;
+//         t.m++;
+//   }
+//   if (t.m > 60) {
+//         t.m = 0;
+//         t.h++
+//   }
+//   if (t.h > 24) {
+//         t.h = 0;
+//         t.d++;
+//   }
+//   if (t.d > 365) {
+//         t.d = 0;
+//         t.y++;
+//   }
+//  return t;
+// }
 
 /**
  * Do one frame of the animation.
@@ -321,7 +321,7 @@ MIST.ui.Animator.prototype.frame = function() {
     this.context[p] = newval;
     paramInfo += p + ": " + newval + "\n";
   } // for
-  var context = this.context;
+  //var context = this.context;
 
   // Inform the user
   if (paramInfo) {
@@ -357,7 +357,7 @@ MIST.ui.Animator.prototype.frame = function() {
  * Create a jpg and switch to that.
  */
 MIST.ui.Animator.prototype.jpg = function() {
-  var data = this.canvas.toDataURL("image/jpeg");
+  //var data = this.canvas.toDataURL("image/jpeg");
   //document.location = data;
   //$("#test").html("hell goats");
 
@@ -395,7 +395,7 @@ MIST.ui.Animator.prototype.run = function() {
   
   // And schedule the next frame
   if (this.on) {
-    var animator = this;
+    //var animator = this;
     // setTimeout(runner(this), 1000/this.fps);
     window.requestAnimationFrame(runner(this));
   }
@@ -435,7 +435,7 @@ MIST.ui.Animator.prototype.start = function()
   if (this.params != "") {
     var tmp = this.params.split(",");
     for (var i = 0; i < tmp.length; i++) {
-      if (this.params[i] != "") {
+      if (this.params[i] !== "") {
         this.parameters[tmp[i]] = -1;
       } // if
     } // for
@@ -458,66 +458,66 @@ MIST.ui.Animator.prototype.start = function()
 /**
  * Hide all of the dialogs on the page.
  */
-function hideAllDialogs()
-{
-  var dialogs = document.getElementsByClassName("dialog");
-  for (var i = 0; i < dialogs.length; i++) {
-    dialogs[i].style.visibility = "hidden";
-  } // for
-} // hideAllDialogs
+// function hideAllDialogs()
+// {
+//   var dialogs = document.getElementsByClassName("dialog");
+//   for (var i = 0; i < dialogs.length; i++) {
+//     dialogs[i].style.visibility = "hidden";
+//   } // for
+// } // hideAllDialogs
 
 /**
  * Show the dialog with a particular id.
  */
-function showDialog(id)
-{
-  hideAllDialogs();
-  var dialog = document.getElementById(id);
-  dialog.style.visibility = "visible";
-  return dialog;
-} // showDialog
+// function showDialog(id)
+// {
+//   hideAllDialogs();
+//   var dialog = document.getElementById(id);
+//   dialog.style.visibility = "visible";
+//   return dialog;
+// } // showDialog
 
 /**
  * Put quotation marks around a string.
  */
-function quote(contents, mark)
-{
-  if (!mark) { mark = "\""; }
-  return mark + contents + mark;
-} // quote
+// function quote(contents, mark)
+// {
+//   if (!mark) { mark = "\""; }
+//   return mark + contents + mark;
+// } // quote
 
 /**
  * Make a button.
  */
-function makeButton(id, value, onclick)
-{
-  return "<input type=\"button\" id=" + quote(id)
-         + " value= " + quote(value)
-         + " onclick= " + quote(onclick, "'") + "/>";
-} // makeButton
+// function makeButton(id, value, onclick)
+// {
+//   return "<input type=\"button\" id=" + quote(id)
+//          + " value= " + quote(value)
+//          + " onclick= " + quote(onclick, "'") + "/>";
+// } // makeButton
 
 /**
  * Create the HTML for a dialog box with a particular body and add
  * it to the page.  Handlers is an object that contains the 
  * button/method pairs.
  */
-function makeDialog(id, content, handlers)
-{
-  var dialog = document.createElement("div");
-  dialog.setAttribute("id", id);
-  dialog.setAttribute("class", "dialog");
-  var buttons = "<div class='dialogbuttons'>\n";
-  buttons += makeButton(id, "Cancel", "hideAllDialogs()");
-  for (var key in handlers) {
-    buttons += makeButton(id+"-"+"key", key, handlers[key]);
-  } // for
-  buttons += "</div>\n";
-  dialog.innerHTML = "<div class=\"innerdialog\">" 
-                   + content
-                   + buttons
-                   + "</div>\n";
-  document.body.appendChild(dialog);
-} // makeDialog
+// function makeDialog(id, content, handlers)
+// {
+//   var dialog = document.createElement("div");
+//   dialog.setAttribute("id", id);
+//   dialog.setAttribute("class", "dialog");
+//   var buttons = "<div class='dialogbuttons'>\n";
+//   buttons += makeButton(id, "Cancel", "hideAllDialogs()");
+//   for (var key in handlers) {
+//     buttons += makeButton(id+"-"+"key", key, handlers[key]);
+//   } // for
+//   buttons += "</div>\n";
+//   dialog.innerHTML = "<div class=\"innerdialog\">" 
+//                    + content
+//                    + buttons
+//                    + "</div>\n";
+//   document.body.appendChild(dialog);
+// } // makeDialog
 /**
  * mistui-help.js
  *   A simple popup help system.
@@ -564,11 +564,11 @@ var HELP_ID = "helptext";
  * Add help to an element with the specified id.
  */
 MISTui.addHelp = function(id,helptext) {
-  var selector = "#" + id;
-  var showhelp = function(event) {
-    var loc = document.getElementById(id).getBoundingClientRect();
-    MISTui.showHelp(helptext, loc.right-5, loc.top+3); // Yay magic numbers
-  };
+  //var selector = "#" + id;
+  // var showhelp = function(event) {
+  //   var loc = document.getElementById(id).getBoundingClientRect();
+  //   MISTui.showHelp(helptext, loc.right-5, loc.top+3); // Yay magic numbers
+  // };
   //$(selector).mouseenter(showhelp);
   //$(selector).mouseover(showhelp);
   //$(selector).mouseout(MISTui.hideHelp);
@@ -664,16 +664,10 @@ MISTui.showHelp = function(text, x, y) {
  */
 MISTui.addMenu = function(parent, menuid, menuname) {
   // Sanity check
-  if (!parent) {
-    throw "Cannot add menu to undefined element.";
-  }
  
   // Special case: Element is identified by a string
   if (typeof(parent) == "string") {
     var element = document.getElementById(parent);
-    if (!element) {
-      throw "No element '#" + parent + "'";  
-    }
     return MISTui.addMenu(element, menuid, menuname);
   }
 
@@ -705,7 +699,7 @@ MISTui.addMenu = function(parent, menuid, menuname) {
 MISTui.addMenuItem = function(menu, id, name, help, handler) {
   var items = document.getElementById(menu + "-items");
   if (!items) {
-    throw "Cannot find menu " + menu;
+    console.log( "Cannot find menu " + menu);
   }
 
   var wrapHandler = function(menu,handler) {
@@ -749,7 +743,7 @@ MISTui.addMenuItem = function(menu, id, name, help, handler) {
 MISTui.addMenuSeparator = function(menu,id) {
   var items = document.getElementById(menu + "-items");
   if (!items) {
-    throw "Cannot find menu " + menu;
+    console.log( "Cannot find menu " + menu);
   }
 
   // Build the item
@@ -767,7 +761,7 @@ MISTui.addMenuSeparator = function(menu,id) {
 MISTui.clearMenu = function(menu) {
   var items = document.getElementById(menu + "-items");
   if (!items) {
-    throw "Cannot find menu " + menu;
+    console.log( "Cannot find menu " + menu);
   }
   items.innerHTML = "";
 } // clearMenu
@@ -791,10 +785,10 @@ MISTui.removeMenuItem = function(menuid, itemid) {
   var parent = document.getElementById(menuid + "-items");
   var item = document.getElementById(itemid);
   if (!parent) {
-    throw "No such menu: " + menuid;
+    console.log( "No such menu: " + menuid);
   }
   if (!item) {
-    throw "No such item: " + itemid;
+    console.log( "No such item: " + itemid);
   } 
   parent.removeChild(item);
 } // removeMenuItem

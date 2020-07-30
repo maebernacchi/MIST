@@ -81,7 +81,7 @@ function ValNode(props) {
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
   const [formValue, setFormValue] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  //const [submitted, setSubmitted] = useState(false);
 
   // +----------------------------+------------------------------------
   // | Trashcan                   |
@@ -242,7 +242,7 @@ function ValNode(props) {
                 if(parseFloat(formValue)!== null) {
                   setRenderFunction(formValue);
                   props.updateHashValue(index, formValue);
-                  setSubmitted(true);
+                  //setSubmitted(true);
                 } else {
                   console.log("Invalid Number");
                 }

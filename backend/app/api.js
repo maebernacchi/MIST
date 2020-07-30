@@ -90,20 +90,40 @@ var handlers = {};
  *   info.title: The title of the image
  */
 handlers.imageexists = function (info, req, res) {
+
   if (!req.isAuthenticated()) {
-    res.send("logged out");
+    res.json("logged out");
   } else {
-    let exists = false;
-    const arr = req.user.images.slice();
-    arr.forEach((image) => {
-      if (image.title === info.title) {
-        exists = true;
-        return;
-      };
-    });
-    res.send(exists);
+
+    database.imageExists(req.user.username, info.title, (err, response) => {
+      if (err)
+        fail(res, "Unable to save image")
+      if (response)
+        res.json("image exists")
+      else
+        res.json("image does not exist")
+    })
+
   }
 };
+
+
+/**
+ * Save an image to the database
+ *   info.action: saveimage
+ *   info.title: The title of the image
+ */
+handlers.saveimage = function (info, req, res) {
+
+  database.getUserIdByUsername(req.user.username, (err, userId) => {
+    if (err)
+      fail(res, "no user found");
+    else {
+      database.saveImage(userId, req.body.title, req.body.code, res)
+    }
+  });
+
+}
 
 /**
  *   Get featured images for home pages

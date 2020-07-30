@@ -1,4 +1,4 @@
-import {width, height, funBarHeight} from './globals';
+import {width, height} from './globals';
 
 const canvasX = width * 5 / 16;
 const canvasY = height / 15;
