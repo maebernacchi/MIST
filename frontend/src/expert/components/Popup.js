@@ -68,7 +68,6 @@ function Popup(props) {
  */
 Popup.propTypes = {
     isOpen: PropTypes.bool,
-    message: PropTypes.string,
     onConfirm: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
 }
