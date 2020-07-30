@@ -90,7 +90,7 @@ const SignUp = () => {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({action:'signUp', ...user})
+      body: JSON.stringify({action:'signIn', ...user})
     })
       //redirect user to home page
       .then(res => res.json())
