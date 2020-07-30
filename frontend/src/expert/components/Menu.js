@@ -34,11 +34,12 @@ import {
     FormControl,
     ListGroup,
     Modal,
+    Nav,
     Navbar,
     OverlayTrigger,
     Tooltip,
 } from 'react-bootstrap';
-import { BsCloud, BsFullscreen, BsFullscreenExit } from 'react-icons/bs';
+import { BsCloud, BsFullscreen, BsFullscreenExit, BsQuestionCircle } from 'react-icons/bs';
 import { FaRegShareSquare } from 'react-icons/fa';
 
 function Menu(props) {
@@ -47,8 +48,10 @@ function Menu(props) {
 
     return (
         <Navbar id='menu' bg="dark" variant="dark" style={{ justifyContent: 'space-between', }}>
-            <ButtonGroup>
+            <Nav>
+
                 <Button
+                    className='menu-btn'
                     onClick={() => {
                         props.triggerPopup({
                             footer: false,
@@ -56,28 +59,32 @@ function Menu(props) {
                                 <div>
                                     <ListGroup>
                                         <ListGroup.Item>
-                                            The <b>Side Panel</b> is the left-most panel is where you 
-                                            access builtin MIST functions and values as well as your saved functions.
-                                        </ListGroup.Item>
+                                            The <b>Side Panel</b> is the left-most panel is where you
+                                        access builtin MIST functions and values as well as your saved functions.
+                                    </ListGroup.Item>
                                         <ListGroup.Item>
                                             The <b>Central Panel</b> is where you can write and save your own MIST function with however many
-                                            parameters as well as write your MIST Image.
-                                        </ListGroup.Item>
+                                        parameters as well as write your MIST Image.
+                                    </ListGroup.Item>
                                         <ListGroup.Item>
                                             The <b>Final Image Panel</b> is where you can render and see the MIST image that you wrote out
-                                            in the Central Panel.
-                                        </ListGroup.Item>
+                                        in the Central Panel.
+                                    </ListGroup.Item>
                                         <ListGroup.Item>
                                             The <b>Workspace</b> you save is both the functions that you have saved as well as the contents
-                                            of the function that you are currently writing. 
-                                        </ListGroup.Item>
+                                        of the function that you are currently writing.
+                                    </ListGroup.Item>
                                     </ListGroup>
                                 </div>
                             ),
                             title: 'MIST Expert UI Terminology',
                         })
                     }}
-                >MIST Expert UI</Button>
+                    variant="outline-light">
+                    <BsQuestionCircle
+
+                    />
+                </Button>
                 <FileDropdown
                     getCurrentWorkspace={props.getCurrentWorkspace}
                     isWorkspaceInUse={props.isWorkspaceInUse}
@@ -98,19 +105,24 @@ function Menu(props) {
                     requestFullscreen={props.requestFullscreen}
                     exitFullscreen={props.exitFullscreen}
                 />
-            </ButtonGroup>
+            </Nav>
+
             <ButtonGroup>
                 <OverlayTrigger
                     placement='top'
                     overlay={<Tooltip>Save your workspace</Tooltip>}
                 >
-                    <Button onClick={() => props.saveWorkspace(workspaceNameRef.current.value)}> <BsCloud /> Save</Button>
+                    <Button className='menu-btn'
+                        onClick={() => props.saveWorkspace(workspaceNameRef.current.value)}
+                        variant='outline-light'> <BsCloud /> Save</Button>
                 </OverlayTrigger>
                 <OverlayTrigger
                     placement='top'
                     overlay={<Tooltip>Publish your final image</Tooltip>}
                 >
-                    <Button><FaRegShareSquare /> Publish</Button>
+                    <Button className='menu-btn'
+                    variant='outline-light'
+                    ><FaRegShareSquare /> Publish</Button>
                 </OverlayTrigger>
             </ButtonGroup>
         </Navbar>
@@ -140,11 +152,17 @@ function FullscreenButton(props) {
 
     if (fullscreen) {
         return (
-            <Button onClick={props.exitFullscreen}><BsFullscreenExit /></Button>
+            <Button
+                className='menu-btn'
+                onClick={props.exitFullscreen}
+                variant='outline'><BsFullscreenExit /></Button>
         );
     } else {
         return (
-            <Button onClick={props.requestFullscreen}><BsFullscreen /></Button>
+            <Button
+                className='menu-btn'
+                onClick={props.requestFullscreen}
+                variant='outline-light'><BsFullscreen /></Button>
         );
     }
 }
@@ -160,7 +178,7 @@ function FileDropdown(props) {
                 className='menu-btn'
                 id="file"
                 title="File"
-                variant="primary"
+                variant="outline-light"
             >
                 <Dropdown.Item
                     onClick={() => {
