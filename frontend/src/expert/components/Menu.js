@@ -33,10 +33,10 @@ import {
     Form,
     FormControl,
     ListGroup,
-    Modal,
     Nav,
     Navbar,
     OverlayTrigger,
+    Row,
     Tooltip,
 } from 'react-bootstrap';
 import { BsCloud, BsFullscreen, BsFullscreenExit, BsQuestionCircle } from 'react-icons/bs';
@@ -100,6 +100,7 @@ function Menu(props) {
                 </Button>
                 <FileDropdown
                     getCurrentWorkspace={props.getCurrentWorkspace}
+                    getUserExpertWS={props.getUserExpertWS}
                     isWorkspaceInUse={props.isWorkspaceInUse}
                     loadWorkspace={props.loadWorkspace}
                     resetWorkspace={props.resetWorkspace}
@@ -205,7 +206,9 @@ function FileDropdown(props) {
                 >Reset Workspace</Dropdown.Item>
 
                 <ImportWorkspace
+                    getUserExpertWS={props.getUserExpertWS}
                     loadWorkspace={props.loadWorkspace}
+                    triggerPopup={props.triggerPopup}
                     workspaceNameRef={props.workspaceNameRef} />
                 <Dropdown.Item onClick={() => alert('Not yet implemented')}>Delete Workspace</Dropdown.Item>
                 <Dropdown.Divider />
@@ -226,54 +229,32 @@ FileDropdown.propTypes = {
  * Button for the user to load a saved workspace from the server 
  */
 function ImportWorkspace(props) {
-
-    // Done in part by following
-    // https://stackoverflow.com/questions/46712554/upload-files-using-react-bootstrap-formcontrol
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    const loadFile = (selectedFiles) => {
-        if (selectedFiles) {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                const json = event.target.result;
-                let workspaceToLoad;
-                try {
-                    workspaceToLoad = JSON.parse(json);
-                }
-                catch (err) {
-                    alert("File does not contain a MIST Workspace");
-                    return;
-                }
-                if (workspaceToLoad.fun.class !== "MIST.FunInfo") {
-                    alert("File does not contain a MIST Workspace");
-                    return;
-                }
-
-                props.loadWorkspace(workspaceToLoad);
-                props.workspaceNameRef.current.value = workspaceToLoad.name;
-            }; // reader.onload
-            reader.readAsText(selectedFiles[0]);
-        } // if (selectedFiles)
+    const handleOnClick = async () => {
+        const data = await props.getUserExpertWS();
+        if (data.success) {
+            props.triggerPopup({
+                footer: false,
+                title: 'Choose an Expert Workspace to Load',
+                message: (<ButtonGroup vertical>
+                    {data.expertWorkspaces.map(expert_workspace => (
+                        <Button
+                            className='menu-btn'
+                            onClick={() => props.loadWorkspace(expert_workspace)}
+                            variant='outline-primary'
+                        >
+                            {expert_workspace.name}
+                        </Button>
+                    ))}
+                </ButtonGroup>),
+            })
+        } else {
+            alert(data.message)
+        }
     }
 
     return (
         <>
-            <Dropdown.Item onClick={handleShow}>Load a Workspace</Dropdown.Item>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Choose a function to load</Modal.Title>
-                </Modal.Header>
-                <Modal.Body> Select the file to load. Note that MIST Workspace
-                     are typically stored in files with a suffix of .ws. </Modal.Body>
-                <Form.File id="formcheck-api-regular">
-                    <Form.File.Label>Regular file input</Form.File.Label>
-                    <Form.File.Input onChange={(event) => { loadFile(event.target.files); handleClose() }} />
-                </Form.File>
-            </Modal>
+            <Dropdown.Item onClick={handleOnClick}>Load a Workspace</Dropdown.Item>
         </>
     );
 }

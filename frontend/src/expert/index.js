@@ -90,7 +90,7 @@ function Expert(props) {
      * Opens a popup with the given message and a specific confirmation action
      * @param {*} param0 
      */
-    const triggerPopup = ({ footer = true,message, onConfirm, title='Warning' }) => {
+    const triggerPopup = ({ footer = true, message, onConfirm, title = 'Warning' }) => {
         setPopup({
             ...popup,
             footer: footer,
@@ -107,7 +107,7 @@ function Expert(props) {
     const [form, setForm] = useState(getInitialForm());
     // For when we have a Link to the Expert UI from the GUI ready
     useEffect(() => {
-        if (props.location.state && props.location.state.code) {
+        if (props.location && props.location.state && props.location.state.code) {
             setForm({
                 ...getInitialForm(),
                 code: props.location.state.code,
@@ -258,7 +258,7 @@ function Expert(props) {
                 if (data.success) {
                     alert('Expert-Workspace ' + workspace.name + ' has been successfully saved!');
                 } else {
-                    alert('We failed to save because of Error: ' + data.message);
+                    alert('We failed to save because of ' + data.message);
                 }
             })
             .catch(error => alert('We failed to save because of Error: ' + error))
@@ -295,8 +295,19 @@ function Expert(props) {
                     alert(data.message);
                 }
             })
-            .catch(error => console.log(error))
+            .catch(error => { alert('Failed due to ' + error); console.log(error) })
 
+    }
+
+    /** 
+     * Loads a user's expert workspaces
+     */
+    const getUserExpertWS = async () => {
+        return (
+            fetch('/api?action=getUserExpertWS')
+                .then(res => res.json())
+                .then(data => data)
+                .catch(error => { alert('Failed due to ' + error); console.log(error) }))
     }
 
     /**
@@ -345,6 +356,7 @@ function Expert(props) {
             />
             <Menu
                 getCurrentWorkspace={getCurrentWorkspace}
+                getUserExpertWS={getUserExpertWS}
                 isWorkspaceInUse={isWorkspaceInUse}
                 loadWorkspace={loadWorkspace}
                 resetWorkspace={resetWorkspace}
