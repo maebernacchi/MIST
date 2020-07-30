@@ -326,56 +326,32 @@ handlers.getUser = function (info, req, res) {
 // | Expert UI |
 // +-----------+
 
-var implemented_id_in_passport_local = false;
-var test_id = '5f1f6d77c28eda4d4c405161';
-
 handlers.expertwsexists = function (info, req, res) {
-  // STUB
-  // we need to wait for user-authentication to store the _id
-  // in passport-local
-  if (implemented_id_in_passport_local) {
-    if (!req.isAuthenticated())
-      res.json({ success: false, message: 'You need to be logged in!' })
-    else {
-      const userId = req.user._id || test_id;
-      const name = info.name;
-      database.userHasWorkspace(userId, name, res);
-    }
-  } else {
-    res.json({ success: false, message: 'Not yet implemented' })
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: 'You need to be logged in!' })
+  else {
+    const userId = req.user._id;
+    const name = info.name;
+    database.userHasWorkspace(userId, name, res);
   }
 }
 
 handlers.saveexpertws = function (info, req, res) {
-  // STUB
-  // we need to wait for user-authentication to store the _id
-  // in passport-local
-  if (implemented_id_in_passport_local) {
-    if (!req.isAuthenticated())
-      res.json({ success: false, message: 'You need to be logged in!' })
-    else {
-      const userId = req.user._id || test_id;
-      const workspace = info.workspace;
-      database.saveExpertWorkspace(userId, workspace, res);
-    }
-  } else {
-    res.json({ success: false, message: 'Not yet implemented' })
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: 'You need to be logged in!' })
+  else {
+    const userId = req.user._id || test_id;
+    const workspace = info.workspace;
+    database.saveExpertWorkspace(userId, workspace, res);
   }
 }
 
 handlers.getUserExpertWS = function (info, req, res) {
-  // STUB
-  // we need to wait for user-authentication to store the _id
-  // in passport-local
-  if (implemented_id_in_passport_local) {
-    if (!req.isAuthenticated())
-      res.json({ success: false, message: 'You need to be logged in!' })
-    else {
-      const userId = req.user._id || test_id;
-      console.log(test_id)
-      database.getUserExpertWS(userId, res);
-    }
-  } else {
-    res.json({ success: false, message: 'Not yet implemented' })
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: 'You need to be logged in!' })
+  else {
+    const userId = req.user._id || test_id;
+    console.log(test_id)
+    database.getUserExpertWS(userId, res);
   }
 }
