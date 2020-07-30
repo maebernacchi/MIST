@@ -273,7 +273,10 @@ function FunNode(props) {
           <MISTImage //Mini image that can be seen at the bottom right of the node
             onClick={() => setShowImage(false)}
             x={x + nodeDimensions.functionImageBoxOffset + props.offsetX}
-            y={y + nodeDimensions.functionImageBoxOffset + props.offsetY}
+            y={y + props.offsetY + (props.numOutlets <= 3
+              ? nodeDimensions.functionImageBoxOffset
+              : nodeDimensions.functionImageBoxOffset +
+                (props.numOutlets - 3) * nodeDimensions.outletYOffset)}
             width={nodeDimensions.renderSideLength}
             height={nodeDimensions.renderSideLength}
             renderFunction={props.renderFunction ? props.renderFunction : ""}
