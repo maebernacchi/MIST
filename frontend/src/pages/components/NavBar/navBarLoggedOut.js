@@ -1,12 +1,48 @@
-// +---------+----------------------------------------------------------
-// | Notes   |
-// +---------+
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-/*
-This file, navBarLoggedOut.js, creates the navigation bar for users
-who are not signed in. The navigation bar is returned by the
-function Header.
-*/
+// +-----------------------+----------------------------------------------------------------------
+// | navBarLoggedIn.js     |
+// +-----------------------+
+/** 
+ * This file, navBarLoggedOut.js, creates the navigation bar for users
+ * who are not signed in. The navigation bar is returned by the
+ * function Header.
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+
+// +----------------+-----------------------------------------------------------------------
+// | Design Issues  |
+// +----------------+
+/**
+ * Header is built up of the following components:
+ *    --Logo
+ *    --NavbarCenter
+ *        | default mode  (default navigation Bar)
+ *        | signIn mode   (when the user is trying to sign in navBar)
+ *    --Search
+ * 
+ * Additional functions:
+ *    -SignInUpButton (used in NavbarCenter in the case of ***default*** mode)
+ *    -SignInButton (used in NavbarCenter in the case of ***signIn*** mode)
+ *    -SignUpButton (used in NavbarCenter in the case of ***signIn*** mode)
+ *    -CancelButton (used in NavbarCenter in the case of ***signIn*** mode)
+ */
+
 
 // +---------+----------------------------------------------------------
 // | Imports |
@@ -16,7 +52,7 @@ import React, { useState } from "react";
 import FacebookIcon from "../../../design/icons/icons8-facebook-30.png";
 import GoogleIcon from "../../../design/icons/icons8-google-48.png";
 import MistLogo from "../../../design/Logos/logoFinal.png";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Navbar, Nav, NavDropdown, Form, Image, InputGroup,
   FormControl, Button
@@ -44,14 +80,20 @@ function Header(props) {
   );
 };
 
+/**
+ * returns logo
+ */
 function Logo() {
   return (
-    <Link to="/" style={{width: "5%"}}>
-      <img src={MistLogo} alt="MIST Logo" style={{maxWidth: "100%"}}></img>
+    <Link to="/" style={{ width: "5%" }}>
+      <img src={MistLogo} alt="MIST Logo" style={{ maxWidth: "100%" }}></img>
     </Link>
   );
 }
 
+/**
+ * returns Search
+ */
 function Search() {
   return (
     <div>
@@ -69,16 +111,14 @@ function Search() {
 // | Center Part of NavBar |
 // +-----------------------+
 
-/*
-NavBarCenter returns the center portion of the Header depending on the mode.
-The three modes are "default", "signIn", and "user".
-The default mode is "default".
-The mode changes to "signIn" when the user clicks on the Sign In/Up option.
-The mode changes to "user" when the user signs in.
+/**
+ * NavBarCenter returns the center portion of the Header depending on the mode.
+ * The two modes are "default", "signIn"
+ *    --The default mode is "default".
+ *    --The mode changes to "signIn" when the user clicks on the Sign In/Up option.
+ *        (they are trying to sign in)
+ * */
 
-There is a problem: If a user is signed in and moves to another page, the 
-NavBarCenter goes back to the "default" mode.
-*/
 function NavBarCenter() {
 
   const [mode, setMode] = useState("default");
@@ -87,6 +127,7 @@ function NavBarCenter() {
 
   if (mode === "default") {
     return (
+      /* default mode*/
       <Nav className="mr-auto">
         <DefaultCenter />
         <SignInUpButton onClick={handleSignInClick} />
@@ -94,6 +135,7 @@ function NavBarCenter() {
     );
   } else {
     return (
+      /* signIn mode*/
       <Nav className="mr-auto">
         <SignInCenter />
         <SignInButton onClick={handleSignInClick} />
@@ -146,8 +188,10 @@ function SignInUpButton(props) {
 function SignInCenter() {
   return (
     <Nav>
+      {/* Google and Facebook Icons */}
       <Image src={GoogleIcon} alt="MIST Logo" className="navBarIcon"></Image>
       <Image src={FacebookIcon} alt="MIST Logo" className="navBarIcon"></Image>
+
       <Nav.Link eventKey="disabled" disabled> OR </Nav.Link>
 
       {/* type in labels (email + password) */}
@@ -186,8 +230,6 @@ function SignInCenter() {
     </Nav>
   );
 }
-
-
 
 /* Sign in button */
 function SignInButton(props) {

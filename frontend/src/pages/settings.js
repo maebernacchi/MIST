@@ -11,17 +11,21 @@
     * unhiding/blocking content 
     *   commented out is the interface for doing this, but it 
     *   has not been incorporated into the refactored settings yet
- * 
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
  */
-
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
 import React from "react";
 import "./../design/styleSheets/tutorial.css";
 
 import {
   Accordion,
-  Card,
   Button,
   ButtonGroup,
+  Card,
   Container,
   Form,
   OverlayTrigger,
@@ -30,14 +34,19 @@ import {
 
 import "bootstrap/dist/css/bootstrap.css";
 
+// +-------------------+----------------------------------------------------------------------
+// | settings.js        |
+// +-------------------+
 //Page Header
-function Contact() {
+function Settings() {
   return (
-    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
+    <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
+      {/* Title */}
       <Container>
         <h1>Account Settings</h1>
       </Container>
-      <Container fluid>
+      {/* settings */}
+      <Container>
         <SettingsTable />
       </Container>
     </Container>
@@ -49,34 +58,39 @@ function SettingsTable() {
   return (
     <Accordion defaultActiveKey="0">
       <Card>
+        {/* User Settings */}
         <Accordion.Toggle as={Card.Header} eventKey="0">
           User Settings
         </Accordion.Toggle>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
             <ButtonGroup vertical>
-              <Button>Privacy</Button>
-              <OverlayTrigger
-                trigger="click"
-                placement="right"
-                overlay={popover}
-              >
-                <Button>Change Email</Button>
+              {/* Privacy */}
+              <Button>
+                Privacy
+              </Button>
+
+              <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+                <Button>
+                  Change Email
+                </Button>
               </OverlayTrigger>
 
-              <OverlayTrigger
-                trigger="click"
-                placement="right"
-                overlay={password}
-              >
-                <Button>Password</Button>
+              <OverlayTrigger trigger="click" placement="right" overlay={password}>
+                <Button>
+                  Password
+                </Button>
               </OverlayTrigger>
-              <Button>Blocked Content</Button>
+              
+              <Button>
+                Blocked Content
+              </Button>
             </ButtonGroup>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
 
+      {/* Accessibility */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="1">
           Accessibility
@@ -92,6 +106,7 @@ function SettingsTable() {
         </Accordion.Collapse>
       </Card>
 
+      {/* Message Settings */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="2">
           Message Settings
@@ -130,6 +145,7 @@ function SettingsTable() {
         </Accordion.Collapse>
       </Card>
 
+      {/* Notifications */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="3">
           Notifications
@@ -392,4 +408,4 @@ function OptionFour() {
 }
 */
 
-export default Contact;
+export default Settings;

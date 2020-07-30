@@ -1,17 +1,25 @@
+
 // +-------+------------------------------------------------------------------------
 // | Notes |
 // +-------+
 /*
  * about.js
  * 
- * This exports the about page, which gives basic information about MIST.
- * 
+ * This file is that displays the About page, which gives basic information about MIST.
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ *
  */
 
+// +-------------+----------------------------------------------------------------------
+// | Imports     |
+// +-------------+
 import React from "react";
+import { Container } from "react-bootstrap";
 import "./../design/styleSheets/styles.css";
 import "./../design/styleSheets/about.css";
-import { Container } from "react-bootstrap";
+
 
 //full page
 const About = () => {

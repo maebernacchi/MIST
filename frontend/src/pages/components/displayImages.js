@@ -102,13 +102,22 @@ function ModalSwitch(props) {
 // | Gallery |
 // +---------+
 
+/**
+ * The Gallery returns a set of cards and the pagination
+ *    -- normally, gallery is displayed when displayImages is called.
+ *  
+ * It takes in the cards array, 
+ * and calls it on the header, image, and body component of the card
+ */
 function Gallery(props) {
   let cards = props.cards;
   let location = useLocation();
 
   return (
+    /* styling helps with footer */
     <Container style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
       <Row style={{ justifyContent: "space-between" }}>
+        {/* maps each array in the cards array */}
         {cards.map((card) => (
           <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
             <CardHeader card={card} />
@@ -116,18 +125,27 @@ function Gallery(props) {
             <CardBody card={card} />
           </Card>
         ))}
+        {/* pagination */}
         <PageCounter style={{ margin: "auto" }} />
       </Row>
     </Container>
   );
 }
 
+/**
+ * Displays the header of the card
+ *    | title
+ *    | clock sign (if animated)
+ *    | More Icon for Report and Hide
+ * 
+ * takes in the information of one card
+ */
 function CardHeader(props) {
   return (
     <Card.Header>
-
       <Card.Title style={{ margin: "auto" }}>
         <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
+          {/* Title + Clock sign */}
           <Col>
             <p1>
               {props.card.title}
@@ -144,10 +162,16 @@ function CardHeader(props) {
   );
 }
 
+/**
+ * Returns the MISTImage of a card
+ * 
+ * Takes in the information of one card.
+ */
 function CardImage(props) {
   let location = useLocation();
 
   return (
+    /* Setting up the pathname and background for overlay */
     <Link
       to={{
         pathname: `/img/${props.card._id}`,
@@ -163,6 +187,14 @@ function CardImage(props) {
   );
 }
 
+/**
+ * Returns the Body of a card
+ *    | Username + Description
+ *    | Icons
+ *    | Write a Comment
+ * 
+ * Takes in the information of one card.
+ */
 function CardBody(props) {
   let card = props.card;
   return (
@@ -200,7 +232,9 @@ function CardBody(props) {
   );
 }
 
-
+/**
+ * Returns the page counter
+ */
 function PageCounter() {
   return (
     <Pagination className="pagination-style">
@@ -225,10 +259,21 @@ function PageCounter() {
 // +---------+---------+------------------------------------------------------------
 // | Single Image Page |
 // +---------+---------+
-
-
+/**
+ * This is being called when someone accesses an image through its URL
+ * and not by clicking on a smaller version of it on a card
+ * 
+ * Takes in the cards array.
+ * 
+ * Col 1:
+ *  | Row 1: title + image
+ *  | Row 2: username
+ *  | Row 3: Range to change resolution
+ * 
+ * Col 2:
+ *  | Comments
+ */
 function ImageView(props) {
-
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
   if (!card) return <div>Image not found</div>;
@@ -245,11 +290,12 @@ function ImageView(props) {
                 {<b>{card.userId.username}</b>}
               </Button>
             </Row>
+            {/* change resolution */}
             <Form>
               <Form.Control type="range" custom style={{ marginTop: "1em", width: "100%" }} />
             </Form>
           </Col>
-
+          {/* Comments */}
           <Col xs="8">
             <ModalComments card={card} />
           </Col>
@@ -263,10 +309,14 @@ function ImageView(props) {
 // | Image Modal |
 // +-------------+
 
-/*
-ImageModal is a pop-up image view. h
-It appears when the image is clicked from the gallery.
-*/
+/**
+ * ImageModal is a overlay image view. 
+ * It appears when the image is clicked from the gallery.
+ * 
+ * It takes in the array of cards
+ */
+
+
 function ImageModal(props) {
   let history = useHistory();
   let { id } = useParams();
@@ -283,9 +333,12 @@ function ImageModal(props) {
   );
 }
 
-/*
-MyVerticallyCenteredModal returns the display portion of ImageModal.
-*/
+/**
+ * MyVerticallyCenteredModal returns the display portion of ImageModal.
+ * 
+ * It takes in one card, show state, and onHide function
+ */
+
 function MyVerticallyCenteredModal(props) {
 
   let card = props.card;
@@ -300,46 +353,62 @@ function MyVerticallyCenteredModal(props) {
         width: "100%",
       }}
     >
+       {/* Modal Header: title + close button */}
       <Modal.Header>
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
-          {/*card.username*/}
         </Container>
         <Link to={{ pathname: "/gallery" }}>Close</Link>
       </Modal.Header>
 
+      {/* Modal Body */}
       <Container>
         <SideView card={card} />
       </Container>
 
+      {/* Modal Footer */}
       <Modal.Footer style={{ minHeight: "3em" }}></Modal.Footer>
     </Modal>
   );
 }
 
 
-/* SideView returns the main body of the modal view.
-It places the image side by side with the comments. */
+/**
+ * SideView returns the main body of the modal view.
+ * It places the image side by side with the comments.
+ * 
+ * Takes in the information of a card
+ */
 function SideView(props) {
   let card = props.card;
 
   return (
     <Modal.Body>
       <Row >
+        {/* Col 1: usernamame, image, caption, range*/}
         <Col>
+          {/* username */}
           <Button variant="light" href="/user">
             {card.userId.username}
           </Button>
+
+          {/* image */}
           <Row style={{ justifyContent: "center", marginTop: "1em" }}>
             <MISTImage code={card.code} resolution="250" />
           </Row>
+
+          {/* caption */}
           <Row>
             {card.caption}
           </Row>
+
+          {/* range for resolution */}
           <Form>
             <Form.Control type="range" custom style={{ marginTop: "1em" }} />
           </Form>
         </Col>
+
+        {/* Col 2: Comments*/}
         <Col style={{ width: "50%" }}>
           <div style={{ paddingLeft: "1em" }}></div>
           <ModalComments card={card} />
@@ -350,9 +419,9 @@ function SideView(props) {
   );
 }
 
-// +-------------+-----------------------------------------------------------
-// | Image Modal |
-// +-------------+
+// +----------------+-----------------------------------------------------------
+// | Modal Comments |
+// +----------------+
 
 
 function ModalComments(props) {
@@ -368,16 +437,18 @@ function ModalComments(props) {
 
 
   return (
-
     <Col>
       <Form.Group >
+        {/* All existing comments */}
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
           {comments.map((comment) => (
             <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
           ))}
         </Container>
+
         {/* Horizontal Line */}
         <hr />
+        {/* Icons and to make a comment field */}
         <ModalIcons card={props.card} />
         <MakeComment imageId={props.card._id} />
 
@@ -448,7 +519,7 @@ function MakeComment(props) {
         justifyContent: "space-between",
         marginTop: "1em",
       }}>
-
+        {/* Box to type comment in */}
         <Col xs={10}>
           <Form.Control
             name="comment"
@@ -460,6 +531,7 @@ function MakeComment(props) {
           />
         </Col>
 
+        {/* Send message button */}
         <Col>
           <Button variant="light" type="submit">
             <FiSend style={{ color: "black" }} />
@@ -541,6 +613,7 @@ function ModalIcons(props) {
   );
 }
 
+/* Code Icon */
 function CodeIcon(props) {
   const [show, setShow] = useState(false);
   const [target, setTarget] = useState(null);
@@ -577,6 +650,7 @@ function CodeIcon(props) {
   );
 }
 
+/* Comment Icon */
 function CommentIcon(props) {
   let location = useLocation();
   return (
@@ -598,6 +672,7 @@ function CommentIcon(props) {
   )
 }
 
+/* More Icon */
 //... = hide, block, report
 function MoreIcon() {
 
@@ -627,11 +702,14 @@ function MoreIcon() {
         {<FiMoreHorizontal />}
       </Dropdown.Toggle>
       <Dropdown.Menu>
+        {/* Hide */}
         <Dropdown.Item>
           <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
             <Button variant="light" onClick={() => hide()}>Hide</Button>
           </OverlayTrigger>
         </Dropdown.Item>
+
+        {/* Report */}
         <Dropdown.Item href="/report">
           <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
             <Button variant="light">Report</Button>
@@ -643,17 +721,23 @@ function MoreIcon() {
 
 }
 
+/* Share Icon */
 function ShareIcon() {
   return (
     <Nav >
       <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown">
+        {/* Facebook */}
         <NavDropdown.Item eventKey="4.1">
           {" "}
           <FaFacebook /> Facebook
         </NavDropdown.Item>
+
+        {/* Instagram */}
         <NavDropdown.Item eventKey="4.2">
           <TiSocialInstagram /> Instagram
         </NavDropdown.Item>
+
+        {/* Snapchat */}
         <NavDropdown.Item eventKey="4.3">
           {" "}
           <FaSnapchat /> Snapchat
@@ -664,6 +748,7 @@ function ShareIcon() {
 }
 
 
+/* Save Icon */
 function SaveIcon() {
   return (
     <Nav>
