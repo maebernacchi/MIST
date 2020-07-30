@@ -73,10 +73,10 @@ const SignUp = () => {
     };
 
     //post user to database
-    fetch('/api?action=signUp', {
+    fetch('/api', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user)
+      body: JSON.stringify({action: 'signUp', ...user})
     })
       .then(res => res.json())
       .then(message => {
@@ -84,13 +84,13 @@ const SignUp = () => {
       })
 
     // login user
-    fetch('/api?action=signUp', {
+    fetch('/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify(user)
+      body: JSON.stringify({action:'signUp', ...user})
     })
       //redirect user to home page
       .then(res => res.json())

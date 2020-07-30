@@ -441,9 +441,9 @@ function ModalComments(props) {
       <Form.Group >
         {/* All existing comments */}
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
-          {comments.map((comment) => (
+          {comments.map((comment) => {console.log(comment); return (
             <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
-          ))}
+          )})}
         </Container>
 
         {/* Horizontal Line */}
@@ -476,7 +476,7 @@ function MakeComment(props) {
     event.preventDefault();
 
     // grab user information
-    fetch('/api?=getUser', {
+    fetch('/api?action=getUser', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -498,12 +498,12 @@ function MakeComment(props) {
           };
 
           //post comment
-          fetch('/api?action=postComment', {
+          fetch('/api', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(fullcomment)
+            body: JSON.stringify({action:'postComment',...fullcomment})
           })
             //reset comment state
             .then(setComment(""))

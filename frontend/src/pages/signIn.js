@@ -37,13 +37,13 @@ const SignIn = () => {
       password: loginPassword,
     };
 
-    fetch('/api?action=signIn', {
+    fetch('/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify(user)
+      body: JSON.stringify({action: 'signIn', ...user})
     })
       //redirect user to home page
       .then(res => res.json())

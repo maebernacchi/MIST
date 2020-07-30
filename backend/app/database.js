@@ -433,7 +433,7 @@ module.exports.saveComment = function (req, res) {
     comment.save()
         .then(comment => {
             //push comment to user's comment array
-            User.updateOne({ _id: userID }, { $push: { comments: comment._id } })
+            User.updateOne({ _id: mongoose.Types.ObjectId(userID) }, { $push: { comments: comment._id } })
                 .exec()
                 .then((writeOpResult) => {
                     if (writeOpResult.nModified === 0) {
