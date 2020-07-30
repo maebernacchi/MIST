@@ -1,3 +1,32 @@
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// +-------------------+----------------------------------------------------------------------
+// | Community.js     |
+// +-------------------+
+/**
+ * This is the Community.js
+ * This file is  displays the Community Guidelines
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+
+// +-------------+----------------------------------------------------------------------
+// | Imports     |
+// +-------------+
 import React from "react";
 import { Container } from "react-bootstrap";
 import "./../design/styleSheets/community.css";
@@ -16,7 +45,9 @@ function Community() {
         We provide the ability to see other user’s images and write comments,
         where we hope you can find inspiration and applaud other people’s creativity.
         We very much would like you to help us do just that, so here are some
-          guidelines for how to participate. </p>
+        guidelines for how to participate. </p>
+
+        {/* Short Version */}
         <h2>The Short Version</h2>
         <ul>
           <li>
@@ -33,6 +64,8 @@ function Community() {
             identify inappropriate content and users!
           </li>
         </ul>
+        
+        {/* Rules & Guidelines */}
         <h2>Rules and Guidelines</h2>
         <ul>
           <li>
@@ -104,6 +137,8 @@ function Community() {
         engaging, helpful, and productive. If we feel content is harming that endeavor,
           we’ll take action.</p>
         <p><b>See any of the above? You can help us out by reporting!</b></p>
+
+        {/* Hiding, Blocking, Reporting */}
         <h2>Hiding, Blocking, and Reporting</h2>
         <p style={{paddingBottom: "10px"}}>We provide the ability to hide and report images, comments, albums,
           and block and report users. </p>

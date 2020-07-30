@@ -1,3 +1,32 @@
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// +-------------------+----------------------------------------------------------------------
+// | signUp.js         |
+// +-------------------+
+/**
+ * This is the signUp.js
+ * This file displays a form for the user to sign up.
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
+
 import 'bootstrap/dist/css/bootstrap.css';
 import FacebookIcon from './../design/icons/icons8-facebook-30.png';
 import GoogleIcon from './../design/icons/icons8-google-48.png';
@@ -5,6 +34,9 @@ import React, { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import './../design/styleSheets/signInUp.css';
 
+// +-------------------+----------------------------------------------------------------------
+// | signUp.js         |
+// +-------------------+
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -82,12 +114,19 @@ const SignUp = () => {
 
   return (
     <Container className="signUp-center">
-      <h1 >Sign Up</h1>
-      <p>    Welcome to MIST! <br />Get started by creating an account. </p>
-      <div className="icons"> <img src={GoogleIcon} alt="Google Logo" className="icon"></img>
-        <img src={FacebookIcon} alt="Facebook Logo" className="icon"></img></div>
+      {/* Title and Subtitle */}
+        <h1 >Sign Up</h1>
+        <p>    Welcome to MIST! <br /> Get started by creating an account. </p>
+
+      {/* Facebook and Google Icons */}
+      <div className="icons">
+        <img src={GoogleIcon} alt="Google Logo" className="icon"></img>
+        <img src={FacebookIcon} alt="Facebook Logo" className="icon"></img>
+      </div>
       <p>OR</p>
+      {/* Start of the form */}
       <Form className="form" onSubmit={handleSubmit}>
+        {/* first name */}
         <Form.Group>
           <Form.Label>First name</Form.Label>
           <Form.Control
@@ -98,6 +137,8 @@ const SignUp = () => {
             placeholder="Enter first name"
           />
         </Form.Group>
+
+        {/* last name */}
         <Form.Group>
           <Form.Label >Last name</Form.Label>
           <Form.Control
@@ -108,6 +149,8 @@ const SignUp = () => {
             placeholder="Enter last name"
           />
         </Form.Group>
+
+        {/* username */}
         <Form.Group>
           <Form.Label>Username</Form.Label>
           <Form.Control
@@ -118,6 +161,8 @@ const SignUp = () => {
             placeholder="@username"
           />
         </Form.Group>
+
+        {/* email */}
         <Form.Group>
           <Form.Label>Email address</Form.Label>
           <Form.Control
@@ -134,6 +179,8 @@ const SignUp = () => {
             We'll never share your email with anyone else.
           </Form.Text>
         </Form.Group>
+
+        {/* password */}
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -150,6 +197,8 @@ const SignUp = () => {
             <Form.Label>Re-enter Password</Form.Label>
             <Form.Control required="required" type="password" placeholder="Re-enter password" />
           </Form.Group> */}
+
+        {/* checkboxes */}
         <Form.Group controlId="formBasicCheckbox">
           <Form.Check
             type="checkbox"
@@ -164,6 +213,8 @@ const SignUp = () => {
             label={<label>By checking this box I confirm that I have read and accept the <a href='/community'>Community Guidelines</a></label>}
           />
         </Form.Group>
+
+        {/* submit */}
         <Form.Group>
           <Button variant="outline-dark" type="submit" id="submitButton">
             Submit

@@ -1,12 +1,55 @@
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// +-------------------+----------------------------------------------------------------------
+// | profile.js        |
+// +-------------------+
+/**
+ * This is the profile.js
+ * This file displays the profile page of the user
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+
+// +----------------+-----------------------------------------------------------------------
+// | Design Issues  |
+// +----------------+
+
+/**
+ * The page is made up of the following parts:
+ *    --First Part
+ *        | Profile Image + user information
+ *        | IconsBar: # of pictures, likes, badges, challenges
+ *    --Profile Nav
+ *        | images: calls displayImages.js
+ *        | albums: function Albums 
+ *            + Carousel
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
 import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Container, Row, Form, Col, Nav, Tab, Card, Carousel } from "react-bootstrap";
+import { Card, Carousel, Container, Col, Form, Nav, Row, Tab} from "react-bootstrap";
 /** 6745662 */
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
-
+/* icons */
 import {
   AiOutlinePicture,
   AiOutlineStar,
@@ -15,6 +58,9 @@ import {
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 
+// +-------------------+----------------------------------------------------------------------
+// | profile.js        |
+// +-------------------+
 export default function Profile() {
 
   /**
@@ -50,9 +96,12 @@ export default function Profile() {
 
   return (
     <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
+      {/* Title */}
       <Container>
         <h1> Profile </h1>
       </Container>
+
+      {/* First Part: Profile Picture + information */}
       <Container style={{ marginTop: "3vh", marginBottom: "3vh" }}>
         <FirstPart name={user.forename + " " + user.surname}
           username={user.username}
@@ -62,12 +111,18 @@ export default function Profile() {
         />
       </Container>
 
+      {/* Tabs for images, albums */}
       <ProfileNav images={userImages} albums={userAlbums} />
     </Container>
   );
 }
 
-
+/**
+ * Returns the Profile picture and information of the user
+ * that they can change 
+ * 
+ * takes in: name, username, date, bio, code (for profile picture)
+ */
 function FirstPart(props) {
   return (
     <Container style={{ width: "90%" }}>
@@ -75,6 +130,7 @@ function FirstPart(props) {
         {" "}
       </Row>
       <Row style={{ justifyContent: "space-between" }}>
+        {/* Displays profile picture + option to change it + settings */}
         <Container style={{ width: "25%", justifyContent: "center" }}>
           <MISTImage code={props.code} resolution="275" />
           <Nav.Link eventKey="link-1">Change Image</Nav.Link>
@@ -84,10 +140,10 @@ function FirstPart(props) {
         </Container>
 
         {/** User informations + icon bar*/}
-
         <Container style={{ width: "50%", alignItems: "center" }}>
           <Form>
             <Form.Group as={Row} controlId="formPlaintextEmail">
+              {/* name */}
               <Form.Label column sm="4">
                 Name
               </Form.Label>
@@ -102,6 +158,7 @@ function FirstPart(props) {
                 <Nav.Link eventKey="link-1">Change</Nav.Link>
               </Col>
 
+              {/* username */}
               <Form.Label column sm="4">
                 Username
               </Form.Label>
@@ -112,18 +169,18 @@ function FirstPart(props) {
                 <Nav.Link eventKey="link-1">Change</Nav.Link>
               </Col>
 
+              {/* member since */}
               <Form.Label column sm="4">
                 Member since
               </Form.Label>
-
               <Col sm="6">
                 <Form.Control plaintext readOnly value={props.date} />
               </Col>
 
+              {/* bio */}
               <Form.Label column sm="4">
                 Bio
               </Form.Label>
-
               <Col sm="7">
                 <Form.Control as="textarea" readOnly rows="3" value={props.bio} />
               </Col>
@@ -132,15 +189,19 @@ function FirstPart(props) {
               </Col>
             </Form.Group>
           </Form>
+
+          {/* icons bar */}
           <hr />
           <IconsBar />
           <hr />
+
         </Container>
       </Row>
     </Container>
   );
 }
 
+{/* Displays the icons (# of pictures, likes, badges, challenges) */}
 function IconsBar() {
   const icons = [
     { iconName: <AiOutlinePicture size={28} />, num: 8, category: "images" },
@@ -166,6 +227,7 @@ function IconsBar() {
   );
 }
 
+/* Displays a navigationBar to change between images and albums */
 function ProfileNav(props) {
   return (
     <Container>
@@ -219,6 +281,7 @@ function ProfileNav(props) {
   );
 }
 
+/* Albums */
 // this is just a quick component I wrote
 // we need to implement an albums page and a real album component
 function Album(props) {
@@ -241,6 +304,7 @@ function Album(props) {
   )
 }
 
+/* Carousel for Albums */
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 

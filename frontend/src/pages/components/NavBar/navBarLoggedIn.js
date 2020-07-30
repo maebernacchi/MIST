@@ -1,29 +1,61 @@
-// +---------+----------------------------------------------------------
-// | Notes   |
-// +---------+
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-/*
-This file, navBarLoggedIn.js, creates the navigation bar for users
-who are signed in. The navigation bar is returned by the
-function UserHeader.
-*/
+// +-----------------------+----------------------------------------------------------------------
+// | navBarLoggedIn.js     |
+// +-----------------------+
+/**
+ * This file, navBarLoggedIn.js, creates the navigation bar for users
+ * who are signed in. The navigation bar is returned by the
+ * function UserHeader.
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+
+// +----------------+-----------------------------------------------------------------------
+// | Design Issues  |
+// +----------------+
+/**
+ * UserHeader is built up of the following components:
+ *    --Logo
+ *    --Navbar
+ *        | Create, Challenges, Tutorial, Gallery, About and its dropdowns
+ *        | Username dropdown
+ *            |Profile, Settings, <SignOutButton>
+ *    --Search
+ */
 
 // +---------+----------------------------------------------------------
 // | Imports |
 // +---------+
-
-
 import React, { useState, useEffect } from "react";
 import {Link} from "react-router-dom";
-/* Imports for images / logos */
+
+/* Imports for stylesheet & logo */
 import MistLogo from "../../../design/Logos/logoFinal.png";
+import "../../../design/styleSheets/navBar.css";
+
 /* Imports for bootstrap */
 import {
   Navbar, Nav, NavDropdown, Form,
   FormControl, Button
 } from "react-bootstrap";
-import "../../../design/styleSheets/navBar.css";
 import "bootstrap/dist/css/bootstrap.css";
+
+
 
 // +------------+----------------------------------------------------------
 // | UserHeader |
@@ -106,11 +138,13 @@ function NavBar(props) {
       <Nav.Link href="/challenges">Challenges</Nav.Link>
       <Nav.Link href="/tutorial">Tutorial</Nav.Link>
       <Nav.Link href="/gallery">Gallery</Nav.Link>
+      {/* about dropdown */}
       <NavDropdown title="About" id="basic-nav-dropdown">
         <NavDropdown.Item href="/about">About MIST</NavDropdown.Item>
         <NavDropdown.Item href="/development">Development</NavDropdown.Item>
         <NavDropdown.Item href="/faq">FAQ</NavDropdown.Item>
       </NavDropdown>
+      {/* username dropdown */}
       <NavDropdown title={username} id="basic-nav-dropdown">
         <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
         <NavDropdown.Item href="#action/3.2">Settings</NavDropdown.Item>
@@ -122,7 +156,6 @@ function NavBar(props) {
 }
 
 /* Sign Out Bar */
-
 function SignOutButton(props) {
   return (
     <NavDropdown.Item href="#" onClick={signout}>

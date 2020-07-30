@@ -1,11 +1,40 @@
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// +-------------------+----------------------------------------------------------------------
+// | settings.js       |
+// +-------------------+
+/**
+ * This is the settings.js
+ * This file displays the settings page that lets users
+ * change their informations and update their privacy settings.
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
 import React from "react";
 import "./../design/styleSheets/tutorial.css";
 
 import {
   Accordion,
-  Card,
   Button,
   ButtonGroup,
+  Card,
   Container,
   Form,
   OverlayTrigger,
@@ -14,14 +43,19 @@ import {
 
 import "bootstrap/dist/css/bootstrap.css";
 
+// +-------------------+----------------------------------------------------------------------
+// | settings.js        |
+// +-------------------+
 //Page Header
-function Contact() {
+function Settings() {
   return (
-    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
+    <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
+      {/* Title */}
       <Container>
         <h1>Account Settings</h1>
       </Container>
-      <Container fluid>
+      {/* settings */}
+      <Container>
         <SettingsTable />
       </Container>
     </Container>
@@ -33,34 +67,39 @@ function SettingsTable() {
   return (
     <Accordion defaultActiveKey="0">
       <Card>
+        {/* User Settings */}
         <Accordion.Toggle as={Card.Header} eventKey="0">
           User Settings
         </Accordion.Toggle>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
             <ButtonGroup vertical>
-              <Button>Privacy</Button>
-              <OverlayTrigger
-                trigger="click"
-                placement="right"
-                overlay={popover}
-              >
-                <Button>Change Email</Button>
+              {/* Privacy */}
+              <Button>
+                Privacy
+              </Button>
+
+              <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+                <Button>
+                  Change Email
+                </Button>
               </OverlayTrigger>
 
-              <OverlayTrigger
-                trigger="click"
-                placement="right"
-                overlay={password}
-              >
-                <Button>Password</Button>
+              <OverlayTrigger trigger="click" placement="right" overlay={password}>
+                <Button>
+                  Password
+                </Button>
               </OverlayTrigger>
-              <Button>Blocked Content</Button>
+              
+              <Button>
+                Blocked Content
+              </Button>
             </ButtonGroup>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
 
+      {/* Accessibility */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="1">
           Accessibility
@@ -76,6 +115,7 @@ function SettingsTable() {
         </Accordion.Collapse>
       </Card>
 
+      {/* Message Settings */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="2">
           Message Settings
@@ -114,6 +154,7 @@ function SettingsTable() {
         </Accordion.Collapse>
       </Card>
 
+      {/* Notifications */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="3">
           Notifications
@@ -376,4 +417,4 @@ function OptionFour() {
 }
 */
 
-export default Contact;
+export default Settings;
