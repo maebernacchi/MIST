@@ -283,16 +283,22 @@ handlers.signOut = function (info, req, res) {
   res.json("Success");
 }
 
+
 /*
 *   Get user from Passport
 *   info.action: getUser
 */
-
 handlers.getUser = function (info, req, res) {
   if (!req.user) res.json(null);
   else {
-    user = req.user;
-    res.json(user);
+    // we have to search the database for the full user
+    // because passport only stores the username of the person logged in
+    database.User.findOne({ username: req.user.username }, (err, user) => {
+      if (err)
+        fail(res, "no user found")
+      else
+        res.json(user)
+    })
   }
 }
 

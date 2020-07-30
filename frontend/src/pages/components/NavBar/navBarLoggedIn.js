@@ -56,7 +56,6 @@ import {
 import "bootstrap/dist/css/bootstrap.css";
 
 
-
 // +------------+----------------------------------------------------------
 // | UserHeader |
 // +------------+
@@ -65,7 +64,7 @@ function UserHeader(props) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch('/api/user', {
+    fetch('/api?action=getUser', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -148,8 +147,8 @@ function NavBar(props) {
       </NavDropdown>
       {/* username dropdown */}
       <NavDropdown title={username} id="basic-nav-dropdown">
-        <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.2">Settings</NavDropdown.Item>
+        <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+        <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
         <NavDropdown.Divider />
         <SignOutButton />
       </NavDropdown>
