@@ -12,6 +12,11 @@ Prerequisites
 - Run "npm install" from the backend folder.
 - Run "npm install" from the frontend folder.
 
+Running MIST as a Developer
+--------------------
+- Run "npm run dev" in the backend folder.
+- This should start the server via nodemon and the react-server
+
 Running MIST locally
 --------------------
 - Run "npm start" in the backend folder.
