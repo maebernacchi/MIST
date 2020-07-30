@@ -62,23 +62,32 @@ function Menu(props) {
                                         <ListGroup.Item>
                                             The <b>Side Panel</b> is the left-most panel is where you
                                         access builtin MIST functions and values as well as your saved functions.
-                                    </ListGroup.Item>
+                                        </ListGroup.Item>
+
                                         <ListGroup.Item>
                                             The <b>Central Panel</b> is where you can write and save your own MIST function with however many
                                         parameters as well as write your MIST Image.
-                                    </ListGroup.Item>
+                                        </ListGroup.Item>
+
                                         <ListGroup.Item>
                                             The <b>Final Image Panel</b> is where you can render and see the MIST image that you wrote out
                                         in the Central Panel.
-                                    </ListGroup.Item>
+                                        </ListGroup.Item>
+
                                         <ListGroup.Item>
                                             The <b>Workspace</b> you save is both the functions that you have saved as well as the contents
                                         of the function that you are currently writing.
-                                    </ListGroup.Item>
+                                        </ListGroup.Item>
+
+                                        <ListGroup.Item>
+                                            If you need additional help to start using the Expert UI, click the following button to
+                                            checkout our tutorial!
+                                            <a href='/tutorial/#expert-ui'>
+                                                <Button>To Tutorials</Button>
+                                            </a>
+                                        </ListGroup.Item>
+
                                     </ListGroup>
-                                    <a href='/tutorial/#expert-ui'>
-                                        <Button>To Tutorials</Button>
-                                    </a>
                                 </div>
                             ),
                             title: 'MIST Expert UI Terminology',
