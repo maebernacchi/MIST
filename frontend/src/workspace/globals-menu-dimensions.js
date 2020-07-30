@@ -1,4 +1,4 @@
-import { width, height, menuHeight, functionWidth, valueWidth } from "./globals";
+import { width, menuHeight, functionWidth, valueWidth } from "./globals";
 import gui from './mistgui-globals';
 
 // +------------------+---------------------------------------------

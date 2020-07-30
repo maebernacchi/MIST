@@ -72,7 +72,7 @@ var MIST = {};
 // | Setup |
 // +-------+
 
-MIST = new Object();
+MIST = Object.create(null);
 
 // +----------------------+------------------------------------------
 // | Types of Expressions |
@@ -285,10 +285,10 @@ MIST.sameExp = function(a,b,checkedLoops)
   // Two expressions are the same if they have the same operations
   // and the same operands.
   if ((a instanceof MIST.App) && (b instanceof MIST.App)) {
-    if (a.operation != b.operation) {
+    if (a.operation !== b.operation) {
       return false;
     } // different operations
-    if (a.operands.length != b.operands.length) {
+    if (a.operands.length !== b.operands.length) {
       return false;
     } // different numbers of operands
     for (var i = 0; i < a.operands.length; i++) {
@@ -396,7 +396,7 @@ MIST.App = function(operation) {
   for (var i = 0; i < this.operands.length; i++) {
     if (!MIST.isExp(this.operands[i])) {
       console.log(this.operands);
-      throw "Subexpression " + i +  "is invalid: " + this.operands[i];
+      console.log( "Subexpression " + i +  "is invalid: " + this.operands[i]);
     } // if
   } // for
 
@@ -753,7 +753,7 @@ MIST.Input = function(text)
 MIST.parseError = function(text, row, col) {
   if (row) MIST.row = row;
   if (col) MIST.col = col;
-  throw "Error at line " + MIST.row + ", column " + MIST.col + ": " + text;
+  console.log( "Error at line " + MIST.row + ", column " + MIST.col + ": " + text);
 } // parseError
 
 /**
@@ -797,10 +797,9 @@ MIST.tokenize = function(str) {
         tokens.push(ch);
       }
       else if (/[A-Za-z]/.test(ch.text)) {
-        var col = ch.col;
-        var row = ch.row;
+        //var col = ch.col;
+        //var row = ch.row;
         var id = ch.text;
-        var c;
         while ((c = input.peek()) && /[A-Za-z0-9.]/.test(c)) {
           id += c;
           input.next();
@@ -875,7 +874,7 @@ MIST.parse = function(str,prefix) {
     } // MIST.tokens.NUM
 
     // Only identifiers and numbers are allowed at the top level.
-    else if (tok.type != MIST.tokens.ID) {
+    else if (tok.type !== MIST.tokens.ID) {
       MIST.parseError("Unexpected token (" + tok.text + ")", tok.row, tok.col);
     } // if it's not an identifier
 
@@ -883,7 +882,7 @@ MIST.parse = function(str,prefix) {
     else if (peekType(tokens) === MIST.tokens.OPEN) {
       tokens.shift();
       var children = [];
-      while (peekType(tokens) != MIST.tokens.CLOSE) {
+      while (peekType(tokens) !== MIST.tokens.CLOSE) {
         children.push(kernel(tokens));
         if (peekType(tokens) === MIST.tokens.COMMA) {
           tokens.shift();
@@ -904,7 +903,7 @@ MIST.parse = function(str,prefix) {
 
   var tokens = MIST.tokenize(str);
   var result = kernel(tokens);
-  if ((tokens.length > 1) || (peekType(tokens) != MIST.tokens.EOF)) {
+  if ((tokens.length > 1) || (peekType(tokens) !== MIST.tokens.EOF)) {
     MIST.parseError("Extra text after expression", tokens[0].row,
       tokens[0].col);
   }
@@ -918,23 +917,23 @@ MIST.parse = function(str,prefix) {
 /**
  * A mouse for cases in which someone has not passed in the mouse.
  */
-function SimulatedMouse()
-{
-  this.x = 0;
-  this.y = 0;
-} // SimulatedMouse()
+// function SimulatedMouse()
+// {
+//   this.x = 0;
+//   this.y = 0;
+// } // SimulatedMouse()
 
 /**
  * A time for cases in which someone has not passed in the time.
  */
-function SimulatedTime()
-{
-  this.s = 0;
-  this.m = 0;
-  this.h = 0;
-  this.d = 0;
-  this.y = 0;
-} // SimulatedTime
+// function SimulatedTime()
+// {
+//   this.s = 0;
+//   this.m = 0;
+//   this.h = 0;
+//   this.d = 0;
+//   this.y = 0;
+// } // SimulatedTime
 
 
 function gifTime()
@@ -956,39 +955,39 @@ function gifTime()
 /**
  * Display a context.
  */
-function displayContext(context)
-{
-  var args = getArgs(arguments);
-  for (var i = 0; i < args.length; i++) {
-    console.log(args[i]);
-  } // for
-} // displayContext
+// function displayContext(context)
+// {
+//   var args = getArgs(arguments);
+//   for (var i = 0; i < args.length; i++) {
+//     console.log(args[i]);
+//   } // for
+// } // displayContext
 
 /**
  * Evaluate an expression in an environment.  (Intended as a bit of an
  * experiment for what we're likely to do in the render function.)
  */
-function evalExp(exp)
-{
-  var env = getArgs(arguments,1);
-  for (var i = 0; i < env.length; i++)
-    {
-      var fun = env[i];
-      console.log(fun);
-      var code = fun.name + " = " + fun.toString();
-      console.log(code);
-      eval(code);
-    }
-  return eval(exp.toString());
-} // evalExp
+// function evalExp(exp)
+// {
+//   var env = getArgs(arguments,1);
+//   for (var i = 0; i < env.length; i++)
+//     {
+//       var fun = env[i];
+//       console.log(fun);
+//       var code = fun.name + " = " + fun.toString();
+//       console.log(code);
+//       eval(code);
+//     }
+//   return eval(exp.toString());
+// } // evalExp
 
 /**
  * Test getArgs
  */
-function testArgs()
-{
-  return getArgs(arguments, 1);
-} // testArgs
+// function testArgs()
+// {
+//   return getArgs(arguments, 1);
+// } // testArgs
 
 // +-----------------------+-----------------------------------------
 // | Interpreting MIST Code |
@@ -1000,10 +999,10 @@ function testArgs()
  *   corresponding function.  (Note that we will generally not
  *   use "raw" MIST, but it's helpful for testing.)
  */
-function MISTbody2fun(body)
-{
-  return eval("(function (x,y,t,m) { return " + body + "})");
-} // MISTbody2fun
+// function MISTbody2fun(body)
+// {
+//   return eval("(function (x,y,t,m) { return " + body + "})");
+// } // MISTbody2fun
 
 /**
  * Convert a MIST expression to something that returns an RGB
@@ -1038,7 +1037,7 @@ MIST.expToRGB = function(name,exp,env) {
   //      var _tmp_ = r2c(-exp);
   //      return [_tmp_, _tmp_, _tmp];
   else if (type === MIST.TYPE.NUMBER) {
-    var code = "(function(x,y,t,m,p) { " + envCode +
+     code = "(function(x,y,t,m,p) { " + envCode +
         "; var _tmp_ = r2c(-" + exp.toString() +
         "); return [_tmp_, _tmp_, _tmp_]; })";
     return eval(code);
@@ -1218,35 +1217,35 @@ MIST.compareFunTime = function(code1,code2) {
 // | Sample Expressions |
 // +--------------------+
 
-var plus = function()
-  {
-    var result = 0;
-    for (var i = 0; i < arguments.length; i++)
-      result += arguments[i];
-    return result;
-  };
+// var plus = function()
+//   {
+//     var result = 0;
+//     for (var i = 0; i < arguments.length; i++)
+//       result += arguments[i];
+//     return result;
+//   };
 
-var exp0 = new MIST.Val(1);
-var exp1 = new MIST.App("plus", new MIST.Val("x"), new MIST.Val("y"));
-var exp1a = new MIST.App("plus", new MIST.Val("x"), new MIST.Val("y"));
-var exp2 = new MIST.App("times", exp0, exp1, exp1)
-var exp3 = new MIST.Val("x");
+//var exp0 = new MIST.Val(1);
+//var exp1 = new MIST.App("plus", new MIST.Val("x"), new MIST.Val("y"));
+//var exp1a = new MIST.App("plus", new MIST.Val("x"), new MIST.Val("y"));
+//var exp2 = new MIST.App("times", exp0, exp1, exp1)
+//var exp3 = new MIST.Val("x");
 
-var fun0 = new MIST.Fun([], exp0);
+//var fun0 = new MIST.Fun([], exp0);
 
-var fun1 = new MIST.Fun(["i"],
-                       new MIST.App("plus",
-                                   new MIST.Val(3),
-                                   new MIST.Val("i")));
+// var fun1 = new MIST.Fun(["i"],
+//                        new MIST.App("plus",
+//                                    new MIST.Val(3),
+//                                    new MIST.Val("i")));
 
-var fun2 = new MIST.Fun(["i"],
-                       new MIST.App("plus",
-                                    new MIST.Val("x"),
-                                    new MIST.Val("i")));
+// var fun2 = new MIST.Fun(["i"],
+//                        new MIST.App("plus",
+//                                     new MIST.Val("x"),
+//                                     new MIST.Val("i")));
 
-var pp = function(str) {
-  console.log(MIST.parse(str).prettyPrint());
-}
+// var pp = function(str) {
+//   console.log(MIST.parse(str).prettyPrint());
+// }
 /**
  * mist-builtin-functions.js
  *   The collection of builtin functions
@@ -1281,10 +1280,10 @@ function BUILTIN() {
 /**
  * Restrict a value to a particular range.
  */
-function cap(val)
-{
-  return Math.max(-1, Math.min(1, val));
-} // cap
+// function cap(val)
+// {
+//   return Math.max(-1, Math.min(1, val));
+// } // cap
 
 /**
  * Wrap around
@@ -1314,7 +1313,7 @@ BUILTIN("abs", "abs", "The absolute value of i", "i",
 var average = function(a) {
   return sum.apply(this, arguments)/arguments.length;
 }; // average
-var avg = average;
+//var avg = average;
 MIST.avg = average;
 MIST.average = average;
 BUILTIN("average", "avg", "Average 2 or more values", "...",
@@ -1323,7 +1322,7 @@ BUILTIN("average", "avg", "Average 2 or more values", "...",
 var cosine = function(a) {
   return Math.cos(Math.PI * a);
 }; // cosine
-var cos = cosine;
+//var cos = cosine;
 MIST.cos = cosine;
 MIST.cosine = cosine;
 BUILTIN("cosine", "cos", "The cosine of pi*a", "a",
@@ -1336,7 +1335,7 @@ var multiply = function() {
   }
   return product;
 }; // multiply
-var mult = multiply;
+//var mult = multiply;
 MIST.mult = multiply;
 MIST.multiply = multiply;
 BUILTIN("multiply", "mult", "Multiply 2 or more values", "...",
@@ -1346,7 +1345,7 @@ var negate = function(value)
 {
  return -value;
 };
-var neg = negate;
+//var neg = negate;
 MIST.negate = negate;
 MIST.neg = negate;
 BUILTIN("negate", "neg", "negates value");
@@ -1384,15 +1383,15 @@ BUILTIN("signz", "signz",
 var sine = function(a) {
     return Math.sin(Math.PI * a);
 };
-var sin = sine;
+//var sin = sine;
 MIST.sine = sine;
 MIST.sin = sine;
 BUILTIN("sine", "sin", "The sine of pi*a", "a",
   1, 1, "GENERAL");
 
-var square = function(i) {
-  return i*i;
-} // square
+// var square = function(i) {
+//   return i*i;
+// } // square
 BUILTIN("square", "square", "Square i", "i", 1, 1, "GENERAL");
 
 var sum = function() {
@@ -1408,17 +1407,17 @@ BUILTIN("sum", "sum", "Sum 2 or more values.  If the sum would exceed 1, has the
 var wrapsum = function() {
     return wrap(sum.apply(this, arguments));
 };
-var wsum = wrapsum;
+//var wsum = wrapsum;
 MIST.wrapsum = wrapsum;
 MIST.wsum = wrapsum;
 BUILTIN("wrapsum", "wsum", "Sum 2 or more values, wrapping around from 1 to -1 (or vice versa) if the sum is too large or too small", "...", 2, 20, "GENERAL");
 
-var mistif = function(test, pos, neg) {
-  if (test >= 0) 
-    return pos;
-  else
-    return neg;
-};
+// var mistif = function(test, pos, neg) {
+//   if (test >= 0) 
+//     return pos;
+//   else
+//     return neg;
+// };
 BUILTIN("mistif", "if", "if test is greater than or equal to zero, return pos, if test is less than zero, return neg", "test, pos, neg", 3, 3, "GENERAL");/**
  * mist-layout.js
  *   Information on the layout of a MIST editing session.
@@ -1454,7 +1453,7 @@ BUILTIN("mistif", "if", "if test is greater than or equal to zero, return pos, i
 // | Setup |
 // +-------+
 
-try { MIST = MIST; } catch (err) { MIST = new Object(); }
+try { MIST = MIST; } catch (err) { MIST = Object.create(null); }
 
 // +--------+----------------------------------------------------------
 // | Layout |
@@ -1556,7 +1555,7 @@ MIST.displayLayout = function(layout, display)
   } // for
 
   // Process all of the values
-  for (var id in layout.values) {
+  for (id in layout.values) {
     var val = layout.values[id];
     things[id] = display.pushVariableNode(val.name, val.x, val.y);
   } // for
@@ -1566,11 +1565,11 @@ MIST.displayLayout = function(layout, display)
     var edge = layout.edges[i];
     var source = layout.operations[edge.source] || layout.values[edge.source];
     if (!source) {
-      throw "Invalid source in edge from " + edge.source + " to " + edge.sink;
+      console.log( "Invalid source in edge from " + edge.source + " to " + edge.sink);
     }
     var sink = layout.operations[edge.sink];
     if (!sink) {
-      throw "Invalid sink in edge from " + edge.source + " to " + edge.sink;
+      console.log( "Invalid sink in edge from " + edge.source + " to " + edge.sink);
     }
     display.pushLine(things[source.id], things[sink.id], edge.i);
   } // for
@@ -1584,7 +1583,7 @@ MIST.rebuildLayout = function(layout)
   if (typeof(layout) === "string")
     return MIST.rebuildlayout(JSON.parse(layout));
   
-  if (layout.class != "MIST.Layout")
+  if (layout.class !== "MIST.Layout")
     throw "Error: Parameter is not a layout.";
 
   var result = new MIST.Layout();
@@ -1599,7 +1598,7 @@ MIST.rebuildLayout = function(layout)
   } // for
 
   // Add all of the values
-  for (var id in layout.values) {
+  for (id in layout.values) {
     var val = layout.values[id];
     result.addVal(val.name, val.x, val.y, val.id);
   } // for
@@ -1717,7 +1716,7 @@ MIST.basicLayout = function(exp)
       return id;
     } // if it's an application
     else {
-      throw "Invalid expression."
+      console.log( "Invalid expression.")
     } // if it's anthing else
   }; // kernel
 
@@ -1742,70 +1741,70 @@ MIST.basicLayout = function(exp)
 /**
  * Convert a value in the range [-1 .. 1] to a hue.
  */
-function r2h(r) {
-  return 180 + r*180;
-}
+// function r2h(r) {
+//   return 180 + r*180;
+// }
 
 /**
  * Convert a value in the range [-1 .. 1] to a saturation or value.
  */
-function r2sv(r) {
-  return .5 + r*.5;
-}
+// function r2sv(r) {
+//   return .5 + r*.5;
+// }
 
 /**
  * Converts hsv values to rgb values.
  */
-function hsv2rgb(h, s, v) {
-  var rgb = [];
-  if (s === 0)
-      rgb = [v, v, v];
-  else {
-    var c = v * s;
-    var h2 = h / 60;
-    var x = c*( 1 - Math.abs((h2 % 2) - 1));
-    if (h2 >= 5) {
-      rgb = [c, 0, x];
-    }
-    else if (h2 >= 4) {
-      rgb = [x, 0, c];
-    }
-    else if (h2 >= 3) {
-      rgb = [0, x, c];
-    }
-    else if (h2 >= 2) {
-      rgb = [0, c, x];
-    }
-    else if (h2 >= 1) {
-      rgb = [x, c, 0];
-    }
-    else {
-      rgb = [c, x, 0];
-    }
-  } // if (s != 0)
+// function hsv2rgb(h, s, v) {
+//   var rgb = [];
+//   if (s === 0)
+//       rgb = [v, v, v];
+//   else {
+//     var c = v * s;
+//     var h2 = h / 60;
+//     var x = c*( 1 - Math.abs((h2 % 2) - 1));
+//     if (h2 >= 5) {
+//       rgb = [c, 0, x];
+//     }
+//     else if (h2 >= 4) {
+//       rgb = [x, 0, c];
+//     }
+//     else if (h2 >= 3) {
+//       rgb = [0, x, c];
+//     }
+//     else if (h2 >= 2) {
+//       rgb = [0, c, x];
+//     }
+//     else if (h2 >= 1) {
+//       rgb = [x, c, 0];
+//     }
+//     else {
+//       rgb = [c, x, 0];
+//     }
+//   } // if (s != 0)
 
-  var m = v - c;
-  rgb[0] = r2c (rgb[0] + m);
-  rgb[1] = r2c (rgb[1] + m);
-  rgb[2] = r2c (rgb[2] + m);
-  return rgb;
-}
+//   var m = v - c;
+//   rgb[0] = r2c (rgb[0] + m);
+//   rgb[1] = r2c (rgb[1] + m);
+//   rgb[2] = r2c (rgb[2] + m);
+//   return rgb;
+// }
 
 /**
  * Convert a value in the range [-1 .. 1] to a component.
  */
-function r2c(r)
-{
-  return 127.5 + r*127.5;
-} // r2c
+// function r2c(r)
+// {
+//   return 127.5 + r*127.5;
+// } // r2c
 
 /**
  * Convert a component to a value in the range [-1 .. 1].
  */
-function c2r(c)
-{
-  return (c/127.5) - 1.0;
-} // c2r
+// function c2r(c)
+// {
+//   return (c/127.5) - 1.0;
+// } // c2r
 
 
 // +-------------------+---------------------------------------------
@@ -1843,22 +1842,22 @@ function setClick(x, y)
  * Simple representations of time using the range model (everything
  * is in the range [-1 .. 1]).
  */
-function Time(sec,min)
-{
-  this.s = sec;
-  this.m = min;
-}  // Time(sec,min)
+// function Time(sec,min)
+// {
+//   this.s = sec;
+//   this.m = min;
+// }  // Time(sec,min)
 
 /**
  * Information on where the mouse is/was
  */
-function Mouse(x, y, cx, cy)
-{
-  this.x = x;
-  this.y = y;
-  this.X = cx;
-  this.Y = cy;
-} // Mouse
+// function Mouse(x, y, cx, cy)
+// {
+//   this.x = x;
+//   this.y = y;
+//   this.X = cx;
+//   this.Y = cy;
+// } // Mouse
 
 // +---------------------+-------------------------------------------
 // | Simulated Renderers |
@@ -1941,8 +1940,8 @@ MIST.renderAt = function(t, exp, context, canvas,
   buffer.height = renderHeight;
 
   // Determine scale factors
-  var hscale = imgWidth/renderWidth;
-  var vscale = imgHeight/renderHeight;
+  // var hscale = imgWidth/renderWidth;
+  // var vscale = imgHeight/renderHeight;
 
   // Set up how much we change x and y each time.
   var deltaX = 2.0/renderWidth;
@@ -2000,8 +1999,8 @@ MIST.renderAt = function(t, exp, context, canvas,
     } // for
 
   // Random computations
-  var renderLeft = imgLeft*renderWidth/imgWidth;
-  var renderTop = imgTop*renderHeight/imgHeight;
+  // var renderLeft = imgLeft*renderWidth/imgWidth;
+  // var renderTop = imgTop*renderHeight/imgHeight;
 
   // Draw and scale
   bufferContext.putImageData(region, 0, 0);
@@ -2030,91 +2029,91 @@ MIST.renderAt = function(t, exp, context, canvas,
  * Call an API routine.  The callback takes two parameters: the response
  * and an optional error.
  */
-function api(action,params,callback,method) {
-  if (!callback) {
-    callback = function(result,error) { return [result,error]; };
-  }
-  if (!method) {
-    method = "POST";
-  }
-  var keys = Object.keys(params);
-  var stuff = keys.map(function(k) { return k + "=" + params[k]});
-  var data = "action=" + action + "&" + stuff.join("&");
-  console.log(data);
-  var request = new XMLHttpRequest();
-  // If we're supposed to post the request ...
-  if (method === "POST") {
-    request.open("POST", "/api", false);
-    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    request.send(data);
-  } // if POST
-  // Otherwise, we can just use GET.
-  else {
-    request.open("GET", "/api?" + data, false);
-    request.send();
-  } // if GET
+// function api(action,params,callback,method) {
+//   if (!callback) {
+//     callback = function(result,error) { return [result,error]; };
+//   }
+//   if (!method) {
+//     method = "POST";
+//   }
+//   var keys = Object.keys(params);
+//   var stuff = keys.map(function(k) { return k + "=" + params[k]});
+//   var data = "action=" + action + "&" + stuff.join("&");
+//   console.log(data);
+//   var request = new XMLHttpRequest();
+//   // If we're supposed to post the request ...
+//   if (method === "POST") {
+//     request.open("POST", "/api", false);
+//     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//     request.send(data);
+//   } // if POST
+//   // Otherwise, we can just use GET.
+//   else {
+//     request.open("GET", "/api?" + data, false);
+//     request.send();
+//   } // if GET
 
-  if (request.status != 200) {
-    console.log("failed", request.responseText);
-    return callback(false, request.responseText);
-  }
-  else {
-    console.log("succeeded", request.responseText);
-    return callback(request.responseText, false);
-  }
-} // api
+//   if (request.status != 200) {
+//     console.log("failed", request.responseText);
+//     return callback(false, request.responseText);
+//   }
+//   else {
+//     console.log("succeeded", request.responseText);
+//     return callback(request.responseText, false);
+//   }
+// } // api
 
 /**
  * Restore the prototypes in an object built from JSON.
  */
-function restore(obj) {
-  // We only work with objects.
-  if (typeof(obj) != "object") {
-    return;
-  } // if it's an object
+// function restore(obj) {
+//   // We only work with objects.
+//   if (typeof(obj) != "object") {
+//     return;
+//   } // if it's an object
 
-  // Set up the collection of objects to process
-  var unprocessed = [obj];
+//   // Set up the collection of objects to process
+//   var unprocessed = [obj];
 
-  // Set up a collection of objects already processed
-  var processed = [];
+//   // Set up a collection of objects already processed
+//   var processed = [];
 
-  // While unprocessed things remain
-  while (unprocessed.length > 0) {
-    // Grab the next value
-    var val = unprocessed.pop();
+//   // While unprocessed things remain
+//   while (unprocessed.length > 0) {
+//     // Grab the next value
+//     var val = unprocessed.pop();
 
-    // Remember that we've processed it.
-    processed.push(val);
+//     // Remember that we've processed it.
+//     processed.push(val);
 
-    // If the object does not yet have a prototype, and it has a
-    // class field, set the prototype using that field.
-    if ((val.__proto__ == Object.prototype) && (val.class != undefined)) {
-      try {
-        val.__proto__ = eval(val.class + ".prototype");
-      } 
-      catch (err) {
-        // Do nothing
-      }
-    } // if it needs a prototype
+//     // If the object does not yet have a prototype, and it has a
+//     // class field, set the prototype using that field.
+//     if ((val.__proto__ == Object.prototype) && (val.class != undefined)) {
+//       try {
+//         val.__proto__ = eval(val.class + ".prototype");
+//       } 
+//       catch (err) {
+//         // Do nothing
+//       }
+//     } // if it needs a prototype
 
-    // Recurse on the children
-    for (var key in val) {
-      var child = val[key];
-      if ((typeof(child) === "object") && (!contains(unprocessed,child))
-          && (!contains(processed,child))) {
-        unprocessed.push(child);
-      } // if it's a new object
-    } // for each child
-  } // while
-} // restore(obj)
+//     // Recurse on the children
+//     for (var key in val) {
+//       var child = val[key];
+//       if ((typeof(child) === "object") && (!contains(unprocessed,child))
+//           && (!contains(processed,child))) {
+//         unprocessed.push(child);
+//       } // if it's a new object
+//     } // for each child
+//   } // while
+// } // restore(obj)
 
-var Data = function() {
+// var Data = function() {
 
-  this.class = "Data";
-  this.layout = new MIST.Layout();
+//   this.class = "Data";
+//   this.layout = new MIST.Layout();
   
-}
+// }
 
 MIST.setMouse = setMouse;
 MIST.setClick = setClick;

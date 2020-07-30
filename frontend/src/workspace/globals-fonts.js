@@ -1,4 +1,4 @@
-import { width, height } from "./globals";
+import { width} from "./globals";
 
 // +--------------+--------------------------------------------------
 // | FunBar Fonts |

@@ -1,6 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
-import Konva from "konva";
-import gui from "./mistgui-globals.js";
+import React, { useEffect, useState } from "react";
 import MIST from "./mistui.js";
 
 /* MISTImage props
