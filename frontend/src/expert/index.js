@@ -90,11 +90,13 @@ function Expert(props) {
      * Opens a popup with the given message and a specific confirmation action
      * @param {*} param0 
      */
-    const triggerPopup = ({ message, onConfirm }) => {
+    const triggerPopup = ({ footer = true,message, onConfirm, title='Warning' }) => {
         setPopup({
             ...popup,
+            footer: footer,
             isOpen: !popup.isOpen,
             message: message,
+            title: title,
             onConfirm: onConfirm,
         })
     }
@@ -126,7 +128,7 @@ function Expert(props) {
         const initialForm = getInitialForm();
         let inUse = false;
         Object.keys(form).forEach(field => {
-            if(form[field] !== initialForm[field]){
+            if (form[field] !== initialForm[field]) {
                 inUse = true;
                 return;
             }
@@ -338,9 +340,7 @@ function Expert(props) {
         <div id='expert' ref={expertRef} >
             {console.log('rendering expert')}
             <Popup
-                isOpen={popup.isOpen}
-                message={popup.message}
-                onConfirm={popup.onConfirm}
+                {...popup}
                 onClose={togglePopup}
             />
             <Menu
