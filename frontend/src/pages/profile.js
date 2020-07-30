@@ -10,17 +10,37 @@
     * Albums are the user's own albums. Currently, what is displayed is fake data.
     * Images are the user's own images. Currently, the images displayed are the same 
     *   images from the gallery 
- * 
+ 
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
  */
 
+// +----------------+-----------------------------------------------------------------------
+// | Design Issues  |
+// +----------------+
+
+/**
+ * The page is made up of the following parts:
+ *    --First Part
+ *        | Profile Image + user information
+ *        | IconsBar: # of pictures, likes, badges, challenges
+ *    --Profile Nav
+ *        | images: calls displayImages.js
+ *        | albums: function Albums 
+ *            + Carousel
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
 import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Container, Row, Form, Col, Nav, Tab, Card, Carousel } from "react-bootstrap";
+import { Card, Carousel, Container, Col, Form, Nav, Row, Tab} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
-
+/* icons */
 import {
   AiOutlinePicture,
   AiOutlineStar,
@@ -29,7 +49,9 @@ import {
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 
-// full profile page
+// +-------------------+----------------------------------------------------------------------
+// | profile.js        |
+// +-------------------+
 export default function Profile() {
 
   /**
@@ -65,9 +87,12 @@ export default function Profile() {
 
   return (
     <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
+      {/* Title */}
       <Container>
         <h1> Profile </h1>
       </Container>
+
+      {/* First Part: Profile Picture + information */}
       <Container style={{ marginTop: "3vh", marginBottom: "3vh" }}>
         <FirstPart name={user.forename + " " + user.surname}
           username={user.username}
@@ -77,6 +102,7 @@ export default function Profile() {
         />
       </Container>
 
+      {/* Tabs for images, albums */}
       <ProfileNav images={userImages} albums={userAlbums} />
     </Container>
   );
@@ -90,6 +116,7 @@ function FirstPart(props) {
         {" "}
       </Row>
       <Row style={{ justifyContent: "space-between" }}>
+        {/* Displays profile picture + option to change it + settings */}
         <Container style={{ width: "25%", justifyContent: "center" }}>
           <MISTImage code={props.code} resolution="275" />
           <Nav.Link eventKey="link-1">Change Image</Nav.Link>
@@ -102,6 +129,7 @@ function FirstPart(props) {
         <Container style={{ width: "50%", alignItems: "center" }}>
           <Form>
             <Form.Group as={Row} controlId="formPlaintextEmail">
+              {/* name */}
               <Form.Label column sm="4">
                 Name
               </Form.Label>
@@ -116,6 +144,7 @@ function FirstPart(props) {
                 <Nav.Link eventKey="link-1">Change</Nav.Link>
               </Col>
 
+              {/* username */}
               <Form.Label column sm="4">
                 Username
               </Form.Label>
@@ -126,18 +155,18 @@ function FirstPart(props) {
                 <Nav.Link eventKey="link-1">Change</Nav.Link>
               </Col>
 
+              {/* member since */}
               <Form.Label column sm="4">
                 Member since
               </Form.Label>
-
               <Col sm="6">
                 <Form.Control plaintext readOnly value={props.date} />
               </Col>
 
+              {/* bio */}
               <Form.Label column sm="4">
                 Bio
               </Form.Label>
-
               <Col sm="7">
                 <Form.Control as="textarea" readOnly rows="3" value={props.bio} />
               </Col>
@@ -146,16 +175,19 @@ function FirstPart(props) {
               </Col>
             </Form.Group>
           </Form>
+
+          {/* icons bar */}
           <hr />
           <IconsBar />
           <hr />
+
         </Container>
       </Row>
     </Container>
   );
 }
 
-// icons (for images, likes, badges, challenges) underneath user information
+{/* # of pictures, likes, badges, challenges and their icons */}
 function IconsBar() {
   const icons = [
     { iconName: <AiOutlinePicture size={28} />, num: 8, category: "images" },
@@ -186,6 +218,7 @@ function ProfileNav(props) {
   return (
     <Container>
     <Tab.Container>
+      {/* tabs to switch between images and albums */}
       <Nav fill variant="tabs" defaultActiveKey="images">
         <Nav.Item>
           <Nav.Link eventKey="images" style={{ color: "black" }}>
@@ -215,6 +248,7 @@ function ProfileNav(props) {
   </Nav.Item> */}
       </Nav>
 
+      {/* the different contents for the diffferent tabs */}
       <Tab.Content>
         <Tab.Pane eventKey="images">
           <DisplayImages cards={props.images} cardsLoaded={true} />

@@ -5,9 +5,17 @@
  * gallery.js
  * 
  * This exports the gallery pages (featured, random, toprated, recent).
+ * It calls displayImages.js in order to display the images and the pagination.
  * Currently no buttons to switch pages, but the code for the pages is there.
- * 
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ *
  */
+
+// +-------------+----------------------------------------------------------------------
+// | Imports     |
+// +-------------+
 import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 

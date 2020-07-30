@@ -5,8 +5,13 @@
  * faq.js
  * 
  * This exports the FAQ (frequently asked questions) page.
- * 
+
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
  */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
 
 import React from 'react';
 import "./../design/styleSheets/styles.css";
