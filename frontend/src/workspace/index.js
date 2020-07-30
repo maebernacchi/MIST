@@ -42,7 +42,7 @@
 
   4. The indices in redoFromIndices are where re-adjusting the
      render functions need to start from. The render function
-     gets updated at each index, and renderFunctionReo gets called
+     gets updated at each index, and renderFunctionRedo gets called
      recursively to do the same for all of the child nodes.
 
   5. UseStrictMode is a good react-konva practice.
@@ -614,6 +614,13 @@ class WorkspaceComponent extends Component {
    */
   updateHashValue = (index, value) => {
     this.state.nodes[index].renderFunction.renderFunction = value;
+    const temp = [];
+    for(let i = 0; i < this.state.nodes[index].lineOut.length; i++) {
+      temp.push(this.state.lines[this.state.nodes[index].lineOut[i]].sinkIndex)
+    }
+    this.setState({
+      redoFromIndices : temp
+    })
   }
 
   /**
