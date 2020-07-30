@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Portal from "./Portal";
 import { Rect, Group, Text } from "react-konva";
 import { Link } from "react-router-dom";
 import gui from "./mistgui-globals.js";
 import { width, height } from "./globals.js";
-import popupDimensions from "./globals-popup_canvas-dimensions";
+import {popupContext} from "./globals-popup_canvas-dimensions";
 import MISTImage from "./MISTImageCreate";
 import "./../design/styleSheets/FunBar.css";
 
 function PopupCanvas(props) {
+
+  const popupDimensions = useContext(popupContext);
   const [imageName, setImageName] = useState("");
 
   return (
     <>
+      {console.log("popup canvas "+props.x+" "+props.y)}
       <Background {...props} />
       <Portal>
         <PortalTextBox {...props} setImageName={setImageName} />
@@ -22,7 +25,7 @@ function PopupCanvas(props) {
       <PortalButtons {...props} imageName={imageName} />
     </>
   );
-}
+
 
 function Background(props) {
   return (
@@ -222,6 +225,7 @@ function ExpertButton(props) {
       />
     </Group>
   );
+}
 }
 
 /**

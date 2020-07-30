@@ -19,23 +19,27 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Rect, Group, Text, Shape } from "react-konva";
 import gui from "./mistgui-globals";
 import { MIST } from "./mist.js";
 import Portal from "./Portal";
 import MakeMenuButton from "./MakeMenuButton";
-import { funcGroup } from "./MakeFunction";
-import { valGroup } from "./MakeValue";
-import global, { width, valueWidth, functionWidth } from "./globals.js";
-import menuDimensions from "./globals-menu-dimensions";
+import FuncGroup from "./MakeFunction";
+import ValGroup from "./MakeValue";
+import { globalContext } from "./global-context.js";
+import { menuContext } from "./globals-menu-dimensions";
+import { fontContext } from "./globals-fonts";
+import {  animated, useSpring } from "react-spring";
 
 // +----------------------------+
 // | All dependent files        |
 // +----------------------------+------------------------------------
 
 function Menu(props) {
-  //keeps track if the menus are open
+  const global = useContext(globalContext);
+  const menuDimensions = useContext(menuContext);
+  const fonts = useContext(fontContext);
 
   // +--------+--------------------------------------------------------
   // | States |
@@ -53,6 +57,31 @@ function Menu(props) {
   // | States |
   // +--------+--------------------------------------------------------
 
+  const formStyle = useSpring({
+    from: {
+      position: "absolute",
+      top: props.top + 2 * menuDimensions.lowerMenuHeight,
+      left: isValueMenuOpen
+        ? 2 * global.width + props.left
+        : isFunctionMenuOpen
+        ? global.width + props.left
+        : isCustomMenuOpen
+        ? 0 + props.left
+        : -global.width + props.left,
+    },
+    to: {
+      position: "absolute",
+      top: props.top + 2 * menuDimensions.lowerMenuHeight,
+      left: isValueMenuOpen
+        ? 2 * global.width + props.left
+        : isFunctionMenuOpen
+        ? global.width + props.left
+        : isCustomMenuOpen
+        ? 0 + props.left
+        : -global.width + props.left,
+    },
+  });
+
   /**
    * This gets called from MakeFunctions and MakeValues to change the group's
    * key to trigger a re-render (so that the node goes back to the right place
@@ -63,204 +92,172 @@ function Menu(props) {
   }
 
   return (
-    <Group width={width} height={global.menuHeight} key={key} ref={ref}>
-      <Rect // Entire menu bar
-        width={width}
-        height={global.menuHeight}
+    <Group
+      width={global.width}
+      height={menuDimensions.totalMenuHeight}
+      key={key}
+      ref={ref}
+    >
+      <Rect
+        y={menuDimensions.lowerMenuHeight}
+        width={global.width * 4}
+        height={menuDimensions.totalMenuHeight}
         fill={props.bgColor}
-        shadowColor={"black"}
         shadowBlur={5}
       />
+      {isCustomMenuOpen && (
+        <Portal>
+          <animated.form
+            id="form"
+            style={formStyle}
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              e.nativeEvent.stopImmediatePropagation();
+              try {
+                props.createLayout(MIST.parse(formValue, ""));
+              } catch (err) {
+                //document.getElementById("input").style.borderColor = "red";
+                console.log("invalid function");
+              }
+              return false;
+            }}
+          >
+            <input
+              id={"input"}
+              style={{
+                width: global.width * 0.9,
+                height: menuDimensions.totalMenuHeight / 2,
+                alignSelf: "center",
+                alignContent: "center",
+              }}
+              id="textbox"
+              type="text"
+              placeholder={formValue}
+              onChange={(e) => {
+                setFormValue(e.target.value);
+              }}
+            />
+          </animated.form>
+        </Portal>
+      )}
       {[
         {
-          name: "Saved",
-          tabPoints: menuDimensions.savedTabPoints,
-          tabOffsetX: menuDimensions.savedTabOffsetX,
+          text: "VALUE",
+          open: isValueMenuOpen,
+          func: function () {
+            setIsValueMenuOpen(true);
+            setIsFunctionMenuOpen(false);
+            setIsCustomMenuOpen(false);
+            setIsSavedMenuOpen(false);
+          },
         },
         {
-          name: "Functions",
-          tabPoints: menuDimensions.functionTabPoints,
-          tabOffsetX: menuDimensions.functionTabOffsetX,
+          text: "FUNCTION",
+          open: isFunctionMenuOpen,
+          func: function () {
+            setIsValueMenuOpen(false);
+            setIsFunctionMenuOpen(true);
+            setIsCustomMenuOpen(false);
+            setIsSavedMenuOpen(false);
+          },
         },
         {
-          name: "Values",
-          tabPoints: menuDimensions.valueTabPoints,
-          tabOffsetX: menuDimensions.valueTabOffsetX,
+          text: "CUSTOM",
+          open: isCustomMenuOpen,
+          func: function () {
+            setIsValueMenuOpen(false);
+            setIsFunctionMenuOpen(false);
+            setIsCustomMenuOpen(true);
+            setIsSavedMenuOpen(false);
+          },
         },
         {
-          name: "Custom",
-          tabPoints: menuDimensions.customTabPoints,
-          tabOffsetX: menuDimensions.customTabOffsetX,
+          text: "SAVED",
+          open: isSavedMenuOpen,
+          func: function () {
+            setIsValueMenuOpen(false);
+            setIsFunctionMenuOpen(false);
+            setIsCustomMenuOpen(false);
+            setIsSavedMenuOpen(true);
+          },
         },
       ].map((u, i) => {
         return (
           <Group
-            x={
-              (isCustomMenuOpen && menuDimensions.formWidth) ||
-              (isValueMenuOpen && u.name !== "Custom"
-                ? menuDimensions.valueListLength
-                : 0) ||
-              (isFunctionMenuOpen && u.name !== "Custom" && u.name !== "Values"
-                ? menuDimensions.functionListLength
-                : 0) ||
-              (isSavedMenuOpen && u.name === "Saved" ? (width * 8) / 15 : 0)
-            }
-            key={i}
-            onMouseEnter={() => {
-              if (u.name === "Custom") {
-                setIsCustomMenuOpen(true);
-                setIsValueMenuOpen(false);
-                setIsFunctionMenuOpen(false);
-                setIsSavedMenuOpen(false);
-              } else if (u.name === "Values") {
-                setIsValueMenuOpen(true);
-                setIsFunctionMenuOpen(false);
-                setIsCustomMenuOpen(false);
-                setIsSavedMenuOpen(false);
-              } else if (u.name === "Functions") {
-                setIsFunctionMenuOpen(true);
-                setIsValueMenuOpen(false);
-                setIsCustomMenuOpen(false);
-                setIsSavedMenuOpen(false);
-              } else {
-                setIsSavedMenuOpen(true);
-                setIsValueMenuOpen(false);
-                setIsFunctionMenuOpen(false);
-                setIsCustomMenuOpen(false);
-              }
-            }}
+            x={(global.width / 4) * i}
+            width={global.width / 4}
+            height={menuDimensions.lowerMenuHeight}
           >
-            <Shape // saved tab arrow
-              sceneFunc={function (context) {
-                context.beginPath();
-                context.moveTo(u.tabPoints.topLeft.x, u.tabPoints.topLeft.y);
-                context.lineTo(u.tabPoints.topRight.x, u.tabPoints.topRight.y);
-                context.lineTo(u.tabPoints.point.x, u.tabPoints.point.y);
-                context.lineTo(
-                  u.tabPoints.bottomRight.x,
-                  u.tabPoints.bottomRight.y
-                );
-                context.lineTo(
-                  u.tabPoints.bottomLeft.x,
-                  u.tabPoints.bottomLeft.y
-                );
-                context.closePath();
-                context.fillStrokeShape(this);
+            <Rect
+              width={global.width / 4}
+              height={menuDimensions.lowerMenuHeight}
+              fill={!u.open ? props.bgColor : "lightgrey"}
+              stroke={"lightgrey"} // make this equal to the ws background
+              //cornerRadius={20}
+              strokeWidth={2}
+              onMouseEnter={() => {
+                u.func();
               }}
-              fill={
-                (u.name === "Values" && props.valTabColor) ||
-                (u.name === "Functions" && props.funTabColor) ||
-                (u.name === "Custom" && props.customTabColor) ||
-                (u.name === "Saved" && props.savedTabColor)
-              }
-              strokeWidth={0}
-              shadowOffsetX={1}
-              shadowOffsetY={-2}
-              shadowBlur={5}
-              shadowOpacity={0.7}
             />
             <Text
-              text={u.name}
-              x={u.tabOffsetX - 50}
-              y={global.menuHeight * 0.9}
-              width={120}
-              height={20}
-              fill={"black"}
-              align={"left"}
+              width={global.width / 4}
+              height={menuDimensions.lowerMenuHeight}
+              text={u.text}
+              fontSize={global.width / 100}
+              align={"center"}
               verticalAlign={"middle"}
-              fontFamily={"Impact"}
-              fontSize={25}
-              rotation={(-Math.atan(global.menuHeight / 60) * 180) / Math.PI}
+              onMouseEnter={() => {
+                u.func();
+              }}
             />
-            {u.name === "Custom" && (
-              <Portal>
-                <form
-                  id="form"
-                  style={{
-                    position: "absolute",
-                    top: props.top + menuDimensions.formY,
-                    left: isCustomMenuOpen
-                      ? props.left + menuDimensions.formX
-                      : -menuDimensions.formWidth + menuDimensions.formX,
-                  }}
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.nativeEvent.stopImmediatePropagation();
-                    try {
-                      props.createLayout(MIST.parse(formValue, ""));
-                    } catch (err) {
-                      //document.getElementById("input").style.borderColor = "red";
-                      console.log("invalid function");
-                    }
-                    return false;
-                  }}
-                >
-                  <label>
-                    <input
-                      id={"input"}
-                      style={{
-                        width: menuDimensions.formWidth,
-                        height: menuDimensions.formHeight,
-                      }}
-                      id="textbox"
-                      type="text"
-                      placeholder={formValue}
-                      onChange={(e) => {
-                        setFormValue(e.target.value);
-                      }}
-                    />
-                  </label>
-                </form>
-              </Portal>
-            )}
-            {u.name === "Values" &&
-              Array.from(new Array(gui.valNames.length), (val, index) =>
-                valGroup(
-                  props.addNode,
-                  gui.valNames[index],
-                  -menuDimensions.valueListLength +
-                    menuDimensions.valueListStartX +
-                    index * (menuDimensions.valueMargin + valueWidth),
-                  gui.menuYspacing - 20,
-                  isValueMenuOpen,
-                  changeKey,
-                  index
-                )
-              )}
-            {u.name === "Functions" &&
-              Array.from(new Array(gui.funNames.length), (val, index) =>
-                funcGroup(
-                  props.addNode,
-                  gui.funNames[index],
-                  -menuDimensions.functionListLength +
-                    menuDimensions.functionListStartX +
-                    index * (menuDimensions.functionMargin + functionWidth),
-                  gui.menuYspacing - 20,
-                  isFunctionMenuOpen,
-                  changeKey,
-                  index
-                )
-              )}
           </Group>
         );
       })}
-      <Group visible={false}>
-        {[
-          { name: "Reset Workspace", func: props.clearWorkspace },
-          { name: "Open Workspace" },
-          { name: "Save Workspace" },
-        ].map((u, i) => (
-          <MakeMenuButton //Calls MakeMenuButton.js to create the three side buttons
-            key={i}
-            text={u.name}
-            x={0}
-            y={(i + 1) * gui.menuOffset + i * gui.menuControlHeight}
-            handleClick={u.func}
-            buttonColor={props.wsButtonColor}
-          />
-        ))}
-      </Group>
+      {gui.valNames.map((name, index) => (
+        <ValGroup
+          addNode={props.addNode}
+          valName={name}
+          x={
+            menuDimensions.valueMargin +
+            index * (menuDimensions.valueMargin + global.valueWidth)
+          }
+          y={
+            menuDimensions.lowerMenuHeight +
+            (menuDimensions.upperMenuHeight - global.valueWidth) / 2
+          }
+          tabs={{
+            isValueMenuOpen: isValueMenuOpen,
+            isFunctionMenuOpen: isFunctionMenuOpen,
+            isCustomMenuOpen: isCustomMenuOpen,
+            isSavedMenuOpen: isSavedMenuOpen,
+          }}
+          changeKey={changeKey}
+          index={index}
+        />
+      ))}
+      {gui.funNames.map((name, index) => (
+        <FuncGroup
+          addNode={props.addNode}
+          funName={name}
+          x={
+            menuDimensions.functionMargin +
+            index * (menuDimensions.functionMargin + global.functionWidth)
+          }
+          y={
+            menuDimensions.lowerMenuHeight +
+            (menuDimensions.upperMenuHeight - global.functionWidth) / 2
+          }
+          tabs={{
+            isValueMenuOpen: isValueMenuOpen,
+            isFunctionMenuOpen: isFunctionMenuOpen,
+            isCustomMenuOpen: isCustomMenuOpen,
+            isSavedMenuOpen: isSavedMenuOpen,
+          }}
+          changeKey={changeKey}
+          index={index}
+        />
+      ))}
     </Group>
   );
 }

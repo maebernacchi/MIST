@@ -46,13 +46,13 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React from "react";
+import React, {useContext} from "react";
 import { Group } from "react-konva";
 import Konva from "konva";
 import gui from "./mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import nodeDimensions from "./globals-nodes-dimensions.js";
-import global, { width, height } from "./globals.js";
+import { globalContext } from "./global-context.js";
 
 // +----------------------------+
 // | All dependent files        |
@@ -62,21 +62,16 @@ import global, { width, height } from "./globals.js";
 // | Entire Function Group                  |
 // +----------------------------------------+
 
-export const funcGroup = function makeFunctionGroup(
-  addNode,
-  funName,
-  x,
-  y,
-  vis,
-  changeKey,
-  index
-) {
+function FuncGroup(props) {
+  const global = useContext(globalContext);
+  const funName = props.funName;
+
   return (
     <Group
       name={funName}
-      key={index}
-      x={x}
-      y={y}
+      key={props.index}
+      x={props.x}
+      y={props.y}
       draggable
       onDragStart={(e) => {
         e.target.setAttrs({
@@ -95,28 +90,28 @@ export const funcGroup = function makeFunctionGroup(
         });
         if (e.currentTarget.y() > global.menuHeight) {
           //setTimeout(function () {
-          addNode("fun", funName, e.target._lastPos.x, e.target._lastPos.y);
-          changeKey();
+          props.addNode("fun", funName, e.target._lastPos.x, e.target._lastPos.y);
+          props.changeKey();
           //}, 200);
         } else {
-          changeKey();
+          props.changeKey();
         }
       }}
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > width - nodeDimensions.functionWidth) {
-          pos.x = width - nodeDimensions.functionWidth;
+        if (pos.x > global.width - nodeDimensions.functionWidth) {
+          pos.x = global.width - nodeDimensions.functionWidth;
         }
         if (pos.y < 0) {
           pos.y = 0;
         }
         if (
           pos.y >
-          height - global.funBarHeight - nodeDimensions.functionWidth
+          global.height - global.funBarHeight - nodeDimensions.functionWidth
         ) {
-          pos.y = height - global.funBarHeight - nodeDimensions.functionWidth;
+          pos.y = global.height - global.funBarHeight - nodeDimensions.functionWidth;
         }
         return pos;
       }}
@@ -124,12 +119,16 @@ export const funcGroup = function makeFunctionGroup(
       <Spring
         native
         from={{
-          x: vis ? 0 : -300,
-          scaleX: 1,
-          scaleY: 1,
-        }}
+          x: props.tabs.isValueMenuOpen ? global.width :
+            props.tabs.isFunctionMenuOpen ? 0 :
+            props.tabs.isCustomMenuOpen ? - global.width :
+            - 2 * global.width,
+          fontSize: gui.nodeFontSize }}
         to={{
-          x: vis ? 0 : -300,
+          x: props.tabs.isValueMenuOpen ? global.width :
+            props.tabs.isFunctionMenuOpen ? 0 :
+            props.tabs.isCustomMenuOpen ? - global.width :
+            - 2 * global.width,
         }}
       >
         {(props) => (
@@ -145,8 +144,18 @@ export const funcGroup = function makeFunctionGroup(
       </Spring>
       <Spring
         native
-        from={{ x: vis ? 0 : -300, fontSize: gui.nodeFontSize }}
-        to={{ x: vis ? 0 : -300 }}
+        from={{
+          x: props.tabs.isValueMenuOpen ? global.width :
+            props.tabs.isFunctionMenuOpen ? 0 :
+            props.tabs.isCustomMenuOpen ? - global.width :
+            - 2 * global.width,
+          fontSize: gui.nodeFontSize }}
+        to={{
+          x: props.tabs.isValueMenuOpen ? global.width :
+            props.tabs.isFunctionMenuOpen ? 0 :
+            props.tabs.isCustomMenuOpen ? - global.width :
+            - 2 * global.width,
+        }}
       >
         {(props) => (
           <animated.Text
@@ -168,3 +177,5 @@ export const funcGroup = function makeFunctionGroup(
   // | Entire Function Group                  |
   // +----------------------------------------+----------------------
 };
+
+export default FuncGroup

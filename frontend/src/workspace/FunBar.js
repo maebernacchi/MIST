@@ -14,6 +14,12 @@ function FunBar(props) {
   const funBarHeight = useContext(globalContext).funBarHeight;
   const funbarDimensions = useContext(funBarContext);
   const funBarFontSize = useContext(fontContext).funBarFontSize;
+
+
+  const [functionButtonHovered, setFunctionButtonHovered] = useState(false);
+  const [imageButtonClicked, setImageButtonClicked] = useState(false);
+  const [imageButtonHovered, setImageButtonHovered] = useState(false);
+
   return (
     <Group y={funbarDimensions.funbarY}>
       <BarBase {...props} />
@@ -63,7 +69,6 @@ function FunBar(props) {
   }
 
   function FunctionButton(props) {
-    const [functionButtonHovered, setFunctionButtonHovered] = useState(false);
 
     return (
       <Group // Function Button on blue bar
@@ -116,8 +121,6 @@ function FunBar(props) {
   }
 
   function ImageButton(props) {
-    const [imageButtonClicked, setImageButtonClicked] = useState(false);
-    const [imageButtonHovered, setImageButtonHovered] = useState(false);
 
     function closePortal() {
       setImageButtonClicked(false);
@@ -172,13 +175,18 @@ function FunBar(props) {
             setImageButtonHovered(false);
           }}
         />
+        <Rect x={10} width={100} height={100} fill={'red'} onClick={() => {
+          console.log("imageButtonClicked: "+imageButtonClicked);
+        }}/>
         {imageButtonClicked && (
+          <Group>
           <PopupCanvas
             {...props}
             x={-funbarDimensions.imageButtonX}
             y={-(height - funBarHeight - funbarDimensions.margin)}
             closePortal={closePortal}
           />
+          </Group>
         )}
       </Group>
     );

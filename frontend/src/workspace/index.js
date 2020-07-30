@@ -953,6 +953,14 @@ class WorkspaceComponent extends Component {
                 )}
             </Layer>
             <Layer>
+            <ContextProvider
+                width={this.width}
+                height={this.height}
+                menuHeight={this.menuHeight}
+                funBarHeight={this.funBarHeight}
+                functionWidth={this.functionWidth}
+                valueWidth={this.valueWidth}
+              >
               {this.state.nodes.map(
                 (node, index) =>
                   (node && node.type === "fun" && (
@@ -1005,9 +1013,17 @@ class WorkspaceComponent extends Component {
                     />
                   ))
               )}
+              </ContextProvider>
             </Layer>
             <Layer>
-              {
+            <ContextProvider
+                width={this.width}
+                height={this.height}
+                menuHeight={this.menuHeight}
+                funBarHeight={this.funBarHeight}
+                functionWidth={this.functionWidth}
+                valueWidth={this.valueWidth}
+              >
                 <Menu
                   addNode={this.pushNode.bind(this)}
                   addLine={this.pushLine.bind(this)}
@@ -1028,7 +1044,7 @@ class WorkspaceComponent extends Component {
                   top={this.state.offsetY}
                   left={this.state.offsetX}
                 />
-              }
+                </ContextProvider>
             </Layer>
             <Layer>
               <ContextProvider

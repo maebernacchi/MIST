@@ -33,17 +33,17 @@ const globalScale = width / 900; // for elements that are more difficult to scal
 
 const funNames = [
   "add",
-  "wrapsum",
   "multiply",
-  "average",
   "square",
   "negate",
   "sine",
   "cosine",
   "absolute",
+  "average",
+  "wrapsum",
   "sign",
   "mistif",
-  "rgb",
+  "rgb"
 ];
 const functions = {
   add: { rep: "sum", max: 20, min: 2, prefix: "sum", color: functionMultColor },

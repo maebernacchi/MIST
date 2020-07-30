@@ -7,11 +7,13 @@ export const fontContext = createContext();
 
 export function FontGlobals(props) {
   const funBarFontSize = props.width / 75;
+  const menuTabFontSize = props.width / 60;
 
   return (
     <fontContext.Provider
       value={{
-          funBarFontSize: funBarFontSize
+          funBarFontSize: funBarFontSize,
+          menuTabFontSize: menuTabFontSize,
         }}
     >
       {props.children}
