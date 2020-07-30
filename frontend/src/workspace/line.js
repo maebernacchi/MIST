@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Line, Group, Text, Image } from "react-konva";
-import gui from './mistgui-globals';
+import { Line, Group, Image } from "react-konva";
 import useImage from 'use-image';
  
 function DrawArrow(props) {

@@ -203,7 +203,6 @@ function Menu(props) {
                         width: menuDimensions.formWidth,
                         height: menuDimensions.formHeight,
                       }}
-                      id="textbox"
                       type="text"
                       placeholder={formValue}
                       onChange={(e) => {

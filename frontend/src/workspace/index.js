@@ -67,12 +67,11 @@ import {
   height,
   menuHeight,
   funBarHeight,
-  functionWidth,
-  valueWidth,
+  functionWidth
 } from "./globals.js";
 import { MIST } from "./mist.js";
-import React, { useState, useEffect, Component } from "react";
-import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
+import React, { Component } from "react";
+import { Stage, Layer, Text} from "react-konva";
 import ValNode from "./ValNode";
 import nodeDimensions from "./globals-nodes-dimensions.js";
 
@@ -127,7 +126,7 @@ class WorkspaceComponent extends Component {
     if (prevState.nodes !== this.state.nodes) {
       console.log("nodes changed");
     }
-    if (prevState.lines != this.state.lines) {
+    if (prevState.lines !== this.state.lines) {
       console.log("lines changed");
     }
     if (prevState.redoFromIndices !== this.state.redoFromIndices) {
@@ -175,7 +174,7 @@ class WorkspaceComponent extends Component {
       newNodes.push(outermost);
     } else {
       // it's a value
-      if (gui.values[expression.name] == undefined) {
+      if (gui.values[expression.name] === undefined) {
         return Error();
       }
       const val = {
@@ -277,7 +276,7 @@ class WorkspaceComponent extends Component {
           newNodes[sinkIndex].activeOutlets[i] = lineIndex;
         } else {
           // value
-          if (gui.values[operands[i].name] == undefined) {
+          if (gui.values[operands[i].name] === undefined) {
             return Error();
           }
           const sourceNode = {
@@ -348,7 +347,7 @@ class WorkspaceComponent extends Component {
    * @param {float} y
    */
   pushNode = (type, name, x, y) => {
-    const newIndex = this.state.nodes.length;
+    //const newIndex = this.state.nodes.length;
     let rf = {};
     switch (type) {
       case "fun":

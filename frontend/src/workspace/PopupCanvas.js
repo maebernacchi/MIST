@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import Portal from "./Portal";
 import { Rect, Group, Text } from "react-konva";
-import { Link } from "react-router-dom";
 import gui from "./mistgui-globals.js";
 import { width, height } from "./globals";
 import popupDimensions from "./globals-popup_canvas-dimensions";
-import MISTImage from "./MISTImageCreate";
+import MISTImage from "./MISTImage";
 import "./../design/styleSheets/FunBar.css";
 
 function PopupCanvas(props) {
@@ -154,21 +153,21 @@ function PortalButtons(props) {
 }
 
 function SaveButton(props) {
-  const [imageExists, setImageExists] = useState("initial");
+  //const [imageExists, setImageExists] = useState("initial");
 
   function SaveImage() {
     //var newName = props.imageName;
     //newName = removeOuterWhiteSpace(newName);
     //var response = getImageExists(newName);
-    console.log("response = " + imageExists);
+    //console.log("response = " + imageExists);
   }
 
-  function getImageExists(title) {
-    let url = "api/?action=imageexists&title=" + title;
-    fetch(url)
-      .then((req) => req.json())
-      .then((exists) => setImageExists(exists));
-  }
+  // function getImageExists(title) {
+  //   let url = "api/?action=imageexists&title=" + title;
+  //   fetch(url)
+  //     .then((req) => req.json())
+  //     .then((exists) => setImageExists(exists));
+  // }
 
   return (
     <Group
@@ -229,10 +228,10 @@ function ExpertButton(props) {
  * of the string, but not the white space in the middle of the string.
  * returns a string
  */
-var removeOuterWhiteSpace = function (string) {
-  string = string.replace(/^ */, "");
-  string = string.replace(/ *$/, "");
-  return string;
-};
+// var removeOuterWhiteSpace = function (string) {
+//   string = string.replace(/^ */, "");
+//   string = string.replace(/ *$/, "");
+//   return string;
+// };
 
 export default PopupCanvas;
