@@ -634,13 +634,13 @@ module.exports.userHasWorkspace = (userId, expertWorkspaceName, res) => {
         })
     }
     User
-        .findById(userId).select('expertWorkspaces').exec((error, user)=>{
-            if(error)
+        .findById(userId).select('expertWorkspaces').exec((error, user) => {
+            if (error)
                 handleError(error);
             else
                 handleSuccess(user);
         })
-        
+
 }
 
 /*
@@ -695,4 +695,21 @@ module.exports.saveExpertWorkspace = (userId, workspace, res) => {
                 }
             }
         })
+}
+
+module.exports.getUserExpertWS = (userId, res) => {
+    User.findById(userId)
+        .select('expertWorkspaces')
+        .exec()
+        .then(user => {
+            if (user)
+                return user.expertWorkspaces;
+            else {
+                res.json({ success: false, message: 'user could not be located in the database' })
+            }
+        })
+        .then(expertWorkspaces => {
+            res.send({success: true, expertWorkspaces: expertWorkspaces})
+        })
+        .catch(error => res.json({ success: false, message: 'Failed due to Error: ' + error }))
 }
