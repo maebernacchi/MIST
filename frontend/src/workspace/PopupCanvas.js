@@ -255,10 +255,10 @@ function ExpertButton(props) {
  * of the string, but not the white space in the middle of the string.
  * returns a string
  */
-// var removeOuterWhiteSpace = function (string) {
-//   string = string.replace(/^ */, "");
-//   string = string.replace(/ *$/, "");
-//   return string;
-// };
+ var removeOuterWhiteSpace = function (string) {
+   string = string.replace(/^ */, "");
+   string = string.replace(/ *$/, "");
+   return string;
+ };
 
 export default PopupCanvas;
