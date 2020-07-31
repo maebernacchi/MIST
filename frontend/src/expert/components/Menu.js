@@ -99,11 +99,13 @@ function Menu(props) {
                     />
                 </Button>
                 <FileDropdown
+                    deleteWorkspace={props.deleteWorkspace}
                     getCurrentWorkspace={props.getCurrentWorkspace}
                     getUserExpertWS={props.getUserExpertWS}
                     isWorkspaceInUse={props.isWorkspaceInUse}
                     loadWorkspace={props.loadWorkspace}
                     resetWorkspace={props.resetWorkspace}
+                    togglePopup={props.togglePopup}
                     triggerPopup={props.triggerPopup}
                     workspaceNameRef={workspaceNameRef}
                 />
@@ -185,6 +187,28 @@ function FullscreenButton(props) {
  * Dropdown for where the user can perform actions related to workspaces other than saving
  */
 function FileDropdown(props) {
+    const handleDeleteOnClick = async () => {
+        const data = await props.getUserExpertWS();
+        if (data.success) {
+            props.triggerPopup({
+                footer: false,
+                title: 'Choose an Expert Workspace to Delete',
+                message: (<ButtonGroup vertical>
+                    {data.expertWorkspaces.map(expert_workspace => (
+                        <Button
+                            className='menu-btn'
+                            onClick={() => {props.deleteWorkspace(expert_workspace.name); props.togglePopup()}}
+                            variant='outline-primary'
+                        >
+                            {expert_workspace.name}
+                        </Button>
+                    ))}
+                </ButtonGroup>),
+            })
+        } else {
+            alert(data.message)
+        }
+    }
     return (
         <>
             <DropdownButton
@@ -210,7 +234,7 @@ function FileDropdown(props) {
                     loadWorkspace={props.loadWorkspace}
                     triggerPopup={props.triggerPopup}
                     workspaceNameRef={props.workspaceNameRef} />
-                <Dropdown.Item onClick={() => alert('Not yet implemented')}>Delete Workspace</Dropdown.Item>
+                <Dropdown.Item onClick={handleDeleteOnClick}>Delete Workspace</Dropdown.Item>
                 <Dropdown.Divider />
 
             </DropdownButton>{' '}

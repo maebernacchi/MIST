@@ -299,6 +299,28 @@ function Expert(props) {
 
     }
 
+    /**
+     * Delete a workspace
+     */
+    const _deleteExpertWorkspace = (name) => {
+        fetch('api/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action: 'deleteexpertws', name: name })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Expert-Workspace ' + name + ' has been successfully deleted!');
+                } else {
+                    alert('We failed to delete because of ' + data.message);
+                }
+            })
+            .catch(error => alert('We failed to delete because of Error: ' + error))
+    }
+
     /** 
      * Loads a user's expert workspaces
      */
@@ -366,8 +388,10 @@ function Expert(props) {
                 }}
                 exitFullscreen={() => document.exitFullscreen()}
 
+                deleteWorkspace={_deleteExpertWorkspace}
                 saveWorkspace={saveWSToUser}
 
+                togglePopup={togglePopup}
                 triggerPopup={triggerPopup}
             />
 
