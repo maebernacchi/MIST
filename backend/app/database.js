@@ -381,13 +381,19 @@ module.exports.saveImage = (userId, title, code, res) => {
 module.exports.getRandomImagesLoggedOut = (count, callback) => {
     Image.aggregate([
         { $match: { public: true, active: true } },
-        { $sample: { size: count } }])
-        .populate('userId')
+        { $sample: { size: count } }
+    ])
         .exec((err, images) => {
             if (err)
                 callback(null, err)
-            else
-                callback(images, null)
+            else {
+                Image.populate(images, { path: 'userId' }, (err, images) => {
+                    if (err)
+                        callback(null, err)
+                    else
+                        callback(images, null)
+                })
+            }
         });
 }
 
