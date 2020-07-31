@@ -53,6 +53,7 @@ import gui from "./mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import {nodeContext} from "./globals-nodes-dimensions.js";
 import { globalContext } from "./global-context.js";
+import {fontContext} from './globals-fonts';
 
 // +----------------------------+
 // | All dependent files        |
@@ -66,6 +67,7 @@ function FuncGroup(props) {
   const global = useContext(globalContext);
   const funName = props.funName;
   const nodeDimensions = useContext(nodeContext);
+  const fonts = useContext(fontContext);
 
   return (
     <Group
@@ -163,6 +165,7 @@ function FuncGroup(props) {
             {...props}
             text={gui.functions[funName].rep}
             fontFamily={gui.globalFont}
+            fontSize={fonts.functionFontSize}
             fill={"white"}
             y={0}
             width={global.functionWidth}

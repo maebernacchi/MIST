@@ -5,33 +5,34 @@ export const popupContext = createContext();
 export function PopupContextProvider(props) {
   const width = props.width;
   const height = props.height;
-  const canvasX = (width * 5) / 16;
-  const canvasY = height / 15;
-  const canvasWidth = width - 2 * canvasX;
-  const canvasHeight = height - 2 * canvasY;
-  const canvasMargin = width / 30;
+  const canvasWidth = width * 0.35;
+  const canvasX = (width - canvasWidth) / 2;
+  const canvasY = canvasWidth * 0.07;
+  const canvasMargin = width * 0.02;
 
   const textfieldX = canvasX + 2 * canvasMargin;
-  const textfieldY = canvasY + canvasHeight / 30;
+  const textfieldY = canvasY + canvasMargin * 0.5;
   const textfieldWidth = canvasWidth - 4 * canvasMargin;
-  const textfieldHeight = canvasHeight / 20;
+  const textfieldHeight = canvasWidth * 0.08;
 
   const imageX = canvasX + canvasMargin;
-  const imageY = canvasY + canvasHeight / 10;
+  const imageY = textfieldY + textfieldHeight + canvasMargin * 0.5;
   const imageWidth = canvasWidth - 2 * canvasMargin;
   const imageHeight = imageWidth;
 
   const rfTextX = canvasX + canvasMargin;
-  const rfTextY = canvasY + (canvasHeight * 8) / 10;
+  const rfTextY = imageY + imageHeight;
   const rfTextWidth = canvasWidth - 2 * canvasMargin;
-  const rfTextHeight = canvasHeight / 20;
+  const rfTextHeight = canvasWidth * 0.08;
 
   const buttonMargin = canvasWidth / 70;
   const buttonOffset = (canvasWidth - 2 * canvasMargin) / 4;
   const buttonX = canvasX + canvasMargin; // divide by the number of buttons
-  const buttonY = canvasY + (canvasHeight * 9) / 10;
+  const buttonY = rfTextY + rfTextHeight;
   const buttonWidth = buttonOffset - 2 * buttonMargin;
-  const buttonHeight = canvasHeight / 20;
+  const buttonHeight = buttonWidth * 0.28;
+
+  const canvasHeight = buttonY + buttonHeight + canvasMargin;
 
   return (
     <popupContext.Provider

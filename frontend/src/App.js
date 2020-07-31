@@ -74,13 +74,13 @@ function App() {
                     height={
                       document.documentElement.clientHeight - navBarHeight
                     }
-                    menuHeight={document.documentElement.clientWidth / 14}
+                    menuHeight={document.documentElement.clientWidth * 0.08}
                     funBarHeight={
-                      (document.documentElement.clientHeight - navBarHeight) /
-                      15 // height / 15
+                      (document.documentElement.clientHeight - navBarHeight) * 0.1
                     }
-                    functionWidth={document.documentElement.clientWidth / 28}
-                    valueWidth={document.documentElement.clientWidth / 28}
+                    functionWidth={document.documentElement.clientWidth * 0.047}
+                    valueWidth={document.documentElement.clientWidth * 0.047}
+                    offset={navBarHeight}
                   />
                 }
               />

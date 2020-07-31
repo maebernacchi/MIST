@@ -20,7 +20,7 @@
 // +----------------------------+
 
 import React, { useState, useRef, useContext } from "react";
-import { Rect, Group, Text, Shape } from "react-konva";
+import { Rect, Group, Text, Shape, Line } from "react-konva";
 import gui from "./mistgui-globals";
 import { MIST } from "./mist.js";
 import Portal from "./Portal";
@@ -31,6 +31,7 @@ import { globalContext } from "./global-context.js";
 import { menuContext } from "./globals-menu-dimensions";
 import { fontContext } from "./globals-fonts";
 import { animated, useSpring } from "react-spring";
+import globalsThemes from "./globals-themes";
 
 // +----------------------------+
 // | All dependent files        |
@@ -56,12 +57,12 @@ function Menu(props) {
   // +--------+
   // | States |
   // +--------+--------------------------------------------------------
-  const element = document.getElementById('workspace');
+  const element = document.getElementById("workspace");
+  console.log("props.top: " + props.top);
   const formStyle = useSpring({
     from: {
       position: "absolute",
-      top: props.top +
-      (window.pageYOffset || document.documentElement.scrollTop) + menuDimensions.lowerMenuHeight,
+      top: props.top + menuDimensions.lowerMenuHeight + 20,
       left: isValueMenuOpen
         ? 2 * global.width + props.left
         : isFunctionMenuOpen
@@ -72,8 +73,7 @@ function Menu(props) {
     },
     to: {
       position: "absolute",
-      top: props.top +
-      (window.pageYOffset || document.documentElement.scrollTop) + menuDimensions.lowerMenuHeight,
+      top: props.top + menuDimensions.lowerMenuHeight + 20,
       left: isValueMenuOpen
         ? 2 * global.width + props.left
         : isFunctionMenuOpen
@@ -106,6 +106,7 @@ function Menu(props) {
         height={menuDimensions.upperMenuHeight}
         fill={props.bgColor}
         shadowBlur={5}
+        opacity={0.98}
       />
       <Portal>
         <animated.form
@@ -128,7 +129,9 @@ function Menu(props) {
             id={"input"}
             style={{
               width: global.width,
-              height: menuDimensions.upperMenuHeight,
+              height: menuDimensions.upperMenuHeight * 0.7,
+              backgroundColor: props.bgColor,
+              border: "none",
             }}
             id="textbox"
             type="text"
@@ -139,9 +142,30 @@ function Menu(props) {
           />
         </animated.form>
       </Portal>
+      <Line
+        points={[
+          0,
+          menuDimensions.lowerMenuHeight + 1.5,
+          global.width,
+          menuDimensions.lowerMenuHeight + 1.5,
+        ]}
+        stroke={
+          isValueMenuOpen
+            ? props.valTabColor
+            : isFunctionMenuOpen
+            ? props.funTabColor
+            : isCustomMenuOpen
+            ? props.customTabColor
+            : props.savedTabColor
+        }
+        strokeWidth={3}
+        shadowBlur={2}
+        shadowOffsetY={1}
+        shadowOpacity={0.3}
+      />
       {[
         {
-          text: "VALUE",
+          text: "Value",
           open: isValueMenuOpen,
           func: function () {
             setIsValueMenuOpen(true);
@@ -151,7 +175,7 @@ function Menu(props) {
           },
         },
         {
-          text: "FUNCTION",
+          text: "Function",
           open: isFunctionMenuOpen,
           func: function () {
             setIsValueMenuOpen(false);
@@ -161,7 +185,7 @@ function Menu(props) {
           },
         },
         {
-          text: "CUSTOM",
+          text: "Custom",
           open: isCustomMenuOpen,
           func: function () {
             setIsValueMenuOpen(false);
@@ -171,7 +195,7 @@ function Menu(props) {
           },
         },
         {
-          text: "SAVED",
+          text: "Saved",
           open: isSavedMenuOpen,
           func: function () {
             setIsValueMenuOpen(false);
@@ -190,10 +214,22 @@ function Menu(props) {
             <Rect
               width={global.width / 4}
               height={menuDimensions.lowerMenuHeight}
-              fill={!u.open ? props.bgColor : "lightgrey"}
-              stroke={"lightgrey"} // make this equal to the ws background
-              //cornerRadius={20}
-              strokeWidth={2}
+              fill={
+                u.open
+                  ? u.text === "Value"
+                    ? props.valTabColor
+                    : u.text === "Function"
+                    ? props.funTabColor
+                    : u.text === "Custom"
+                    ? props.customTabColor
+                    : props.savedTabColor
+                  : props.bgColor
+              }
+              opacity={u.open ? 1 : 0.5}
+              shadowBlur={2}
+              shadowOpacity={0.3}
+              shadowOffsetY={-1.5}
+              shadowEnabled={u.open}
               onMouseEnter={() => {
                 u.func();
               }}
@@ -202,7 +238,15 @@ function Menu(props) {
               width={global.width / 4}
               height={menuDimensions.lowerMenuHeight}
               text={u.text}
-              fontSize={global.width / 100}
+              fill={
+                (u.text === "Function" || u.text === "Custom") && u.open
+                  ? "white"
+                  : "black"
+              }
+              fontFamily={fonts.menuFont}
+              fontStyle={"italic"}
+              fontWeight={u.open ? "bold" : "light"}
+              fontSize={fonts.menuTabFontSize}
               align={"center"}
               verticalAlign={"middle"}
               onMouseEnter={() => {

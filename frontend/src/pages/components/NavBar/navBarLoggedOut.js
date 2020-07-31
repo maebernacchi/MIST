@@ -33,7 +33,6 @@ function Header(props) {
 
 
   useEffect(() => {
-    console.log("nav bar "+document.getElementById('basenav').offsetHeight);
     props.sendHeight(document.getElementById('basenav').offsetHeight);
   })
 

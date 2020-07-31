@@ -687,12 +687,12 @@ const sections = [
               menu bar.
               <br />
               <WorkSpace
-                width={700}
-                height={500}
-                menuHeight={50}
-                funBarHeight={30}
-                functionWidth={10}
-                valueWidth={10}
+                width={800}
+                height={580}
+                menuHeight={90}
+                funBarHeight={60}
+                functionWidth={40}
+                valueWidth={40}
               />
               On the create page, you can make your own images using the
               workspace on it.

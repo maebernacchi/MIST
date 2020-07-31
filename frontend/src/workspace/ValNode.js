@@ -64,6 +64,7 @@ import useImage from "use-image";
 import { nodeContext } from "./globals-nodes-dimensions.js";
 import { globalContext } from './global-context';
 import { width, height, funBarHeight, menuHeight } from "./globals.js";
+import {fontContext} from './globals-fonts';
 
 // +----------------------------+
 // | All dependent files        |
@@ -89,6 +90,7 @@ function ValNode(props) {
   const funBarHeight = useContext(globalContext).funBarHeight;
   const menuHeight = useContext(globalContext).menuHeight;
   const valueWidth = useContext(globalContext).valueWidth;
+  const fonts = useContext(fontContext);
 
   // +----------------------------+------------------------------------
   // | Trashcan                   |
@@ -275,9 +277,9 @@ function ValNode(props) {
         ) : (
           <Text
             text={renderFunction}
-            fontFamily={gui.globalFont}
+            fontFamily={fonts.globalFont}
             fill={"black"}
-            fontSize={gui.nodeFontSize}
+            fontSize={fonts.valueFontSize}
             x={0}
             y={0}
             width={valueWidth}

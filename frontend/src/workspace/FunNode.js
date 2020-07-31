@@ -67,6 +67,7 @@ import useImage from "use-image";
 import {nodeContext} from "./globals-nodes-dimensions.js";
 import {globalContext} from './global-context';
 import globals from "./globals.js";
+import {fontContext} from './globals-fonts';
 
 // +----------------------------+
 // | All dependent files        |
@@ -86,6 +87,7 @@ function FunNode(props) {
   const groupRef = useRef(null);
   const nodeDimensions = useContext(nodeContext);
   const functionWidth = useContext(globalContext).functionWidth;
+  const fonts = useContext(fontContext);
 
 // +----------------------------+------------------------------------
 // | Trashcan                   |
@@ -205,9 +207,6 @@ function FunNode(props) {
         props.dblClickHandler(index);
       }}
     >
-      {
-        console.log("hello from funnode")
-      }
       <Group
         onMouseEnter={(e) => {
           groupRef.current.children.map((u, i) => {
@@ -256,9 +255,9 @@ function FunNode(props) {
         />
         <Text
           text={rep}
-          fontFamily={gui.globalFont}
+          fontFamily={fonts.globalFont}
           fill={"white"}
-          fontSize={gui.nodeFontSize}
+          fontSize={fonts.functionFontSize}
           x={0}
           y={0}
           width={functionWidth}
