@@ -37,7 +37,7 @@ import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Card, Carousel, Container, Col, Form, Nav, Row, Tab} from "react-bootstrap";
+import { Button, Card, Carousel, Container, Col, Form, Nav, Row, Tab } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
 /* icons */
@@ -72,10 +72,10 @@ export default function Profile() {
   const [userAlbums, setUserAlbums] = useState([]);
 
   // grab user's information, images, and albums
-  useEffect(() => { 
+  useEffect(() => {
     fetch('/api/gallery/recent')
-        .then(req => req.json())
-        .then(cards => { setUserImages(cards)});
+      .then(req => req.json())
+      .then(cards => { setUserImages(cards) });
 
     fetch('/api/profile')
       .then(req => req.json())
@@ -187,7 +187,7 @@ function FirstPart(props) {
   );
 }
 
-{/* # of pictures, likes, badges, challenges and their icons */}
+{/* # of pictures, likes, badges, challenges and their icons */ }
 function IconsBar() {
   const icons = [
     { iconName: <AiOutlinePicture size={28} />, num: 8, category: "images" },
@@ -213,24 +213,45 @@ function IconsBar() {
   );
 }
 
-// user images and albums
-function ProfileNav(props) {
-  return (
-    <Container>
-    <Tab.Container>
-      {/* tabs to switch between images and albums */}
-      <Nav fill variant="tabs" defaultActiveKey="images">
-        <Nav.Item>
-          <Nav.Link eventKey="images" style={{ color: "black" }}>
-            Images
+class ProfileNav extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: <DisplayImages cards={props.images} cardsLoaded={true} />
+    }
+  }
+
+  updateContent = () => {
+    this.setState({ message: "Updated Content!" });
+  }
+
+  openImagesView = () => {
+    this.setState({ message: <DisplayImages cards={this.props.images} cardsLoaded={true} /> });
+  }
+
+  openAlbumsView = () => {
+    this.setState({ message: <Albums albums={this.props.albums} message={this.state.message} /> });
+  }
+
+  openedAlbum = () => {
+    this.setState({ message: <AlbumsView albums={this.props.albums} /> });
+  }
+
+  render() {
+    return (
+      <Container>
+        <Nav fill variant="tabs" defaultActiveKey="images">
+          <Nav.Item>
+            <Nav.Link onClick={this.openImagesView} style={{ color: "black" }}>
+              Images
           </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="albums" style={{ color: "black" }}>
-            Albums
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link onClick={this.openAlbumsView} style={{ color: "black" }}>
+              Albums
           </Nav.Link>
-        </Nav.Item>
-        {/*  Not implemented in back-end 
+          </Nav.Item>
+          {/*  Not implemented in back-end 
         <Nav.Item>
           <Nav.Link eventKey="link-4" style={{ color: "black" }}>
             Badges
@@ -246,29 +267,65 @@ function ProfileNav(props) {
             Saved
           </Nav.Link>
   </Nav.Item> */}
-      </Nav>
+        </Nav>
 
-      {/* the different contents for the diffferent tabs */}
-      <Tab.Content>
-        <Tab.Pane eventKey="images">
-          <DisplayImages cards={props.images} cardsLoaded={true} />
-        </Tab.Pane>
+        <Container>
+          {this.state.message}
+        </Container>
 
-        <Tab.Pane eventKey="albums">
-          <Row>
-            {props.albums.map((album) => (
-              <Album title={album.name} description={album.caption} date={album.createdAt} />
-            ))}
-          </Row>
-        </Tab.Pane>
-
-
-      </Tab.Content>
-    </Tab.Container>
-    </Container>
-  );
+      </Container>
+    );
+  }
 }
 
+function Albums(props) {
+
+  const [mode, setMode] = useState("albumsView");
+  const [images, setImages] = useState("");
+  function openAlbumsView() { setMode("albumsView") };
+  function openAlbum(props) { setMode("openedAlbum"); setImages(props.images) };
+
+  if (mode === "albumsView") {
+    return (
+
+      /* default mode*/
+      <Row>
+        {props.albums.map((album) => (
+          <Card
+            style={{ padding: "1em", width: "30%", margin: "1em" }}
+          >
+            <Card.Header>
+              <Card.Title style={{ margin: "auto" }}>
+                <p>{props.title}</p>
+              </Card.Title>
+              {/* ICONS */}
+              <Card.Body style={{ justifyContent: "space-between" }}>
+                <ControlledCarousel images={album.images} openAlbum={openAlbum}/>
+                <p>{props.description}</p>
+                <p>{props.date}</p>
+              </Card.Body>
+            </Card.Header>
+          </Card>
+        ))}
+      </Row>
+    );
+  } else {
+    return (
+      /* signIn mode*/
+      <OpenedAlbum  images={images} onClick={openAlbumsView}/>
+    );
+  }
+}
+
+function AlbumsView(props) {
+  return (
+    <Row>
+      {props.albums.map((album) => (
+        <Album title={album.name} description={album.caption} date={album.createdAt} images={album.images} message={props.message} />
+      ))}
+    </Row>
+  )
+}
 // album component
 function Album(props) {
   return (
@@ -281,7 +338,7 @@ function Album(props) {
         </Card.Title>
         {/* ICONS */}
         <Card.Body style={{ justifyContent: "space-between" }}>
-          <ControlledCarousel />
+          <ControlledCarousel images={props.images} message={props.message} />
           <p>{props.description}</p>
           <p>{props.date}</p>
         </Card.Body>
@@ -291,43 +348,38 @@ function Album(props) {
 }
 
 // carousel used for looking through albums
-function ControlledCarousel() {
+function ControlledCarousel(props) {
   const [index, setIndex] = useState(0);
-
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
 
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
-      <Carousel.Item >
-        <Row style={{ justifyContent: "center" }}>
-          <MISTImage
-            code="x"
-            resolution="250"
-          />
-        </Row>
-        <Carousel.Caption>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-
-        <Row style={{ justifyContent: "center" }}>
-          <MISTImage
-            code="x"
-            resolution="250"
-          />
-        </Row>
-
-      </Carousel.Item>
-      <Carousel.Item>
-        <Row style={{ justifyContent: "center" }}>
-          <MISTImage
-            code="x"
-            resolution="250"
-          />
-        </Row>
-      </Carousel.Item>
+      {props.images.map((album) => (
+        <Carousel.Item >
+          <Row style={{ justifyContent: "center" }}>
+            <Nav.Link onClick={props.openAlbum}>
+              <MISTImage
+                code={album.code}
+                resolution="250"
+              />
+            </Nav.Link>
+          </Row>
+          <Carousel.Caption>
+          </Carousel.Caption>
+        </Carousel.Item>
+      ))}
     </Carousel>
   );
+}
+
+function OpenedAlbum(props) {
+  return (
+    <Container>
+      <Row>
+        <Button onClick={props.onClick}> Back </Button>
+      </Row>
+    </Container>
+  )
 }
