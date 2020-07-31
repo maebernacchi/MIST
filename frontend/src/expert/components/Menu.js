@@ -109,6 +109,8 @@ function Menu(props) {
                     triggerPopup={props.triggerPopup}
                     workspaceNameRef={workspaceNameRef}
                 />
+            </Nav>
+            <Nav>
                 <Form inline>
                     <FormControl
                         className="mr-sm-2"
@@ -117,13 +119,6 @@ function Menu(props) {
                         type="text"
                     />
                 </Form>
-                <FullscreenButton
-                    requestFullscreen={props.requestFullscreen}
-                    exitFullscreen={props.exitFullscreen}
-                />
-            </Nav>
-
-            <ButtonGroup>
                 <OverlayTrigger
                     placement='top'
                     overlay={<Tooltip>Save your workspace</Tooltip>}
@@ -132,6 +127,17 @@ function Menu(props) {
                         onClick={() => props.saveWorkspace(workspaceNameRef.current.value)}
                         variant='outline-light'> <BsCloud /> Save</Button>
                 </OverlayTrigger>
+            </Nav>
+
+            <Nav>
+                <Form inline>
+                    <FormControl
+                        className="mr-sm-2"
+                        placeholder="Name your Final Image"
+                        ref={workspaceNameRef}
+                        type="text"
+                    />
+                </Form>
                 <OverlayTrigger
                     placement='top'
                     overlay={<Tooltip>Publish your final image</Tooltip>}
@@ -140,7 +146,11 @@ function Menu(props) {
                         variant='outline-light'
                     ><FaRegShareSquare /> Publish</Button>
                 </OverlayTrigger>
-            </ButtonGroup>
+            </Nav>
+            <FullscreenButton
+                    requestFullscreen={props.requestFullscreen}
+                    exitFullscreen={props.exitFullscreen}
+                />
         </Navbar>
     )
 }
@@ -197,7 +207,7 @@ function FileDropdown(props) {
                     {data.expertWorkspaces.map(expert_workspace => (
                         <Button
                             className='menu-btn'
-                            onClick={() => {props.deleteWorkspace(expert_workspace.name); props.togglePopup()}}
+                            onClick={() => { props.deleteWorkspace(expert_workspace.name); props.togglePopup() }}
                             variant='outline-primary'
                         >
                             {expert_workspace.name}
