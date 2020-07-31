@@ -340,9 +340,19 @@ handlers.saveexpertws = function (info, req, res) {
   if (!req.isAuthenticated())
     res.json({ success: false, message: 'You need to be logged in!' })
   else {
-    const userId = req.user._id || test_id;
+    const userId = req.user._id;
     const workspace = info.workspace;
     database.saveExpertWorkspace(userId, workspace, res);
+  }
+}
+
+handlers.deleteexpertws = function (info, req, res) {
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: 'You need to be logged in!' })
+  else {
+    const userId = req.user._id;
+    const workspace_name = info.name;
+    database.deleteexpertws(userId, workspace_name, res);
   }
 }
 
@@ -350,8 +360,7 @@ handlers.getUserExpertWS = function (info, req, res) {
   if (!req.isAuthenticated())
     res.json({ success: false, message: 'You need to be logged in!' })
   else {
-    const userId = req.user._id || test_id;
-    console.log(test_id)
+    const userId = req.user._id;
     database.getUserExpertWS(userId, res);
   }
 }

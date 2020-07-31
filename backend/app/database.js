@@ -779,6 +779,48 @@ module.exports.saveExpertWorkspace = (userId, workspace, res) => {
         })
 }
 
+/*
+ * deletes an expert workspace 
+ * 
+ * If successful, returns
+ * {
+ *  success: true
+ * }
+ * 
+ * Otherwise, returns
+ * {
+ *  success: false,
+ *  message: ....
+ * }
+ * where message, is our error message
+ * 
+ */
+module.exports.deleteexpertws = (userId, workspace_name, res) => {
+    var bulk = User.collection.initializeOrderedBulkOp();
+
+    User.find({ "_id": mongoose.Types.ObjectId(userId) }).updateOne({
+        "$pull": {"expertWorkspaces" : { "name": workspace_name }}
+    }).exec((error, result) => {
+            if (error) {
+                res.status(400).send({
+                    success: false,
+                    message: 'Error failed to remove expert-workspace because of Error: ' + error,
+                })
+            } else {
+                if (result.nMatched === 0) {
+                    res.json({
+                        success: false,
+                        message: 'Error: Unknown',
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                    })
+                }
+            }
+        })
+}
+
 module.exports.getUserExpertWS = (userId, res) => {
     User.findById(userId)
         .select('expertWorkspaces')
