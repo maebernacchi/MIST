@@ -369,6 +369,11 @@ function Expert(props) {
         })
     }
 
+    /**
+     * Rendering code: This should always contain valid MIST Code
+     */
+    const [rendering_code, setRenderingCode] = useState('');
+
     return (
         <div id='expert' ref={expertRef} >
             {console.log('rendering expert')}
@@ -377,6 +382,7 @@ function Expert(props) {
                 onClose={togglePopup}
             />
             <Menu
+            
                 getCurrentWorkspace={getCurrentWorkspace}
                 getUserExpertWS={getUserExpertWS}
                 isWorkspaceInUse={isWorkspaceInUse}
@@ -393,6 +399,8 @@ function Expert(props) {
 
                 togglePopup={togglePopup}
                 triggerPopup={triggerPopup}
+
+                rendering_code={rendering_code}
             />
 
             <ResizablePanels
@@ -452,6 +460,7 @@ function Expert(props) {
                     getStateFunctions={() => macros}
                     params={getFormValue('params')}
                     setMessage={(message) => setFormValue("message", message)}
+                    setRenderingCode={setRenderingCode}
                 />
             </ResizablePanels>
 

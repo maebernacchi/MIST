@@ -108,6 +108,8 @@ class CanvasCard extends Component {
             });
             this.animator.setResolution(this.state.resolution, this.state.resolution);
             this.animator.start();
+            // at this point the image should be rendering
+            this.props.setRenderingCode(expand_code);
         } catch (error) {
             this.props.setMessage(error);
         }

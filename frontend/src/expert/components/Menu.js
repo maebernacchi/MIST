@@ -46,7 +46,7 @@ import { Link } from "react-router-dom";
 function Menu(props) {
     // A reference to keep track of the name that the user picks for their workspace
     const workspaceNameRef = createRef('workspaceName');
-
+    const finalimageNameRef = createRef('finalimageName');
     return (
         <Navbar id='menu' bg="dark" variant="dark" style={{ justifyContent: 'space-between', }}>
             <Nav>
@@ -134,7 +134,7 @@ function Menu(props) {
                     <FormControl
                         className="mr-sm-2"
                         placeholder="Name your Final Image"
-                        ref={workspaceNameRef}
+                        ref={finalimageNameRef}
                         type="text"
                     />
                 </Form>
@@ -144,13 +144,60 @@ function Menu(props) {
                 >
                     <Button className='menu-btn'
                         variant='outline-light'
+                        onClick={() => {
+                            if (!finalimageNameRef.current.value || !props.rendering_code) {
+                                alert('Enter a valid final image name or render an image')
+                            } else {
+                                //props.triggerPopup({message: 'You are about to publish the image'finalimageNameRef.current.value, props.rendering_code});
+                                // check if the user already has an image with that title
+                                // or if the user is not logged in 
+                                const title = finalimageNameRef.current.value;
+
+                                let url = "api?action=imageexists&title=" + title;
+                                fetch(url)
+                                    .then((res) => res.json())
+                                    .then((response) => {
+                                        if (response === "logged out")
+                                            alert("Please log in to save images.")
+                                        if (response === "image exists")
+                                            alert("You already have an image with this name; please name it something else.")
+                                        if (response === "image does not exist") {
+                                            let image = {
+                                                action: "saveimage",
+                                                title: title,
+                                                code: props.rendering_code
+                                            }
+                                            // save the image
+                                            fetch("api", {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                },
+                                                credentials: 'include',
+                                                body: JSON.stringify(image)
+                                            })
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    if (data.success)
+                                                        alert(data.message);
+                                                    else{
+                                                        alert('Failed to save due to ' + (data.message || data))
+                                                    }
+                                                })
+                                                .catch(err => alert('Failed to save due to Error: ' + err))
+                                        }
+                                    })
+                                    .catch(error => alert('Failed to fetch due to Error: ' + error))
+                                    
+                            }
+                        }}
                     ><FaRegShareSquare /> Publish</Button>
                 </OverlayTrigger>
             </Nav>
             <FullscreenButton
-                    requestFullscreen={props.requestFullscreen}
-                    exitFullscreen={props.exitFullscreen}
-                />
+                requestFullscreen={props.requestFullscreen}
+                exitFullscreen={props.exitFullscreen}
+            />
         </Navbar>
     )
 }
