@@ -381,13 +381,19 @@ module.exports.saveImage = (userId, title, code, res) => {
 module.exports.getRandomImagesLoggedOut = (count, callback) => {
     Image.aggregate([
         { $match: { public: true, active: true } },
-        { $sample: { size: count } }])
-        .populate('userId')
+        { $sample: { size: count } }
+    ])
         .exec((err, images) => {
             if (err)
                 callback(null, err)
-            else
-                callback(images, null)
+            else {
+                Image.populate(images, { path: 'userId' }, (err, images) => {
+                    if (err)
+                        callback(null, err)
+                    else
+                        callback(images, null)
+                })
+            }
         });
 }
 
@@ -716,13 +722,13 @@ module.exports.userHasWorkspace = (userId, expertWorkspaceName, res) => {
         })
     }
     User
-        .findById(userId).select('expertWorkspaces').exec((error, user)=>{
-            if(error)
+        .findById(userId).select('expertWorkspaces').exec((error, user) => {
+            if (error)
                 handleError(error);
             else
                 handleSuccess(user);
         })
-        
+
 }
 
 /*
