@@ -381,13 +381,19 @@ module.exports.saveImage = (userId, title, code, res) => {
 module.exports.getRandomImagesLoggedOut = (count, callback) => {
     Image.aggregate([
         { $match: { public: true, active: true } },
-        { $sample: { size: count } }])
-        .populate('userId')
+        { $sample: { size: count } }
+    ])
         .exec((err, images) => {
             if (err)
                 callback(null, err)
-            else
-                callback(images, null)
+            else {
+                Image.populate(images, { path: 'userId' }, (err, images) => {
+                    if (err)
+                        callback(null, err)
+                    else
+                        callback(images, null)
+                })
+            }
         });
 }
 
@@ -716,13 +722,13 @@ module.exports.userHasWorkspace = (userId, expertWorkspaceName, res) => {
         })
     }
     User
-        .findById(userId).select('expertWorkspaces').exec((error, user)=>{
-            if(error)
+        .findById(userId).select('expertWorkspaces').exec((error, user) => {
+            if (error)
                 handleError(error);
             else
                 handleSuccess(user);
         })
-        
+
 }
 
 /*
@@ -777,4 +783,63 @@ module.exports.saveExpertWorkspace = (userId, workspace, res) => {
                 }
             }
         })
+}
+
+/*
+ * deletes an expert workspace 
+ * 
+ * If successful, returns
+ * {
+ *  success: true
+ * }
+ * 
+ * Otherwise, returns
+ * {
+ *  success: false,
+ *  message: ....
+ * }
+ * where message, is our error message
+ * 
+ */
+module.exports.deleteexpertws = (userId, workspace_name, res) => {
+    var bulk = User.collection.initializeOrderedBulkOp();
+
+    User.find({ "_id": mongoose.Types.ObjectId(userId) }).updateOne({
+        "$pull": {"expertWorkspaces" : { "name": workspace_name }}
+    }).exec((error, result) => {
+            if (error) {
+                res.status(400).send({
+                    success: false,
+                    message: 'Error failed to remove expert-workspace because of Error: ' + error,
+                })
+            } else {
+                if (result.nMatched === 0) {
+                    res.json({
+                        success: false,
+                        message: 'Error: Unknown',
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                    })
+                }
+            }
+        })
+}
+
+module.exports.getUserExpertWS = (userId, res) => {
+    User.findById(userId)
+        .select('expertWorkspaces')
+        .exec()
+        .then(user => {
+            if (user)
+                return user.expertWorkspaces;
+            else {
+                res.json({ success: false, message: 'user could not be located in the database' })
+            }
+        })
+        .then(expertWorkspaces => {
+            res.send({success: true, expertWorkspaces: expertWorkspaces})
+        })
+        .catch(error => res.json({ success: false, message: 'Failed due to Error: ' + error }))
 }

@@ -327,20 +327,40 @@ handlers.getUser = function (info, req, res) {
 // +-----------+
 
 handlers.expertwsexists = function (info, req, res) {
-  // STUB
-  // replace using req.isAuthenticated when UA is done
-  // and using local-passport
-  const userId = '5efd140f5f0ef435a02538e2';
-  const name = info.name;
-  database.userHasWorkspace(userId, name, res);
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: 'You need to be logged in!' })
+  else {
+    const userId = req.user._id;
+    const name = info.name;
+    database.userHasWorkspace(userId, name, res);
+  }
 }
 
-
 handlers.saveexpertws = function (info, req, res) {
-  // STUB
-  // replace using req.isAuthenticated when UA is done
-  const userId = '5efd140f5f0ef435a02538e2';
-  const workspace = info.workspace;
-  database.saveExpertWorkspace(userId, workspace, res);
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: 'You need to be logged in!' })
+  else {
+    const userId = req.user._id;
+    const workspace = info.workspace;
+    database.saveExpertWorkspace(userId, workspace, res);
+  }
+}
 
+handlers.deleteexpertws = function (info, req, res) {
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: 'You need to be logged in!' })
+  else {
+    const userId = req.user._id;
+    const workspace_name = info.name;
+    database.deleteexpertws(userId, workspace_name, res);
+  }
+}
+
+handlers.getUserExpertWS = function (info, req, res) {
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: 'You need to be logged in!' })
+  else {
+    const userId = req.user._id;
+    database.getUserExpertWS(userId, res);
+  }
 }
