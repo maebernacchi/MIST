@@ -25,8 +25,8 @@ import gui from "./mistgui-globals";
 import { MIST } from "./mist.js";
 import Portal from "./Portal";
 import MakeMenuButton from "./MakeMenuButton";
-import FuncGroup from "./MakeFunction";
-import ValGroup from "./MakeValue";
+import FuncGroup from "./MakeFunction2";
+import ValGroup from "./MakeValue2";
 import { globalContext } from "./global-context.js";
 import { menuContext } from "./globals-menu-dimensions";
 import { fontContext } from "./globals-fonts";
@@ -37,7 +37,7 @@ import globalsThemes from "./globals-themes";
 // | All dependent files        |
 // +----------------------------+------------------------------------
 
-function Menu(props) {
+function Menu2(props) {
   const global = useContext(globalContext);
   const menuDimensions = useContext(menuContext);
   const fonts = useContext(fontContext);
@@ -46,10 +46,11 @@ function Menu(props) {
   // | States |
   // +--------+
 
-  const [isValueMenuOpen, setIsValueMenuOpen] = useState(true);
-  const [isFunctionMenuOpen, setIsFunctionMenuOpen] = useState(false);
+  const [isValueMenuOpen, setIsValueMenuOpen] = useState(false);
+  const [isFunctionMenuOpen, setIsFunctionMenuOpen] = useState(true);
   const [isCustomMenuOpen, setIsCustomMenuOpen] = useState(false);
   const [isSavedMenuOpen, setIsSavedMenuOpen] = useState(false);
+  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [key, setKey] = useState(Math.random());
   const ref = useRef(null);
   const [formValue, setFormValue] = useState("Enter a MIST expression");
@@ -156,7 +157,9 @@ function Menu(props) {
             ? props.funTabColor
             : isCustomMenuOpen
             ? props.customTabColor
-            : props.savedTabColor
+            : isSavedMenuOpen
+            ? props.savedTabColor
+            : props.settingsTabColor
         }
         strokeWidth={3}
         shadowBlur={2}
@@ -172,6 +175,7 @@ function Menu(props) {
             setIsFunctionMenuOpen(false);
             setIsCustomMenuOpen(false);
             setIsSavedMenuOpen(false);
+            setIsSettingsMenuOpen(false);
           },
         },
         {
@@ -182,6 +186,7 @@ function Menu(props) {
             setIsFunctionMenuOpen(true);
             setIsCustomMenuOpen(false);
             setIsSavedMenuOpen(false);
+            setIsSettingsMenuOpen(false);
           },
         },
         {
@@ -192,6 +197,7 @@ function Menu(props) {
             setIsFunctionMenuOpen(false);
             setIsCustomMenuOpen(true);
             setIsSavedMenuOpen(false);
+            setIsSettingsMenuOpen(false);
           },
         },
         {
@@ -202,17 +208,29 @@ function Menu(props) {
             setIsFunctionMenuOpen(false);
             setIsCustomMenuOpen(false);
             setIsSavedMenuOpen(true);
+            setIsSettingsMenuOpen(false);
+          },
+        },
+        {
+          text: "Settings",
+          open: isSettingsMenuOpen,
+          func: function () {
+            setIsValueMenuOpen(false);
+            setIsFunctionMenuOpen(false);
+            setIsCustomMenuOpen(false);
+            setIsSavedMenuOpen(false);
+            setIsSettingsMenuOpen(true);
           },
         },
       ].map((u, i) => {
         return (
           <Group
-            x={(global.width / 4) * i}
-            width={global.width / 4}
+            x={(global.width / 5) * i}
+            width={global.width / 5}
             height={menuDimensions.lowerMenuHeight}
           >
             <Rect
-              width={global.width / 4}
+              width={global.width / 5}
               height={menuDimensions.lowerMenuHeight}
               fill={
                 u.open
@@ -222,7 +240,9 @@ function Menu(props) {
                     ? props.funTabColor
                     : u.text === "Custom"
                     ? props.customTabColor
-                    : props.savedTabColor
+                    : u.text === "Saved"
+                    ? props.savedTabColor
+                    : props.settingsTabColor
                   : props.bgColor
               }
               opacity={u.open ? 1 : 0.5}
@@ -235,11 +255,16 @@ function Menu(props) {
               }}
             />
             <Text
-              width={global.width / 4}
+              width={global.width / 5}
               height={menuDimensions.lowerMenuHeight}
               text={u.text}
               fill={
-                (u.text === "Function" || u.text === "Custom") && u.open
+                ((u.text === "Function" ||
+                  u.text === "Custom" ||
+                  u.text === "Settings") &&
+                u.open)
+                  ? "white"
+                  : props.theme === "dark"
                   ? "white"
                   : "black"
               }
@@ -273,6 +298,7 @@ function Menu(props) {
             isFunctionMenuOpen: isFunctionMenuOpen,
             isCustomMenuOpen: isCustomMenuOpen,
             isSavedMenuOpen: isSavedMenuOpen,
+            isSettingsMenuOpen: isSettingsMenuOpen
           }}
           changeKey={changeKey}
           index={index}
@@ -295,6 +321,7 @@ function Menu(props) {
             isFunctionMenuOpen: isFunctionMenuOpen,
             isCustomMenuOpen: isCustomMenuOpen,
             isSavedMenuOpen: isSavedMenuOpen,
+            isSettingsMenuOpen: isSettingsMenuOpen
           }}
           changeKey={changeKey}
           index={index}
@@ -304,4 +331,4 @@ function Menu(props) {
   );
 }
 
-export default Menu;
+export default Menu2;

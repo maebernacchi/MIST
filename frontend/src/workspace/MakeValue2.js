@@ -53,7 +53,7 @@ import gui from "./mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { nodeContext } from "./globals-nodes-dimensions.js";
 import { globalContext } from "./global-context.js";
-import {fontContext} from './globals-fonts';
+import { fontContext } from "./globals-fonts";
 
 // +----------------------------+
 // | All dependent files        |
@@ -64,7 +64,6 @@ import {fontContext} from './globals-fonts';
 // +----------------------------------------+
 
 function ValGroup(props) {
-
   const global = useContext(globalContext);
   const valName = props.valName;
   const nodeDimensions = useContext(nodeContext);
@@ -94,8 +93,13 @@ function ValGroup(props) {
         });
         if (e.currentTarget.y() > global.menuHeight) {
           //setTimeout(function () {
-            props.addNode("val", valName, e.target._lastPos.x, e.target._lastPos.y);
-            props.changeKey();
+          props.addNode(
+            "val",
+            valName,
+            e.target._lastPos.x,
+            e.target._lastPos.y
+          );
+          props.changeKey();
           //}, 200);
         } else {
           props.changeKey();
@@ -120,15 +124,27 @@ function ValGroup(props) {
       <Spring
         native
         from={{
-          x: props.tabs.isValueMenuOpen ? 0 + nodeDimensions.valueOffset :
-            props.tabs.isFunctionMenuOpen ? - global.width + nodeDimensions.valueOffset :
-            props.tabs.isCustomMenuOpen ? - 2 * global.width + nodeDimensions.valueOffset :
-            - 3 * global.width + nodeDimensions.valueOffset}}
+          x: props.tabs.isValueMenuOpen
+            ? 0 + nodeDimensions.valueOffset
+            : props.tabs.isFunctionMenuOpen
+            ? -global.width + nodeDimensions.valueOffset
+            : props.tabs.isCustomMenuOpen
+            ? -2 * global.width + nodeDimensions.valueOffset
+            : props.tabs.isSavedMenuOpen
+            ? -3 * global.width + nodeDimensions.valueOffset
+            : -4 * global.width + nodeDimensions.valueOffset,
+        }}
         to={{
-          x: props.tabs.isValueMenuOpen ? 0 + nodeDimensions.valueOffset :
-            props.tabs.isFunctionMenuOpen ? - global.width + nodeDimensions.valueOffset :
-            props.tabs.isCustomMenuOpen ? - 2 * global.width + nodeDimensions.valueOffset :
-            - 3 * global.width + nodeDimensions.valueOffset}}
+          x: props.tabs.isValueMenuOpen
+            ? 0 + nodeDimensions.valueOffset
+            : props.tabs.isFunctionMenuOpen
+            ? -global.width + nodeDimensions.valueOffset
+            : props.tabs.isCustomMenuOpen
+            ? -2 * global.width + nodeDimensions.valueOffset
+            : props.tabs.isSavedMenuOpen
+            ? -3 * global.width + nodeDimensions.valueOffset
+            : -4 * global.width + nodeDimensions.valueOffset,
+        }}
       >
         {(props) => (
           <animated.Rect
@@ -145,15 +161,27 @@ function ValGroup(props) {
       <Spring
         native
         from={{
-          x: props.tabs.isValueMenuOpen ? 0 :
-            props.tabs.isFunctionMenuOpen ? - global.width :
-            props.tabs.isCustomMenuOpen ? - 2 * global.width :
-            - 3 * global.width}}
+          x: props.tabs.isValueMenuOpen
+            ? 0
+            : props.tabs.isFunctionMenuOpen
+            ? -global.width
+            : props.tabs.isCustomMenuOpen
+            ? -2 * global.width
+            : props.tabs.isSavedMenuOpen
+            ? -3 * global.width
+            : -4 * global.width,
+        }}
         to={{
-          x: props.tabs.isValueMenuOpen ? 0 :
-            props.tabs.isFunctionMenuOpen ? - global.width :
-            props.tabs.isCustomMenuOpen ? - 2 * global.width :
-            - 3 * global.width}}
+          x: props.tabs.isValueMenuOpen
+            ? 0
+            : props.tabs.isFunctionMenuOpen
+            ? -global.width
+            : props.tabs.isCustomMenuOpen
+            ? -2 * global.width
+            : props.tabs.isSavedMenuOpen
+            ? -3 * global.width
+            : -4 * global.width,
+        }}
       >
         {(props) => (
           <animated.Text
@@ -175,6 +203,6 @@ function ValGroup(props) {
   // +----------------------------------------+
   // | Entire Value Group                     |
   // +----------------------------------------+----------------------
-};
+}
 
-export default ValGroup
+export default ValGroup;

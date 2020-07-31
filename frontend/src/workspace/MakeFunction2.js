@@ -125,13 +125,15 @@ function FuncGroup(props) {
           x: props.tabs.isValueMenuOpen ? global.width :
             props.tabs.isFunctionMenuOpen ? 0 :
             props.tabs.isCustomMenuOpen ? - global.width :
-            - 2 * global.width,
+            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+            - 3 * global.width,
           fontSize: gui.nodeFontSize }}
         to={{
           x: props.tabs.isValueMenuOpen ? global.width :
             props.tabs.isFunctionMenuOpen ? 0 :
             props.tabs.isCustomMenuOpen ? - global.width :
-            - 2 * global.width,
+            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+            - 3 * global.width,
         }}
       >
         {(props) => (
@@ -151,13 +153,15 @@ function FuncGroup(props) {
           x: props.tabs.isValueMenuOpen ? global.width :
             props.tabs.isFunctionMenuOpen ? 0 :
             props.tabs.isCustomMenuOpen ? - global.width :
-            - 2 * global.width,
+            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+            - 3 * global.width,
           fontSize: gui.nodeFontSize }}
         to={{
           x: props.tabs.isValueMenuOpen ? global.width :
             props.tabs.isFunctionMenuOpen ? 0 :
             props.tabs.isCustomMenuOpen ? - global.width :
-            - 2 * global.width,
+            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+            - 3 * global.width,
         }}
       >
         {(props) => (

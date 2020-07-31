@@ -14,6 +14,7 @@ function FunBar(props) {
   const funBarHeight = useContext(globalContext).funBarHeight;
   const funbarDimensions = useContext(funBarContext);
   const funBarFontSize = useContext(fontContext).funBarFontSize;
+  const funBarRFFontSize = useContext(fontContext).funBarRFFontSize;
   // only here because props isn't recognized from Spring
   const renderFunction = props.renderFunction;
 
@@ -53,14 +54,14 @@ function FunBar(props) {
         />
         <Text // Render function text display
           text={props.renderFunction.renderFunction}
-          x={gui.funBarTextOffset}
-          y={gui.funBarTextOffset}
-          width={gui.funBarTextAreaWidth - gui.funBarTextOffset}
+          x={funbarDimensions.margin}
+          y={funbarDimensions.margin}
+          width={funbarDimensions.rfTextAreaWidth}
           height={funbarDimensions.rfTextAreaHeight}
           verticalAlign={"middle"}
           fill={props.functionTextColor}
           fontFamily={"Courier New"}
-          fontSize={gui.funBarDisplayFontSize}
+          fontSize={funBarRFFontSize}
         />
       </Group>
     );

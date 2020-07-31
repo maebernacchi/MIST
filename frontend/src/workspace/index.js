@@ -62,7 +62,8 @@ import colors from "./globals-themes";
 import { Container } from "react-bootstrap";
 import DrawArrow from "./line";
 import { ContextProvider } from "./ContextProvider";
-import Menu from "./Menu";
+import Menu1 from './Menu1';
+import Menu2 from "./Menu2";
 import gui from "./mistgui-globals";
 import { MIST } from "./mist.js";
 import React, { useContext, Component } from "react";
@@ -1031,7 +1032,7 @@ class WorkspaceComponent extends Component {
                 functionWidth={this.functionWidth}
                 valueWidth={this.valueWidth}
               >
-                <Menu
+                <Menu2
                   addNode={this.pushNode.bind(this)}
                   addLine={this.pushLine.bind(this)}
                   clearWorkspace={this.clearWorkspace.bind(this)}
@@ -1048,8 +1049,10 @@ class WorkspaceComponent extends Component {
                   valTabColor={colors.menuValTab[this.state.theme]}
                   customTabColor={colors.menuCustomTab[this.state.theme]}
                   savedTabColor={colors.menuSavedTab[this.state.theme]}
+                  settingsTabColor={colors.menuSettingsTab[this.state.theme]}
                   top={this.state.offsetY}
                   left={this.state.offsetX}
+                  theme={this.state.theme}
                 />
               </ContextProvider>
             </Layer>

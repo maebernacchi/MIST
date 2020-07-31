@@ -71,9 +71,15 @@ const menuCustomTab = {
 }
 
 const menuSavedTab = {
-  classic: '#79a89a', //'#cffcdb',
-  dusk: '#79a89a', // '#1b4f2a',
-  dark: '#79a89a' // '#1b4f2a'
+  classic: '	#bfe996', //'#cffcdb',
+  dusk: '	#bfe996', // '#1b4f2a',
+  dark: '	#bfe996' // '#1b4f2a'
+}
+
+const menuSettingsTab = {
+  classic: '#8022c3',
+  dusk: '#8022c3',
+  dark: '#8022c3'
 }
 
 // +---------------+-------------------------------------------------
@@ -103,6 +109,7 @@ export default {
   menuValTab,
   menuCustomTab,
   menuSavedTab,
+  menuSettingsTab,
   workspaceButton,
   funBarBackground,
 };

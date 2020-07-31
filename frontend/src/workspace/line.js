@@ -9,13 +9,17 @@ function DrawArrow(props) {
   const [trashHovered, setTrashHovered] = useState(false);
   const [image] = useImage(require("./trash.png"));
   const nodeDimensions = useContext(nodeContext);
+  const sinkX = props.sinkX - (props.outletIndex == null ? 0 : nodeDimensions.outletXOffset * 2);
+  const sinkY = props.sinkY +
+  (props.outletIndex == null ? 0 : nodeDimensions.outletStartY +
+  props.outletIndex * nodeDimensions.outletYOffset);
 
   function Trashcan() {
     return (
       <Image
         image={image}
-        x={props.sourceX + (props.sinkX - props.sourceX) * (3 / 5) - 7}
-        y={props.sourceY + (props.sinkY - props.sourceY) * (3 / 5) - 7}
+        x={props.sourceX + (sinkX - props.sourceX) * (3 / 5) - 7}
+        y={props.sourceY + (sinkY - props.sourceY) * (3 / 5) - 7}
         width={14}
         height={14}
         shadowColor={trashHovered ? "red" : props.hoverShadowColor}
@@ -46,10 +50,8 @@ function DrawArrow(props) {
         points={[
           props.sourceX,
           props.sourceY,
-          props.sinkX - (props.outletIndex == null ? 0 : nodeDimensions.outletXOffset * 2),
-          props.sinkY +
-            (props.outletIndex == null ? 0 : nodeDimensions.outletStartY +
-            props.outletIndex * nodeDimensions.outletYOffset),
+          sinkX,
+          sinkY,
         ]}
         pointerLength={0}
         pointerWidth={0}
