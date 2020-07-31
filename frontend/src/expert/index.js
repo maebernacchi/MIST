@@ -32,7 +32,7 @@
  * 
  * Here we build the Expert component which manages the state of the form on
  * the expert page as well as the function-macros defined by the user. We divide the
- * page into four React Components: Menu, SidePanelCard, WorkspaceCard, CanvasCard;
+ * page into the React Components: Menu, SidePanelCard, WorkspaceCard, CanvasCard;
  * whose corresponding files are located in './components'. We go into more detail
  * of each Component in the list below as well as in the Notes Headers of the respective
  * files.
@@ -45,12 +45,26 @@
  * 
  * 4. CanvasCard
  * 
+ * 
  * We also rely on a Popup Component, whose contents will be modified at
  * shown whenever a popup is needed via the triggerPopup() function.
  * 
  * The initialState of th Expert Component is stored under './initial-state.js
  * 
  * We handle macros using the expand_macros function from the './macros' module.
+ * 
+ * We keep track of following states using React hooks:
+ * popup, form, macros, rendering_code
+ * 
+ * We define a workspace to be both the contents of the form wherein we allow the 
+ * users to write their functions or write code that renders into an image. Thus,
+ * it is the object { form: object, functions: object} where the object corresponding
+ * to 'form' is the hook 'form' and the object corresponding 'functions' is the hook macros.
+ * 
+ * Our definition of workspace had changed overtime, at first it only meant the contents
+ * of the 'function form' which is why the central panel is named WorksapceCard; we should
+ * rename this file and component in the future. 
+ * 
  */
 
 import '../design/styleSheets/expert.css';
