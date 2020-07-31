@@ -105,6 +105,7 @@ class CanvasCard extends Component {
             this.props.setMessage(""); // Clear out any previous errors
             this.animator = new MIST.ui.Animator(expand_code, "", {}, this.canvas.current, (txt) => {
                 this.props.setMessage(txt);
+                throw txt
             });
             this.animator.setResolution(this.state.resolution, this.state.resolution);
             this.animator.start();
@@ -112,6 +113,7 @@ class CanvasCard extends Component {
             this.props.setRenderingCode(expand_code);
         } catch (error) {
             this.props.setMessage(error);
+            this.props.setRenderingCode('');
         }
     } // startAnimator()
 

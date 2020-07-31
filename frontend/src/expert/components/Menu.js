@@ -146,7 +146,10 @@ function Menu(props) {
                         variant='outline-light'
                         onClick={() => {
                             if (!finalimageNameRef.current.value || !props.rendering_code) {
-                                alert('Enter a valid final image name or render an image')
+                                if (!finalimageNameRef.current.value)
+                                    alert('Enter a valid final image name')
+                                else
+                                    alert('Please render an image to save')
                             } else {
                                 //props.triggerPopup({message: 'You are about to publish the image'finalimageNameRef.current.value, props.rendering_code});
                                 // check if the user already has an image with that title
@@ -157,38 +160,46 @@ function Menu(props) {
                                 fetch(url)
                                     .then((res) => res.json())
                                     .then((response) => {
-                                        if (response === "logged out")
-                                            alert("Please log in to save images.")
-                                        if (response === "image exists")
-                                            alert("You already have an image with this name; please name it something else.")
-                                        if (response === "image does not exist") {
-                                            let image = {
-                                                action: "saveimage",
-                                                title: title,
-                                                code: props.rendering_code
-                                            }
-                                            // save the image
-                                            fetch("api", {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type': 'application/json',
-                                                },
-                                                credentials: 'include',
-                                                body: JSON.stringify(image)
-                                            })
-                                                .then(res => res.json())
-                                                .then(data => {
-                                                    if (data.success)
-                                                        alert(data.message);
-                                                    else{
-                                                        alert('Failed to save due to ' + (data.message || data))
-                                                    }
+                                        switch (response) {
+                                            case "logged out":
+                                                alert("Please log in to save images.")
+                                                break;
+                                            case "image exists":
+                                                alert("You already have an image with this name; please name it something else.")
+                                                break;
+                                            case "image does not exist":
+                                                let image = {
+                                                    action: "saveimage",
+                                                    title: title,
+                                                    code: props.rendering_code
+                                                }
+                                                // save the image
+                                                fetch("api", {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+                                                    credentials: 'include',
+                                                    body: JSON.stringify(image)
                                                 })
-                                                .catch(err => alert('Failed to save due to Error: ' + err))
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if (data.success)
+                                                            alert(data.message);
+                                                        else {
+                                                            alert('Failed to save due to ' + (data.message || data))
+                                                        }
+                                                    })
+                                                    .catch(err => alert('Failed to save due to Error: ' + err))
+                                                break;
+                                            default: {
+                                                // we do not expect to reach this state
+                                                console.log('Unexpected result')
+                                            }
                                         }
                                     })
                                     .catch(error => alert('Failed to fetch due to Error: ' + error))
-                                    
+
                             }
                         }}
                     ><FaRegShareSquare /> Publish</Button>
