@@ -317,12 +317,14 @@ module.exports.imageExists = (username, title, callback) => {
             if (err)
                 callback(err, null)
             else {
+                let response = false;
                 user.images.forEach((image) => {
                     if (image.title === title) {
-                        callback(null, true)
+                        response = true;
+                        return;
                     };
                 });
-                callback(null, false)
+                callback(null, response)
             }
         });
 }
@@ -354,6 +356,9 @@ module.exports.saveImage = (userId, title, code, res) => {
                 .then((writeOpResult) => {
                     if (writeOpResult.nModified === 0) {
                         console.log("Failed to insert image into user's array");
+                        res.send({success: false, message: 'Image failed to save due to unknown error'})
+                    }else{
+                        res.send({success: true, message: 'Image was successfully saved'})
                     }
                 })
                 .catch(err => {
