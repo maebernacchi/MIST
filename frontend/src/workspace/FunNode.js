@@ -57,14 +57,15 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Rect, Group, Text, Shape, Image } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
 import gui from "./mistgui-globals.js";
 import MISTImage from "./MISTImage";
 import useImage from "use-image";
-import nodeDimensions from "./globals-nodes-dimensions.js";
+import {nodeContext} from "./globals-nodes-dimensions.js";
+import {globalContext} from './global-context';
 import globals from "./globals.js";
 
 // +----------------------------+
@@ -83,6 +84,8 @@ function FunNode(props) {
   const [trashHovered, setTrashHovered] = useState(false);
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
+  const nodeDimensions = useContext(nodeContext);
+  const functionWidth = useContext(globalContext).functionWidth;
 
 // +----------------------------+------------------------------------
 // | Trashcan                   |
@@ -137,8 +140,8 @@ function FunNode(props) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > window.innerWidth - nodeDimensions.functionWidth) {
-          pos.x = window.innerWidth - nodeDimensions.functionWidth;
+        if (pos.x > window.innerWidth - functionWidth) {
+          pos.x = window.innerWidth - functionWidth;
         }
         if (pos.y < globals.menuHeight) {
           pos.y = globals.menuHeight;
@@ -147,12 +150,12 @@ function FunNode(props) {
           pos.y >
           window.innerHeight -
             globals.funBarHeight -
-            nodeDimensions.functionWidth
+            functionWidth
         ) {
           pos.y =
             window.innerHeight -
             globals.funBarHeight -
-            nodeDimensions.functionWidth;
+            functionWidth;
         }
         return pos;
       }}
@@ -202,6 +205,9 @@ function FunNode(props) {
         props.dblClickHandler(index);
       }}
     >
+      {
+        console.log("hello from funnode")
+      }
       <Group
         onMouseEnter={(e) => {
           groupRef.current.children.map((u, i) => {
@@ -232,11 +238,11 @@ function FunNode(props) {
         <Rect
           x={0}
           y={0}
-          width={nodeDimensions.functionWidth}
+          width={functionWidth}
           height={
             props.numOutlets <= 3
-              ? nodeDimensions.functionWidth
-              : nodeDimensions.functionWidth +
+              ? functionWidth
+              : functionWidth +
                 (props.numOutlets - 3) * nodeDimensions.outletYOffset
           }
           fill={gui.functions[name].color}
@@ -255,11 +261,11 @@ function FunNode(props) {
           fontSize={gui.nodeFontSize}
           x={0}
           y={0}
-          width={nodeDimensions.functionWidth}
+          width={functionWidth}
           height={
             props.numOutlets <= 3
-              ? nodeDimensions.functionWidth
-              : nodeDimensions.functionWidth +
+              ? functionWidth
+              : functionWidth +
                 (props.numOutlets - 3) * nodeDimensions.outletYOffset
           }
           align={"center"}

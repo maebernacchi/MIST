@@ -51,7 +51,7 @@ import { Group } from "react-konva";
 import Konva from "konva";
 import gui from "./mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
-import nodeDimensions from "./globals-nodes-dimensions.js";
+import {nodeContext} from "./globals-nodes-dimensions.js";
 import { globalContext } from "./global-context.js";
 
 // +----------------------------+
@@ -65,6 +65,7 @@ import { globalContext } from "./global-context.js";
 function FuncGroup(props) {
   const global = useContext(globalContext);
   const funName = props.funName;
+  const nodeDimensions = useContext(nodeContext);
 
   return (
     <Group
@@ -101,17 +102,17 @@ function FuncGroup(props) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > global.width - nodeDimensions.functionWidth) {
-          pos.x = global.width - nodeDimensions.functionWidth;
+        if (pos.x > global.width - global.functionWidth) {
+          pos.x = global.width - global.functionWidth;
         }
         if (pos.y < 0) {
           pos.y = 0;
         }
         if (
           pos.y >
-          global.height - global.funBarHeight - nodeDimensions.functionWidth
+          global.height - global.funBarHeight - global.functionWidth
         ) {
-          pos.y = global.height - global.funBarHeight - nodeDimensions.functionWidth;
+          pos.y = global.height - global.funBarHeight - global.functionWidth;
         }
         return pos;
       }}
@@ -135,8 +136,8 @@ function FuncGroup(props) {
           <animated.Rect
             {...props}
             y={0}
-            width={nodeDimensions.functionWidth}
-            height={nodeDimensions.functionWidth}
+            width={global.functionWidth}
+            height={global.functionWidth}
             fill={gui.functions[funName].color}
             cornerRadius={10}
           />
@@ -164,8 +165,8 @@ function FuncGroup(props) {
             fontFamily={gui.globalFont}
             fill={"white"}
             y={0}
-            width={nodeDimensions.functionWidth}
-            height={nodeDimensions.functionWidth}
+            width={global.functionWidth}
+            height={global.functionWidth}
             align={"center"}
             verticalAlign={"middle"}
           />

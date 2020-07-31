@@ -54,14 +54,15 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { Rect, Group, Text, Image } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
 import gui from "./mistgui-globals.js";
 import MISTImage from "./MISTImage";
 import useImage from "use-image";
-import nodeDimensions from "./globals-nodes-dimensions.js";
+import { nodeContext } from "./globals-nodes-dimensions.js";
+import { globalContext } from './global-context';
 import { width, height, funBarHeight, menuHeight } from "./globals.js";
 
 // +----------------------------+
@@ -82,6 +83,12 @@ function ValNode(props) {
   const groupRef = useRef(null);
   const [formValue, setFormValue] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const nodeDimensions = useContext(nodeContext);
+  const width = useContext(globalContext).width;
+  const height = useContext(globalContext).height;
+  const funBarHeight = useContext(globalContext).funBarHeight;
+  const menuHeight = useContext(globalContext).menuHeight;
+  const valueWidth = useContext(globalContext).valueWidth;
 
   // +----------------------------+------------------------------------
   // | Trashcan                   |
@@ -129,14 +136,14 @@ function ValNode(props) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > width - nodeDimensions.valueWidth) {
-          pos.x = width - nodeDimensions.valueWidth;
+        if (pos.x > width - valueWidth) {
+          pos.x = width - valueWidth;
         }
         if (pos.y < menuHeight) {
           pos.y = menuHeight;
         }
-        if (pos.y > height - funBarHeight - nodeDimensions.valueWidth) {
-          pos.y = height - funBarHeight - nodeDimensions.valueWidth;
+        if (pos.y > height - funBarHeight - valueWidth) {
+          pos.y = height - funBarHeight - valueWidth;
         }
         return pos;
       }}
@@ -254,8 +261,8 @@ function ValNode(props) {
                   type="text"
                   placeholder="#"
                   style={{
-                    width: 0.5 * nodeDimensions.valueWidth,
-                    height: 0.5 * nodeDimensions.valueWidth,
+                    width: 0.5 * valueWidth,
+                    height: 0.5 * valueWidth,
                   }}
                   onChange={(e) => {
                     setFormValue(e.target.value);
@@ -273,8 +280,8 @@ function ValNode(props) {
             fontSize={gui.nodeFontSize}
             x={0}
             y={0}
-            width={nodeDimensions.valueWidth}
-            height={nodeDimensions.valueWidth}
+            width={valueWidth}
+            height={valueWidth}
             align={"center"}
             verticalAlign={"middle"}
             _useStrictMode

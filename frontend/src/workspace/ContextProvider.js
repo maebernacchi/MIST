@@ -5,6 +5,7 @@ import {FontGlobals} from './globals-fonts';
 import {FunBarDimensions} from './globals-funbar-dimensions';
 import {PopupContextProvider} from './globals-popup_canvas-dimensions';
 import {MenuContextProvider} from './globals-menu-dimensions';
+import {NodeContextProvider} from './globals-nodes-dimensions';
 
 function ProviderComposer({ contexts, children }) {
   return contexts.reduceRight(
@@ -24,7 +25,8 @@ function ContextProvider(props) {
       <FontGlobals {...props}/>,
       <FunBarDimensions {...props}/>,
       <PopupContextProvider {...props}/>,
-      <MenuContextProvider {...props}/>
+      <MenuContextProvider {...props}/>,
+      <NodeContextProvider {...props}/>
     ]}
     >
       {props.children}

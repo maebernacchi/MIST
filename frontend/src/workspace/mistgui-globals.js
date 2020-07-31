@@ -34,13 +34,13 @@ const globalScale = width / 900; // for elements that are more difficult to scal
 const funNames = [
   "add",
   "multiply",
+  "average",
+  "wrapsum",
   "square",
   "negate",
   "sine",
   "cosine",
   "absolute",
-  "average",
-  "wrapsum",
   "sign",
   "mistif",
   "rgb"

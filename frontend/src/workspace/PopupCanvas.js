@@ -3,21 +3,23 @@ import Portal from "./Portal";
 import { Rect, Group, Text } from "react-konva";
 import { Link } from "react-router-dom";
 import gui from "./mistgui-globals.js";
-import { width, height } from "./globals.js";
+import { globalContext } from "./global-context";
 import {popupContext} from "./globals-popup_canvas-dimensions";
 import MISTImage from "./MISTImageCreate";
 import "./../design/styleSheets/FunBar.css";
 
 function PopupCanvas(props) {
 
+  const width = useContext(globalContext).width;
+  const height = useContext(globalContext).height;
   const popupDimensions = useContext(popupContext);
   const [imageName, setImageName] = useState("");
 
   return (
     <>
       {console.log("popup canvas "+props.x+" "+props.y)}
-      <Background {...props} />
       <Portal>
+        <Background {...props} />
         <PortalTextBox {...props} setImageName={setImageName} />
         <PortalImage {...props} />
         <PortalFunction {...props} />
@@ -29,23 +31,31 @@ function PopupCanvas(props) {
 
 function Background(props) {
   return (
-    <Group x={props.x} y={props.y}>
-      <Rect
-        width={width}
-        height={height}
-        fill={"black"}
-        opacity={0.7}
+    <div>
+      <div
+        style={{
+          position: 'absolute',
+          top: props.top,
+          left: props.left,
+          width: width,
+          height: height,
+          backgroundColor: 'black',
+          opacity: 0.8,
+        }}
       />
-      <Rect
-        x={popupDimensions.canvasX}
-        y={popupDimensions.canvasY}
-        width={popupDimensions.canvasWidth}
-        height={popupDimensions.canvasHeight}
-        fill={"white"}
-        cornerRadius={30}
-        opacity={0.8}
+      <div
+        style={{
+          position: 'absolute',
+          top: props.top + popupDimensions.canvasY,
+          left: props.left + popupDimensions.canvasX,
+          width: popupDimensions.canvasWidth,
+          height: popupDimensions.canvasHeight,
+          backgroundColor: 'white',
+          opacity: '0.7',
+          borderRadius: 30,
+        }}
       />
-    </Group>
+    </div>
   );
 }
 

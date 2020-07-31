@@ -22,6 +22,8 @@ function FunBar(props) {
 
   return (
     <Group y={funbarDimensions.funbarY}>
+      {/* <Rect width={50} height={50} fill={'pink'}/>
+      <Text y={100} fill={'blue'} text={funbarDimensions.funbarY}/> */}
       <BarBase {...props} />
       <FunctionButton {...props} />
       <ImageButton {...props} />
@@ -175,9 +177,6 @@ function FunBar(props) {
             setImageButtonHovered(false);
           }}
         />
-        <Rect x={10} width={100} height={100} fill={'red'} onClick={() => {
-          console.log("imageButtonClicked: "+imageButtonClicked);
-        }}/>
         {imageButtonClicked && (
           <Group>
           <PopupCanvas

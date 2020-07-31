@@ -30,7 +30,7 @@ import ValGroup from "./MakeValue";
 import { globalContext } from "./global-context.js";
 import { menuContext } from "./globals-menu-dimensions";
 import { fontContext } from "./globals-fonts";
-import {  animated, useSpring } from "react-spring";
+import { animated, useSpring } from "react-spring";
 
 // +----------------------------+
 // | All dependent files        |
@@ -56,11 +56,12 @@ function Menu(props) {
   // +--------+
   // | States |
   // +--------+--------------------------------------------------------
-
+  const element = document.getElementById('workspace');
   const formStyle = useSpring({
     from: {
       position: "absolute",
-      top: props.top + 2 * menuDimensions.lowerMenuHeight,
+      top: props.top +
+      (window.pageYOffset || document.documentElement.scrollTop) + menuDimensions.lowerMenuHeight,
       left: isValueMenuOpen
         ? 2 * global.width + props.left
         : isFunctionMenuOpen
@@ -71,7 +72,8 @@ function Menu(props) {
     },
     to: {
       position: "absolute",
-      top: props.top + 2 * menuDimensions.lowerMenuHeight,
+      top: props.top +
+      (window.pageYOffset || document.documentElement.scrollTop) + menuDimensions.lowerMenuHeight,
       left: isValueMenuOpen
         ? 2 * global.width + props.left
         : isFunctionMenuOpen
@@ -101,46 +103,42 @@ function Menu(props) {
       <Rect
         y={menuDimensions.lowerMenuHeight}
         width={global.width * 4}
-        height={menuDimensions.totalMenuHeight}
+        height={menuDimensions.upperMenuHeight}
         fill={props.bgColor}
         shadowBlur={5}
       />
-      {isCustomMenuOpen && (
-        <Portal>
-          <animated.form
-            id="form"
-            style={formStyle}
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              e.nativeEvent.stopImmediatePropagation();
-              try {
-                props.createLayout(MIST.parse(formValue, ""));
-              } catch (err) {
-                //document.getElementById("input").style.borderColor = "red";
-                console.log("invalid function");
-              }
-              return false;
+      <Portal>
+        <animated.form
+          id="form"
+          style={formStyle}
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.nativeEvent.stopImmediatePropagation();
+            try {
+              props.createLayout(MIST.parse(formValue, ""));
+            } catch (err) {
+              //document.getElementById("input").style.borderColor = "red";
+              console.log("invalid function");
+            }
+            return false;
+          }}
+        >
+          <input
+            id={"input"}
+            style={{
+              width: global.width,
+              height: menuDimensions.upperMenuHeight,
             }}
-          >
-            <input
-              id={"input"}
-              style={{
-                width: global.width * 0.9,
-                height: menuDimensions.totalMenuHeight / 2,
-                alignSelf: "center",
-                alignContent: "center",
-              }}
-              id="textbox"
-              type="text"
-              placeholder={formValue}
-              onChange={(e) => {
-                setFormValue(e.target.value);
-              }}
-            />
-          </animated.form>
-        </Portal>
-      )}
+            id="textbox"
+            type="text"
+            placeholder={formValue}
+            onChange={(e) => {
+              setFormValue(e.target.value);
+            }}
+          />
+        </animated.form>
+      </Portal>
       {[
         {
           text: "VALUE",

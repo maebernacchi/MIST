@@ -1,71 +1,77 @@
-import { width, functionWidth, valueWidth } from "./globals.js";
+//import { width, functionWidth, valueWidth } from "./globals.js";
 
-// +----------------+------------------------------------------------
-// | Function Nodes |
-// +----------------+
+import React, { createContext } from "react";
 
-const functionTrashX = functionWidth * 4 / 5;
+export const nodeContext = createContext();
 
-const functionTrashY = - functionWidth * 1 / 20;
+export function NodeContextProvider(props) {
+  // +----------------+------------------------------------------------
+  // | Function Nodes |
+  // +----------------+
 
-// Horizontal offset of an outlet
-const outletXOffset = functionWidth / 20;
+  const functionTrashX = (props.functionWidth * 4) / 5;
 
-// Vertical space between outlets
-const outletYOffset = functionWidth / 4;
+  const functionTrashY = (-props.functionWidth * 1) / 20;
 
-// Offset of the first outlet in relation to a node group
-const outletStartY = (functionWidth - 2 * outletYOffset) / 2;
+  // Horizontal offset of an outlet
+  const outletXOffset = props.functionWidth / 20;
 
-// Offset of the image render box in relation to the function group (Konva <Group/>).
-const functionImageBoxOffset = functionWidth * 6 / 7;
+  // Vertical space between outlets
+  const outletYOffset = props.functionWidth / 4;
 
-// +-------------+---------------------------------------------------
-// | Value Nodes |
-// +-------------+
+  // Offset of the first outlet in relation to a node group
+  const outletStartY = (props.functionWidth - 2 * outletYOffset) / 2;
 
-const valueOffset = valueWidth / 2;
+  // Offset of the image render box in relation to the function group (Konva <Group/>).
+  const functionImageBoxOffset = (props.functionWidth * 6) / 7;
 
-const valueSideLength = valueOffset * 1.414; // 1.414 === √2
+  // +-------------+---------------------------------------------------
+  // | Value Nodes |
+  // +-------------+
 
-const valueTrashX = valueWidth * 1 / 6;
+  const valueOffset = props.valueWidth / 2;
 
-const valueTrashY = valueWidth * 1 / 7;
+  const valueSideLength = valueOffset * 1.414; // 1.414 === √2
 
-// Offset of the image render box in relation to the value group.
-const valueImageBoxOffset = valueWidth * 2 / 3;
+  const valueTrashX = (props.valueWidth * 1) / 6;
 
-// +-----------+-----------------------------------------------------
-// | All Nodes |
-// +-----------+
+  const valueTrashY = (props.valueWidth * 1) / 7;
 
-// side length of the image render box when not expanded
-const imageBoxSideLength = width / 80;
+  // Offset of the image render box in relation to the value group.
+  const valueImageBoxOffset = (props.valueWidth * 2) / 3;
 
-// side length of the image render box when expanded
-const renderSideLength = width / 18;
+  // +-----------+-----------------------------------------------------
+  // | All Nodes |
+  // +-----------+
 
-// +---------+-------------------------------------------------------
-// | Exports |
-// +---------+
+  // side length of the image render box when not expanded
+  const imageBoxSideLength = props.width / 80;
 
-export default {
-  // function nodes
-  functionWidth,
-  outletXOffset,
-  outletYOffset,
-  outletStartY,
-  functionTrashX,
-  functionTrashY,
-  functionImageBoxOffset,
-  // value nodes
-  valueSideLength,
-  valueOffset,
-  valueWidth,
-  valueTrashX,
-  valueTrashY,
-  valueImageBoxOffset,
-  // all nodes
-  imageBoxSideLength,
-  renderSideLength,
-};
+  // side length of the image render box when expanded
+  const renderSideLength = props.width / 18;
+
+  return (
+    <nodeContext.Provider
+      value={{
+        // function nodes
+        outletXOffset: outletXOffset,
+        outletYOffset: outletYOffset,
+        outletStartY: outletStartY,
+        functionTrashX: functionTrashX,
+        functionTrashY: functionTrashY,
+        functionImageBoxOffset: functionImageBoxOffset,
+        // value nodes
+        valueSideLength: valueSideLength,
+        valueOffset: valueOffset,
+        valueTrashX: valueTrashX,
+        valueTrashY: valueTrashY,
+        valueImageBoxOffset: valueImageBoxOffset,
+        // all nodes
+        imageBoxSideLength: imageBoxSideLength,
+        renderSideLength: renderSideLength,
+      }}
+    >
+      {props.children}
+    </nodeContext.Provider>
+  );
+}

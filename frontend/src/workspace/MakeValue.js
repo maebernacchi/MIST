@@ -51,7 +51,7 @@ import { Group } from "react-konva";
 import Konva from "konva";
 import gui from "./mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
-import nodeDimensions from "./globals-nodes-dimensions.js";
+import { nodeContext } from "./globals-nodes-dimensions.js";
 import { globalContext } from "./global-context.js";
 
 // +----------------------------+
@@ -66,6 +66,7 @@ function ValGroup(props) {
 
   const global = useContext(globalContext);
   const valName = props.valName;
+  const nodeDimensions = useContext(nodeContext);
 
   return (
     <Group
@@ -102,14 +103,14 @@ function ValGroup(props) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > global.width - nodeDimensions.valueWidth) {
-          pos.x = global.width - nodeDimensions.valueWidth;
+        if (pos.x > global.width - global.valueWidth) {
+          pos.x = global.width - global.valueWidth;
         }
         if (pos.y < 0) {
           pos.y = 0;
         }
-        if (pos.y > global.height - global.funBarHeight - nodeDimensions.valueWidth) {
-          pos.y = global.height - global.funBarHeight - nodeDimensions.valueWidth;
+        if (pos.y > global.height - global.funBarHeight - global.valueWidth) {
+          pos.y = global.height - global.funBarHeight - global.valueWidth;
         }
         return pos;
       }}
@@ -160,8 +161,8 @@ function ValGroup(props) {
             fontSize={gui.nodeFontSize}
             fill={"black"}
             y={0}
-            width={nodeDimensions.valueWidth}
-            height={nodeDimensions.valueWidth}
+            width={global.valueWidth}
+            height={global.valueWidth}
             align={"center"}
             verticalAlign={"middle"}
           />

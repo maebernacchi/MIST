@@ -10,7 +10,6 @@ export function GlobalContextProvider(props) {
       value={{
           width: props.width,
           height: props.height,
-          height: props.height,
           menuHeight: props.menuHeight,
           funBarHeight: props.funBarHeight,
           functionWidth: props.functionWidth,

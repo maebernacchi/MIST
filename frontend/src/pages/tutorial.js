@@ -118,28 +118,30 @@ import WorkSpace from "../workspace";
 //Tutorial Header
 function Tutorial() {
   return (
-    <Container fluid 
-               style={{
-                 marginTop: "2vh",
-                 marginBottom: "0", 
-                 paddingBottom: "7.5rem"
-                }}>
-    <Row
+    <Container
+      fluid
       style={{
-        marginLeft: "1em",
-        marginRight: "1em",
-        alignItems: "flex-start",
+        marginTop: "2vh",
+        marginBottom: "0",
+        paddingBottom: "7.5rem",
       }}
     >
-      <Col xs="3" style={{ position: "sticky", top: "2rem" }}>
-        {/* Table of Contents */}
-        <TableContents />
-      </Col>
-      <Col xs="9">
-        {/* Tutorials */}
-        <Tutorials />
-      </Col>
-    </Row>
+      <Row
+        style={{
+          marginLeft: "1em",
+          marginRight: "1em",
+          alignItems: "flex-start",
+        }}
+      >
+        <Col xs="3" style={{ position: "sticky", top: "2rem" }}>
+          {/* Table of Contents */}
+          <TableContents />
+        </Col>
+        <Col xs="9">
+          {/* Tutorials */}
+          <Tutorials />
+        </Col>
+      </Row>
     </Container>
   );
 }
@@ -153,9 +155,7 @@ function TableContents() {
     <Card>
       {/* Title -- Table of Contents */}
       <Card.Header style={{ marginTop: "2vh" }}>
-        <h3 style={{fontSize: "170%"}}>
-          Table of Contents 
-        </h3>
+        <h3 style={{ fontSize: "170%" }}>Table of Contents</h3>
       </Card.Header>
       {/* All the sections and subsections */}
       <Accordion>
@@ -258,7 +258,10 @@ function Tutorials() {
                           <SubsectionButton id={subsection.id} type="text" />
                           <SubsectionButton id={subsection.id} type="video" />
                           <SubsectionButton id={subsection.id} type="final" />
-                          <SubsectionButton id={subsection.id} type="challenges"/>
+                          <SubsectionButton
+                            id={subsection.id}
+                            type="challenges"
+                          />
                         </Row>
                       </Col>
 
@@ -683,7 +686,14 @@ const sections = [
               get to by clicking "create" on the top left of the page on the
               menu bar.
               <br />
-              <WorkSpace />
+              <WorkSpace
+                width={700}
+                height={500}
+                menuHeight={50}
+                funBarHeight={30}
+                functionWidth={10}
+                valueWidth={10}
+              />
               On the create page, you can make your own images using the
               workspace on it.
               <br />
