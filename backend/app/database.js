@@ -722,20 +722,12 @@ module.exports.getws = async (userid) => (
  * name wsname. We assume that userid corresponds to an existing and active
  * user in the database
  * 
- * Let's write it more elegantly to use just a mongodb query
  */
 module.exports.wsexists = async (userid, wsname) => (
-    User.findOne({_id: userid})
+    User.findOne({ _id: userid, 'workspaces.name': wsname })
+        .countDocuments()
         .exec()
-        .then(user => {
-            let match = false;
-            user.workspaces.forEach(ws => {
-                if (ws.name === wsname)
-                    match = true;
-                    return
-            })
-            return match;
-        })
+        .then(count => count)
 )
 
 // +--------------+-------------------------------------------------
