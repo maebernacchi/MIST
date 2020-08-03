@@ -781,7 +781,6 @@ class WorkspaceComponent extends Component {
    * Pre: User is authenticated and user does not already have a workspace by the given name
    */
   _saveWorkspace = (name) => {
-    console.log(name)
     const workspace = {
       name: name,
       data: {
@@ -838,8 +837,26 @@ class WorkspaceComponent extends Component {
   /**
    * Load a workspace from the server
    */
-  loadWorkspace = () => {
+  getWorkspaces = () => {
+    fetch('/api?action=getws')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success)
+          console.log(data.workspaces);
+        else
+          alert(data.message);
+      })
+      .catch(error => console.log(error))
+  }
 
+  /**
+   * Load a workspace from the server
+   */
+  loadWorkspace = (workspaceToLoad) => {
+    this.setState({
+      nodes: workspaceToLoad.data.nodes,
+      lines: workspaceToLoad.data.load
+    })
   }
 
   // +------------------------+
@@ -953,6 +970,9 @@ class WorkspaceComponent extends Component {
           backgroundColor: colors.workspaceBackground[this.state.theme]
         }}
       >
+        <div onClick={this.getWorkspaces}>
+          testing get userworkspaces
+        </div>
         <Stage
           width={width}
           height={height}

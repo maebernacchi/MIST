@@ -156,12 +156,39 @@ handlers.wsexists = async function (info, req, res) {
   else {
     try {
       const exists = await database.wsexists(req.user._id, info.name);
-      res.json({ exists: exists, success: true})
+      res.json({ exists: exists, success: true })
     } catch (error) {
       res.json('Database query failed for unknown reason')
     }
   } // else
 };
+
+/**
+ * Get workspaces
+ *  info.action: getws
+ *  info. 
+ */
+handlers.getws = async function (info, req, res) {
+  try {
+    // check if user is authenticated
+    if (!req.isAuthenticated())
+      throw ('You have to be logged in!')
+
+    // retrieve the workspaces corresponding to a user
+    const workspaces = await database.getws(req.user._id);
+    // send the response containing the workspaces
+    res.json({
+      success: true,
+      workspaces: workspaces,
+    })
+
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error,
+    })
+  }
+}
 
 /**
 * Save a workspace.

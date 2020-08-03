@@ -707,18 +707,36 @@ module.exports.savews = (userId, workspace, res) => {
 }
 
 /**
+ * Retrieves the workspaces corresponding to userid
+ * We assume that userid corresponds to a user existing in the database
+ */
+module.exports.getws = async (userid) => (
+    User.findById(userid)
+        .select('workspaces')
+        .exec()
+        .then(user => user.workspaces)
+)
+
+/**
  * Checks if the user corresponding to userid has a workspace by the 
  * name wsname. We assume that userid corresponds to an existing and active
  * user in the database
+ * 
+ * Let's write it more elegantly to use just a mongodb query
  */
-module.exports.wsexists = async (userid, wsname) => {
-    User.findById(userid)
-        .where({ "workspaces": { name: wsname } })
-        .countDocuments()
+module.exports.wsexists = async (userid, wsname) => (
+    User.findOne({_id: userid})
         .exec()
-        .then(count => count)
-        .catch(err => { throw err })
-}
+        .then(user => {
+            let match = false;
+            user.workspaces.forEach(ws => {
+                if (ws.name === wsname)
+                    match = true;
+                    return
+            })
+            return match;
+        })
+)
 
 // +--------------+-------------------------------------------------
 // |    Expert    |
