@@ -784,8 +784,7 @@ class WorkspaceComponent extends Component {
     const workspace = {
       name: name,
       data: {
-        nodes: this.state.nodes,
-        lines: this.state.nodes,
+        ...this.state
       },
     }
     fetch('api/', {
@@ -827,7 +826,7 @@ class WorkspaceComponent extends Component {
         alert('You already have a workspace by this name. Please confirm before replacing previous workspace')
       } else {
         // immediately save to account
-        this._saveWorkspace('hello')
+        this._saveWorkspace('a')
       }
     } catch (error) {
       alert('Failed to save due to Error: ' + error)
@@ -835,18 +834,22 @@ class WorkspaceComponent extends Component {
   }
 
   /**
-   * Load a workspace from the server
+   * Retrieve a user's workspaces from the server
    */
-  getWorkspaces = () => {
-    fetch('/api?action=getws')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success)
-          console.log(data.workspaces);
-        else
-          alert(data.message);
-      })
-      .catch(error => console.log(error))
+  getWorkspaces = async () => {
+    try {
+      const workspaces = await fetch('/api?action=getws')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success)
+            return data.workspaces;
+          else
+            throw (data.message);
+        });
+      return workspaces;
+    } catch (error) {
+      alert(error);
+    }
   }
 
   /**
@@ -854,8 +857,7 @@ class WorkspaceComponent extends Component {
    */
   loadWorkspace = (workspaceToLoad) => {
     this.setState({
-      nodes: workspaceToLoad.data.nodes,
-      lines: workspaceToLoad.data.load
+      ...workspaceToLoad
     })
   }
 
@@ -970,9 +972,6 @@ class WorkspaceComponent extends Component {
           backgroundColor: colors.workspaceBackground[this.state.theme]
         }}
       >
-        <div onClick={this.getWorkspaces}>
-          testing get userworkspaces
-        </div>
         <Stage
           width={width}
           height={height}

@@ -669,42 +669,23 @@ module.exports.getUserIdByUsername = (username, callback) => {
 // +-----------+-------------------------------------------------
 // | Workspace |
 // +-----------+
-module.exports.savews = (userId, workspace, res) => {
-    var bulk = User.collection.initializeOrderedBulkOp();
-
-    bulk.find({ "_id": mongoose.Types.ObjectId(userId), "workspaces.name": workspace.name }).updateOne({
-        "$set": { "workspace.$.data": workspace.data }
-    })
-
-    bulk.find({ "_id": mongoose.Types.ObjectId(userId), "workspaces.name": { "$ne": workspace.name } }).updateOne({
-        "$push": { "workspaces": new Workspace(workspace) }
-    });
-    bulk
-        .execute((error, result) => {
-            if (error) {
-                res.status(400).send({
-                    success: false,
-                    message: 'Error failed to save workspace because of Error: ' + error,
-                })
-            } else {
-                if (result.nMatched === 0) {
-                    // chose nMatched because somehow Mongo was choosing
-                    // to not modify a document and array if the object inserted
-                    // is not different from what was already in the array.
-                    // so we assume that when we have a match the update
-                    // worked successfully
-                    res.json({
-                        success: false,
-                        message: 'Error: Unknown',
-                    })
-                } else {
-                    res.json({
-                        success: true,
-                    })
-                }
+module.exports.savews = (userId, workspace) => (
+    User.bulkWrite([
+        {
+            updateOne: {
+                filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": workspace.name },
+                update: { "workspace.$.data": workspace.data }
             }
-        })
-}
+        },
+        {
+            updateOne: {
+                filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": { "$ne": workspace.name } },
+                update: { "$push": { "workspaces": new Workspace(workspace) } }
+            }
+        }
+    ], { ordered: true }
+    ).exec()
+)
 
 /**
  * Retrieves the workspaces corresponding to userid

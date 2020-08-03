@@ -246,7 +246,7 @@ function Menu(props) {
       })}
       <Group visible={true}>
         {[
-          { name: "Reset Workspace", func: () => { props.saveWorkspace('hello') } },
+          { name: "Reset Workspace", func: () => { props.saveWorkspace('a') } },
           { name: "Open Workspace", },
           { name: "Save Workspace" },
         ].map((u, i) => (

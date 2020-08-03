@@ -199,7 +199,7 @@ handlers.getws = async function (info, req, res) {
 * Precondition:
 * The user does not already own a workspace by the same name.
 */
-handlers.savews = function (info, req, res) {
+handlers.savews = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     fail(res, "Could not save workspace because you're not logged in");
   }
@@ -207,8 +207,19 @@ handlers.savews = function (info, req, res) {
     fail(res, "Could not save workspace because you didn't title it");
   }
   else {
-    const workspace = info.workspace
-    database.savews(req.user._id, workspace, res)
+    try {
+      const workspace = info.workspace
+      const bulkWriteOpResult = await database.savews(req.user._id, workspace);
+      if (bulkWriteOpResult.nMatched === 0) {
+        console.log('here')
+        throw ('Error Unknown')
+      }
+      else
+        res.json({ success: true })
+    } catch (error) {
+      res.json({ success: false, message: error })
+    }
+
   }
 } // handlers.savews
 
