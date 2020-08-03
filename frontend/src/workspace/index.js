@@ -781,12 +781,14 @@ class WorkspaceComponent extends Component {
    * Pre: User is authenticated and user does not already have a workspace by the given name
    */
   _saveWorkspace = (name) => {
+    // build workspace
     const workspace = {
       name: name,
       data: {
         ...this.state
       },
     }
+    // async POST fetch request
     fetch('api/', {
       method: 'POST',
       headers: {
@@ -801,7 +803,7 @@ class WorkspaceComponent extends Component {
         else
           throw (data.message);
       })
-      .catch(err => alert('Failed to save due to Error:' + err))
+      .catch(error => { alert (error) })
   }
 
   /**
@@ -809,6 +811,7 @@ class WorkspaceComponent extends Component {
    */
   saveWorkspace = async (name) => {
     try {
+      // fetch request to see if the user already has a workspace by the same name
       const exists = await fetch('api/?action=wsexists&name=' + name)
         .then(res => res.json())
         .then(data => {
@@ -820,16 +823,17 @@ class WorkspaceComponent extends Component {
             else
               throw (data.message);
           }
-        })
+        });
+      // if exists we add an extra confirmation 
       if (exists) {
         // add a confirmation for replacement
-        alert('You already have a workspace by this name. Please confirm before replacing previous workspace')
+        throw ('You already have a workspace by this name. Please confirm before replacing previous workspace')
       } else {
         // immediately save to account
-        this._saveWorkspace('a')
+        this._saveWorkspace(name)
       }
     } catch (error) {
-      alert('Failed to save due to Error: ' + error)
+      alert(error)
     }
   }
 
