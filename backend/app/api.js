@@ -140,6 +140,52 @@ handlers.getHomeImages = function (info, req, res) {
   })
 }
 
+// +--------------------+----------------------------------------------
+// | Workspace Handlers |
+// +--------------------+
+
+/**
+ * Check if an image exists
+ *   info.action: wsexists
+ *   info.title: The title of the image
+ */
+handlers.wsexists = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    res.json("logged out");
+  }
+  else {
+    try {
+      const exists = await database.wsexists(req.user._id, info.name);
+      res.json({ exists: exists, success: true})
+    } catch (error) {
+      res.json('Database query failed for unknown reason')
+    }
+  } // else
+};
+
+/**
+* Save a workspace.
+*   action: savews
+*   name: the name of the workspace
+*   data: The information about the workspace
+*   replace: true or false [optional]
+* Precondition:
+* The user does not already own a workspace by the same name.
+*/
+handlers.savews = function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    fail(res, "Could not save workspace because you're not logged in");
+  }
+  else if (!info.workspace.name) {
+    fail(res, "Could not save workspace because you didn't title it");
+  }
+  else {
+    const workspace = info.workspace
+    database.savews(req.user._id, workspace, res)
+  }
+} // handlers.savews
+
+
 // +----------------+--------------------------------------------------
 // | Gallery        |
 // +----------------+

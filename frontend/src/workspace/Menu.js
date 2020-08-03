@@ -219,8 +219,8 @@ function Menu(props) {
                   props.addNode,
                   gui.valNames[index],
                   -menuDimensions.valueListLength +
-                    menuDimensions.valueListStartX +
-                    index * (menuDimensions.valueMargin + valueWidth),
+                  menuDimensions.valueListStartX +
+                  index * (menuDimensions.valueMargin + valueWidth),
                   gui.menuYspacing - 20,
                   isValueMenuOpen,
                   changeKey,
@@ -233,8 +233,8 @@ function Menu(props) {
                   props.addNode,
                   gui.funNames[index],
                   -menuDimensions.functionListLength +
-                    menuDimensions.functionListStartX +
-                    index * (menuDimensions.functionMargin + functionWidth),
+                  menuDimensions.functionListStartX +
+                  index * (menuDimensions.functionMargin + functionWidth),
                   gui.menuYspacing - 20,
                   isFunctionMenuOpen,
                   changeKey,
@@ -244,10 +244,10 @@ function Menu(props) {
           </Group>
         );
       })}
-      <Group visible={false}>
+      <Group visible={true}>
         {[
-          { name: "Reset Workspace", func: props.clearWorkspace },
-          { name: "Open Workspace" },
+          { name: "Reset Workspace", func: () => { props.saveWorkspace('hello') } },
+          { name: "Open Workspace", },
           { name: "Save Workspace" },
         ].map((u, i) => (
           <MakeMenuButton //Calls MakeMenuButton.js to create the three side buttons

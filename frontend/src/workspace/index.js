@@ -71,7 +71,7 @@ import {
 } from "./globals.js";
 import { MIST } from "./mist.js";
 import React, { Component } from "react";
-import { Stage, Layer, Text} from "react-konva";
+import { Stage, Layer, Text } from "react-konva";
 import ValNode from "./ValNode";
 import nodeDimensions from "./globals-nodes-dimensions.js";
 
@@ -153,7 +153,7 @@ class WorkspaceComponent extends Component {
       const name = gui.repToFun[expression.operation];
       const parentX = Math.random() * (0.8 * width);
       const parentY = gui.menuHeight +
-      Math.random() * (height - menuHeight - 2 * funBarHeight);
+        Math.random() * (height - menuHeight - 2 * funBarHeight);
       const outermost = {
         // Creating a new node
         name: name,
@@ -203,20 +203,20 @@ class WorkspaceComponent extends Component {
         ) {
           return Error(
             newNodes[sinkIndex].name +
-              " must contain between " +
-              gui.functions[newNodes[sinkIndex].name].min +
-              " and " +
-              gui.functions[newNodes[sinkIndex].name].max +
-              " parameters"
+            " must contain between " +
+            gui.functions[newNodes[sinkIndex].name].min +
+            " and " +
+            gui.functions[newNodes[sinkIndex].name].max +
+            " parameters"
           );
         }
       } else {
         if (operands.length !== gui.functions[newNodes[sinkIndex].name].min) {
           return Error(
             this.state.nodes[sinkIndex].name +
-              " must contain " +
-              gui.functions[this.state.nodes[sinkIndex].name].min +
-              " parameters"
+            " must contain " +
+            gui.functions[this.state.nodes[sinkIndex].name].min +
+            " parameters"
           );
         }
       }
@@ -227,7 +227,7 @@ class WorkspaceComponent extends Component {
         if (operands[i].class === "MIST.App") {
           const pX = parentX - 50;
           const pY = menuHeight +
-          Math.random() * (height - menuHeight - 2 * funBarHeight);
+            Math.random() * (height - menuHeight - 2 * funBarHeight);
           const sourceNode = {
             // Creating a new node
             name: gui.repToFun[operands[i].operation],
@@ -267,7 +267,7 @@ class WorkspaceComponent extends Component {
           if (
             newNodes[sinkIndex].numInputs >= newNodes[sinkIndex].numOutlets &&
             gui.functions[newNodes[sinkIndex].name].color ===
-              gui.functionMultColor
+            gui.functionMultColor
           ) {
             // Adding a new outlet once existing outlets are used
             newNodes[sinkIndex].numOutlets += 1;
@@ -319,7 +319,7 @@ class WorkspaceComponent extends Component {
           if (
             newNodes[sinkIndex].numInputs >= newNodes[sinkIndex].numOutlets &&
             gui.functions[newNodes[sinkIndex].name].color ===
-              gui.functionMultColor
+            gui.functionMultColor
           ) {
             // Adding a new outlet once existing outlets are used
             newNodes[sinkIndex].numOutlets += 1;
@@ -373,7 +373,7 @@ class WorkspaceComponent extends Component {
       activeOutlets:
         type === "fun"
           ? // e.g. if the function is 'add', this will be [false, false]
-            Array(gui.functions[name].min).fill(false)
+          Array(gui.functions[name].min).fill(false)
           : null,
       parentNodes: [],
     };
@@ -457,9 +457,9 @@ class WorkspaceComponent extends Component {
   updateLinePosition = (nodeIndex, end, x, y) => {
     console.log(
       "updateLinePosition " +
-        this.state.nodes[nodeIndex].numInputs +
-        " " +
-        this.state.nodes[nodeIndex].lineOut.length
+      this.state.nodes[nodeIndex].numInputs +
+      " " +
+      this.state.nodes[nodeIndex].lineOut.length
     );
     if (
       this.state.nodes[nodeIndex].numInputs > 0 ||
@@ -614,11 +614,11 @@ class WorkspaceComponent extends Component {
   updateHashValue = (index, value) => {
     this.state.nodes[index].renderFunction.renderFunction = value;
     const temp = [];
-    for(let i = 0; i < this.state.nodes[index].lineOut.length; i++) {
+    for (let i = 0; i < this.state.nodes[index].lineOut.length; i++) {
       temp.push(this.state.lines[this.state.nodes[index].lineOut[i]].sinkIndex)
     }
     this.setState({
-      redoFromIndices : temp
+      redoFromIndices: temp
     })
   }
 
@@ -772,6 +772,76 @@ class WorkspaceComponent extends Component {
     });
   };
 
+  // +-----------+----------------------------------------
+  // | Workspace |
+  // +-----------+
+
+  /**
+   * Save your workspace to the server
+   * Pre: User is authenticated and user does not already have a workspace by the given name
+   */
+  _saveWorkspace = (name) => {
+    console.log(name)
+    const workspace = {
+      name: name,
+      data: {
+        nodes: this.state.nodes,
+        lines: this.state.nodes,
+      },
+    }
+    fetch('api/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'savews', workspace: (workspace) })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success)
+          alert('Succesfully saved the workspace');
+        else
+          throw (data.message);
+      })
+      .catch(err => alert('Failed to save due to Error:' + err))
+  }
+
+  /**
+   * Save workspace wrapper that checks if the workspace exists in the server first
+   */
+  saveWorkspace = async (name) => {
+    try {
+      const exists = await fetch('api/?action=wsexists&name=' + name)
+        .then(res => res.json())
+        .then(data => {
+          if (data === 'logged out') {
+            throw ('You need to be logged in to save your workspace!');
+          } else {
+            if (data.success)
+              return data.exists
+            else
+              throw (data.message);
+          }
+        })
+      if (exists) {
+        // add a confirmation for replacement
+        alert('You already have a workspace by this name. Please confirm before replacing previous workspace')
+      } else {
+        // immediately save to account
+        this._saveWorkspace('hello')
+      }
+    } catch (error) {
+      alert('Failed to save due to Error: ' + error)
+    }
+  }
+
+  /**
+   * Load a workspace from the server
+   */
+  loadWorkspace = () => {
+
+  }
+
   // +------------------------+
   // | Updating the Workspace |
   // +------------------------+----------------------------------------
@@ -826,7 +896,7 @@ class WorkspaceComponent extends Component {
       this.state.newSource !== sinkIndex &&
       this.state.nodes[sinkIndex].activeOutlets[outletIndex] === false &&
       this.state.nodes[sinkIndex].numInputs <
-        gui.functions[this.state.nodes[sinkIndex].name].max
+      gui.functions[this.state.nodes[sinkIndex].name].max
     ) {
       // a line coming out of source
       this.pushLine(this.state.newSource, sinkIndex, outletIndex);
@@ -897,10 +967,10 @@ class WorkspaceComponent extends Component {
             if (this.state.mouseListenerOn) {
               this.updateMousePosition(
                 e.evt.clientX -
-                  document.getElementById("workspace").getBoundingClientRect()
-                    .x,
+                document.getElementById("workspace").getBoundingClientRect()
+                  .x,
                 e.evt.clientY -
-                  document.getElementById("workspace").getBoundingClientRect().y
+                document.getElementById("workspace").getBoundingClientRect().y
               );
             }
           }}
@@ -984,7 +1054,7 @@ class WorkspaceComponent extends Component {
                     clickHandler={this.valClicked.bind(this)}
                     dblClickHandler={this.dblClicked.bind(this)}
                     removeNode={this.removeNode.bind(this)}
-                    updateHashValue = {this.updateHashValue.bind(this)}
+                    updateHashValue={this.updateHashValue.bind(this)}
                   />
                 ))
             )}
@@ -995,6 +1065,7 @@ class WorkspaceComponent extends Component {
                 addNode={this.pushNode.bind(this)}
                 addLine={this.pushLine.bind(this)}
                 clearWorkspace={this.clearWorkspace.bind(this)}
+                saveWorkspace={this.saveWorkspace.bind(this)}
                 createLayout={this.createLayout.bind(this)}
                 bgColor={colors.menuBackground[this.state.theme]}
                 wsButtonColor={colors.workspaceButton[this.state.theme]}
@@ -1016,7 +1087,7 @@ class WorkspaceComponent extends Component {
             <FunBar
               renderFunction={
                 this.state.currentNode !== null &&
-                this.state.nodes[this.state.currentNode]
+                  this.state.nodes[this.state.currentNode]
                   ? this.state.nodes[this.state.currentNode].renderFunction
                   : { renderFunction: "", isRenderable: false }
               }
