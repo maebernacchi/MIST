@@ -888,3 +888,47 @@ module.exports.getUserExpertWS = (userId, res) => {
       res.json({ success: false, message: "Failed due to Error: " + error })
     );
 };
+
+// +-----------+-------------------------------------------------
+// | Workspace |
+// +-----------+
+module.exports.savews = (userId, workspace) => (
+  User.bulkWrite([
+      {
+          updateOne: {
+              filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": workspace.name },
+              update: { "workspaces.$.data": workspace.data }
+          }
+      },
+      {
+          updateOne: {
+              filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": { "$ne": workspace.name } },
+              update: { "$push": { "workspaces": new Workspace(workspace) } }
+          }
+      }
+  ], { ordered: true }
+  )
+)
+
+/**
+* Retrieves the workspaces corresponding to userid
+* We assume that userid corresponds to a user existing in the database
+*/
+module.exports.getws = async (userid) => (
+  User.findById(userid)
+      .select('workspaces')
+      .exec()
+      .then(user => user.workspaces)
+)
+
+/**
+* Checks if the user corresponding to userid has a workspace by the 
+* name wsname. We assume that userid corresponds to an existing and active
+* user in the database
+* 
+*/
+module.exports.wsexists = async (userid, wsname) => (
+  User.findOne({ _id: mongoose.Types.ObjectId(userid), 'workspaces.name': wsname })
+      .countDocuments()
+      .exec()
+)

@@ -803,7 +803,30 @@ class WorkspaceComponent extends Component {
         else
           throw (data.message);
       })
-      .catch(error => { alert (error) })
+      .catch(error => { alert(error) })
+  }
+
+  /**
+   * Checks if the workspace exists in the server by the same name
+   * @param {String} name 
+   */
+  checkIfWorkspaceExists = async (name) => {
+    const res = await fetch('api/?action=wsexists&name=' + name);
+    if (!res.ok)
+      throw new Error(`HTTP error! status: ${res.status}`);
+    else {
+      return await res.json()
+        .then(data => {
+          if (data === 'logged out')
+            throw new Error('You needed to be logged in!')
+          if (data.success) {
+            return data.exists;
+          }
+          else {
+            throw new Error(data.message);
+          }
+        });
+    }
   }
 
   /**
@@ -812,19 +835,8 @@ class WorkspaceComponent extends Component {
   saveWorkspace = async (name) => {
     try {
       // fetch request to see if the user already has a workspace by the same name
-      const exists = await fetch('api/?action=wsexists&name=' + name)
-        .then(res => res.json())
-        .then(data => {
-          if (data === 'logged out') {
-            throw ('You need to be logged in to save your workspace!');
-          } else {
-            if (data.success)
-              return data.exists
-            else
-              throw (data.message);
-          }
-        });
-      // if exists we add an extra confirmation 
+      const exists = await this.checkIfWorkspaceExists(name);
+      console.log('Checking for existence ' + exists)
       if (exists) {
         // add a confirmation for replacement
         throw ('You already have a workspace by this name. Please confirm before replacing previous workspace')
@@ -1088,7 +1100,6 @@ class WorkspaceComponent extends Component {
                 addNode={this.pushNode.bind(this)}
                 addLine={this.pushLine.bind(this)}
                 clearWorkspace={this.clearWorkspace.bind(this)}
-                saveWorkspace={this.saveWorkspace.bind(this)}
                 createLayout={this.createLayout.bind(this)}
                 bgColor={colors.menuBackground[this.state.theme]}
                 wsButtonColor={colors.workspaceButton[this.state.theme]}
@@ -1103,6 +1114,10 @@ class WorkspaceComponent extends Component {
                 savedTabColor={colors.menuSavedTab[this.state.theme]}
                 top={this.offsetY}
                 left={this.offsetX}
+
+
+                saveWorkspace={this.saveWorkspace.bind(this)}
+                getWorkspaces={this.getWorkspaces.bind(this)}
               />
             }
           </Layer>

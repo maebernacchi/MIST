@@ -176,6 +176,7 @@ handlers.getws = async function (info, req, res) {
 
     // retrieve the workspaces corresponding to a user
     const workspaces = await database.getws(req.user._id);
+    console.log(workspaces)
     // send the response containing the workspaces
     res.json({
       success: true,
@@ -211,7 +212,6 @@ handlers.savews = async function (info, req, res) {
       const workspace = info.workspace
       const bulkWriteOpResult = await database.savews(req.user._id, workspace);
       if (bulkWriteOpResult.nMatched === 0) {
-        console.log('here')
         throw ('Error Unknown')
       }
       else
