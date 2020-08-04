@@ -853,18 +853,21 @@ class WorkspaceComponent extends Component {
    * Retrieve a user's workspaces from the server
    */
   getWorkspaces = async () => {
-    try {
-      const workspaces = await fetch('/api?action=getws')
-        .then(res => res.json())
+    const res = await fetch('api/?action=getws');
+    if (!res.ok)
+      throw new Error(`HTTP error! status: ${res.status}`);
+    else {
+      return await res.json()
         .then(data => {
-          if (data.success)
+          if (data === 'logged out')
+            throw new Error('You needed to be logged in!')
+          if (data.success) {
             return data.workspaces;
-          else
-            throw (data.message);
+          }
+          else {
+            throw new Error(data.message);
+          }
         });
-      return workspaces;
-    } catch (error) {
-      alert(error);
     }
   }
 
@@ -1118,6 +1121,7 @@ class WorkspaceComponent extends Component {
 
                 saveWorkspace={this.saveWorkspace.bind(this)}
                 getWorkspaces={this.getWorkspaces.bind(this)}
+                loadWorkspace={this.loadWorkspace.bind(this)}
               />
             }
           </Layer>
