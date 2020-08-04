@@ -61,13 +61,13 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { Rect, Group, Text, Shape, Image } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
-import gui from "./mistgui-globals.js";
+import gui from "../globals/mistgui-globals.js";
 import MISTImage from "./MISTImage";
 import useImage from "use-image";
-import {nodeContext} from "./globals-nodes-dimensions.js";
-import {globalContext} from './global-context';
-import globals from "./globals.js";
-import {fontContext} from './globals-fonts';
+import {nodeContext} from "../globals/globals-nodes-dimensions.js";
+import {globalContext} from '../globals/global-context';
+import globals from "../globals/globals.js";
+import {fontContext} from '../globals/globals-fonts';
 
 // +----------------------------+
 // | All dependent files        |

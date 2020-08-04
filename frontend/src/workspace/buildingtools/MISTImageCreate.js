@@ -1,7 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
-import Konva from "konva";
-import gui from "./mistgui-globals.js";
-import MIST from "./mistui.js";
+import MIST from "../mist/mistui.js";
 
 /* MISTImage props
  *   resolution: the resolution used to render the image (may be smaller than

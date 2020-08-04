@@ -21,14 +21,14 @@
 
 import React, { useState, useRef, useContext } from "react";
 import { Rect, Group, Text, Shape } from "react-konva";
-import gui from "./mistgui-globals";
-import { MIST } from "./mist.js";
-import Portal from "./Portal";
+import gui from "../globals/mistgui-globals";
+import { MIST } from "../mist/mist.js";
+import Portal from "../buildingtools/Portal";
 import MakeMenuButton from "./MakeMenuButton";
 import FuncGroup from "./MakeFunction1";
 import ValGroup from "./MakeValue1";
-import { globalContext } from "./global-context.js";
-import { menuContext1 } from "./globals-menu-dimensions1";
+import { globalContext } from "../globals/global-context.js";
+import { menuContext1 } from "../globals/globals-menu-dimensions1";
 
 // +----------------------------+
 // | All dependent files        |

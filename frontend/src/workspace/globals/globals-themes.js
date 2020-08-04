@@ -71,15 +71,15 @@ const menuCustomTab = {
 }
 
 const menuSavedTab = {
-  classic: '	#bfe996', //'#cffcdb',
-  dusk: '	#bfe996', // '#1b4f2a',
-  dark: '	#bfe996' // '#1b4f2a'
+  classic: '#80d22d', //'#cffcdb',
+  dusk: '	#80d22d', // '#1b4f2a',
+  dark: '	#80d22d' // '#1b4f2a'
 }
 
 const menuSettingsTab = {
-  classic: '#8022c3',
-  dusk: '#8022c3',
-  dark: '#8022c3'
+  classic: '#490679',
+  dusk: '#490679',
+  dark: '#490679'
 }
 
 // +---------------+-------------------------------------------------

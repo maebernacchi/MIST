@@ -3,8 +3,8 @@ import React, { createContext } from "react";
 export const popupContext = createContext();
 
 export function PopupContextProvider(props) {
-  const width = props.width;
-  const height = props.height;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
   const canvasWidth = width * 0.35;
   const canvasX = (width - canvasWidth) / 2;
   const canvasY = canvasWidth * 0.07;
@@ -26,10 +26,8 @@ export function PopupContextProvider(props) {
   const rfTextHeight = canvasWidth * 0.08;
 
   const buttonMargin = canvasWidth / 70;
-  const buttonOffset = (canvasWidth - 2 * canvasMargin) / 4;
-  const buttonX = canvasX + canvasMargin; // divide by the number of buttons
-  const buttonY = rfTextY + rfTextHeight;
-  const buttonWidth = buttonOffset - 2 * buttonMargin;
+  const buttonY = rfTextY + rfTextHeight + canvasMargin;
+  const buttonWidth = (imageWidth - 3 * buttonMargin) / 4;
   const buttonHeight = buttonWidth * 0.28;
 
   const canvasHeight = buttonY + buttonHeight + canvasMargin;
@@ -51,10 +49,8 @@ export function PopupContextProvider(props) {
         imageWidth: imageWidth,
         imageHeight: imageHeight,
         buttonMargin: buttonMargin,
-        buttonOffset: buttonOffset,
-        buttonX: buttonX,
-        buttonY: buttonY,
         buttonWidth: buttonWidth,
+        buttonY: buttonY,
         buttonHeight: buttonHeight,
         rfTextX: rfTextX,
         rfTextY: rfTextY,

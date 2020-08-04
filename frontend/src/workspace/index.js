@@ -56,19 +56,22 @@
 // | All dependent files        |
 // +----------------------------+
 
-import FunBar from "./FunBar";
-import FunNode from "./FunNode";
-import colors from "./globals-themes";
+import FunBar from "./funbar/FunBar";
+import FunNode from "./buildingtools/FunNode";
+import colors from "./globals/globals-themes";
 import { Container } from "react-bootstrap";
-import DrawArrow from "./line";
-import { ContextProvider } from "./ContextProvider";
-import Menu1 from './Menu1';
-import Menu2 from "./Menu2";
-import gui from "./mistgui-globals";
-import { MIST } from "./mist.js";
-import React, { useContext, Component } from "react";
+import DrawArrow from "./buildingtools/line";
+import { ContextProvider } from "./globals/ContextProvider";
+import Menu1 from "./menu/Menu1";
+import Menu2 from "./menu/Menu2";
+import gui from "./globals/mistgui-globals";
+import { MIST } from "./mist/mist.js";
+import React, { Component } from "react";
 import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
-import ValNode from "./ValNode";
+import ValNode from "./buildingtools/ValNode";
+import PopupCanvas from "./funbar/PopupCanvas";
+import { animated, useSpring } from "react-spring";
+import Custom from "./menu/Custom";
 
 // +----------------------------+
 // | All dependent files        |
@@ -108,6 +111,14 @@ class WorkspaceComponent extends Component {
       pos2: { x: 0, y: 100 },
       offsetX: 0,
       offsetY: props.offset,
+      isPopupCanvasOpen: false,
+      menuTabs: {
+        isValueMenuOpen: false,
+        isFunctionMenuOpen: true,
+        isCustomMenuOpen: false,
+        isSavedMenuOpen: false,
+        isSettingsMenuOpen: false,
+      },
     };
     // +--------+
     // | States |
@@ -191,6 +202,8 @@ class WorkspaceComponent extends Component {
     }
 
     function evalFrom(sinkIndex, operands, parentX, parentY) {
+      console.log("newNodes[sinkIndex].name: " + newNodes[sinkIndex].name);
+      console.log("operands.length: " + operands.length);
       if (
         gui.functions[newNodes[sinkIndex].name].color === gui.functionMultColor
       ) {
@@ -867,15 +880,21 @@ class WorkspaceComponent extends Component {
         <div
           id="workspace"
           style={{
-            position: 'relative',
+            position: "relative",
             width: this.width,
             height: this.height,
             backgroundColor: colors.workspaceBackground[this.state.theme],
           }}
         >
+
           <Stage
             ref={(ref) => {
               this.stageRef = ref;
+            }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0
             }}
             width={this.width}
             height={this.height}
@@ -1053,6 +1072,23 @@ class WorkspaceComponent extends Component {
                   top={this.state.offsetY}
                   left={this.state.offsetX}
                   theme={this.state.theme}
+                  setMenuTabs={(
+                    isValueMenuOpen,
+                    isFunctionMenuOpen,
+                    isCustomMenuOpen,
+                    isSavedMenuOpen,
+                    isSettingsMenuOpen
+                  ) => {
+                    this.setState({
+                      menuTabs: {
+                        isValueMenuOpen: isValueMenuOpen,
+                        isFunctionMenuOpen: isFunctionMenuOpen,
+                        isCustomMenuOpen: isCustomMenuOpen,
+                        isSavedMenuOpen: isSavedMenuOpen,
+                        isSettingsMenuOpen: isSettingsMenuOpen,
+                      },
+                    });
+                  }}
                 />
               </ContextProvider>
             </Layer>
@@ -1088,6 +1124,12 @@ class WorkspaceComponent extends Component {
                   }
                   top={this.state.offsetY}
                   left={this.state.offsetX}
+                  openPopupCanvas={() => {
+                    this.setState({
+                      isPopupCanvasOpen: true,
+                    });
+                    console.log("opened popup canvas");
+                  }}
                 />
               </ContextProvider>
               <Text
@@ -1108,6 +1150,51 @@ class WorkspaceComponent extends Component {
               />
             </Layer>
           </Stage>
+          
+          <ContextProvider
+            width={this.width}
+            height={this.height}
+            menuHeight={this.menuHeight}
+            funBarHeight={this.funBarHeight}
+            functionWidth={this.functionWidth}
+            valueWidth={this.valueWidth}
+          >
+            <PopupCanvas
+              x={0}
+              y={0}
+              top={0}
+              left={0}
+              show={this.state.isPopupCanvasOpen}
+              renderFunction={{ renderFunction: "sqr(x)", isRenderable: true }}
+              closePortal={() => {
+                this.setState({ isPopupCanvasOpen: false });
+              }}
+              setImageName={(name) => {
+                // not implemented
+              }}
+            />
+          </ContextProvider>
+
+          <ContextProvider
+            width={this.width}
+            height={this.height}
+            menuHeight={this.menuHeight}
+            funBarHeight={this.funBarHeight}
+            functionWidth={this.functionWidth}
+            valueWidth={this.valueWidth}
+          >
+            {/* <div style={{ position: "absolute" }}>
+              <form style={{
+                position: 'absolute',
+                top: 30,
+                left: 30
+              }}>
+                <input />
+              </form>
+            </div> */}
+            <Custom menuTabs={this.state.menuTabs}/>
+          </ContextProvider>
+
         </div>
       </Container>
     );

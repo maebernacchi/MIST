@@ -1,12 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Rect, Group, Text } from "react-konva";
-import gui from "./mistgui-globals.js";
-import "../design/styleSheets/FunBar.css";
+import "../../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import PopupCanvas from "./PopupCanvas";
-import { funBarContext } from "./globals-funbar-dimensions";
-import { globalContext } from "./global-context";
-import { fontContext } from "./globals-fonts";
+import { funBarContext } from "../globals/globals-funbar-dimensions";
+import { globalContext } from "../globals/global-context";
+import { fontContext } from "../globals/globals-fonts";
 
 function FunBar(props) {
   const width = useContext(globalContext).width;
@@ -51,6 +50,7 @@ function FunBar(props) {
           shadowBlur={5}
           shadowOffset={{ x: 2, y: 3 }}
           shadowOpacity={0.5}
+          opacity={renderFunction.isRenderable ? 1 : 0.95}
         />
         <Text // Render function text display
           text={props.renderFunction.renderFunction}
@@ -167,8 +167,9 @@ function FunBar(props) {
           fontSize={funBarFontSize}
           onClick={() => {
             if (props.renderFunction.isRenderable) {
-              setImageButtonClicked(true);
+              //setImageButtonClicked(true);
               setImageButtonHovered(false);
+              props.openPopupCanvas();
             }
           }}
           onMouseOver={() => {
@@ -178,16 +179,6 @@ function FunBar(props) {
             setImageButtonHovered(false);
           }}
         />
-        {imageButtonClicked && (
-          <Group>
-            <PopupCanvas
-              {...props}
-              x={-funbarDimensions.imageButtonX}
-              y={-(height - funBarHeight - funbarDimensions.margin)}
-              closePortal={closePortal}
-            />
-          </Group>
-        )}
       </Group>
     );
   }

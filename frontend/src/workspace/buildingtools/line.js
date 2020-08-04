@@ -1,8 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Line, Group, Text, Image } from "react-konva";
-import gui from "./mistgui-globals";
 import useImage from "use-image";
-import { nodeContext } from "./globals-nodes-dimensions";
+import { nodeContext } from "../globals/globals-nodes-dimensions";
 
 function DrawArrow(props) {
   const [hovered, setHovered] = useState(false);

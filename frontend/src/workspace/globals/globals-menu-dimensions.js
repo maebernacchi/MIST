@@ -1,5 +1,3 @@
-import gui from "./mistgui-globals";
-
 import React, { createContext } from "react";
 
 export const menuContext = createContext();

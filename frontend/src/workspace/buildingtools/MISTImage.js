@@ -1,7 +1,5 @@
-import React, { Component, useEffect, useState } from "react";
-import Konva from "konva";
-import gui from "./mistgui-globals.js";
-import MIST from "./mistui.js";
+import React, { useEffect, useState } from "react";
+import MIST from '../mist/mistui.js';
 
 /* MISTImage props
  *   resolution: the resolution used to render the image (may be smaller than
@@ -11,6 +9,7 @@ import MIST from "./mistui.js";
  *   height: (optional, defaults to resolution) the height of the canvas
  */
 export default function MISTImage(props) {
+  
   const [canvas] = useState(React.createRef());
   const [animator, setAnimator] = useState(null);
 
@@ -49,14 +48,13 @@ export default function MISTImage(props) {
   return (
     <canvas
       className="mist-image"
-      width={props.width}
-      height={props.height}
       style={{
         position: "absolute",
         top: props.y,
         left: props.x,
         width: props.width,
         height: props.height,
+        backgroundColor: 'red'
       }}
       onMouseOut={() => {
         if (!props.automated) {

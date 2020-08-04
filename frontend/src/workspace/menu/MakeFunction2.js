@@ -29,11 +29,14 @@
     - changeKey : function; This gets called from MakeFunctions and MakeValues to change the group's
                   key to trigger a re-render (so that the node goes back to the right place
                   if it's drag-and-dropped into the menu, not the workspace) 
+
     2. React-Spring is the library used to create animations for the on hover attribute in the 
       menu bar for functions. 
+
     3. The dragBoundFunc attribute on the group helps keep the function node within the 
       boundaries of the workspace. 
   
+
 */
 // +-------+
 // | Notes |
@@ -46,10 +49,11 @@
 import React, {useContext} from "react";
 import { Group } from "react-konva";
 import Konva from "konva";
-import gui from "./mistgui-globals";
+import gui from "../globals/mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
-import {nodeContext} from "./globals-nodes-dimensions.js";
-import global, { width, height } from "./globals.js";
+import {nodeContext} from "../globals/globals-nodes-dimensions.js";
+import { globalContext } from "../globals/global-context.js";
+import {fontContext} from '../globals/globals-fonts';
 
 // +----------------------------+
 // | All dependent files        |
@@ -60,20 +64,17 @@ import global, { width, height } from "./globals.js";
 // +----------------------------------------+
 
 function FuncGroup(props) {
-
+  const global = useContext(globalContext);
   const funName = props.funName;
-  const index = props.index;
-  const x = props.x;
-  const y = props.y;
-  const vis = props.vis;
   const nodeDimensions = useContext(nodeContext);
+  const fonts = useContext(fontContext);
 
   return (
     <Group
       name={funName}
-      key={index}
-      x={x}
-      y={y}
+      key={props.index}
+      x={props.x}
+      y={props.y}
       draggable
       onDragStart={(e) => {
         e.target.setAttrs({
@@ -96,24 +97,24 @@ function FuncGroup(props) {
           props.changeKey();
           //}, 200);
         } else {
-          props.hangeKey();
+          props.changeKey();
         }
       }}
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > width - nodeDimensions.functionWidth) {
-          pos.x = width - nodeDimensions.functionWidth;
+        if (pos.x > global.width - global.functionWidth) {
+          pos.x = global.width - global.functionWidth;
         }
         if (pos.y < 0) {
           pos.y = 0;
         }
         if (
           pos.y >
-          height - global.funBarHeight - nodeDimensions.functionWidth
+          global.height - global.funBarHeight - global.functionWidth
         ) {
-          pos.y = height - global.funBarHeight - nodeDimensions.functionWidth;
+          pos.y = global.height - global.funBarHeight - global.functionWidth;
         }
         return pos;
       }}
@@ -121,20 +122,26 @@ function FuncGroup(props) {
       <Spring
         native
         from={{
-          x: vis ? 0 : -300,
-          scaleX: 1,
-          scaleY: 1,
-        }}
+          x: props.tabs.isValueMenuOpen ? global.width :
+            props.tabs.isFunctionMenuOpen ? 0 :
+            props.tabs.isCustomMenuOpen ? - global.width :
+            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+            - 3 * global.width,
+          fontSize: gui.nodeFontSize }}
         to={{
-          x: vis ? 0 : -300,
+          x: props.tabs.isValueMenuOpen ? global.width :
+            props.tabs.isFunctionMenuOpen ? 0 :
+            props.tabs.isCustomMenuOpen ? - global.width :
+            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+            - 3 * global.width,
         }}
       >
         {(props) => (
           <animated.Rect
             {...props}
             y={0}
-            width={nodeDimensions.functionWidth}
-            height={nodeDimensions.functionWidth}
+            width={global.functionWidth}
+            height={global.functionWidth}
             fill={gui.functions[funName].color}
             cornerRadius={10}
           />
@@ -142,18 +149,31 @@ function FuncGroup(props) {
       </Spring>
       <Spring
         native
-        from={{ x: vis ? 0 : -300, fontSize: gui.nodeFontSize }}
-        to={{ x: vis ? 0 : -300 }}
+        from={{
+          x: props.tabs.isValueMenuOpen ? global.width :
+            props.tabs.isFunctionMenuOpen ? 0 :
+            props.tabs.isCustomMenuOpen ? - global.width :
+            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+            - 3 * global.width,
+          fontSize: gui.nodeFontSize }}
+        to={{
+          x: props.tabs.isValueMenuOpen ? global.width :
+            props.tabs.isFunctionMenuOpen ? 0 :
+            props.tabs.isCustomMenuOpen ? - global.width :
+            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+            - 3 * global.width,
+        }}
       >
         {(props) => (
           <animated.Text
             {...props}
             text={gui.functions[funName].rep}
             fontFamily={gui.globalFont}
+            fontSize={fonts.functionFontSize}
             fill={"white"}
             y={0}
-            width={nodeDimensions.functionWidth}
-            height={nodeDimensions.functionWidth}
+            width={global.functionWidth}
+            height={global.functionWidth}
             align={"center"}
             verticalAlign={"middle"}
           />
@@ -164,5 +184,6 @@ function FuncGroup(props) {
   // +----------------------------------------+
   // | Entire Function Group                  |
   // +----------------------------------------+----------------------
-}
-export default FuncGroup;
+};
+
+export default FuncGroup

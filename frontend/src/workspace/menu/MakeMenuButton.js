@@ -21,7 +21,7 @@
 
 import React, { useState } from "react";
 import { Group, Text } from "react-konva";
-import gui from "./mistgui-globals.js";
+import gui from "../globals/mistgui-globals.js";
 import { Spring, animated } from "react-spring/renderprops-konva";
 
 // +----------------------------+
