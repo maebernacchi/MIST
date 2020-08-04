@@ -64,8 +64,8 @@ function PortalTextBox(props) {
         type={"text"}
         placeholder={"Enter Name Of Image"}
         style={{
-            width: popupDimensions.textfieldWidth,
-            height: popupDimensions.textfieldHeight,
+          width: popupDimensions.textfieldWidth,
+          height: popupDimensions.textfieldHeight,
           border: "2px solid #008CBA",
           textAlign: "center",
         }}
@@ -104,9 +104,9 @@ function PortalFunction(props) {
       }}
     >
       <p style={{
-          width: popupDimensions.rfTextWidth,
-          height: popupDimensions.rfTextHeight,
-          fill: 'red'
+        width: popupDimensions.rfTextWidth,
+        height: popupDimensions.rfTextHeight,
+        fill: 'red'
       }}>{props.renderFunction.renderFunction}</p>
     </div>
   );
@@ -161,38 +161,39 @@ function SaveButton(props) {
     // check that the user has given a title
     if (title === "")
       alert("Please type a valid name")
+    else {
 
-    // check if the user already has an image with that title
-    // or if the user is not logged in 
-    let url = "api?action=imageexists&title=" + title;
-    fetch(url)
-      .then((req) => req.json())
-      .then((response) => {
-        if (response === "logged out")
-          alert("Please log in to save images.")
-        if (response === "image exists")
-          alert("You already have an image with this name; please name it something else.")
-        if (response === "image does not exist") {
+      // check if the user already has an image with that title
+      // or if the user is not logged in 
+      let url = "api?action=imageexists&title=" + title;
+      fetch(url)
+        .then((req) => req.json())
+        .then((response) => {
+          if (response === "logged out")
+            alert("Please log in to save images.")
+          if (response === "image exists")
+            alert("You already have an image with this name; please name it something else.")
+          if (response === "image does not exist") {
 
-          let image = {
-            action: "saveimage",
-            title: title,
-            code: props.renderFunction.renderFunction
+            let image = {
+              action: "saveimage",
+              title: title,
+              code: props.renderFunction.renderFunction
+            }
+
+            // save the image
+            fetch("api", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'include',
+              body: JSON.stringify(image)
+            }).then(props.closePortal())
+              .then(alert("Image Saved!"))
           }
-
-          // save the image
-          fetch("api", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(image)
-          }).then(props.closePortal())
-            .then(alert("Image Saved!"))
-        }
-      });
-
+        });
+    }
   }
 
   return (
@@ -255,10 +256,10 @@ function ExpertButton(props) {
  * of the string, but not the white space in the middle of the string.
  * returns a string
  */
- var removeOuterWhiteSpace = function (string) {
-   string = string.replace(/^ */, "");
-   string = string.replace(/ *$/, "");
-   return string;
- };
+var removeOuterWhiteSpace = function (string) {
+  string = string.replace(/^ */, "");
+  string = string.replace(/ *$/, "");
+  return string;
+};
 
 export default PopupCanvas;

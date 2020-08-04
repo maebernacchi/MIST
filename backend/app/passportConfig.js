@@ -1,3 +1,12 @@
+/***************************************************************************************
+*    Title: passportConfig from passport-local-video
+*    Author: woodburydev
+*    Date: May, 2020
+*    Code version: 1
+*    Availability: https://github.com/woodburydev/passport-local-video/blob/master/backend/passportConfig.js
+*
+***************************************************************************************/
+
 const database = require("./database");
 const bcrypt = require("bcrypt");
 const localStrategy = require("passport-local").Strategy;

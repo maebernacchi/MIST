@@ -138,7 +138,9 @@ function NavBarCenter() {
       /* signIn mode*/
       <Nav className="mr-auto">
         <SignInCenter />
+        {/*
         <SignInButton onClick={handleSignInClick} />
+        */}
         <SignUpButton />
         <CancelButton onClick={handleCancelClick} />
       </Nav>
@@ -189,6 +191,36 @@ function SignInUpButton(props) {
 /* Base of the SignIn navigation bar -- Icons + Forms (Inputs, Remember Check) */
 
 function SignInCenter() {
+
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  const login = (e) => {
+
+    // prevents the page from refreshing on submit
+    e.preventDefault();
+
+    let user = {
+      username: loginUsername,
+      password: loginPassword,
+    };
+
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ action: 'signIn', ...user })
+    })
+      //redirect user to home page
+      .then(res => res.json())
+      .then(message => {
+        console.log("message = " + message);
+        if (message === "Success") window.location.href = "/";
+      })
+  }
+
   return (
     <Nav>
       {/* Google and Facebook Icons */}
@@ -205,7 +237,8 @@ function SignInCenter() {
         <Form.Control
           className="mb-2 mr-sm-2"
           id="inlineFormInputName2"
-          placeholder="E-mail"
+          placeholder="Username"
+          onChange={(e) => setLoginUsername(e.target.value)}
         />
         <Form.Label htmlFor="inlineFormInputGroupUsername2" srOnly>
           Email
@@ -215,6 +248,7 @@ function SignInCenter() {
             id="inlineFormInputGroupUsername2"
             type="password"
             placeholder="Password"
+            onChange={(e) => setLoginPassword(e.target.value)}
           />
         </InputGroup>
 
@@ -229,6 +263,9 @@ function SignInCenter() {
             Remember Me
           </label>
         </div>
+        <Nav.Link href="#" onClick={login}>
+          Sign In
+      </Nav.Link>
       </Form>
     </Nav>
   );

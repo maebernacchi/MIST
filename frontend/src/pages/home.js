@@ -5,7 +5,7 @@
  * home.js
  * 
  * This exports the home page
-
+ *
  * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
  * This work is licenced under a LGLP 3.0 or later .....
  *
