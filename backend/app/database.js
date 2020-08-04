@@ -916,9 +916,8 @@ module.exports.savews = (userId, workspace) => (
 */
 module.exports.getws = async (userid) => (
   User.findById(userid)
-      .select('workspaces')
+      .select('workspaces.data workspaces.name')
       .exec()
-      .then(user => user.workspaces)
 )
 
 /**

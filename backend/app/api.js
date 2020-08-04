@@ -175,8 +175,7 @@ handlers.getws = async function (info, req, res) {
       throw ('You have to be logged in!')
 
     // retrieve the workspaces corresponding to a user
-    const workspaces = await database.getws(req.user._id);
-    console.log(workspaces)
+    const {workspaces} = await database.getws(req.user._id);
     // send the response containing the workspaces
     res.json({
       success: true,
