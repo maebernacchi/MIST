@@ -872,7 +872,37 @@ class WorkspaceComponent extends Component {
   }
 
   /**
-   * Load a workspace from the server
+   * Delete a workspace of a name
+   * @param {String} name 
+   */
+  deleteWorkspaces = async (name) => {
+    // async POST fetch request
+    const res = await fetch('api/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'deletews', name: name })
+    });
+    if(!res.ok)
+      throw new Error(`HTTP error! status: ${res.status}`);
+    else{
+      return await res.json()
+        .then(data => {
+          if (data === 'logged out')
+            throw new Error('You needed to be logged in!')
+          if (data.success) {
+            return 'Successfully deleted workspace';
+          }
+          else {
+            throw new Error(data.message);
+          }
+        });
+    }
+  }
+
+  /**
+   * Load a workspace onto the state
    */
   loadWorkspace = (workspaceToLoad) => {
     this.setState({
@@ -991,6 +1021,7 @@ class WorkspaceComponent extends Component {
           backgroundColor: colors.workspaceBackground[this.state.theme]
         }}
       >
+        <div onClick={()=>this.deleteWorkspaces('a').then(alert).catch(alert)}>Delete ws</div>
         <Stage
           width={width}
           height={height}
