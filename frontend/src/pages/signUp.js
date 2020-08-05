@@ -84,6 +84,8 @@ const SignUp = () => {
       .then((message) => {
         if (message !== "User Created") {
           alert(message);
+        } else {
+          window.location.href = "/";
         }
       });
 
@@ -207,7 +209,6 @@ const SignUp = () => {
           ><ul>
             <li>At least 8 characters</li>
             <li>At least one digit</li>
-            <li>At least one alphabet</li>
             <li>At least one special character</li>
           </ul></div>):(<div></div>)}
         </div>
