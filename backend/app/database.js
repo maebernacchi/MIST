@@ -641,6 +641,12 @@ passwordSecurity = (pass) => {
   }
 };
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} callback 
+ * Chnages the email of the user in the database
+ */
 module.exports.changeEmail = (req, callback) => {
   User.findOneAndUpdate(
     { _id: req.body._id },
@@ -655,6 +661,27 @@ module.exports.changeEmail = (req, callback) => {
     }
   );
 };
+
+/**
+ * 
+ * @param {*} req 
+ * @param {*} callback 
+ * Changes the username of the user in the database
+ */
+module.exports.changeUsername = (req, callback) => {
+  User.findOneAndUpdate(
+    { _id: req.body._id },
+    { $set: { username: req.body.newUsername } },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback("Successfully Updated Username");
+      }
+    }
+  );
+}
 
 // given a userId, returns the username
 module.exports.getUsername = (userId, callback) => {

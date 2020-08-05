@@ -23,19 +23,17 @@ handler.
 // | Required Libraries |
 // +--------------------+
 
-var database = require('./database.js');
+var database = require("./database.js");
 const passport = require("passport");
-
 
 // +--------------------+--------------------------------------------
 // | Exported Functions |
 // +--------------------+
 
 /**
-* Run the API.
-*/
+ * Run the API.
+ */
 module.exports.run = function (info, req, res) {
-
   // Support both Sam's and Alex's model of specifying what to do
   var action = info.action || info.funct;
 
@@ -53,7 +51,7 @@ module.exports.run = function (info, req, res) {
   else {
     fail(res, "Invalid action: " + action);
   } // invalid action
-} // run
+}; // run
 
 // +-----------+-------------------------------------------------------
 // | Utilities |
@@ -64,8 +62,8 @@ module.exports.run = function (info, req, res) {
  */
 fail = function (res, message) {
   console.log("FAILED!", message);
-  res.status(400).send(message);       // "Bad request"
-} // fail
+  res.status(400).send(message); // "Bad request"
+}; // fail
 
 // +----------+--------------------------------------------------------
 // | Handlers |
@@ -90,23 +88,16 @@ var handlers = {};
  *   info.title: The title of the image
  */
 handlers.imageexists = function (info, req, res) {
-
   if (!req.isAuthenticated()) {
     res.json("logged out");
   } else {
-
     database.imageExists(req.user.username, info.title, (err, response) => {
-      if (err)
-        fail(res, "Unable to save image")
-      if (response)
-        res.json("image exists")
-      else
-        res.json("image does not exist")
-    })
-
+      if (err) fail(res, "Unable to save image");
+      if (response) res.json("image exists");
+      else res.json("image does not exist");
+    });
   }
 };
-
 
 /**
  * Save an image to the database
@@ -114,16 +105,13 @@ handlers.imageexists = function (info, req, res) {
  *   info.title: The title of the image
  */
 handlers.saveimage = function (info, req, res) {
-
   database.getUserIdByUsername(req.user.username, (err, userId) => {
-    if (err)
-      fail(res, "no user found");
+    if (err) fail(res, "no user found");
     else {
-      database.saveImage(userId, req.body.title, req.body.code, res)
+      database.saveImage(userId, req.body.title, req.body.code, res);
     }
   });
-
-}
+};
 
 /**
  *   Get featured images for home pages
@@ -137,8 +125,8 @@ handlers.getHomeImages = function (info, req, res) {
       res.json([]);
     } else if (!images) res.json([]);
     else res.json(images);
-  })
-}
+  });
+};
 
 // +----------------+--------------------------------------------------
 // | Gallery        |
@@ -156,8 +144,8 @@ handlers.getRandomImages = function (info, req, res) {
       res.json([]);
     } else if (!images) res.json([]);
     else res.json(images);
-  })
-}
+  });
+};
 
 /**
  *   Get 9 top public images
@@ -171,8 +159,8 @@ handlers.getTopImages = function (info, req, res) {
       res.json([]);
     } else if (!images) res.json([]);
     else res.json(images);
-  })
-}
+  });
+};
 
 /**
  *   Get 9 featured public images
@@ -186,8 +174,8 @@ handlers.getFeaturedImages = function (info, req, res) {
       res.json([]);
     } else if (!images) res.json([]);
     else res.json(images);
-  })
-}
+  });
+};
 
 /**
  *   Get 9 recent public images
@@ -201,8 +189,8 @@ handlers.getRecentImages = function (info, req, res) {
       res.json([]);
     } else if (!images) res.json([]);
     else res.json(images);
-  })
-}
+  });
+};
 
 // +----------------+--------------------------------------------------
 // | Comments       |
@@ -215,7 +203,7 @@ handlers.getRecentImages = function (info, req, res) {
 
 handlers.postComment = function (info, req, res) {
   database.saveComment(req, res);
-}
+};
 
 /**
  *  Get all comments on an image
@@ -229,22 +217,22 @@ handlers.getImageComments = function (info, req, res) {
       res.json([]);
     } else if (!comments) res.json([]);
     else res.json(comments);
-  })
-}
+  });
+};
 
 // +----------------+--------------------------------------------------
 // | Challenges     |
 // +----------------+
 
 /*
-*   Load challenges to the page
-*   info.action: getChallenges
-*/
+ *   Load challenges to the page
+ *   info.action: getChallenges
+ */
 
 handlers.getChallenges = function (info, req, res) {
-  // grab URL parameters 	
-  let search = req.query.level + ', ' +
-    req.query.color + ', ' + req.query.animation;
+  // grab URL parameters
+  let search =
+    req.query.level + ", " + req.query.color + ", " + req.query.animation;
 
   database.getChallenges(search, (challenges, error) => {
     if (error) {
@@ -252,27 +240,26 @@ handlers.getChallenges = function (info, req, res) {
       res.json([]);
     } else if (!challenges) res.json([]);
     else res.json(challenges);
-  })
-}
+  });
+};
 
 // +------------------+--------------------------------------------------
 // | Authentication   |
 // +------------------+
 
-
 /*
-*   Register user to the database
-*   info.action: signup
-*/
+ *   Register user to the database
+ *   info.action: signup
+ */
 
 handlers.signUp = function (info, req, res) {
-  database.createUser(req, (message) => res.json(message))
-}
+  database.createUser(req, (message) => res.json(message));
+};
 
 /*
-*   Log user in
-*   info.action: signIn
-*/
+ *   Log user in
+ *   info.action: signIn
+ */
 
 handlers.signIn = function (info, req, res, next) {
   passport.authenticate("local", (err, user, info) => {
@@ -282,8 +269,7 @@ handlers.signIn = function (info, req, res, next) {
     if (!user) {
       var message = "No User Exists";
       res.json(message);
-    }
-    else {
+    } else {
       req.logIn(user, (err) => {
         if (err) throw err;
         var message = "Success";
@@ -291,36 +277,32 @@ handlers.signIn = function (info, req, res, next) {
       });
     }
   })(req, res, next);
-}
-
+};
 
 /*
-*   Log user out
-*   info.action: signOut
-*/
+ *   Log user out
+ *   info.action: signOut
+ */
 handlers.signOut = function (info, req, res) {
   req.logout();
   res.json("Success");
-}
-
+};
 
 /*
-*   Get user from Passport
-*   info.action: getUser
-*/
+ *   Get user from Passport
+ *   info.action: getUser
+ */
 handlers.getUser = function (info, req, res) {
   if (!req.user) res.json(null);
   else {
     // we have to search the database for the full user
     // because passport only stores the username of the person logged in
     database.User.findOne({ username: req.user.username }, (err, user) => {
-      if (err)
-        fail(res, "no user found")
-      else
-        res.json(user)
-    })
+      if (err) fail(res, "no user found");
+      else res.json(user);
+    });
   }
-}
+};
 
 // +-----------+------------------------------------------------------
 // | Expert UI |
@@ -328,48 +310,51 @@ handlers.getUser = function (info, req, res) {
 
 handlers.expertwsexists = function (info, req, res) {
   if (!req.isAuthenticated())
-    res.json({ success: false, message: 'You need to be logged in!' })
+    res.json({ success: false, message: "You need to be logged in!" });
   else {
     const userId = req.user._id;
     const name = info.name;
     database.userHasWorkspace(userId, name, res);
   }
-}
+};
 
 handlers.saveexpertws = function (info, req, res) {
   if (!req.isAuthenticated())
-    res.json({ success: false, message: 'You need to be logged in!' })
+    res.json({ success: false, message: "You need to be logged in!" });
   else {
     const userId = req.user._id;
     const workspace = info.workspace;
     database.saveExpertWorkspace(userId, workspace, res);
   }
-}
+};
 
 handlers.deleteexpertws = function (info, req, res) {
   if (!req.isAuthenticated())
-    res.json({ success: false, message: 'You need to be logged in!' })
+    res.json({ success: false, message: "You need to be logged in!" });
   else {
     const userId = req.user._id;
     const workspace_name = info.name;
     database.deleteexpertws(userId, workspace_name, res);
   }
-}
+};
 
 handlers.getUserExpertWS = function (info, req, res) {
   if (!req.isAuthenticated())
-    res.json({ success: false, message: 'You need to be logged in!' })
+    res.json({ success: false, message: "You need to be logged in!" });
   else {
     const userId = req.user._id;
     database.getUserExpertWS(userId, res);
   }
-}
+};
 
 // +-----------+------------------------------------------------------
 // | Settings  |
 // +-----------+
 
-handlers.changeEmail = function(info, req, res) {
+handlers.changeEmail = function (info, req, res) {
   database.changeEmail(req, (message) => res.json(message));
-  console.log(req.body.newEmail);
+};
+
+handlers.changeUsername = function(info, req, res) {
+  database.changeUsername(req, (message) => res.json(message));
 }
