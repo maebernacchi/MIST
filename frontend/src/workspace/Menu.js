@@ -29,6 +29,7 @@ import { funcGroup } from "./MakeFunction";
 import { valGroup } from "./MakeValue";
 import global, { width, valueWidth, functionWidth } from "./globals.js";
 import menuDimensions from "./globals-menu-dimensions";
+import { Button, Modal } from 'react-bootstrap';
 
 // +----------------------------+
 // | All dependent files        |
@@ -49,6 +50,10 @@ function Menu(props) {
   const ref = useRef(null);
   const [formValue, setFormValue] = useState("Enter a MIST expression");
 
+  // States for popup
+  const [popupShow, setPopupShow] = useState(false);
+  const [popupContents, setPopupContents] = useState({ title: 'STUB', body: 'STUB' })
+  const [popupConfirmSideEffect, setPopupConfirmSideEffect] = useState(() => console.log('STUB'))
   // +--------+
   // | States |
   // +--------+--------------------------------------------------------
@@ -62,225 +67,249 @@ function Menu(props) {
     setKey(Math.random());
   }
 
-  return (
-    <Group width={width} height={global.menuHeight} key={key} ref={ref}>
-      <Rect // Entire menu bar
-        width={width}
-        height={global.menuHeight}
-        fill={props.bgColor}
-        shadowColor={"black"}
-        shadowBlur={5}
-      />
-      {[
-        {
-          name: "Saved",
-          tabPoints: menuDimensions.savedTabPoints,
-          tabOffsetX: menuDimensions.savedTabOffsetX,
-        },
-        {
-          name: "Functions",
-          tabPoints: menuDimensions.functionTabPoints,
-          tabOffsetX: menuDimensions.functionTabOffsetX,
-        },
-        {
-          name: "Values",
-          tabPoints: menuDimensions.valueTabPoints,
-          tabOffsetX: menuDimensions.valueTabOffsetX,
-        },
-        {
-          name: "Custom",
-          tabPoints: menuDimensions.customTabPoints,
-          tabOffsetX: menuDimensions.customTabOffsetX,
-        },
-      ].map((u, i) => {
-        return (
-          <Group
-            x={
-              (isCustomMenuOpen && menuDimensions.formWidth) ||
-              (isValueMenuOpen && u.name !== "Custom"
-                ? menuDimensions.valueListLength
-                : 0) ||
-              (isFunctionMenuOpen && u.name !== "Custom" && u.name !== "Values"
-                ? menuDimensions.functionListLength
-                : 0) ||
-              (isSavedMenuOpen && u.name === "Saved" ? (width * 8) / 15 : 0)
-            }
-            key={i}
-            onMouseEnter={() => {
-              if (u.name === "Custom") {
-                setIsCustomMenuOpen(true);
-                setIsValueMenuOpen(false);
-                setIsFunctionMenuOpen(false);
-                setIsSavedMenuOpen(false);
-              } else if (u.name === "Values") {
-                setIsValueMenuOpen(true);
-                setIsFunctionMenuOpen(false);
-                setIsCustomMenuOpen(false);
-                setIsSavedMenuOpen(false);
-              } else if (u.name === "Functions") {
-                setIsFunctionMenuOpen(true);
-                setIsValueMenuOpen(false);
-                setIsCustomMenuOpen(false);
-                setIsSavedMenuOpen(false);
-              } else {
-                setIsSavedMenuOpen(true);
-                setIsValueMenuOpen(false);
-                setIsFunctionMenuOpen(false);
-                setIsCustomMenuOpen(false);
-              }
-            }}
-          >
-            <Shape // saved tab arrow
-              sceneFunc={function (context) {
-                context.beginPath();
-                context.moveTo(u.tabPoints.topLeft.x, u.tabPoints.topLeft.y);
-                context.lineTo(u.tabPoints.topRight.x, u.tabPoints.topRight.y);
-                context.lineTo(u.tabPoints.point.x, u.tabPoints.point.y);
-                context.lineTo(
-                  u.tabPoints.bottomRight.x,
-                  u.tabPoints.bottomRight.y
-                );
-                context.lineTo(
-                  u.tabPoints.bottomLeft.x,
-                  u.tabPoints.bottomLeft.y
-                );
-                context.closePath();
-                context.fillStrokeShape(this);
-              }}
-              fill={
-                (u.name === "Values" && props.valTabColor) ||
-                (u.name === "Functions" && props.funTabColor) ||
-                (u.name === "Custom" && props.customTabColor) ||
-                (u.name === "Saved" && props.savedTabColor)
-              }
-              strokeWidth={0}
-              shadowOffsetX={1}
-              shadowOffsetY={-2}
-              shadowBlur={5}
-              shadowOpacity={0.7}
-            />
-            <Text
-              text={u.name}
-              x={u.tabOffsetX - 50}
-              y={global.menuHeight * 0.9}
-              width={120}
-              height={20}
-              fill={"black"}
-              align={"left"}
-              verticalAlign={"middle"}
-              fontFamily={"Impact"}
-              fontSize={25}
-              rotation={(-Math.atan(global.menuHeight / 60) * 180) / Math.PI}
-            />
-            {u.name === "Custom" && (
-              <Portal>
-                <form
-                  id="form"
-                  style={{
-                    position: "absolute",
-                    top: props.top + menuDimensions.formY,
-                    left: isCustomMenuOpen
-                      ? props.left + menuDimensions.formX
-                      : -menuDimensions.formWidth + menuDimensions.formX,
-                  }}
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.nativeEvent.stopImmediatePropagation();
-                    try {
-                      props.createLayout(MIST.parse(formValue, ""));
-                    } catch (err) {
-                      //document.getElementById("input").style.borderColor = "red";
-                      console.log("invalid function");
-                    }
-                    return false;
-                  }}
-                >
-                  <label>
-                    <input
-                      id={"input"}
-                      style={{
-                        width: menuDimensions.formWidth,
-                        height: menuDimensions.formHeight,
-                      }}
-                      type="text"
-                      placeholder={formValue}
-                      onChange={(e) => {
-                        setFormValue(e.target.value);
-                      }}
-                    />
-                  </label>
-                </form>
-              </Portal>
-            )}
-            {u.name === "Values" &&
-              Array.from(new Array(gui.valNames.length), (val, index) =>
-                valGroup(
-                  props.addNode,
-                  gui.valNames[index],
-                  -menuDimensions.valueListLength +
-                  menuDimensions.valueListStartX +
-                  index * (menuDimensions.valueMargin + valueWidth),
-                  gui.menuYspacing - 20,
-                  isValueMenuOpen,
-                  changeKey,
-                  index
-                )
-              )}
-            {u.name === "Functions" &&
-              Array.from(new Array(gui.funNames.length), (val, index) =>
-                funcGroup(
-                  props.addNode,
-                  gui.funNames[index],
-                  -menuDimensions.functionListLength +
-                  menuDimensions.functionListStartX +
-                  index * (menuDimensions.functionMargin + functionWidth),
-                  gui.menuYspacing - 20,
-                  isFunctionMenuOpen,
-                  changeKey,
-                  index
-                )
-              )}
-          </Group>
-        );
-      })}
-      <Group visible={true}>
-        {
-          // // this is how you might write code to load workspaces
-          // () => {
-          //   props.getWorkspaces()
-          //   .then(workspaces => {
-          //     //here is where you would deal with workspaces
-          //     // which is an array of objects
-          //     // of the form 
-          //     // {
-          //     // name: name of the workspace
-          //     // data: the state of the workspace that was store
-          //     // to load the workspace use data to replace the state
-          //     //}
-          //   })
-          //   .catch(alert)
+  /**
+   * Toggles the popup's show state
+   */
+  const togglePopup = () => setPopupShow((prev) => !prev);
 
-          // }
-        }
+  return (
+    <>
+      <Portal>
+        <Modal show={popupShow} onHide={togglePopup}>
+          <Modal.Header closeButton>
+            <Modal.Title>{popupContents.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{popupContents.body}</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={togglePopup}>
+              Close
+          </Button>
+            <Button variant="primary" onClick={() => { popupConfirmSideEffect(); togglePopup(); }}>
+              Confirm
+          </Button>
+          </Modal.Footer>
+        </Modal>
+      </Portal>
+
+      <Group width={width} height={global.menuHeight} key={key} ref={ref}>
+        <Rect // Entire menu bar
+          width={width}
+          height={global.menuHeight}
+          fill={props.bgColor}
+          shadowColor={"black"}
+          shadowBlur={5}
+        />
         {[
           {
-            name: "Reset Workspace", func: props.clearWorkspace,
+            name: "Saved",
+            tabPoints: menuDimensions.savedTabPoints,
+            tabOffsetX: menuDimensions.savedTabOffsetX,
           },
-          { name: "Open Workspace", func: ()=>{console.log('a')}},
-          { name: "Save Workspace", func: ()=>{console.log('b')}},
-        ].map((u, i) => (
-          <MakeMenuButton //Calls MakeMenuButton.js to create the three side buttons
-            key={i}
-            text={u.name}
-            x={0}
-            y={(i + 1) * gui.menuOffset + i * gui.menuControlHeight}
-            handleClick={u.func}
-            buttonColor={props.wsButtonColor}
-          />
-        ))}
+          {
+            name: "Functions",
+            tabPoints: menuDimensions.functionTabPoints,
+            tabOffsetX: menuDimensions.functionTabOffsetX,
+          },
+          {
+            name: "Values",
+            tabPoints: menuDimensions.valueTabPoints,
+            tabOffsetX: menuDimensions.valueTabOffsetX,
+          },
+          {
+            name: "Custom",
+            tabPoints: menuDimensions.customTabPoints,
+            tabOffsetX: menuDimensions.customTabOffsetX,
+          },
+        ].map((u, i) => {
+          return (
+            <Group
+              x={
+                (isCustomMenuOpen && menuDimensions.formWidth) ||
+                (isValueMenuOpen && u.name !== "Custom"
+                  ? menuDimensions.valueListLength
+                  : 0) ||
+                (isFunctionMenuOpen && u.name !== "Custom" && u.name !== "Values"
+                  ? menuDimensions.functionListLength
+                  : 0) ||
+                (isSavedMenuOpen && u.name === "Saved" ? (width * 8) / 15 : 0)
+              }
+              key={i}
+              onMouseEnter={() => {
+                if (u.name === "Custom") {
+                  setIsCustomMenuOpen(true);
+                  setIsValueMenuOpen(false);
+                  setIsFunctionMenuOpen(false);
+                  setIsSavedMenuOpen(false);
+                } else if (u.name === "Values") {
+                  setIsValueMenuOpen(true);
+                  setIsFunctionMenuOpen(false);
+                  setIsCustomMenuOpen(false);
+                  setIsSavedMenuOpen(false);
+                } else if (u.name === "Functions") {
+                  setIsFunctionMenuOpen(true);
+                  setIsValueMenuOpen(false);
+                  setIsCustomMenuOpen(false);
+                  setIsSavedMenuOpen(false);
+                } else {
+                  setIsSavedMenuOpen(true);
+                  setIsValueMenuOpen(false);
+                  setIsFunctionMenuOpen(false);
+                  setIsCustomMenuOpen(false);
+                }
+              }}
+            >
+              <Shape // saved tab arrow
+                sceneFunc={function (context) {
+                  context.beginPath();
+                  context.moveTo(u.tabPoints.topLeft.x, u.tabPoints.topLeft.y);
+                  context.lineTo(u.tabPoints.topRight.x, u.tabPoints.topRight.y);
+                  context.lineTo(u.tabPoints.point.x, u.tabPoints.point.y);
+                  context.lineTo(
+                    u.tabPoints.bottomRight.x,
+                    u.tabPoints.bottomRight.y
+                  );
+                  context.lineTo(
+                    u.tabPoints.bottomLeft.x,
+                    u.tabPoints.bottomLeft.y
+                  );
+                  context.closePath();
+                  context.fillStrokeShape(this);
+                }}
+                fill={
+                  (u.name === "Values" && props.valTabColor) ||
+                  (u.name === "Functions" && props.funTabColor) ||
+                  (u.name === "Custom" && props.customTabColor) ||
+                  (u.name === "Saved" && props.savedTabColor)
+                }
+                strokeWidth={0}
+                shadowOffsetX={1}
+                shadowOffsetY={-2}
+                shadowBlur={5}
+                shadowOpacity={0.7}
+              />
+              <Text
+                text={u.name}
+                x={u.tabOffsetX - 50}
+                y={global.menuHeight * 0.9}
+                width={120}
+                height={20}
+                fill={"black"}
+                align={"left"}
+                verticalAlign={"middle"}
+                fontFamily={"Impact"}
+                fontSize={25}
+                rotation={(-Math.atan(global.menuHeight / 60) * 180) / Math.PI}
+              />
+              {u.name === "Custom" && (
+                <Portal>
+                  <form
+                    id="form"
+                    style={{
+                      position: "absolute",
+                      top: props.top + menuDimensions.formY,
+                      left: isCustomMenuOpen
+                        ? props.left + menuDimensions.formX
+                        : -menuDimensions.formWidth + menuDimensions.formX,
+                    }}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      e.nativeEvent.stopImmediatePropagation();
+                      try {
+                        props.createLayout(MIST.parse(formValue, ""));
+                      } catch (err) {
+                        //document.getElementById("input").style.borderColor = "red";
+                        console.log("invalid function");
+                      }
+                      return false;
+                    }}
+                  >
+                    <label>
+                      <input
+                        id={"input"}
+                        style={{
+                          width: menuDimensions.formWidth,
+                          height: menuDimensions.formHeight,
+                        }}
+                        type="text"
+                        placeholder={formValue}
+                        onChange={(e) => {
+                          setFormValue(e.target.value);
+                        }}
+                      />
+                    </label>
+                  </form>
+                </Portal>
+              )}
+              {u.name === "Values" &&
+                Array.from(new Array(gui.valNames.length), (val, index) =>
+                  valGroup(
+                    props.addNode,
+                    gui.valNames[index],
+                    -menuDimensions.valueListLength +
+                    menuDimensions.valueListStartX +
+                    index * (menuDimensions.valueMargin + valueWidth),
+                    gui.menuYspacing - 20,
+                    isValueMenuOpen,
+                    changeKey,
+                    index
+                  )
+                )}
+              {u.name === "Functions" &&
+                Array.from(new Array(gui.funNames.length), (val, index) =>
+                  funcGroup(
+                    props.addNode,
+                    gui.funNames[index],
+                    -menuDimensions.functionListLength +
+                    menuDimensions.functionListStartX +
+                    index * (menuDimensions.functionMargin + functionWidth),
+                    gui.menuYspacing - 20,
+                    isFunctionMenuOpen,
+                    changeKey,
+                    index
+                  )
+                )}
+            </Group>
+          );
+        })}
+        <Group visible={true}>
+          {
+            // // this is how you might write code to load workspaces
+            // () => {
+            //   props.getWorkspaces()
+            //   .then(workspaces => {
+            //     //here is where you would deal with workspaces
+            //     // which is an array of objects
+            //     // of the form 
+            //     // {
+            //     // name: name of the workspace
+            //     // data: the state of the workspace that was store
+            //     // to load the workspace use data to replace the state
+            //     //}
+            //   })
+            //   .catch(alert)
+
+            // }
+          }
+          {[
+            {
+              name: "Reset Workspace", func: props.clearWorkspace,
+            },
+            { name: "Open Workspace", func: () => { props.getWorkspaces().then(console.log).catch(alert) } },
+            { name: "Save Workspace", func: () => { setPopupShow(true) } },
+          ].map((u, i) => (
+            <MakeMenuButton //Calls MakeMenuButton.js to create the three side buttons
+              key={i}
+              text={u.name}
+              x={0}
+              y={(i + 1) * gui.menuOffset + i * gui.menuControlHeight}
+              handleClick={u.func}
+              buttonColor={props.wsButtonColor}
+            />
+          ))}
+        </Group>
       </Group>
-    </Group>
+    </>
   );
 }
 
