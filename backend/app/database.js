@@ -641,6 +641,21 @@ passwordSecurity = (pass) => {
   }
 };
 
+module.exports.changeEmail = (req, callback) => {
+  User.findOneAndUpdate(
+    { _id: req.body._id },
+    { $set: { email: req.body.newEmail } },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback("Successfully Updated Email");
+      }
+    }
+  );
+};
+
 // given a userId, returns the username
 module.exports.getUsername = (userId, callback) => {
   User.findById(userId).exec((err, user) => {

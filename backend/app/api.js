@@ -364,3 +364,12 @@ handlers.getUserExpertWS = function (info, req, res) {
     database.getUserExpertWS(userId, res);
   }
 }
+
+// +-----------+------------------------------------------------------
+// | Settings  |
+// +-----------+
+
+handlers.changeEmail = function(info, req, res) {
+  database.changeEmail(req, (message) => res.json(message));
+  console.log(req.body.newEmail);
+}
