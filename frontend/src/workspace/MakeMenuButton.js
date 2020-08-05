@@ -39,11 +39,7 @@ function MakeMenuButton(props) {
     <Group
       x={props.x}
       y={props.y}
-      onClick={() => {
-        if (props.text === "Reset Workspace") {
-          props.handleClick();
-        }
-      }}
+      onClick={props.handleClick}
       onMouseOver={() => setHover(true)}
       onMouseOut={() => setHover(false)}
     >
