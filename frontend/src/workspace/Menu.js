@@ -363,6 +363,7 @@ function Menu(props) {
                   })
                   setContentModalCallack(() => () => {
                     props.loadWorkspace(workspacesObj[wsFormRef.current.value])
+                      .catch(alert)
                   })
                   toggleContentModal();
                 } catch (error) {
@@ -403,8 +404,45 @@ function Menu(props) {
                   }
                 })
                 toggleContentModal();
-              }
+              },
             },
+            {
+              name: "Delete Workspace", func: async () => {
+                try {
+                  const workspaces = await props.getWorkspaces();
+                  const workspacesObj = {};
+                  // we need a scrollable list that we can find the index of an then
+                  // load from workspaces based on the index
+                  setContentModalInfo({
+                    title: 'Pick a workspace to dekete',
+                    body: (<div>
+                      <Form>
+                        <Form.Group>
+                          <Form.Label>
+                            Select a workspace to load
+                          </Form.Label>
+                          <Form.Control as='select' ref={wsFormRef}>
+                            {workspaces.map(workspace => {
+                              workspacesObj[workspace.name] = workspace.data;
+                              return (<option key={workspace.name}>{workspace.name}</option>);
+                            })}
+                          </Form.Control>
+                        </Form.Group>
+                      </Form>
+                    </div>)
+                  })
+                  setContentModalCallack(() => () => {
+                    props.deleteWorkspace(wsFormRef.current.value)
+                    .then(message => {toggleContentModal();alert(message);})
+                    .catch(alert)
+                  })
+                  toggleContentModal();
+                } catch (error) {
+                  alert(error)
+                }
+
+              },
+            }
           ].map((u, i) => (
             <MakeMenuButton //Calls MakeMenuButton.js to create the three side buttons
               key={i}

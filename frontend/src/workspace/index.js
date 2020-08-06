@@ -855,7 +855,7 @@ class WorkspaceComponent extends Component {
    * Delete a workspace of a name
    * @param {String} name 
    */
-  deleteWorkspaces = async (name) => {
+  deleteWorkspace = async (name) => {
     // async POST fetch request
     const res = await fetch('api/', {
       method: 'POST',
@@ -1130,6 +1130,7 @@ class WorkspaceComponent extends Component {
                 left={this.offsetX}
 
                 checkIfWorkspaceExists={this.checkIfWorkspaceExists.bind(this)}
+                deleteWorkspace={this.deleteWorkspace.bind(this)}
                 getWorkspaces={this.getWorkspaces.bind(this)}
                 loadWorkspace={this.loadWorkspace.bind(this)}
                 saveWorkspace={this._saveWorkspace.bind(this)}
