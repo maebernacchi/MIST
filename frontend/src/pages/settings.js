@@ -60,6 +60,8 @@ function Settings() {
 function SettingsTable() {
   const [newEmail, setNewEmail] = useState("");
   const [newUsername, setNewUsername] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -86,10 +88,14 @@ function SettingsTable() {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ action: "changeEmail", newEmail: newEmail, ...user }),
+      body: JSON.stringify({
+        action: "changeEmail",
+        newEmail: newEmail,
+        ...user,
+      }),
     })
-    .then((res) => res.json())
-    .then((message) => alert(message));
+      .then((res) => res.json())
+      .then((message) => alert(message));
   }
 
   function changeUsername(e) {
@@ -97,13 +103,36 @@ function SettingsTable() {
     fetch("/api", {
       method: "POST",
       headers: {
-        "Content-Type" : "application/json"
+        "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({action: "changeUsername", newUsername: newUsername, ...user})
+      body: JSON.stringify({
+        action: "changeUsername",
+        newUsername: newUsername,
+        ...user,
+      }),
     })
-    .then((res) => res.json())
-    .then((message) => alert(message));
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
+  function changePassword(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changePassword",
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        ...user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
   }
 
   const popover = (
@@ -136,6 +165,29 @@ function SettingsTable() {
               type="username"
               placeholder="Enter new username"
               onChange={(e) => setNewUsername(e.target.value)}
+            />
+            <Form.Text className="text-muted"></Form.Text>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+  const password = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Change Password</Popover.Title>
+      <Popover.Content>
+        <Form onSubmit = {changePassword}>
+          <Form.Group controlId="formBasicPassword">
+            <Form.Control
+              type="password"
+              placeholder="Enter old password"
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <Form.Control
+              type="password"
+              placeholder="Enter new password"
+              onChange={(e) => setNewPassword(e.target.value)}
             />
             <Form.Text className="text-muted"></Form.Text>
           </Form.Group>
@@ -299,20 +351,7 @@ function SettingsTable() {
 
 //Popover bubble to change email
 
-const password = (
-  <Popover id="popover-basic">
-    <Popover.Title as="h3"> Change Password</Popover.Title>
-    <Popover.Content>
-      <Form>
-        <Form.Group controlId="formBasicPassword">
-          <Form.Control type="password" placeholder="Enter old password" />
-          <Form.Control type="password" placeholder="Enter new password" />
-          <Form.Text className="text-muted"></Form.Text>
-        </Form.Group>
-      </Form>
-    </Popover.Content>
-  </Popover>
-);
+
 /*const popover = (
   <Popover id="popover-basic">
     <Popover.Title as="h3">Popover right</Popover.Title>
