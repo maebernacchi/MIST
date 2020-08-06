@@ -358,3 +358,7 @@ handlers.changeEmail = function (info, req, res) {
 handlers.changeUsername = function(info, req, res) {
   database.changeUsername(req, (message) => res.json(message));
 }
+
+handlers.changePassword = function(info, req, res) {
+  alert(req.body.currentPassword);
+}
