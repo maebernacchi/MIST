@@ -313,25 +313,6 @@ function Menu(props) {
           );
         })}
         <Group visible={true}>
-          {
-            // // this is how you might write code to load workspaces
-            // () => {
-            //   props.getWorkspaces()
-            //   .then(workspaces => {
-            //     //here is where you would deal with workspaces
-            //     // which is an array of objects
-            //     // of the form 
-            //     // {
-            //     // name: name of the workspace
-            //     // data: the state of the workspace that was store
-            //     // to load the workspace use data to replace the state
-            //     //}
-            //   })
-            //   .catch(alert)
-
-            // }
-          }
-
           {[
             {
               name: "Reset Workspace", func: props.clearWorkspace,
