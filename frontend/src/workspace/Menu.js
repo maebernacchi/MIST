@@ -343,8 +343,7 @@ function Menu(props) {
                     </div>)
                   })
                   setContentModalCallack(() => () => {
-                    props.loadWorkspace(workspacesObj[wsFormRef.current.value])
-                      .catch(alert)
+                    props.loadWorkspace(workspacesObj[wsFormRef.current.value]);
                   })
                   toggleContentModal();
                 } catch (error) {
