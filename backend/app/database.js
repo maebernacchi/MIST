@@ -894,18 +894,18 @@ module.exports.getUserExpertWS = (userId, res) => {
 // +-----------+
 module.exports.savews = (userId, workspace) => (
   User.bulkWrite([
-      {
-          updateOne: {
-              filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": workspace.name },
-              update: { "workspaces.$.data": workspace.data }
-          }
-      },
-      {
-          updateOne: {
-              filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": { "$ne": workspace.name } },
-              update: { "$push": { "workspaces": new Workspace(workspace) } }
-          }
+    {
+      updateOne: {
+        filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": workspace.name },
+        update: { "workspaces.$.data": workspace.data }
       }
+    },
+    {
+      updateOne: {
+        filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": { "$ne": workspace.name } },
+        update: { "$push": { "workspaces": new Workspace(workspace) } }
+      }
+    }
   ], { ordered: true }
   )
 )
@@ -916,8 +916,8 @@ module.exports.savews = (userId, workspace) => (
 */
 module.exports.getws = async (userid) => (
   User.findById(userid)
-      .select('workspaces.data workspaces.name')
-      .exec()
+    .select('workspaces.data workspaces.name')
+    .exec()
 )
 
 /**
@@ -928,6 +928,14 @@ module.exports.getws = async (userid) => (
 */
 module.exports.wsexists = async (userid, wsname) => (
   User.findOne({ _id: mongoose.Types.ObjectId(userid), 'workspaces.name': wsname })
-      .countDocuments()
-      .exec()
+    .countDocuments()
+    .exec()
+)
+
+module.exports.deletews = async (userId, workspace_name) => (
+  User.findOne({ _id: mongoose.Types.ObjectId(userId) })
+    .updateOne({
+      $pull: { workspaces: { name: workspace_name } },
+    })
+    .exec()
 )

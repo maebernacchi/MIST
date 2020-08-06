@@ -175,7 +175,7 @@ handlers.getws = async function (info, req, res) {
       throw ('You have to be logged in!')
 
     // retrieve the workspaces corresponding to a user
-    const {workspaces} = await database.getws(req.user._id);
+    const { workspaces } = await database.getws(req.user._id);
     // send the response containing the workspaces
     res.json({
       success: true,
@@ -221,6 +221,28 @@ handlers.savews = async function (info, req, res) {
 
   }
 } // handlers.savews
+
+handlers.deletews = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    fail(res, "Could not save workspace because you're not logged in");
+  }
+  else if (!info.name) {
+    fail(res, "Could not save workspace because you didn't title it");
+  }
+  else {
+    try {
+      const result = await database.deletews(req.user._id, info.name);
+      console.log(result);
+      if(result.nModified)
+        res.json({ success: true })
+      else{
+        res.json({success: false, message: 'Failed due to unknown error'})
+      }
+    } catch (error) {
+      res.json({ success: false, message: error })
+    }
+  }
+}
 
 
 // +----------------+--------------------------------------------------

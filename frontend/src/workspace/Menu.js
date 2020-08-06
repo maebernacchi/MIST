@@ -29,7 +29,7 @@ import { funcGroup } from "./MakeFunction";
 import { valGroup } from "./MakeValue";
 import global, { width, valueWidth, functionWidth } from "./globals.js";
 import menuDimensions from "./globals-menu-dimensions";
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 
 // +----------------------------+
 // | All dependent files        |
@@ -50,10 +50,23 @@ function Menu(props) {
   const ref = useRef(null);
   const [formValue, setFormValue] = useState("Enter a MIST expression");
 
-  // States for popup
-  const [popupShow, setPopupShow] = useState(false);
-  const [popupContents, setPopupContents] = useState({ title: 'STUB', body: 'STUB' })
-  const [popupConfirmSideEffect, setPopupConfirmSideEffect] = useState(() => console.log('STUB'))
+  // Ref for saving the workspace name
+  const wsNameRef = useRef('wsName');
+
+  // Ref for select form value
+  const wsFormRef = useRef('wsForm');
+
+  // create one modal that is for displaying content
+  const [isContentModalOpen, setIsContentModalOpen] = useState(false);
+  const [contentModalInfo, setContentModalInfo] = useState({ title: 'STUB', body: 'STUB' });
+  const [contentModalCallback, setContentModalCallack] = useState(() => () => console.log('STUB'))
+
+  // create another modal that is for double confirmation
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [confirmationModalInfo, setConfirmationModalInfo] = useState({ title: 'STUB', body: 'STUB' });
+  // check that this state callback is actually a function
+  const [confirmationCallback, setConfirmationCallback] = useState(() => () => console.log('STUB'));
+
   // +--------+
   // | States |
   // +--------+--------------------------------------------------------
@@ -68,29 +81,56 @@ function Menu(props) {
   }
 
   /**
-   * Toggles the popup's show state
+   * Toggle content modal
    */
-  const togglePopup = () => setPopupShow((prev) => !prev);
+  function toggleContentModal() {
+    setIsContentModalOpen(prev => !prev);
+  }
+
+  /**
+   * Toggle confirmation modal
+   */
+  function toggleConfirmationModal() {
+    setIsConfirmationModalOpen(prev => !prev);
+  }
 
   return (
     <>
       <Portal>
-        <Modal show={popupShow} onHide={togglePopup}>
+        <Modal show={isContentModalOpen} onHide={toggleContentModal} centered>
           <Modal.Header closeButton>
-            <Modal.Title>{popupContents.title}</Modal.Title>
+            <Modal.Title>{contentModalInfo.title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>{popupContents.body}</Modal.Body>
+          <Modal.Body> {contentModalInfo.body}
+          </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={togglePopup}>
-              Close
-          </Button>
-            <Button variant="primary" onClick={() => { popupConfirmSideEffect(); togglePopup(); }}>
-              Confirm
-          </Button>
+            <Button
+              onClick={toggleContentModal}
+              variant="secondary">Close</Button>
+            <Button
+              onClick={contentModalCallback}
+              variant="primary">
+              Confirm</Button>
           </Modal.Footer>
         </Modal>
-      </Portal>
+        <Modal show={isConfirmationModalOpen} onHide={toggleConfirmationModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>{confirmationModalInfo.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body> {confirmationModalInfo.body}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              onClick={toggleConfirmationModal}
+              variant="secondary">Close</Button>
+            <Button
+              onClick={confirmationCallback}
+              variant="primary">
+              Confirm</Button>
+          </Modal.Footer>
+        </Modal>
 
+      </Portal>
       <Group width={width} height={global.menuHeight} key={key} ref={ref}>
         <Rect // Entire menu bar
           width={width}
@@ -291,12 +331,80 @@ function Menu(props) {
 
             // }
           }
+
           {[
             {
               name: "Reset Workspace", func: props.clearWorkspace,
             },
-            { name: "Open Workspace", func: () => { props.getWorkspaces().then(console.log).catch(alert) } },
-            { name: "Save Workspace", func: () => { setPopupShow(true) } },
+            {
+              name: "Open Workspace", func: async () => {
+                try {
+                  const workspaces = await props.getWorkspaces();
+                  const workspacesObj = {};
+                  // we need a scrollable list that we can find the index of an then
+                  // load from workspaces based on the index
+                  setContentModalInfo({
+                    title: 'Pick a workspace to load',
+                    body: (<div>
+                      <Form>
+                        <Form.Group>
+                          <Form.Label>
+                            Select a workspace to load
+                          </Form.Label>
+                          <Form.Control as='select' ref={wsFormRef}>
+                            {workspaces.map(workspace => {
+                              workspacesObj[workspace.name] = workspace.data;
+                              return (<option key={workspace.name}>{workspace.name}</option>);
+                            })}
+                          </Form.Control>
+                        </Form.Group>
+                      </Form>
+                    </div>)
+                  })
+                  setContentModalCallack(() => () => {
+                    props.loadWorkspace(workspacesObj[wsFormRef.current.value])
+                  })
+                  toggleContentModal();
+                } catch (error) {
+                  alert(error)
+                }
+
+              }
+            },
+            {
+              name: "Save Workspace", func: () => {
+                setContentModalInfo({
+                  title: 'Saving Workspace',
+                  body: (<div>
+                    <input placeholder='Name your workspace' ref={wsNameRef} />
+                  </div>)
+                })
+                setContentModalCallack(() => async () => {
+                  try {
+                    const wsName = wsNameRef.current.value;
+                    if (!wsName)
+                      throw ('Please enter a valid name for your workspace')
+                    const exists = await props.checkIfWorkspaceExists(wsName);
+                    if (exists) {
+                      // trigger confirmation popup
+                      setConfirmationModalInfo({
+                        title: 'Overwriting previous workspace',
+                        body: (<div>You are about to overwrite the workspace named {wsName} Click confirm to continue</div>)
+                      })
+                      setConfirmationCallback(() => () => {
+                        props.saveWorkspace(wsName);
+                      })
+                      toggleConfirmationModal();
+                    } else {
+                      props.saveWorkspace(wsName)
+                    }
+                  } catch (error) {
+                    alert(error)
+                  }
+                })
+                toggleContentModal();
+              }
+            },
           ].map((u, i) => (
             <MakeMenuButton //Calls MakeMenuButton.js to create the three side buttons
               key={i}
@@ -308,7 +416,7 @@ function Menu(props) {
             />
           ))}
         </Group>
-      </Group>
+      </Group >
     </>
   );
 }

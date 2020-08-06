@@ -799,7 +799,7 @@ class WorkspaceComponent extends Component {
       .then(res => res.json())
       .then(data => {
         if (data.success)
-          alert('Succesfully saved the workspace');
+          alert('Succesfully saved workspace ' + name);
         else
           throw (data.message);
       })
@@ -826,26 +826,6 @@ class WorkspaceComponent extends Component {
             throw new Error(data.message);
           }
         });
-    }
-  }
-
-  /**
-   * Save workspace wrapper that checks if the workspace exists in the server first
-   */
-  saveWorkspace = async (name) => {
-    try {
-      // fetch request to see if the user already has a workspace by the same name
-      const exists = await this.checkIfWorkspaceExists(name);
-      console.log('Checking for existence ' + exists)
-      if (exists) {
-        // add a confirmation for replacement
-        throw ('You already have a workspace by this name. Please confirm before replacing previous workspace')
-      } else {
-        // immediately save to account
-        this._saveWorkspace(name)
-      }
-    } catch (error) {
-      alert(error)
     }
   }
 
@@ -1149,10 +1129,11 @@ class WorkspaceComponent extends Component {
                 top={this.offsetY}
                 left={this.offsetX}
 
-
-                saveWorkspace={this.saveWorkspace.bind(this)}
+                checkIfWorkspaceExists={this.checkIfWorkspaceExists.bind(this)}
                 getWorkspaces={this.getWorkspaces.bind(this)}
                 loadWorkspace={this.loadWorkspace.bind(this)}
+                saveWorkspace={this._saveWorkspace.bind(this)}
+
               />
             }
           </Layer>
