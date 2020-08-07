@@ -328,19 +328,18 @@ module.exports.imageExists = (username, title, callback) => {
   User.findOne({ username: username })
     .populate("images")
     .exec((err, user) => {
-      if (err)
-        callback(err, null)
+      if (err) callback(err, null);
       else {
         let response = false;
         user.images.forEach((image) => {
           if (image.title === title) {
             response = true;
             return;
-          };
+          }
         });
-        callback(null, response)
+        callback(null, response);
       }
-    })
+    });
 };
 
 /**
@@ -644,10 +643,47 @@ passwordSecurity = (pass) => {
   }
 };
 
+module.exports.changePassword = async (req, callback) => {
+  let dbPassword = "a";
+  await User.findOne({ _id: req.body._id }, (err, doc) => {
+    if (err) {
+      console.log("No doc");
+      console.log(err);
+    }
+    dbPassword = doc.password;
+  });
+  bcrypt.compare(req.body.currentPassword, dbPassword, async (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    if (result === false) {
+      callback("Old Password Does Not Match");
+    } else {
+      if (passwordSecurity(req.body.newPassword) !== "Success") {
+        callback(passwordSecurity(req.body.newPassword));
+      } else {
+        let newPass = await bcrypt.hash(req.body.newPassword, 12);
+        User.findOneAndUpdate(
+          { _id: req.body._id },
+          { $set: { password: newPass} },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback("Successfully Updated Password");
+            }
+          }
+        );
+      }
+    }
+  });
+};
+
 /**
- * 
- * @param {*} req 
- * @param {*} callback 
+ *
+ * @param {*} req
+ * @param {*} callback
  * Chnages the email of the user in the database
  */
 module.exports.changeEmail = (req, callback) => {
@@ -666,9 +702,9 @@ module.exports.changeEmail = (req, callback) => {
 };
 
 /**
- * 
- * @param {*} req 
- * @param {*} callback 
+ *
+ * @param {*} req
+ * @param {*} callback
  * Changes the username of the user in the database
  */
 module.exports.changeUsername = (req, callback) => {
@@ -684,7 +720,7 @@ module.exports.changeUsername = (req, callback) => {
       }
     }
   );
-}
+};
 
 // given a userId, returns the username
 module.exports.getUsername = (userId, callback) => {
@@ -934,50 +970,55 @@ module.exports.getUserExpertWS = (userId, res) => {
 // +-----------+-------------------------------------------------
 // | Workspace |
 // +-----------+
-module.exports.savews = (userId, workspace) => (
-  User.bulkWrite([
-    {
-      updateOne: {
-        filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": workspace.name },
-        update: { "workspaces.$.data": workspace.data }
-      }
-    },
-    {
-      updateOne: {
-        filter: { _id: mongoose.Types.ObjectId(userId), "workspaces.name": { "$ne": workspace.name } },
-        update: { "$push": { "workspaces": new Workspace(workspace) } }
-      }
-    }
-  ], { ordered: true }
-  )
-)
+module.exports.savews = (userId, workspace) =>
+  User.bulkWrite(
+    [
+      {
+        updateOne: {
+          filter: {
+            _id: mongoose.Types.ObjectId(userId),
+            "workspaces.name": workspace.name,
+          },
+          update: { "workspaces.$.data": workspace.data },
+        },
+      },
+      {
+        updateOne: {
+          filter: {
+            _id: mongoose.Types.ObjectId(userId),
+            "workspaces.name": { $ne: workspace.name },
+          },
+          update: { $push: { workspaces: new Workspace(workspace) } },
+        },
+      },
+    ],
+    { ordered: true }
+  );
 
 /**
-* Retrieves the workspaces corresponding to userid
-* We assume that userid corresponds to a user existing in the database
-*/
-module.exports.getws = async (userid) => (
-  User.findById(userid)
-    .select('workspaces.data workspaces.name')
-    .exec()
-)
+ * Retrieves the workspaces corresponding to userid
+ * We assume that userid corresponds to a user existing in the database
+ */
+module.exports.getws = async (userid) =>
+  User.findById(userid).select("workspaces.data workspaces.name").exec();
 
 /**
-* Checks if the user corresponding to userid has a workspace by the 
-* name wsname. We assume that userid corresponds to an existing and active
-* user in the database
-* 
-*/
-module.exports.wsexists = async (userid, wsname) => (
-  User.findOne({ _id: mongoose.Types.ObjectId(userid), 'workspaces.name': wsname })
+ * Checks if the user corresponding to userid has a workspace by the
+ * name wsname. We assume that userid corresponds to an existing and active
+ * user in the database
+ *
+ */
+module.exports.wsexists = async (userid, wsname) =>
+  User.findOne({
+    _id: mongoose.Types.ObjectId(userid),
+    "workspaces.name": wsname,
+  })
     .countDocuments()
-    .exec()
-)
+    .exec();
 
-module.exports.deletews = async (userId, workspace_name) => (
+module.exports.deletews = async (userId, workspace_name) =>
   User.findOne({ _id: mongoose.Types.ObjectId(userId) })
     .updateOne({
       $pull: { workspaces: { name: workspace_name } },
     })
-    .exec()
-)
+    .exec();

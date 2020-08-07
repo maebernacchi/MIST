@@ -159,7 +159,7 @@ function SettingsTable() {
       <Popover.Title as="h3"> Change Username</Popover.Title>
 
       <Popover.Content>
-        <Form onSubmit={changeUsername}>
+        <Form>
           <Form.Group controlId="formBasicEmail">
             <Form.Control
               type="username"
@@ -167,6 +167,7 @@ function SettingsTable() {
               onChange={(e) => setNewUsername(e.target.value)}
             />
             <Form.Text className="text-muted"></Form.Text>
+            <Button onClick = {changeUsername}>Confirm Changes</Button>
           </Form.Group>
         </Form>
       </Popover.Content>
@@ -190,6 +191,7 @@ function SettingsTable() {
               onChange={(e) => setNewPassword(e.target.value)}
             />
             <Form.Text className="text-muted"></Form.Text>
+            <Button onClick = {changePassword}>Confirm Changes</Button>
           </Form.Group>
         </Form>
       </Popover.Content>

@@ -465,5 +465,5 @@ handlers.changeUsername = function(info, req, res) {
 }
 
 handlers.changePassword = function(info, req, res) {
-  alert(req.body.currentPassword);
+  database.changePassword(req, (message) => res.json(message));
 }
