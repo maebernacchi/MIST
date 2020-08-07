@@ -9,41 +9,47 @@ function Custom(props) {
   const global = useContext(globalContext);
   const menuDimensions = useContext(menuContext);
   const fonts = useContext(fontContext);
-  const isValueMenuOpen = props.menuTabs.isValueMenuOpen;
-  const isFunctionMenuOpen = props.menuTabs.isFunctionMenuOpen;
-  const isCustomMenuOpen = props.menuTabs.isCustomMenuOpen;
-  const isSavedMenuOpen = props.menuTabs.isSavedMenuOpen;
-  const isSettingsMenuOpen = props.menuTabs.isSettingsMenuOpen;
+  const valuesOpen = props.menuTabs.valuesOpen;
+  const functionsOpen = props.menuTabs.functionsOpen;
+  const customOpen = props.menuTabs.customOpen;
+  const savedOpen = props.menuTabs.savedOpen;
+  const settingsOpen = props.menuTabs.settingsOpen;
   const [formValue, setFormValue] = useState("Enter a MIST expression");
   const formStyle = useSpring({
     from: {
-      position: 'absolute',
-      top: menuDimensions.lowerMenuHeight + 20,
-      left: isValueMenuOpen
+      position: "absolute",
+      top: menuDimensions.menuTabHeight + 2,
+      left: valuesOpen
         ? 2 * global.width
-        : isFunctionMenuOpen
+        : functionsOpen
         ? global.width
-        : isCustomMenuOpen
+        : customOpen
         ? 0
-        : -global.width,
+        : savedOpen
+        ? -global.width
+        : -2 * global.width,
     },
     to: {
-      position: 'absolute',
-      top: menuDimensions.lowerMenuHeight + 20,
-      left: isValueMenuOpen
+      position: "absolute",
+      top: menuDimensions.menuTabHeight + 3,
+      left: valuesOpen
         ? 2 * global.width
-        : isFunctionMenuOpen
+        : functionsOpen
         ? global.width
-        : isCustomMenuOpen
+        : customOpen
         ? 0
-        : -global.width,
+        : savedOpen
+        ? -global.width
+        : -2 * global.width,
     },
   });
 
   return (
-    <div style={{
-        position: 'absolute'
-    }}>
+    <div
+      style={{
+        position: "absolute",
+      }}
+    >
       <animated.form
         id="form"
         style={formStyle}
@@ -64,7 +70,7 @@ function Custom(props) {
           id={"input"}
           style={{
             width: global.width,
-            height: menuDimensions.upperMenuHeight * 0.7,
+            height: menuDimensions.mainMenuHeight - 4,
             backgroundColor: props.bgColor,
             border: "none",
           }}

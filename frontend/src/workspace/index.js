@@ -113,11 +113,11 @@ class WorkspaceComponent extends Component {
       offsetY: props.offset,
       isPopupCanvasOpen: false,
       menuTabs: {
-        isValueMenuOpen: false,
-        isFunctionMenuOpen: true,
-        isCustomMenuOpen: false,
-        isSavedMenuOpen: false,
-        isSettingsMenuOpen: false,
+        valuesOpen: false,
+        functionsOpen: true,
+        customOpen: false,
+        savedOpen: false,
+        settingsOpen: false,
       },
     };
     // +--------+
@@ -1069,23 +1069,21 @@ class WorkspaceComponent extends Component {
                   customTabColor={colors.menuCustomTab[this.state.theme]}
                   savedTabColor={colors.menuSavedTab[this.state.theme]}
                   settingsTabColor={colors.menuSettingsTab[this.state.theme]}
-                  top={this.state.offsetY}
-                  left={this.state.offsetX}
                   theme={this.state.theme}
                   setMenuTabs={(
-                    isValueMenuOpen,
-                    isFunctionMenuOpen,
-                    isCustomMenuOpen,
-                    isSavedMenuOpen,
-                    isSettingsMenuOpen
+                    valuesOpen,
+                    functionsOpen,
+                    customOpen,
+                    savedOpen,
+                    settingsOpen
                   ) => {
                     this.setState({
                       menuTabs: {
-                        isValueMenuOpen: isValueMenuOpen,
-                        isFunctionMenuOpen: isFunctionMenuOpen,
-                        isCustomMenuOpen: isCustomMenuOpen,
-                        isSavedMenuOpen: isSavedMenuOpen,
-                        isSettingsMenuOpen: isSettingsMenuOpen,
+                        valuesOpen: valuesOpen,
+                        functionsOpen: functionsOpen,
+                        customOpen: customOpen,
+                        savedOpen: savedOpen,
+                        settingsOpen: settingsOpen,
                       },
                     });
                   }}
@@ -1122,8 +1120,6 @@ class WorkspaceComponent extends Component {
                   functionTextColor={
                     this.state.theme === "dark" ? "black" : "black"
                   }
-                  top={this.state.offsetY}
-                  left={this.state.offsetX}
                   openPopupCanvas={() => {
                     this.setState({
                       isPopupCanvasOpen: true,
@@ -1183,15 +1179,6 @@ class WorkspaceComponent extends Component {
             functionWidth={this.functionWidth}
             valueWidth={this.valueWidth}
           >
-            {/* <div style={{ position: "absolute" }}>
-              <form style={{
-                position: 'absolute',
-                top: 30,
-                left: 30
-              }}>
-                <input />
-              </form>
-            </div> */}
             <Custom menuTabs={this.state.menuTabs}/>
           </ContextProvider>
 

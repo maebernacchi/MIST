@@ -46,7 +46,7 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import { Group } from "react-konva";
 import Konva from "konva";
 import gui from "../globals/mistgui-globals";
@@ -68,6 +68,10 @@ function FuncGroup(props) {
   const funName = props.funName;
   const nodeDimensions = useContext(nodeContext);
   const fonts = useContext(fontContext);
+
+  useEffect(() => {
+    //console.log("props:"+props);
+  }, [props])
 
   return (
     <Group
@@ -122,17 +126,17 @@ function FuncGroup(props) {
       <Spring
         native
         from={{
-          x: props.tabs.isValueMenuOpen ? global.width :
-            props.tabs.isFunctionMenuOpen ? 0 :
-            props.tabs.isCustomMenuOpen ? - global.width :
-            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+          x: props.tabs.valuesOpen ? global.width :
+            props.tabs.functionsOpen ? 0 :
+            props.tabs.customOpen ? - global.width :
+            props.tabs.savedOpen ? - 2 * global.width :
             - 3 * global.width,
           fontSize: gui.nodeFontSize }}
         to={{
-          x: props.tabs.isValueMenuOpen ? global.width :
-            props.tabs.isFunctionMenuOpen ? 0 :
-            props.tabs.isCustomMenuOpen ? - global.width :
-            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+          x: props.tabs.valuesOpen ? global.width :
+            props.tabs.functionsOpen ? 0 :
+            props.tabs.customOpen ? - global.width :
+            props.tabs.savedOpen ? - 2 * global.width :
             - 3 * global.width,
         }}
       >
@@ -150,17 +154,17 @@ function FuncGroup(props) {
       <Spring
         native
         from={{
-          x: props.tabs.isValueMenuOpen ? global.width :
-            props.tabs.isFunctionMenuOpen ? 0 :
-            props.tabs.isCustomMenuOpen ? - global.width :
-            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+          x: props.tabs.valuesOpen ? global.width :
+            props.tabs.functionsOpen ? 0 :
+            props.tabs.customOpen ? - global.width :
+            props.tabs.savedOpen ? - 2 * global.width :
             - 3 * global.width,
           fontSize: gui.nodeFontSize }}
         to={{
-          x: props.tabs.isValueMenuOpen ? global.width :
-            props.tabs.isFunctionMenuOpen ? 0 :
-            props.tabs.isCustomMenuOpen ? - global.width :
-            props.tabs.isSavedMenuOpen ? - 2 * global.width :
+          x: props.tabs.valuesOpen ? global.width :
+            props.tabs.functionsOpen ? 0 :
+            props.tabs.customOpen ? - global.width :
+            props.tabs.savedOpen ? - 2 * global.width :
             - 3 * global.width,
         }}
       >

@@ -22,13 +22,13 @@ function ContextProvider(props) {
   return (
     <ProviderComposer
       contexts={[
-      <GlobalContextProvider {...props}/>,
-      <FontGlobals {...props}/>,
-      <FunBarDimensions {...props}/>,
-      <PopupContextProvider {...props}/>,
-      <MenuContextProvider {...props}/>,
-      <NodeContextProvider {...props}/>,
-      <MenuContextProvider1 {...props}/>,
+      <GlobalContextProvider key={0} {...props}/>,
+      <FontGlobals key={1} {...props}/>,
+      <FunBarDimensions key={2} {...props}/>,
+      <PopupContextProvider key={3} {...props}/>,
+      <MenuContextProvider key={4} {...props}/>,
+      <NodeContextProvider key={5} {...props}/>,
+      <MenuContextProvider1 key={6} {...props}/>,
     ]}
     >
       {props.children}

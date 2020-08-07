@@ -124,24 +124,24 @@ function ValGroup(props) {
       <Spring
         native
         from={{
-          x: props.tabs.isValueMenuOpen
+          x: props.tabs.valuesOpen
             ? 0 + nodeDimensions.valueOffset
-            : props.tabs.isFunctionMenuOpen
+            : props.tabs.functionsOpen
             ? -global.width + nodeDimensions.valueOffset
-            : props.tabs.isCustomMenuOpen
+            : props.tabs.customOpen
             ? -2 * global.width + nodeDimensions.valueOffset
-            : props.tabs.isSavedMenuOpen
+            : props.tabs.savedOpen
             ? -3 * global.width + nodeDimensions.valueOffset
             : -4 * global.width + nodeDimensions.valueOffset,
         }}
         to={{
-          x: props.tabs.isValueMenuOpen
+          x: props.tabs.valuesOpen
             ? 0 + nodeDimensions.valueOffset
-            : props.tabs.isFunctionMenuOpen
+            : props.tabs.functionsOpen
             ? -global.width + nodeDimensions.valueOffset
-            : props.tabs.isCustomMenuOpen
+            : props.tabs.customOpen
             ? -2 * global.width + nodeDimensions.valueOffset
-            : props.tabs.isSavedMenuOpen
+            : props.tabs.savedOpen
             ? -3 * global.width + nodeDimensions.valueOffset
             : -4 * global.width + nodeDimensions.valueOffset,
         }}
@@ -161,24 +161,24 @@ function ValGroup(props) {
       <Spring
         native
         from={{
-          x: props.tabs.isValueMenuOpen
+          x: props.tabs.valuesOpen
             ? 0
-            : props.tabs.isFunctionMenuOpen
+            : props.tabs.functionsOpen
             ? -global.width
-            : props.tabs.isCustomMenuOpen
+            : props.tabs.customOpen
             ? -2 * global.width
-            : props.tabs.isSavedMenuOpen
+            : props.tabs.savedOpen
             ? -3 * global.width
             : -4 * global.width,
         }}
         to={{
-          x: props.tabs.isValueMenuOpen
+          x: props.tabs.valuesOpen
             ? 0
-            : props.tabs.isFunctionMenuOpen
+            : props.tabs.functionsOpen
             ? -global.width
-            : props.tabs.isCustomMenuOpen
+            : props.tabs.customOpen
             ? -2 * global.width
-            : props.tabs.isSavedMenuOpen
+            : props.tabs.savedOpen
             ? -3 * global.width
             : -4 * global.width,
         }}

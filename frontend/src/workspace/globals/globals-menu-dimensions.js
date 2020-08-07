@@ -5,8 +5,8 @@ export const menuContext = createContext();
 export function MenuContextProvider(props) {
 
     const totalMenuHeight = props.menuHeight;
-    const upperMenuHeight = totalMenuHeight * .73;
-    const lowerMenuHeight = totalMenuHeight * .27;
+    const mainMenuHeight = totalMenuHeight * .73;
+    const menuTabHeight = totalMenuHeight * .27;
 
     const valueMargin = props.valueWidth / 10;
     const functionMargin = props.functionWidth / 10;
@@ -15,8 +15,8 @@ export function MenuContextProvider(props) {
     <menuContext.Provider
       value={{
         totalMenuHeight: totalMenuHeight,
-        upperMenuHeight: upperMenuHeight,
-        lowerMenuHeight: lowerMenuHeight,
+        mainMenuHeight: mainMenuHeight,
+        menuTabHeight: menuTabHeight,
         valueMargin: valueMargin,
         functionMargin: functionMargin
       }}
