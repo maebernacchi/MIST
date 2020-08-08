@@ -140,13 +140,12 @@ handlers.getHomeImages = function (info, req, res) {
 handlers.wsexists = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     res.json("logged out");
-  }
-  else {
+  } else {
     try {
       const exists = await database.wsexists(req.user._id, info.name);
-      res.json({ exists: exists, success: true })
+      res.json({ exists: exists, success: true });
     } catch (error) {
-      res.json('Database query failed for unknown reason')
+      res.json("Database query failed for unknown reason");
     }
   } // else
 };
@@ -154,13 +153,12 @@ handlers.wsexists = async function (info, req, res) {
 /**
  * Get workspaces
  *  info.action: getws
- *  info. 
+ *  info.
  */
 handlers.getws = async function (info, req, res) {
   try {
     // check if user is authenticated
-    if (!req.isAuthenticated())
-      throw ('You have to be logged in!')
+    if (!req.isAuthenticated()) throw "You have to be logged in!";
 
     // retrieve the workspaces corresponding to a user
     const { workspaces } = await database.getws(req.user._id);
@@ -168,70 +166,60 @@ handlers.getws = async function (info, req, res) {
     res.json({
       success: true,
       workspaces: workspaces,
-    })
-
+    });
   } catch (error) {
     res.json({
       success: false,
       message: error,
-    })
+    });
   }
-}
+};
 
 /**
-* Save a workspace.
-*   action: savews
-*   name: the name of the workspace
-*   data: The information about the workspace
-*   replace: true or false [optional]
-* Precondition:
-* The user does not already own a workspace by the same name.
-*/
+ * Save a workspace.
+ *   action: savews
+ *   name: the name of the workspace
+ *   data: The information about the workspace
+ *   replace: true or false [optional]
+ * Precondition:
+ * The user does not already own a workspace by the same name.
+ */
 handlers.savews = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     fail(res, "Could not save workspace because you're not logged in");
-  }
-  else if (!info.workspace.name) {
+  } else if (!info.workspace.name) {
     fail(res, "Could not save workspace because you didn't title it");
-  }
-  else {
+  } else {
     try {
-      const workspace = info.workspace
+      const workspace = info.workspace;
       const bulkWriteOpResult = await database.savews(req.user._id, workspace);
       if (bulkWriteOpResult.nMatched === 0) {
-        throw ('Error Unknown')
-      }
-      else
-        res.json({ success: true })
+        throw "Error Unknown";
+      } else res.json({ success: true });
     } catch (error) {
-      res.json({ success: false, message: error })
+      res.json({ success: false, message: error });
     }
-
   }
-} // handlers.savews
+}; // handlers.savews
 
 handlers.deletews = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     fail(res, "Could not save workspace because you're not logged in");
-  }
-  else if (!info.name) {
+  } else if (!info.name) {
     fail(res, "Could not save workspace because you didn't title it");
-  }
-  else {
+  } else {
     try {
       const result = await database.deletews(req.user._id, info.name);
       console.log(result);
-      if(result.nModified)
-        res.json({ success: true })
-      else{
-        res.json({success: false, message: 'Failed due to unknown error'})
+      if (result.nModified) res.json({ success: true });
+      else {
+        res.json({ success: false, message: "Failed due to unknown error" });
       }
     } catch (error) {
-      res.json({ success: false, message: error })
+      res.json({ success: false, message: error });
     }
   }
-}
-
+};
 
 // +----------------+--------------------------------------------------
 // | Gallery        |
@@ -460,10 +448,17 @@ handlers.changeEmail = function (info, req, res) {
   database.changeEmail(req, (message) => res.json(message));
 };
 
-handlers.changeUsername = function(info, req, res) {
+handlers.changeUsername = function (info, req, res) {
   database.changeUsername(req, (message) => res.json(message));
-}
+};
 
-handlers.changePassword = function(info, req, res) {
+handlers.changePassword = function (info, req, res) {
   database.changePassword(req, (message) => res.json(message));
-}
+};
+
+handlers.deleteAccount = function (info, req, res) {
+  database.deleteAccount(req, (message) => {
+    req.logout();
+    res.json(message);
+  });
+};

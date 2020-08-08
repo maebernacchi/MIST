@@ -642,9 +642,14 @@ passwordSecurity = (pass) => {
     return "Success";
   }
 };
-
+/**
+ * 
+ * @param {*} req 
+ * @param {*} callback 
+ * Changes the password of the user
+ */
 module.exports.changePassword = async (req, callback) => {
-  let dbPassword = "a";
+  let dbPassword = "";
   await User.findOne({ _id: req.body._id }, (err, doc) => {
     if (err) {
       console.log("No doc");
@@ -729,6 +734,39 @@ module.exports.getUsername = (userId, callback) => {
     else callback(user.username, null);
   });
 };
+
+/**
+ * Deletes the user's account
+ * @param {*} req 
+ * @param {*} callback 
+ */
+
+module.exports.deleteAccount = async (req, callback) => {
+  let dbPassword = "";
+  await User.findOne({ _id: req.body._id }, (err, doc) => {
+    if (err) {
+      console.log(err);
+    }
+    dbPassword = doc.password;
+  })
+  bcrypt.compare(req.body.currentPassword, dbPassword, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    if (result === false) {
+      callback("Old Password Does Not Match");
+    } else {
+      User.findOneAndDelete({_id: req.body._id}, (err, doc) => {
+        if(err) {
+          callback(err)
+        } else {
+          callback("Deleted. Please Sign Out.")
+        }
+      })
+    }
+  })
+}
+
 
 /**
  * creates a new user in the database
