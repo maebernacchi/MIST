@@ -288,9 +288,9 @@ class ProfileNav extends React.Component {
 function Albums(props) {
 
   const [mode, setMode] = useState("albumsView");
-  const [images, setImages] = useState("");
+  const [images, setImages] = useState([]);
   function openAlbumsView() { setMode("albumsView") };
-  function openAlbum(props) { setMode("openedAlbum"); setImages(props.images) };
+  function openAlbum(images) { setMode("openedAlbum"); setImages(images) };
 
   if (mode === "albumsView") {
     return (
@@ -317,10 +317,14 @@ function Albums(props) {
         ))}
       </Row>
     );
+  } else if (mode === "openedAlbum") {
+    return (
+      <OpenedAlbum images={images} onClick={openAlbumsView} />
+    )
   } else {
     return (
       /* signIn mode*/
-      <OpenedAlbum images={images} onClick={openAlbumsView} />
+      <OpenedAlbum images={[]} onClick={openAlbumsView} />
     );
   }
 }
@@ -367,7 +371,7 @@ function ControlledCarousel(props) {
       {props.images.map((album) => (
         <Carousel.Item >
           <Row style={{ justifyContent: "center" }}>
-            <Nav.Link onClick={props.openAlbum}>
+            <Nav.Link onClick={() => props.openAlbum(props.images)}>
               <MISTImage
                 code={album.code}
                 resolution="250"
@@ -388,6 +392,7 @@ function OpenedAlbum(props) {
       <Row>
         <Button onClick={props.onClick}> Back </Button>
       </Row>
+      <DisplayImages cards={props.images} cardsLoaded={true} />
     </Container>
   )
 }
