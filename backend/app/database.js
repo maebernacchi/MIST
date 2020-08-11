@@ -670,7 +670,7 @@ module.exports.changePassword = async (req, callback) => {
         let newPass = await bcrypt.hash(req.body.newPassword, 12);
         User.findOneAndUpdate(
           { _id: req.body._id },
-          { $set: { password: newPass} },
+          { $set: { password: newPass } },
           { new: true },
           (err, doc) => {
             if (err) {
@@ -756,8 +756,8 @@ module.exports.deleteAccount = async (req, callback) => {
     if (result === false) {
       callback("Old Password Does Not Match");
     } else {
-      User.findOneAndDelete({_id: req.body._id}, (err, doc) => {
-        if(err) {
+      User.findOneAndDelete({ _id: req.body._id }, (err, doc) => {
+        if (err) {
           callback(err)
         } else {
           callback("Deleted. Please Sign Out.")
@@ -821,7 +821,8 @@ module.exports.getCompleteUserProfile = async (userid) => {
     })
     .populate({
       path: 'albums',
-      match: { active: true }
+      match: { active: true },
+      populate: { path: 'images', match: { active: true } }
     })
     .select('-password')
     .exec())
