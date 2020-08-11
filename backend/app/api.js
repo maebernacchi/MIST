@@ -129,16 +129,51 @@ handlers.getHomeImages = function (info, req, res) {
   });
 };
 
+/** 
+ * We expect info to have both an 
+ * imageId : String
+ * albumId : String 
+ */
+handlers.addToWorkspace = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    res.json({
+      success: false,
+      message: 'You need to be logged in to save an image to an album'
+    })
+  } else {
+    try {
+      const { albumId, imageId } = info;
+      const writeOpResult = await database.addToAlbum(albumId, imageId);
+      if (writeOpResult.nModified) {
+        res.json({
+          success: true,
+          message: 'Successfully added image to album',
+        })
+      } else {
+        res.json({
+          success: false,
+          message: 'Failed to add due to unknown reason, most likely because image already exists in album',
+        })
+      }
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
+
 // +--------------------+----------------------------------------------
 // | Workspace Handlers |
 // +--------------------+
 
 /**
- * Check if an image exists
+ * Check if an workspace exists
  *   info.action: wsexists
  *   info.title: The title of the image
  */
-handlers.wsexists = async function (info, req, res) {
+handlers.wsexists = async function (info, req, workspace) {
   if (!req.isAuthenticated()) {
     res.json("logged out");
   } else {
@@ -433,6 +468,36 @@ handlers.getUser = function (info, req, res) {
   }
 };
 
+/** */
+handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
+  try {
+    if (!req.isAuthenticated())
+      throw ('User is not authenticated');
+    const userid = req.user._id;
+    const complete_user = await database.getCompleteUserProfile(userid);
+    res.json({
+      user: complete_user,
+    })
+  } catch (error) {
+    fail(res, error);
+  }
+}
+
+
+/** */
+handlers.getCompleteUserProfile = async function (info, req, res) {
+  try {
+    const { userid } = info;
+    const complete_user = await database.getCompleteUserProfile(userid);
+    console.log(complete_user)
+    res.json({
+      user: complete_user,
+    })
+  } catch (error) {
+    fail(res, error);
+  }
+}
+
 // +-----------+------------------------------------------------------
 // | Expert UI |
 // +-----------+
@@ -475,6 +540,113 @@ handlers.getUserExpertWS = function (info, req, res) {
     database.getUserExpertWS(userId, res);
   }
 };
+
+// +--------+------------------------------------------------------
+// | Albums |
+// +--------+
+
+/**
+ * Creates an album for a user. We expect info to be of the form:
+ * {
+ *  name: String
+ * }
+ */
+handlers.createAlbums = async function (info, req, res) {
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: "You need to be logged in" });
+  else {
+    try {
+      const { name } = info;
+      const userId = req.user._id;
+      const writeOpResult = await database.createAlbum(userId, name);
+      if (writeOpResult.nModified) {
+        res.json({
+          success: true,
+          message: 'Successfully saved the album ' + name,
+        })
+      } else {
+        throw 'Failed to save due to unknown reason';
+      }
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
+
+
+/**
+ * deletes an album. We expect info to be of the form:
+ * {
+ *  albumId : String
+ * }
+ * 
+ * DANGEROUS : DOES NOT CHECK FOR AUTHORIZATION
+ */
+handlers.deleteAlbum = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    res.json({
+      message: 'Failed because you have not been authenticated',
+      success: false,
+    })
+  } else {
+    try {
+      const { albumId } = info;
+      const writeOpResult = await database.deleteAlbum(albumId);
+      const response = (writeOpResult.nModified) ? {
+        message: 'Succesfully deleted album ',
+        success: true,
+      } : {
+          message: 'Failed to delete album for unknow reason',
+          success: false,
+        };
+      res.json(response);
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error
+      })
+    }
+  }
+}
+
+/**
+ * We expect info to have 
+ * {
+ *  albumId : String,
+ *  newName : String, 
+ * }
+ */
+handlers.renameAlbum = async function (info, req, res) {
+  if(!req.isAuthenticated()){
+    res.json({
+      success: false,
+      message: 'You need to be logged in to rename an album'
+    })
+  }
+  try {
+    const { albumId, newName } = info;
+    const writeOpResult = await database.renameAlbum(albumId, newName);
+    if (writeOpResult.nModified) {
+      res.json({
+        success: true,
+        message: 'Successfully renamed album'
+      });
+    } else {
+      res.json({
+        success: false,
+        message: 'Failed to rename album due to unknown reason'
+      })
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error
+    })
+  }
+}
 
 // +-----------+------------------------------------------------------
 // | Settings  |

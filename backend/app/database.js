@@ -382,6 +382,36 @@ module.exports.saveImage = (userId, title, code, res) => {
     });
 };
 
+// add image to album
+module.exports.addToAlbum = async (albumId, imageId) => {
+  // Sanitize inputs.  Yay!
+  albumId = sanitize(albumId);
+  imageId = sanitize(imageId);
+  const image = {
+    images: imageId,
+  }
+
+  const updateObj = { $addToSet: image };
+
+  return (Album
+    .updateOne({ _id: albumId }, updateObj)
+    .exec()
+  )
+};
+
+// rename an album
+module.exports.renameAlbum = async (albumId, newName) => {
+  // Sanitize inputs.  Yay!
+  albumId = sanitize(albumId);
+  newName = sanitize(newName);
+
+  return (
+    Album
+      .updateOne({ _id: albumId }, { name: newName })
+      .exec()
+  )
+}
+
 // +------------+-------------------------------------------------
 // |   Gallery  |
 // +------------+
@@ -672,7 +702,7 @@ module.exports.changePassword = async (req, callback) => {
         let newPass = await bcrypt.hash(req.body.newPassword, 12);
         User.findOneAndUpdate(
           { _id: req.body._id },
-          { $set: { password: newPass} },
+          { $set: { password: newPass } },
           { new: true },
           (err, doc) => {
             if (err) {
@@ -758,8 +788,8 @@ module.exports.deleteAccount = async (req, callback) => {
     if (result === false) {
       callback("Old Password Does Not Match");
     } else {
-      User.findOneAndDelete({_id: req.body._id}, (err, doc) => {
-        if(err) {
+      User.findOneAndDelete({ _id: req.body._id }, (err, doc) => {
+        if (err) {
           callback(err)
         } else {
           callback("Deleted. Please Sign Out.")
@@ -810,6 +840,25 @@ module.exports.getUserIdByUsername = (username, callback) => {
     if (err) return callback(err, null);
     else return callback(null, user._id);
   });
+};
+
+// Returns all images and albums for a user
+module.exports.getCompleteUserProfile = async (userid) => {
+  userid = sanitize(userid);
+  return (User
+    .findById(userid)
+    .populate({
+      path: 'images',
+      match: { active: true },
+    })
+    .populate({
+      path: 'albums',
+      match: { active: true },
+      populate: { path: 'images', match: { active: true } }
+    })
+    .select('-password')
+    .exec())
+  //     .select('images albums')
 };
 
 // +--------------+-------------------------------------------------
@@ -1056,9 +1105,61 @@ module.exports.wsexists = async (userid, wsname) =>
     .countDocuments()
     .exec();
 
-module.exports.deletews = async (userId, workspace_name) =>
+module.exports.deletews = async (userId, workspace_name) => (
   User.findOne({ _id: mongoose.Types.ObjectId(userId) })
     .updateOne({
       $pull: { workspaces: { name: workspace_name } },
     })
-    .exec();
+    .exec()
+)
+
+// +--------+----------------------------------------------------------
+// | Albums |
+// +--------+
+
+// create Album
+module.exports.createAlbum = async (userid, name) => {
+  userid = sanitize(userid);
+  name = sanitize(name);
+  let album = new Album({
+    name: name,
+    userId: userid,
+    public: false,
+    active: true,
+    flag: false,
+    caption: '',
+  }) // create album document object 
+  try {
+    //save the album object
+    const albumObject = await album.save();
+    if (albumObject) {
+      return (
+        User
+          .updateOne({ _id: userid }, { $push: { albums: albumObject._id } })
+          .exec()
+      );
+    } else {
+      throw 'Failed to safe for Unkown reason'
+    }
+  } catch (error) {
+    throw err;
+  }
+}; // createAlbum
+
+/**
+* deletes the comment if the user has authorization
+* @param userId: the object ID for the user
+* @param albumId: the object ID for the album
+* @param callback: the callback to be excecuted if true
+*/
+module.exports.deleteAlbum = async (albumId) => {
+
+  // sanitize ID's
+  albumId = sanitize(albumId);
+
+  return (
+    Album
+      .updateOne({ _id: albumId }, { active: false, updatedAt: Date.now })
+      .exec()
+  )
+}

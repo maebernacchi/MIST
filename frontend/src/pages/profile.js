@@ -73,16 +73,23 @@ export default function Profile() {
 
   // grab user's information, images, and albums
   useEffect(() => {
-    fetch('/api/gallery/recent')
-      .then(req => req.json())
-      .then(cards => { setUserImages(cards) });
-
-    fetch('/api/profile')
-      .then(req => req.json())
-      .then((userInfo) => {
-        setUser(userInfo.user);
-        setUserAlbums(userInfo.userAlbums);
-      });
+    fetch('/api/?action=getAuthenticatedCompleteUserProfile')
+      .then(res => res.json())
+      .then(function ({ user }) {
+        setUser(
+          {
+            forename: user.forename,
+            surname: user.surname,
+            username: user.username,
+            createdAt: user.createdAt,
+            about: user.about,
+            profilepic: (user.profilepic) ? user.profilepic : ''
+          }
+        );
+        setUserImages(user.images.map(image => ({ ...image, userId: { username: image.username } })))
+        setUserAlbums(user.albums);
+      })
+      .catch(alert)
   }, [])
 
   return (
@@ -281,9 +288,9 @@ class ProfileNav extends React.Component {
 function Albums(props) {
 
   const [mode, setMode] = useState("albumsView");
-  const [images, setImages] = useState("");
+  const [images, setImages] = useState([]);
   function openAlbumsView() { setMode("albumsView") };
-  function openAlbum(props) { setMode("openedAlbum"); setImages(props.images) };
+  function openAlbum(images) { setMode("openedAlbum"); setImages(images) };
 
   if (mode === "albumsView") {
     return (
@@ -295,24 +302,29 @@ function Albums(props) {
             style={{ padding: "1em", width: "30%", margin: "1em" }}
           >
             <Card.Header>
-              <Card.Title style={{ margin: "auto" }}>
-                <p>{props.title}</p>
-              </Card.Title>
-              {/* ICONS */}
-              <Card.Body style={{ justifyContent: "space-between" }}>
-                <ControlledCarousel images={album.images} openAlbum={openAlbum}/>
-                <p>{props.description}</p>
-                <p>{props.date}</p>
-              </Card.Body>
+              {/* EMPTY HEADER */}
             </Card.Header>
+            {/* ICONS */}
+            <Card.Body style={{ justifyContent: "space-between" }}>
+              <Card.Title style={{ margin: "auto" }}>
+                <p>{album.name}</p>
+              </Card.Title>
+              <ControlledCarousel images={album.images} openAlbum={openAlbum} />
+              <p>{album.caption}</p>
+              <p>{album.createdAt}</p>
+            </Card.Body>
           </Card>
         ))}
       </Row>
     );
+  } else if (mode === "openedAlbum") {
+    return (
+      <OpenedAlbum images={images} onClick={openAlbumsView} />
+    )
   } else {
     return (
       /* signIn mode*/
-      <OpenedAlbum  images={images} onClick={openAlbumsView}/>
+      <OpenedAlbum images={[]} onClick={openAlbumsView} />
     );
   }
 }
@@ -359,7 +371,7 @@ function ControlledCarousel(props) {
       {props.images.map((album) => (
         <Carousel.Item >
           <Row style={{ justifyContent: "center" }}>
-            <Nav.Link onClick={props.openAlbum}>
+            <Nav.Link onClick={() => props.openAlbum(props.images)}>
               <MISTImage
                 code={album.code}
                 resolution="250"
@@ -380,6 +392,7 @@ function OpenedAlbum(props) {
       <Row>
         <Button onClick={props.onClick}> Back </Button>
       </Row>
+      <DisplayImages cards={props.images} cardsLoaded={true} />
     </Container>
   )
 }
