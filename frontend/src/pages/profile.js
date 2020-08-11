@@ -302,16 +302,17 @@ function Albums(props) {
             style={{ padding: "1em", width: "30%", margin: "1em" }}
           >
             <Card.Header>
-              <Card.Title style={{ margin: "auto" }}>
-                <p>{props.title}</p>
-              </Card.Title>
-              {/* ICONS */}
-              <Card.Body style={{ justifyContent: "space-between" }}>
-                <ControlledCarousel images={album.images} openAlbum={openAlbum} />
-                <p>{props.description}</p>
-                <p>{props.date}</p>
-              </Card.Body>
+              {/* EMPTY HEADER */}
             </Card.Header>
+            {/* ICONS */}
+            <Card.Body style={{ justifyContent: "space-between" }}>
+              <Card.Title style={{ margin: "auto" }}>
+                <p>{album.name}</p>
+              </Card.Title>
+              <ControlledCarousel images={album.images} openAlbum={openAlbum} />
+              <p>{album.caption}</p>
+              <p>{album.date}</p>
+            </Card.Body>
           </Card>
         ))}
       </Row>
