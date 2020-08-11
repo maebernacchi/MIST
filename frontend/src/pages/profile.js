@@ -311,7 +311,7 @@ function Albums(props) {
               </Card.Title>
               <ControlledCarousel images={album.images} openAlbum={openAlbum} />
               <p>{album.caption}</p>
-              <p>{album.date}</p>
+              <p>{album.createdAt}</p>
             </Card.Body>
           </Card>
         ))}
