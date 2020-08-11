@@ -382,6 +382,36 @@ module.exports.saveImage = (userId, title, code, res) => {
     });
 };
 
+// add image to album
+module.exports.addToAlbum = async (albumId, imageId) => {
+  // Sanitize inputs.  Yay!
+  albumId = sanitize(albumId);
+  imageId = sanitize(imageId);
+  const image = {
+    images: imageId,
+  }
+
+  const updateObj = { $addToSet: image };
+
+  return (Album
+    .updateOne({ _id: albumId }, updateObj)
+    .exec()
+  )
+};
+
+// rename an album
+module.exports.renameAlbum = async (albumId, newName) => {
+  // Sanitize inputs.  Yay!
+  albumId = sanitize(albumId);
+  newName = sanitize(newName);
+
+  return (
+    Album
+      .updateOne({ _id: albumId }, { name: newName })
+      .exec()
+  )
+}
+
 // +------------+-------------------------------------------------
 // |   Gallery  |
 // +------------+
@@ -1113,3 +1143,21 @@ module.exports.createAlbum = async (userid, name) => {
     throw err;
   }
 }; // createAlbum
+
+/**
+* deletes the comment if the user has authorization
+* @param userId: the object ID for the user
+* @param albumId: the object ID for the album
+* @param callback: the callback to be excecuted if true
+*/
+module.exports.deleteAlbum = async (albumId) => {
+
+  // sanitize ID's
+  albumId = sanitize(albumId);
+
+  return (
+    Album
+      .updateOne({ _id: albumId }, { active: false, updatedAt: Date.now })
+      .exec()
+  )
+}
