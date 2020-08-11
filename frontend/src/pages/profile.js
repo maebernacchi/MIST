@@ -73,16 +73,23 @@ export default function Profile() {
 
   // grab user's information, images, and albums
   useEffect(() => {
-    fetch('/api/gallery/recent')
-      .then(req => req.json())
-      .then(cards => { setUserImages(cards) });
-
-    fetch('/api/profile')
-      .then(req => req.json())
-      .then((userInfo) => {
-        setUser(userInfo.user);
-        setUserAlbums(userInfo.userAlbums);
-      });
+    fetch('/api/?action=getAuthenticatedCompleteUserProfile')
+      .then(res => res.json())
+      .then(function ({ user }) {
+        setUser(
+          {
+            forename: user.forename,
+            surname: user.surname,
+            username: user.username,
+            createdAt: user.createdAt,
+            about: user.about,
+            profilepic: (user.profilepic) ? user.profilepic : ''
+          }
+        );
+        setUserImages(user.images.map(image => ({ ...image, userId: { username: image.username } })))
+        setUserAlbums(user.albums);
+      })
+      .catch(alert)
   }, [])
 
   return (
@@ -300,7 +307,7 @@ function Albums(props) {
               </Card.Title>
               {/* ICONS */}
               <Card.Body style={{ justifyContent: "space-between" }}>
-                <ControlledCarousel images={album.images} openAlbum={openAlbum}/>
+                <ControlledCarousel images={album.images} openAlbum={openAlbum} />
                 <p>{props.description}</p>
                 <p>{props.date}</p>
               </Card.Body>
@@ -312,7 +319,7 @@ function Albums(props) {
   } else {
     return (
       /* signIn mode*/
-      <OpenedAlbum  images={images} onClick={openAlbumsView}/>
+      <OpenedAlbum images={images} onClick={openAlbumsView} />
     );
   }
 }
