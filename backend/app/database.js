@@ -613,6 +613,8 @@ module.exports.commentInfo = (userid, imageid, callback) => {
 // |    Users   |
 // +------------+
 
+
+
 /**
  * Checks if the password is secure enough when the user is signing up
  */
@@ -791,7 +793,7 @@ module.exports.createUser = (req, callback) => {
           username: user.username,
           password: hashedPassword,
           email: user.email,
-          verified: true,
+          verified: false,
           admin: false,
           moderator: false,
         });

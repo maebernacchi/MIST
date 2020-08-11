@@ -22,9 +22,10 @@ handler.
 // +--------------------+--------------------------------------------
 // | Required Libraries |
 // +--------------------+
-
+require("dotenv").config();
 var database = require("./database.js");
 const passport = require("passport");
+const nodemailer = require("nodemailer");
 
 // +--------------------+--------------------------------------------
 // | Exported Functions |
@@ -346,6 +347,29 @@ handlers.getChallenges = function (info, req, res) {
  */
 
 handlers.signUp = function (info, req, res) {
+    let transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.GMAILID, // generated ethereal user
+      pass: process.env.GMAILPASS, // generated ethereal password
+    },
+  });
+
+  let mail = {
+    from: process.env.GMAILID,
+    to: process.env.RECEIVE,
+    subject: 'Email Verification',
+    text: 'Please use the following link to verify your account: http://localhost:3000/emailVerification/' + req.body.username
+  }
+
+  transporter.sendMail(mail, (err, data) => {
+    if(err) {
+      console.log(err)
+    } else {
+      console.log('Sent!')
+    }
+  })  
+
   database.createUser(req, (message) => res.json(message));
 };
 
@@ -355,21 +379,33 @@ handlers.signUp = function (info, req, res) {
  */
 
 handlers.signIn = function (info, req, res, next) {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      throw err;
-    }
-    if (!user) {
-      var message = "No User Exists";
-      res.json(message);
+  let emailVerify = false
+  database.User.findOne({username: req.body.username}, (err,user) => {
+    if(err) {
+      console.log(err);
     } else {
-      req.logIn(user, (err) => {
-        if (err) throw err;
-        var message = "Success";
-        res.json(message);
-      });
+      emailVerify = user.verified
     }
-  })(req, res, next);
+  })
+  if (emailVerify) {
+    res.json("Please Verify Email");
+  } else {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        throw err;
+      }
+      if (!user) {
+        var message = "No User Exists";
+        res.json(message);
+      } else {
+        req.logIn(user, (err) => {
+          if (err) throw err;
+          var message = "Success";
+          res.json(message);
+        });
+      }
+    })(req, res, next);
+  }
 };
 
 /*
