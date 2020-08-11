@@ -69,6 +69,7 @@ import Challenges from "./pages/challenges";
 import Community from "./pages/community";
 import Contact from "./pages/contact";
 import Development from "./pages/development";
+import EmailVerification from "./pages/emailVerification";
 import Expert from "./expert/";
 import Faq from "./pages/faq";
 import Gallery from "./pages/Gallery";
@@ -87,6 +88,7 @@ import WorkspaceComponent from './workspace';
 
 /* imports the footer */
 import Footer from "./pages/components/footer";
+import emailVerification from "./pages/emailVerification";
 
 // +-------------+----------------------------------------------------------------------
 // | App         |
@@ -126,6 +128,7 @@ function App() {
             <Route path="/signUp" component={SignUp} />
             <Route path="/tutorial" component={Tutorial} />
             <Route path="/user" children={User} />
+            <Route path="/emailVerification" component={EmailVerification} />
             {/* workspace */}
             <Route path="/createWorkspace" children={<WorkspaceComponent />} />
             <Route path="/expert" render={(props) => <Expert {...props} />} />
