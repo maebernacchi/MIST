@@ -221,10 +221,10 @@ handlers.deletews = async function (info, req, res) {
     try {
       const result = await database.deletews(req.user._id, info.name);
       console.log(result);
-      if(result.nModified)
+      if (result.nModified)
         res.json({ success: true })
-      else{
-        res.json({success: false, message: 'Failed due to unknown error'})
+      else {
+        res.json({ success: false, message: 'Failed due to unknown error' })
       }
     } catch (error) {
       res.json({ success: false, message: error })
@@ -409,6 +409,36 @@ handlers.getUser = function (info, req, res) {
   }
 };
 
+/** */
+handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
+  try {
+    if (!req.isAuthenticated())
+      throw ('User is not authenticated');
+    const userid = req.user._id;
+    const complete_user = await database.getCompleteUserProfile(userid);
+    res.json({
+      user: complete_user,
+    })
+  } catch (error) {
+    fail(res, error);
+  }
+}
+
+
+/** */
+handlers.getCompleteUserProfile = async function (info, req, res) {
+  try {
+    const { userid } = info;
+    const complete_user = await database.getCompleteUserProfile(userid);
+    console.log(complete_user)
+    res.json({
+      user: complete_user,
+    })
+  } catch (error) {
+    fail(res, error);
+  }
+}
+
 // +-----------+------------------------------------------------------
 // | Expert UI |
 // +-----------+
@@ -452,6 +482,35 @@ handlers.getUserExpertWS = function (info, req, res) {
   }
 };
 
+// +--------+------------------------------------------------------
+// | Albums |
+// +--------+
+
+handlers.createAlbums = async function (info, req, res) {
+  if (!req.isAuthenticated())
+    res.json({ success: false, message: "You need to be logged in" });
+  else {
+    try {
+      const { name } = info;
+      const userId = req.user._id;
+      const writeOpResult = await database.createAlbum(userId, name);
+      if (writeOpResult.nModified) {
+        res.json({
+          success: true,
+          message: 'Successfully saved the album ' + name,
+        })
+      } else {
+        throw 'Failed to save due to unknown reason';
+      }
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
+
 // +-----------+------------------------------------------------------
 // | Settings  |
 // +-----------+
@@ -460,10 +519,10 @@ handlers.changeEmail = function (info, req, res) {
   database.changeEmail(req, (message) => res.json(message));
 };
 
-handlers.changeUsername = function(info, req, res) {
+handlers.changeUsername = function (info, req, res) {
   database.changeUsername(req, (message) => res.json(message));
 }
 
-handlers.changePassword = function(info, req, res) {
+handlers.changePassword = function (info, req, res) {
   alert(req.body.currentPassword);
 }

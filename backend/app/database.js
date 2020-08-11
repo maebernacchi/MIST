@@ -736,6 +736,24 @@ module.exports.getUserIdByUsername = (username, callback) => {
   });
 };
 
+// Returns all images and albums for a user
+module.exports.getCompleteUserProfile = async (userid) => {
+  userid = sanitize(userid);
+  return (User
+    .findById(userid)
+    .populate({
+      path: 'images',
+      match: { active: true },
+    })
+    .populate({
+      path: 'albums',
+      match: { active: true }
+    })
+    .select('-password')
+    .exec())
+  //     .select('images albums')
+};
+
 // +--------------+-------------------------------------------------
 // |    Expert    |
 // +--------------+
@@ -981,3 +999,36 @@ module.exports.deletews = async (userId, workspace_name) => (
     })
     .exec()
 )
+
+// +--------+----------------------------------------------------------
+// | Albums |
+// +--------+
+
+// create Album
+module.exports.createAlbum = async (userid, name) => {
+  userid = sanitize(userid);
+  name = sanitize(name);
+  let album = new Album({
+    name: name,
+    userId: userid,
+    public: false,
+    active: true,
+    flag: false,
+    caption: '',
+  }) // create album document object 
+  try {
+    //save the album object
+    const albumObject = await album.save();
+    if (albumObject) {
+      return (
+        User
+          .updateOne({ _id: userid }, { $push: { albums: albumObject._id } })
+          .exec()
+      );
+    } else {
+      throw 'Failed to safe for Unkown reason'
+    }
+  } catch (error) {
+    throw err;
+  }
+}; // createAlbum
