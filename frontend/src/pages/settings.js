@@ -135,6 +135,29 @@ function SettingsTable() {
       .then((message) => alert(message));
   }
 
+  function deleteAccount(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "deleteAccount",
+        currentPassword: currentPassword,
+        ...user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => {
+        if(message === "Deleted. Please Sign Out.") {
+          window.location.href = "/";
+          alert(message);
+        }
+      })
+  }
+
   const popover = (
     <Popover id="popover-basic">
       <Popover.Title as="h3"> Change Email</Popover.Title>
@@ -159,7 +182,7 @@ function SettingsTable() {
       <Popover.Title as="h3"> Change Username</Popover.Title>
 
       <Popover.Content>
-        <Form onSubmit={changeUsername}>
+        <Form>
           <Form.Group controlId="formBasicEmail">
             <Form.Control
               type="username"
@@ -167,6 +190,7 @@ function SettingsTable() {
               onChange={(e) => setNewUsername(e.target.value)}
             />
             <Form.Text className="text-muted"></Form.Text>
+            <Button onClick = {changeUsername}>Confirm Changes</Button>
           </Form.Group>
         </Form>
       </Popover.Content>
@@ -190,6 +214,26 @@ function SettingsTable() {
               onChange={(e) => setNewPassword(e.target.value)}
             />
             <Form.Text className="text-muted"></Form.Text>
+            <Button onClick = {changePassword}>Confirm Changes</Button>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+  const deletePopover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Delete Account</Popover.Title>
+      <Popover.Content>
+        <Form>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
+              type="password"
+              placeholder="Enter Password"
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <Form.Text className="text-muted"></Form.Text>
+            <Button onClick = {deleteAccount}>Confirm</Button>
           </Form.Group>
         </Form>
       </Popover.Content>
@@ -234,6 +278,14 @@ function SettingsTable() {
               </OverlayTrigger>
 
               <Button>Blocked Content</Button>
+
+              <OverlayTrigger
+                trigger="click"
+                placement="right"
+                overlay={deletePopover}
+              >
+                <Button>Delete Account</Button>
+              </OverlayTrigger>
             </ButtonGroup>
           </Card.Body>
         </Accordion.Collapse>
