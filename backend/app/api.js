@@ -612,6 +612,38 @@ handlers.renameAlbum = async function (info, req, res) {
   }
 }
 
+// +----------+----------------------------------------------------------
+// | Reporting/Hiding/Blocking |
+// +---------------------------+
+
+/**
+ * Info contains the type of content that the user wants to hide as way as the 
+ * ObjectId of the content in the database.
+ * info = {
+ *  userid: 
+ * }
+ */
+handlers.hideContent = async function (info, req, res) {
+  if (!req.isAuthenticated())
+    fail(res, 'You need to be logged in to hide content!');
+  else {
+    try {
+      const userid = req.user._id;
+      const { type, contentid } = info;
+      const success = await database.hideContent(userid, type, contentid);
+      res.json({
+        success: success,
+        message: (success) ? 'Successfully hidden content!' : 'Failed to hide content due to unknown reason',
+      })
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
+
 // +-----------+------------------------------------------------------
 // | Settings  |
 // +-----------+
