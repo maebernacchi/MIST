@@ -79,8 +79,8 @@ module.exports = (app) => {
         res.json(userInfo);
     })
 
-    app.post('/api/emailVerification', (req,res) => {
-        
+    app.post('/api/emailVerification/:username', (req,res) => {
+        console.log(req.params.username);
     })
 
 }	

@@ -129,17 +129,17 @@ handlers.getHomeImages = function (info, req, res) {
   });
 };
 
-/** 
- * We expect info to have both an 
+/**
+ * We expect info to have both an
  * imageId : String
- * albumId : String 
+ * albumId : String
  */
 handlers.addToWorkspace = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     res.json({
       success: false,
-      message: 'You need to be logged in to save an image to an album'
-    })
+      message: "You need to be logged in to save an image to an album",
+    });
   } else {
     try {
       const { albumId, imageId } = info;
@@ -147,22 +147,23 @@ handlers.addToWorkspace = async function (info, req, res) {
       if (writeOpResult.nModified) {
         res.json({
           success: true,
-          message: 'Successfully added image to album',
-        })
+          message: "Successfully added image to album",
+        });
       } else {
         res.json({
           success: false,
-          message: 'Failed to add due to unknown reason, most likely because image already exists in album',
-        })
+          message:
+            "Failed to add due to unknown reason, most likely because image already exists in album",
+        });
       }
     } catch (error) {
       res.json({
         success: false,
         message: error,
-      })
+      });
     }
   }
-}
+};
 
 // +--------------------+----------------------------------------------
 // | Workspace Handlers |
@@ -376,13 +377,34 @@ handlers.getChallenges = function (info, req, res) {
 // | Authentication   |
 // +------------------+
 
+/**
+ * Verifies that the email address is correct
+ * @param {*} info 
+ * @param {*} req 
+ * @param {*} res 
+ */
+handlers.verifyEmail = function (info, req, res) {
+  database.User.findOneAndUpdate(
+    { username: req.body.username },
+    { $set: { verified: true } },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Success");
+      }
+    }
+  );
+};
+
 /*
  *   Register user to the database
  *   info.action: signup
  */
 
 handlers.signUp = function (info, req, res) {
-    let transporter = nodemailer.createTransport({
+  let transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
       user: process.env.GMAILID, // generated ethereal user
@@ -392,18 +414,20 @@ handlers.signUp = function (info, req, res) {
 
   let mail = {
     from: process.env.GMAILID,
-    to: process.env.RECEIVE,
-    subject: 'Email Verification',
-    text: 'Please use the following link to verify your account: http://localhost:3000/emailVerification/' + req.body.username
-  }
+    to: req.body.email,
+    subject: "Email Verification",
+    text:
+      "Please use the following link to verify your account: http://localhost:3000/emailVerification/" +
+      req.body.username,
+  };
 
   transporter.sendMail(mail, (err, data) => {
-    if(err) {
-      console.log(err)
+    if (err) {
+      console.log(err);
     } else {
-      console.log('Sent!')
+      console.log("Sent!");
     }
-  })  
+  });
 
   database.createUser(req, (message) => res.json(message));
 };
@@ -413,16 +437,16 @@ handlers.signUp = function (info, req, res) {
  *   info.action: signIn
  */
 
-handlers.signIn = function (info, req, res, next) {
-  let emailVerify = false
-  database.User.findOne({username: req.body.username}, (err,user) => {
-    if(err) {
+handlers.signIn = async function (info, req, res, next) {
+  let emailVerify = false;
+  await database.User.findOne({ username: req.body.username }, (err, user) => {
+    if (err) {
       console.log(err);
     } else {
-      emailVerify = user.verified
+      emailVerify = user.verified;
     }
-  })
-  if (emailVerify) {
+  });
+  if (!emailVerify) {
     res.json("Please Verify Email");
   } else {
     passport.authenticate("local", (err, user, info) => {
@@ -471,32 +495,30 @@ handlers.getUser = function (info, req, res) {
 /** */
 handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
   try {
-    if (!req.isAuthenticated())
-      throw ('User is not authenticated');
+    if (!req.isAuthenticated()) throw "User is not authenticated";
     const userid = req.user._id;
     const complete_user = await database.getCompleteUserProfile(userid);
     res.json({
       user: complete_user,
-    })
+    });
   } catch (error) {
     fail(res, error);
   }
-}
-
+};
 
 /** */
 handlers.getCompleteUserProfile = async function (info, req, res) {
   try {
     const { userid } = info;
     const complete_user = await database.getCompleteUserProfile(userid);
-    console.log(complete_user)
+    console.log(complete_user);
     res.json({
       user: complete_user,
-    })
+    });
   } catch (error) {
     fail(res, error);
   }
-}
+};
 
 // +-----------+------------------------------------------------------
 // | Expert UI |
@@ -562,69 +584,70 @@ handlers.createAlbums = async function (info, req, res) {
       if (writeOpResult.nModified) {
         res.json({
           success: true,
-          message: 'Successfully saved the album ' + name,
-        })
+          message: "Successfully saved the album " + name,
+        });
       } else {
-        throw 'Failed to save due to unknown reason';
+        throw "Failed to save due to unknown reason";
       }
     } catch (error) {
       res.json({
         success: false,
         message: error,
-      })
+      });
     }
   }
-}
-
+};
 
 /**
  * deletes an album. We expect info to be of the form:
  * {
  *  albumId : String
  * }
- * 
+ *
  * DANGEROUS : DOES NOT CHECK FOR AUTHORIZATION
  */
 handlers.deleteAlbum = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     res.json({
-      message: 'Failed because you have not been authenticated',
+      message: "Failed because you have not been authenticated",
       success: false,
-    })
+    });
   } else {
     try {
       const { albumId } = info;
       const writeOpResult = await database.deleteAlbum(albumId);
-      const response = (writeOpResult.nModified) ? {
-        message: 'Succesfully deleted album ',
-        success: true,
-      } : {
-          message: 'Failed to delete album for unknow reason',
-          success: false,
-        };
+      const response = writeOpResult.nModified
+        ? {
+            message: "Succesfully deleted album ",
+            success: true,
+          }
+        : {
+            message: "Failed to delete album for unknow reason",
+            success: false,
+          };
       res.json(response);
     } catch (error) {
       res.json({
         success: false,
-        message: error
-      })
+        message: error,
+      });
     }
   }
-}
+};
 
 /**
- * We expect info to have 
+ * We expect info to have
  * {
  *  albumId : String,
- *  newName : String, 
+ *  newName : String,
  * }
  */
 handlers.renameAlbum = async function (info, req, res) {
-  if(!req.isAuthenticated()){
+  if (!req.isAuthenticated()) {
     res.json({
       success: false,
-      message: 'You need to be logged in to rename an album'
-    })
+      message: "You need to be logged in to rename an album",
+    });
   }
   try {
     const { albumId, newName } = info;
@@ -632,21 +655,21 @@ handlers.renameAlbum = async function (info, req, res) {
     if (writeOpResult.nModified) {
       res.json({
         success: true,
-        message: 'Successfully renamed album'
+        message: "Successfully renamed album",
       });
     } else {
       res.json({
         success: false,
-        message: 'Failed to rename album due to unknown reason'
-      })
+        message: "Failed to rename album due to unknown reason",
+      });
     }
   } catch (error) {
     res.json({
       success: false,
-      message: error
-    })
+      message: error,
+    });
   }
-}
+};
 
 // +-----------+------------------------------------------------------
 // | Settings  |
