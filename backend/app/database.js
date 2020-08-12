@@ -1161,3 +1161,21 @@ module.exports.deleteAlbum = async (albumId) => {
       .exec()
   )
 }
+
+// +-------+-------------------------------------------------
+// | Misc. |
+// +-------+
+
+
+module.exports.isAdminOrModerator = async (userId) => (
+  User.findOne({
+    _id: userId,
+    $or: [{ admin: true }, { moderator: true }]
+  }).countDocuments().exec()
+)
+
+module.exports.updateAuthorizationCheck = async (userId, model, objectId) => (
+  Models[model]
+    .findOne({ _id: objectId, userId: userId })
+    .countDocuments()
+    .exec())

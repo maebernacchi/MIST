@@ -584,7 +584,7 @@ handlers.deleteAlbum = async function (info, req, res) {
  * }
  */
 handlers.renameAlbum = async function (info, req, res) {
-  if(!req.isAuthenticated()){
+  if (!req.isAuthenticated()) {
     res.json({
       success: false,
       message: 'You need to be logged in to rename an album'
@@ -634,3 +634,55 @@ handlers.deleteAccount = function (info, req, res) {
     res.json(message);
   });
 };
+
+// +--------+------------------------------------------------------
+// | Misc.  |
+// +--------+
+
+/**
+ * Determines whether or not a user is authorized to Delete an object (album, image, etc...)
+ */
+handlers.deleteAuthorizationCheck = async function (info, req, res) {
+  try {
+    const { userId, model, objectId } = info;
+    const updateAuthorization = database.updateAuthorizationCheck(userId, model, objectId);
+    const adminOrModerator = database.isAdminOrModerator(userId);
+    Promise.all([updateAuthorization, adminOrModerator]).then((values) => {
+      res.json({
+        success: true,
+        authorized: values[0] || values[1]
+      });
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      authorized: false,
+    })
+  }
+}
+
+/**
+ * Determines whether or not a user is authorized to Update an object (album, image, etc...)
+ */
+handlers.updateAuthorizationCheck = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    res.json({
+      success: false,
+      message: 'You need to be logged in!'
+    })
+  } else {
+    try {
+      const { userId, model, objectId } = info;
+      const authorized = (Boolean)(await database.updateAuthorizationCheck(userId, model, objectId));
+      res.json({
+        success: true,
+        authorized: authorized,
+      })
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
