@@ -1166,7 +1166,6 @@ module.exports.deleteAlbum = async (albumId) => {
 // | Reporting/Hiding/Blocking |
 // +---------------------------+
 
-// not tested - need front-end for that
 /**
  * hide content from a user
  * @param userid: the objectId of the user wanting to hide something
@@ -1200,7 +1199,6 @@ module.exports.hideContent = async (userid, type, contentid) => {
   }
 }
 
-// not tested - need front-end for that
 /**
  * unhide content from a user
  * @param userid: the objectId of the user wanting to unhide something
@@ -1231,7 +1229,6 @@ module.exports.unhideContent = async (userid, type, contentid) => {
   }
 }
 
-// not tested - need front-end for that
 /**
  * blocks a user
  * @param userid: the objectId of the user who wants to block a user 
@@ -1239,15 +1236,11 @@ module.exports.unhideContent = async (userid, type, contentid) => {
  * returns true if successfull, false otherwise
  */
 module.exports.blockUser = async (userid, contentid) => {
-  try {
-    const { nModified } = await User.updateOne({ _id: userid }, { $push: { blockedUsers: contentid } }).exec();
-    return (Boolean)(nModified);
-  } catch (error) {
-    throw error;
-  }
+  return await User.updateOne({ _id: userid }, { $push: { blockedUsers: contentid } }).exec()
+    .then(writeOpResult => (Boolean)(writeOpResult.nModified))
+    .catch(error => { throw error })
 }
 
-// not tested - need front-end for that
 /**
  * unblocks a user
  * @param userid: the objectId of the user who wants to block a user 
@@ -1255,12 +1248,9 @@ module.exports.blockUser = async (userid, contentid) => {
  * returns true if successfull, false otherwise
  */
 module.exports.unblockUser = async (userid, contentid) => {
-  try {
-    const { nModified } = await User.updateOne({ _id: userid }, { $pull: { blockedUsers: contentid } }).exec();
-    return (Boolean)(nModified);
-  } catch (error) {
-    throw error;
-  }
+  return await User.updateOne({ _id: userid }, { $pull: { blockedUsers: contentid } }).exec()
+    .then(writeOpResult => (Boolean)(writeOpResult.nModified))
+    .catch(error => { throw error })
 }
 
 
