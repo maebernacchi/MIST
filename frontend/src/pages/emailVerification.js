@@ -1,8 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-export default function emailVerification() {
+class emailVerification extends React.Component {
+  componentDidMount() {
+    const {
+      match: { params },
+    } = this.props;
 
-    return (
-        <h1>Email has been verified. Please SignIn to continue!</h1>
-    )
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "verifyEmail",
+        username: params.username,
+      }),
+    });
+  }
+  render() {
+    return <h1>Email has been verified. Please SignIn to continue!</h1>;
+  }
 }
+
+export default emailVerification;

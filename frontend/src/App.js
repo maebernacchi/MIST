@@ -88,7 +88,7 @@ import WorkspaceComponent from './workspace';
 
 /* imports the footer */
 import Footer from "./pages/components/footer";
-import emailVerification from "./pages/emailVerification";
+;
 
 // +-------------+----------------------------------------------------------------------
 // | App         |
@@ -128,7 +128,7 @@ function App() {
             <Route path="/signUp" component={SignUp} />
             <Route path="/tutorial" component={Tutorial} />
             <Route path="/user" children={User} />
-            <Route path="/emailVerification" component={EmailVerification} />
+            <Route path="/emailVerification/:username" component={EmailVerification} />
             {/* workspace */}
             <Route path="/createWorkspace" children={<WorkspaceComponent />} />
             <Route path="/expert" render={(props) => <Expert {...props} />} />
