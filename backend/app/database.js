@@ -382,21 +382,18 @@ module.exports.saveImage = (userId, title, code, res) => {
     });
 };
 
-// add image to album
+/**
+ * Adds an image to an album
+ * @param {String} albumId 
+ * @param {String} imageId 
+ */
 module.exports.addToAlbum = async (albumId, imageId) => {
   // Sanitize inputs.  Yay!
   albumId = sanitize(albumId);
   imageId = sanitize(imageId);
-  const image = {
-    images: imageId,
-  }
-
-  const updateObj = { $addToSet: image };
-
-  return (Album
-    .updateOne({ _id: albumId }, updateObj)
-    .exec()
-  )
+  return await Album.updateOne({ _id: albumId }, { $addToSet: { images: imageId } }).exec()
+    .then(writeOpResult => (Boolean)(writeOpResult.nModified))
+    .catch(error => { throw error })
 };
 
 // rename an album
@@ -405,11 +402,10 @@ module.exports.renameAlbum = async (albumId, newName) => {
   albumId = sanitize(albumId);
   newName = sanitize(newName);
 
-  return (
-    Album
-      .updateOne({ _id: albumId }, { name: newName })
-      .exec()
-  )
+  return await Album.updateOne({ _id: albumId }, { name: newName }).exec()
+    .then(writeOpResult => writeOpResult.nModified)
+    .catch(error => { throw error })
+
 }
 
 // +------------+-------------------------------------------------
@@ -1135,31 +1131,29 @@ module.exports.createAlbum = async (userid, name) => {
         User
           .updateOne({ _id: userid }, { $push: { albums: albumObject._id } })
           .exec()
+          .then(writeOpResult => writeOpResult.nModified)
+          .catch(error => { throw error })
       );
     } else {
       throw 'Failed to safe for Unkown reason'
     }
   } catch (error) {
-    throw err;
+    throw error;
   }
 }; // createAlbum
 
 /**
-* deletes the comment if the user has authorization
+* deletes an album
+* DANGEROUS DOES NOT CHECK FOR AUTHORIZATION
 * @param userId: the object ID for the user
 * @param albumId: the object ID for the album
-* @param callback: the callback to be excecuted if true
 */
 module.exports.deleteAlbum = async (albumId) => {
-
   // sanitize ID's
   albumId = sanitize(albumId);
-
-  return (
-    Album
-      .updateOne({ _id: albumId }, { active: false, updatedAt: Date.now })
-      .exec()
-  )
+  return await Album.updateOne({ _id: albumId }, { active: false, updatedAt: Date.now }).exec()
+    .then(writeOpResult => writeOpResult.nModified)
+    .catch(error => { throw error })
 }
 
 // +----------+----------------------------------------------------------

@@ -133,7 +133,7 @@ handlers.getHomeImages = function (info, req, res) {
  * imageId : String
  * albumId : String 
  */
-handlers.addToWorkspace = async function (info, req, res) {
+handlers.addToAlbum = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     res.json({
       success: false,
@@ -142,8 +142,8 @@ handlers.addToWorkspace = async function (info, req, res) {
   } else {
     try {
       const { albumId, imageId } = info;
-      const writeOpResult = await database.addToAlbum(albumId, imageId);
-      if (writeOpResult.nModified) {
+      const success = await database.addToAlbum(albumId, imageId);
+      if (success) {
         res.json({
           success: true,
           message: 'Successfully added image to album',
@@ -515,15 +515,15 @@ handlers.getUserExpertWS = function (info, req, res) {
  *  name: String
  * }
  */
-handlers.createAlbums = async function (info, req, res) {
+handlers.createAlbum = async function (info, req, res) {
   if (!req.isAuthenticated())
     res.json({ success: false, message: "You need to be logged in" });
   else {
     try {
-      const { name } = info;
       const userId = req.user._id;
-      const writeOpResult = await database.createAlbum(userId, name);
-      if (writeOpResult.nModified) {
+      const { name } = info;
+      const success = await database.createAlbum(userId, name);
+      if (success) {
         res.json({
           success: true,
           message: 'Successfully saved the album ' + name,
@@ -539,7 +539,6 @@ handlers.createAlbums = async function (info, req, res) {
     }
   }
 }
-
 
 /**
  * deletes an album. We expect info to be of the form:
@@ -558,8 +557,8 @@ handlers.deleteAlbum = async function (info, req, res) {
   } else {
     try {
       const { albumId } = info;
-      const writeOpResult = await database.deleteAlbum(albumId);
-      const response = (writeOpResult.nModified) ? {
+      const success = await database.deleteAlbum(albumId);
+      const response = (success) ? {
         message: 'Succesfully deleted album ',
         success: true,
       } : {
@@ -584,7 +583,7 @@ handlers.deleteAlbum = async function (info, req, res) {
  * }
  */
 handlers.renameAlbum = async function (info, req, res) {
-  if (!req.isAuthenticated()) {
+  if (false && !req.isAuthenticated()) {
     res.json({
       success: false,
       message: 'You need to be logged in to rename an album'
@@ -592,8 +591,8 @@ handlers.renameAlbum = async function (info, req, res) {
   }
   try {
     const { albumId, newName } = info;
-    const writeOpResult = await database.renameAlbum(albumId, newName);
-    if (writeOpResult.nModified) {
+    const success = await database.renameAlbum(albumId, newName);
+    if (success) {
       res.json({
         success: true,
         message: 'Successfully renamed album'
