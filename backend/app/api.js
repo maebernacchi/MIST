@@ -620,7 +620,8 @@ handlers.renameAlbum = async function (info, req, res) {
  * Info contains the type of content that the user wants to hide as way as the 
  * ObjectId of the content in the database.
  * info = {
- *  userid: 
+ *  type: STRING,
+ *  contentid: STRING,
  * }
  */
 handlers.hideContent = async function (info, req, res) {
@@ -634,6 +635,76 @@ handlers.hideContent = async function (info, req, res) {
       res.json({
         success: success,
         message: (success) ? 'Successfully hidden content!' : 'Failed to hide content due to unknown reason',
+      })
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
+
+/**
+ * Info contains the type of content that the user wants to unhide as way as the 
+ * ObjectId of the content in the database.
+ * info = {
+ *  type: STRING,
+ *  contentid: STRING,
+ * }
+ */
+handlers.unhideContent = async function (info, req, res) {
+  if (!req.isAuthenticated())
+    fail(res, 'You need to be logged in to hide content!');
+  else {
+    try {
+      const userid = req.user._id;
+      const { type, contentid } = info;
+      const success = await database.unhideContent(userid, type, contentid);
+      res.json({
+        success: success,
+        message: (success) ? 'Successfully hidden content!' : 'Failed to hide content due to unknown reason',
+      })
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
+
+handlers.blockUser = async function (info, req, res) {
+  try {
+    if (!req.isAuthenticated())
+      throw 'You have to be logged in to block a user';
+    const userid = req.user._id;
+    const { contentid } = info;
+    const success = await database.blockUser(userid, contentid);
+    console.log(success);
+  } catch (error) {
+    // not sure if it is relevant to distinguish between
+    // server-side or client-side errors
+    res.json({
+      success: false,
+      message: error,
+    })
+  }
+}
+
+handlers.unblockUser = async function (info, req, res) {
+  if (!req.isAuthenticated())
+    res.json({
+      success: false,
+      message: 'You have to be logged in to unblock a user',
+    })
+  else {
+    try {
+      const { userid, contentid } = info;
+      const success = await database.unblockUser(userid, contentid);
+      res.json({
+        success: success,
+        message: (success) ? 'Successfully unblocked a user' : 'Failed to unblock user due to unknown error',
       })
     } catch (error) {
       res.json({
