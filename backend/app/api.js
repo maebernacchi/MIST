@@ -134,7 +134,7 @@ handlers.getHomeImages = function (info, req, res) {
  * imageId : String
  * albumId : String
  */
-handlers.addToWorkspace = async function (info, req, res) {
+handlers.addToAlbum = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     res.json({
       success: false,
@@ -143,8 +143,8 @@ handlers.addToWorkspace = async function (info, req, res) {
   } else {
     try {
       const { albumId, imageId } = info;
-      const writeOpResult = await database.addToAlbum(albumId, imageId);
-      if (writeOpResult.nModified) {
+      const success = await database.addToAlbum(albumId, imageId);
+      if (success) {
         res.json({
           success: true,
           message: "Successfully added image to album",
@@ -573,15 +573,15 @@ handlers.getUserExpertWS = function (info, req, res) {
  *  name: String
  * }
  */
-handlers.createAlbums = async function (info, req, res) {
+handlers.createAlbum = async function (info, req, res) {
   if (!req.isAuthenticated())
     res.json({ success: false, message: "You need to be logged in" });
   else {
     try {
-      const { name } = info;
       const userId = req.user._id;
-      const writeOpResult = await database.createAlbum(userId, name);
-      if (writeOpResult.nModified) {
+      const { name } = info;
+      const success = await database.createAlbum(userId, name);
+      if (success) {
         res.json({
           success: true,
           message: "Successfully saved the album " + name,
@@ -596,7 +596,7 @@ handlers.createAlbums = async function (info, req, res) {
       });
     }
   }
-};
+}
 
 /**
  * deletes an album. We expect info to be of the form:
@@ -615,16 +615,14 @@ handlers.deleteAlbum = async function (info, req, res) {
   } else {
     try {
       const { albumId } = info;
-      const writeOpResult = await database.deleteAlbum(albumId);
-      const response = writeOpResult.nModified
-        ? {
-            message: "Succesfully deleted album ",
-            success: true,
-          }
-        : {
-            message: "Failed to delete album for unknow reason",
-            success: false,
-          };
+      const success = await database.deleteAlbum(albumId);
+      const response = (success) ? {
+        message: 'Succesfully deleted album ',
+        success: true,
+      } : {
+          message: 'Failed to delete album for unknow reason',
+          success: false,
+        };
       res.json(response);
     } catch (error) {
       res.json({
@@ -643,7 +641,7 @@ handlers.deleteAlbum = async function (info, req, res) {
  * }
  */
 handlers.renameAlbum = async function (info, req, res) {
-  if (!req.isAuthenticated()) {
+  if (false && !req.isAuthenticated()) {
     res.json({
       success: false,
       message: "You need to be logged in to rename an album",
@@ -651,8 +649,8 @@ handlers.renameAlbum = async function (info, req, res) {
   }
   try {
     const { albumId, newName } = info;
-    const writeOpResult = await database.renameAlbum(albumId, newName);
-    if (writeOpResult.nModified) {
+    const success = await database.renameAlbum(albumId, newName);
+    if (success) {
       res.json({
         success: true,
         message: "Successfully renamed album",
@@ -670,6 +668,109 @@ handlers.renameAlbum = async function (info, req, res) {
     });
   }
 };
+
+// +----------+----------------------------------------------------------
+// | Reporting/Hiding/Blocking |
+// +---------------------------+
+
+/**
+ * Info contains the type of content that the user wants to hide as way as the 
+ * ObjectId of the content in the database.
+ * info = {
+ *  type: STRING,
+ *  contentid: STRING,
+ * }
+ */
+handlers.hideContent = async function (info, req, res) {
+  if (!req.isAuthenticated())
+    fail(res, 'You need to be logged in to hide content!');
+  else {
+    try {
+      const userid = req.user._id;
+      const { type, contentid } = info;
+      const success = await database.hideContent(userid, type, contentid);
+      res.json({
+        success: success,
+        message: (success) ? 'Successfully hidden content!' : 'Failed to hide content due to unknown reason',
+      })
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
+
+/**
+ * Info contains the type of content that the user wants to unhide as way as the 
+ * ObjectId of the content in the database.
+ * info = {
+ *  type: STRING,
+ *  contentid: STRING,
+ * }
+ */
+handlers.unhideContent = async function (info, req, res) {
+  if (!req.isAuthenticated())
+    fail(res, 'You need to be logged in to hide content!');
+  else {
+    try {
+      const userid = req.user._id;
+      const { type, contentid } = info;
+      const success = await database.unhideContent(userid, type, contentid);
+      res.json({
+        success: success,
+        message: (success) ? 'Successfully hidden content!' : 'Failed to hide content due to unknown reason',
+      })
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
+
+handlers.blockUser = async function (info, req, res) {
+  try {
+    if (!req.isAuthenticated())
+      throw 'You have to be logged in to block a user';
+    const userid = req.user._id;
+    const { contentid } = info;
+    const success = await database.blockUser(userid, contentid);
+    console.log(success);
+  } catch (error) {
+    // not sure if it is relevant to distinguish between
+    // server-side or client-side errors
+    res.json({
+      success: false,
+      message: error,
+    })
+  }
+}
+
+handlers.unblockUser = async function (info, req, res) {
+  if (!req.isAuthenticated())
+    res.json({
+      success: false,
+      message: 'You have to be logged in to unblock a user',
+    })
+  else {
+    try {
+      const { userid, contentid } = info;
+      const success = await database.unblockUser(userid, contentid);
+      res.json({
+        success: success,
+        message: (success) ? 'Successfully unblocked a user' : 'Failed to unblock user due to unknown error',
+      })
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
 
 // +-----------+------------------------------------------------------
 // | Settings  |
@@ -693,3 +794,55 @@ handlers.deleteAccount = function (info, req, res) {
     res.json(message);
   });
 };
+
+// +--------+------------------------------------------------------
+// | Misc.  |
+// +--------+
+
+/**
+ * Determines whether or not a user is authorized to Delete an object (album, image, etc...)
+ */
+handlers.deleteAuthorizationCheck = async function (info, req, res) {
+  try {
+    const { userId, model, objectId } = info;
+    const updateAuthorization = database.updateAuthorizationCheck(userId, model, objectId);
+    const adminOrModerator = database.isAdminOrModerator(userId);
+    Promise.all([updateAuthorization, adminOrModerator]).then((values) => {
+      res.json({
+        success: true,
+        authorized: values[0] || values[1]
+      });
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      authorized: false,
+    })
+  }
+}
+
+/**
+ * Determines whether or not a user is authorized to Update an object (album, image, etc...)
+ */
+handlers.updateAuthorizationCheck = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    res.json({
+      success: false,
+      message: 'You need to be logged in!'
+    })
+  } else {
+    try {
+      const { userId, model, objectId } = info;
+      const authorized = (Boolean)(await database.updateAuthorizationCheck(userId, model, objectId));
+      res.json({
+        success: true,
+        authorized: authorized,
+      })
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      })
+    }
+  }
+}
