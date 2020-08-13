@@ -216,10 +216,12 @@ function SignInCenter() {
       //redirect user to home page
       .then(res => res.json())
       .then((message) => {
-        if (message !== "User Created") {
-          alert(message);
-        } else {
+        //console.log("message = " + message);
+        if (message === "Success") {
           window.location.href = "/";
+        } else {
+          console.log(message)
+          alert(message);
         }
       });
   }
