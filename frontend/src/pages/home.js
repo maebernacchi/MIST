@@ -230,7 +230,7 @@ class FeaturedImages extends Component {
               <Row >
                 {featuredImages.map((featuredImage) => {
                   return (
-                    <Col>
+                    <Col key={featuredImage._id}>
                       {/* the two lines below are placeholders, we need to pass in MIST images instead */}
                       <MISTImage code={featuredImage.code} resolution="150" />
                       {/*<p> {featuredImage.code}</p>*/}
