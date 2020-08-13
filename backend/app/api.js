@@ -379,9 +379,9 @@ handlers.getChallenges = function (info, req, res) {
 
 /**
  * Verifies that the email address is correct
- * @param {*} info 
- * @param {*} req 
- * @param {*} res 
+ * @param {*} info
+ * @param {*} req
+ * @param {*} res
  */
 handlers.verifyEmail = function (info, req, res) {
   database.User.findOneAndUpdate(
@@ -442,28 +442,33 @@ handlers.signIn = async function (info, req, res, next) {
   await database.User.findOne({ username: req.body.username }, (err, user) => {
     if (err) {
       console.log(err);
-    } else {
+    } else if (user) {
       emailVerify = user.verified;
+    } else {
+      res.json("No User Exists");
     }
   });
   if (!emailVerify) {
     res.json("Please Verify Email");
   } else {
-    passport.authenticate("local", (err, user, info) => {
-      if (err) {
-        throw err;
-      }
-      if (!user) {
-        var message = "No User Exists";
-        res.json(message);
-      } else {
-        req.logIn(user, (err) => {
-          if (err) throw err;
-          var message = "Success";
-          res.json(message);
-        });
-      }
-    })(req, res, next);
+    try {
+      passport.authenticate("local", (err, user, info) => {
+        if (err) {
+          throw err;
+        }
+        if (!user) {
+          res.json("No User Exists");
+        } else {
+          req.logIn(user, (err) => {
+            if (err) throw err;
+            var message = "Success";
+            res.json(message);
+          });
+        }
+      })(req, res, next);
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 
@@ -596,7 +601,7 @@ handlers.createAlbum = async function (info, req, res) {
       });
     }
   }
-}
+};
 
 /**
  * deletes an album. We expect info to be of the form:
@@ -616,13 +621,15 @@ handlers.deleteAlbum = async function (info, req, res) {
     try {
       const { albumId } = info;
       const success = await database.deleteAlbum(albumId);
-      const response = (success) ? {
-        message: 'Succesfully deleted album ',
-        success: true,
-      } : {
-          message: 'Failed to delete album for unknow reason',
-          success: false,
-        };
+      const response = success
+        ? {
+            message: "Succesfully deleted album ",
+            success: true,
+          }
+        : {
+            message: "Failed to delete album for unknow reason",
+            success: false,
+          };
       res.json(response);
     } catch (error) {
       res.json({
@@ -674,7 +681,7 @@ handlers.renameAlbum = async function (info, req, res) {
 // +---------------------------+
 
 /**
- * Info contains the type of content that the user wants to hide as way as the 
+ * Info contains the type of content that the user wants to hide as way as the
  * ObjectId of the content in the database.
  * info = {
  *  type: STRING,
@@ -683,7 +690,7 @@ handlers.renameAlbum = async function (info, req, res) {
  */
 handlers.hideContent = async function (info, req, res) {
   if (!req.isAuthenticated())
-    fail(res, 'You need to be logged in to hide content!');
+    fail(res, "You need to be logged in to hide content!");
   else {
     try {
       const userid = req.user._id;
@@ -691,19 +698,21 @@ handlers.hideContent = async function (info, req, res) {
       const success = await database.hideContent(userid, type, contentid);
       res.json({
         success: success,
-        message: (success) ? 'Successfully hidden content!' : 'Failed to hide content due to unknown reason',
-      })
+        message: success
+          ? "Successfully hidden content!"
+          : "Failed to hide content due to unknown reason",
+      });
     } catch (error) {
       res.json({
         success: false,
         message: error,
-      })
+      });
     }
   }
-}
+};
 
 /**
- * Info contains the type of content that the user wants to unhide as way as the 
+ * Info contains the type of content that the user wants to unhide as way as the
  * ObjectId of the content in the database.
  * info = {
  *  type: STRING,
@@ -712,7 +721,7 @@ handlers.hideContent = async function (info, req, res) {
  */
 handlers.unhideContent = async function (info, req, res) {
   if (!req.isAuthenticated())
-    fail(res, 'You need to be logged in to hide content!');
+    fail(res, "You need to be logged in to hide content!");
   else {
     try {
       const userid = req.user._id;
@@ -720,21 +729,23 @@ handlers.unhideContent = async function (info, req, res) {
       const success = await database.unhideContent(userid, type, contentid);
       res.json({
         success: success,
-        message: (success) ? 'Successfully hidden content!' : 'Failed to hide content due to unknown reason',
-      })
+        message: success
+          ? "Successfully hidden content!"
+          : "Failed to hide content due to unknown reason",
+      });
     } catch (error) {
       res.json({
         success: false,
         message: error,
-      })
+      });
     }
   }
-}
+};
 
 handlers.blockUser = async function (info, req, res) {
   try {
     if (!req.isAuthenticated())
-      throw 'You have to be logged in to block a user';
+      throw "You have to be logged in to block a user";
     const userid = req.user._id;
     const { contentid } = info;
     const success = await database.blockUser(userid, contentid);
@@ -745,32 +756,34 @@ handlers.blockUser = async function (info, req, res) {
     res.json({
       success: false,
       message: error,
-    })
+    });
   }
-}
+};
 
 handlers.unblockUser = async function (info, req, res) {
   if (!req.isAuthenticated())
     res.json({
       success: false,
-      message: 'You have to be logged in to unblock a user',
-    })
+      message: "You have to be logged in to unblock a user",
+    });
   else {
     try {
       const { userid, contentid } = info;
       const success = await database.unblockUser(userid, contentid);
       res.json({
         success: success,
-        message: (success) ? 'Successfully unblocked a user' : 'Failed to unblock user due to unknown error',
-      })
+        message: success
+          ? "Successfully unblocked a user"
+          : "Failed to unblock user due to unknown error",
+      });
     } catch (error) {
       res.json({
         success: false,
         message: error,
-      })
+      });
     }
   }
-}
+};
 
 // +-----------+------------------------------------------------------
 // | Settings  |
@@ -805,21 +818,25 @@ handlers.deleteAccount = function (info, req, res) {
 handlers.deleteAuthorizationCheck = async function (info, req, res) {
   try {
     const { userId, model, objectId } = info;
-    const updateAuthorization = database.updateAuthorizationCheck(userId, model, objectId);
+    const updateAuthorization = database.updateAuthorizationCheck(
+      userId,
+      model,
+      objectId
+    );
     const adminOrModerator = database.isAdminOrModerator(userId);
     Promise.all([updateAuthorization, adminOrModerator]).then((values) => {
       res.json({
         success: true,
-        authorized: values[0] || values[1]
+        authorized: values[0] || values[1],
       });
     });
   } catch (error) {
     res.json({
       success: false,
       authorized: false,
-    })
+    });
   }
-}
+};
 
 /**
  * Determines whether or not a user is authorized to Update an object (album, image, etc...)
@@ -828,21 +845,23 @@ handlers.updateAuthorizationCheck = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     res.json({
       success: false,
-      message: 'You need to be logged in!'
-    })
+      message: "You need to be logged in!",
+    });
   } else {
     try {
       const { userId, model, objectId } = info;
-      const authorized = (Boolean)(await database.updateAuthorizationCheck(userId, model, objectId));
+      const authorized = Boolean(
+        await database.updateAuthorizationCheck(userId, model, objectId)
+      );
       res.json({
         success: true,
         authorized: authorized,
-      })
+      });
     } catch (error) {
       res.json({
         success: false,
         message: error,
-      })
+      });
     }
   }
-}
+};
