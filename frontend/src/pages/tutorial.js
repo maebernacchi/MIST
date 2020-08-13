@@ -1348,7 +1348,7 @@ const sections = [
         ),
 
         //Video
-        video: <Container> <iframe width="560" height="315" src="https://www.youtube.com/embed/YQwvc7hdggE" frameborder="0"
+        video: <Container> <iframe width="560" height="315" src="https://www.youtube.com/embed/YQwvc7hdggE" title="circle-tutorial" frameborder="0"
          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> </Container>,
 
         //Final

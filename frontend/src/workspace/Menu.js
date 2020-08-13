@@ -364,8 +364,10 @@ function Menu(props) {
                 setContentModalCallack(() => async () => {
                   try {
                     const wsName = wsNameRef.current.value;
-                    if (!wsName)
-                      throw ('Please enter a valid name for your workspace')
+                    if (!wsName) {
+                      const error_message = 'Please enter a valid name for your workspace';
+                      throw error_message;
+                    }
                     const exists = await props.checkIfWorkspaceExists(wsName);
                     if (exists) {
                       // trigger confirmation popup
@@ -414,8 +416,8 @@ function Menu(props) {
                   })
                   setContentModalCallack(() => () => {
                     props.deleteWorkspace(wsFormRef.current.value)
-                    .then(message => {toggleContentModal();alert(message);})
-                    .catch(alert)
+                      .then(message => { toggleContentModal(); alert(message); })
+                      .catch(alert)
                   })
                   toggleContentModal();
                 } catch (error) {
