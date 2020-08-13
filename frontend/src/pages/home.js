@@ -43,7 +43,6 @@ import { NavLink } from "react-router-dom";
 import "./../design/styleSheets/home.css";
 import MistLogo from "./../design/Logos/logoFinal.png";
 /* imports icons */
-import { AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
 /* MISTImage and LinkButton */
 import MISTImage from "./components/MISTImageGallery"

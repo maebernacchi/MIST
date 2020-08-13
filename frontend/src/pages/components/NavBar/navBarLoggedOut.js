@@ -271,17 +271,6 @@ function SignInCenter() {
   );
 }
 
-/* Sign in button */
-function SignInButton(props) {
-  return (
-    <Nav>
-      <Nav.Link href="#" onClick={props.onClick}>
-        Sign In
-      </Nav.Link>
-    </Nav>
-  );
-}
-
 /* Sign up button */
 function SignUpButton(props) {
   return (

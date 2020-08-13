@@ -111,7 +111,6 @@ function ModalSwitch(props) {
  */
 function Gallery(props) {
   let cards = props.cards;
-  let location = useLocation();
 
   return (
     /* styling helps with footer */

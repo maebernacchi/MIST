@@ -37,7 +37,7 @@ import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Button, Card, Carousel, Container, Col, Form, Nav, Row, Tab } from "react-bootstrap";
+import { Button, Card, Carousel, Container, Col, Form, Nav, Row, } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
 /* icons */
@@ -194,7 +194,7 @@ function FirstPart(props) {
   );
 }
 
-{/* # of pictures, likes, badges, challenges and their icons */ }
+/* # of pictures, likes, badges, challenges and their icons */ 
 function IconsBar() {
   const icons = [
     { iconName: <AiOutlinePicture size={28} />, num: 8, category: "images" },
