@@ -432,7 +432,7 @@ MIST.ui.Animator.prototype.start = function()
 {  
 // Set up a hash for the parameters
   this.parameters = {};
-  if (this.params != "") {
+  if (this.params !== "") {
     var tmp = this.params.split(",");
     for (var i = 0; i < tmp.length; i++) {
       if (this.params[i] !== "") {
