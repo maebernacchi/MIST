@@ -26,6 +26,7 @@ require("dotenv").config();
 var database = require("./database.js");
 const passport = require("passport");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 // +--------------------+--------------------------------------------
 // | Exported Functions |
@@ -385,7 +386,7 @@ handlers.getChallenges = function (info, req, res) {
  */
 handlers.verifyEmail = function (info, req, res) {
   database.User.findOneAndUpdate(
-    { username: req.body.username },
+    { token: req.body.token },
     { $set: { verified: true } },
     { new: true },
     (err, doc) => {
@@ -403,7 +404,9 @@ handlers.verifyEmail = function (info, req, res) {
  *   info.action: signup
  */
 
-handlers.signUp = function (info, req, res) {
+handlers.signUp = async function (info, req, res) {
+  req.body.token = await crypto.randomBytes(32).toString('hex');
+
   let transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
@@ -417,8 +420,8 @@ handlers.signUp = function (info, req, res) {
     to: req.body.email,
     subject: "Email Verification",
     text:
-      "Please use the following link to verify your account: http://localhost:3000/emailVerification/" +
-      req.body.username,
+      "Greetings from MIST!"+ '\n\n' +"Please use the following link to verify your account:" + '\n\n' + "http://localhost:3000/emailVerification/" +
+      req.body.token,
   };
 
   transporter.sendMail(mail, (err, data) => {

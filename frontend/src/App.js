@@ -128,7 +128,7 @@ function App() {
             <Route path="/signUp" component={SignUp} />
             <Route path="/tutorial" component={Tutorial} />
             <Route path="/user" children={User} />
-            <Route path="/emailVerification/:username" component={EmailVerification} />
+            <Route path="/emailVerification/:token" component={EmailVerification} />
             {/* workspace */}
             <Route path="/createWorkspace" children={<WorkspaceComponent />} />
             <Route path="/expert" render={(props) => <Expert {...props} />} />

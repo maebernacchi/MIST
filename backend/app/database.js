@@ -554,6 +554,7 @@ module.exports.createUser = (req, callback) => {
           verified: false,
           admin: false,
           moderator: false,
+          token: user.token,
         });
         await newUser.save();
         callback("User Created");

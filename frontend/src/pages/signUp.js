@@ -72,6 +72,7 @@ const SignUp = () => {
       username: username,
       password: password,
       email: email,
+      token: ''
     };
 
     //post user to database
