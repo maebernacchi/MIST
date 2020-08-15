@@ -37,7 +37,7 @@ import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Button, Card, Carousel, Container, Col, Form, Nav, Row, Tab } from "react-bootstrap";
+import { Button, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
 /* icons */
@@ -48,6 +48,7 @@ import {
 } from "react-icons/ai";
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
+import { IoIosArrowBack, IoMdAdd } from "react-icons/io"
 
 // +-------------------+----------------------------------------------------------------------
 // | profile.js        |
@@ -213,6 +214,8 @@ function IconsBar() {
   );
 }
 
+
+/* Profile navigation bar: for now, it is only images and albums */
 class ProfileNav extends React.Component {
   constructor(props) {
     super(props);
@@ -221,18 +224,17 @@ class ProfileNav extends React.Component {
     }
   }
 
-  updateContent = () => {
-    this.setState({ message: "Updated Content!" });
-  }
-
+  /* update message with Display Images; when someone clicks the "Images" tab*/
   openImagesView = () => {
     this.setState({ message: <DisplayImages cards={this.props.images} cardsLoaded={true} /> });
   }
 
+  /* update message with Albums; when someone clicks the "Album" tab*/
   openAlbumsView = () => {
-    this.setState({ message: <Albums albums={this.props.albums} message={this.state.message} /> });
+    this.setState({ message: <Albums albums={this.props.albums} /> });
   }
 
+  /* update message with AlbumsView; when someone tries to open an album*/
   openedAlbum = () => {
     this.setState({ message: <AlbumsView albums={this.props.albums} /> });
   }
@@ -282,37 +284,51 @@ function Albums(props) {
 
   const [mode, setMode] = useState("albumsView");
   const [images, setImages] = useState("");
-  function openAlbumsView() { setMode("albumsView") };
-  function openAlbum(props) { setMode("openedAlbum"); setImages(props.images) };
 
+  function openAlbumsView() { setMode("albumsView") };
+  function openAlbum(props) { setMode("openedAlbum") };
+  function setImagesProp(images) { setImages(images) };
+
+  const [modalShow, setModalShow] = React.useState(false);
   if (mode === "albumsView") {
     return (
 
       /* default mode*/
-      <Row>
-        {props.albums.map((album) => (
-          <Card
-            style={{ padding: "1em", width: "30%", margin: "1em" }}
-          >
-            <Card.Header>
-              <Card.Title style={{ margin: "auto" }}>
-                <p>{props.title}</p>
-              </Card.Title>
-              {/* ICONS */}
-              <Card.Body style={{ justifyContent: "space-between" }}>
-                <ControlledCarousel images={album.images} openAlbum={openAlbum}/>
-                <p>{props.description}</p>
-                <p>{props.date}</p>
-              </Card.Body>
-            </Card.Header>
-          </Card>
-        ))}
-      </Row>
+      <Col style={{ marginTop: "1em" }}>
+        <Row style={{ justifyContent: "flex-end" }}>
+          <Button variant="outline-secondary" onClick={() => setModalShow(true)}>
+            <IoMdAdd /> Create Album
+          </Button>
+        </Row>
+        <Row>
+          {props.albums.map((album, index) => (
+            <Card
+              style={{ padding: "1em", width: "30%", margin: "1em" }}
+            >
+              <Card.Header>
+                <Card.Title style={{ margin: "auto" }}>
+                  <p>{props.title}</p>
+                </Card.Title>
+                {/* ICONS */}
+                <Card.Body style={{ justifyContent: "space-between" }}>
+                  <ControlledCarousel albumIndex={index} images={album.images} openAlbum={openAlbum} setImages={setImagesProp} />
+                  <p>{props.description}</p>
+                  <p>{props.date}</p>
+                </Card.Body>
+              </Card.Header>
+            </Card>
+          ))}
+        </Row>
+        <AddAlbumModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
+      </Col>
     );
   } else {
     return (
       /* signIn mode*/
-      <OpenedAlbum  images={images} onClick={openAlbumsView}/>
+      <OpenedAlbum images={images} onClick={openAlbumsView} />
     );
   }
 }
@@ -324,10 +340,12 @@ function AlbumsView(props) {
         <Album title={album.name} description={album.caption} date={album.createdAt} images={album.images} message={props.message} />
       ))}
     </Row>
+
   )
 }
 // album component
 function Album(props) {
+
   return (
     <Card
       style={{ padding: "1em", width: "30%", margin: "1em" }}
@@ -359,7 +377,10 @@ function ControlledCarousel(props) {
       {props.images.map((album) => (
         <Carousel.Item >
           <Row style={{ justifyContent: "center" }}>
-            <Nav.Link onClick={props.openAlbum}>
+            <Nav.Link onClick={() => {
+              props.openAlbum();
+              props.setImages(props.images);
+            }}>
               <MISTImage
                 code={album.code}
                 resolution="250"
@@ -377,9 +398,66 @@ function ControlledCarousel(props) {
 function OpenedAlbum(props) {
   return (
     <Container>
-      <Row>
-        <Button onClick={props.onClick}> Back </Button>
-      </Row>
+      <Col style={{ marginTop: "1em" }}>
+        <Row style={{ justifyContent: "space-between" }}>
+          <Button variant="outline-secondary" onClick={props.onClick}> <IoIosArrowBack /> Back </Button>
+
+          <Button variant="outline-secondary" >
+            <IoMdAdd /> Add Image
+          </Button>
+
+        </Row>
+        <Row>
+
+
+          {props.images.map((album) => (
+            <Card style={{ width: '18rem' }}>
+              <MISTImage
+                code={album.code}
+                resolution="250"
+              />
+            </Card>
+          ))}
+
+          {/*  <DisplayImages cards={props.images} cardsLoaded={true} /> */}
+        </Row>
+      </Col>
     </Container>
   )
+}
+
+function AddAlbumModal(props) {
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Create Album
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Container>
+          <Form>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Album name</Form.Label>
+              <Form.Control type="email" placeholder="Enter album name" />
+
+            </Form.Group>
+            <Form.Group controlId="exampleForm.ControlTextarea1">
+              <Form.Label>Description</Form.Label>
+              <Form.Control as="textarea" rows="3" />
+            </Form.Group>
+          </Form>
+        </Container>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={props.onHide}>Submit</Button>
+        <Button onClick={props.onHide}>Cancel</Button>
+      </Modal.Footer>
+    </Modal>
+  );
 }
