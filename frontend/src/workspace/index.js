@@ -72,6 +72,7 @@ import ValNode from "./buildingtools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
 import { animated, useSpring } from "react-spring";
 import Custom from "./menu/Custom";
+import RenderBox from "./buildingtools/RenderBox";
 
 // +----------------------------+
 // | All dependent files        |
@@ -174,6 +175,7 @@ class WorkspaceComponent extends Component {
           gui.functions[gui.repToFun[expression.operation]].min
         ).fill(false),
         parentNodes: [],
+        imageShowing: false,
       };
       console.log("pushed operation " + outermost.name);
       evalFrom(sink, expression.operands, parentX, parentY);
@@ -197,6 +199,7 @@ class WorkspaceComponent extends Component {
         numOutlets: null,
         activeOutlets: null,
         parentNodes: null,
+        imageShowing: false,
       };
       newNodes.push(val);
     }
@@ -254,6 +257,7 @@ class WorkspaceComponent extends Component {
               gui.functions[gui.repToFun[operands[i].operation]].min
             ).fill(false),
             parentNodes: [],
+            imageShowing: false,
           };
           evalFrom(sourceIndex, operands[i].operands, pX, pY);
           newNodes.push(sourceNode);
@@ -305,6 +309,7 @@ class WorkspaceComponent extends Component {
             numOutlets: null,
             activeOutlets: null,
             parentNodes: null,
+            imageShowing: false,
           };
           newNodes.push(sourceNode);
           newLines.push({
@@ -383,6 +388,7 @@ class WorkspaceComponent extends Component {
             Array(gui.functions[name].min).fill(false)
           : null,
       parentNodes: [],
+      imageShowing: false,
     };
     this.setState((state, props) => {
       return {
@@ -886,15 +892,14 @@ class WorkspaceComponent extends Component {
             backgroundColor: colors.workspaceBackground[this.state.theme],
           }}
         >
-
           <Stage
             ref={(ref) => {
               this.stageRef = ref;
             }}
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: 0,
-              left: 0
+              left: 0,
             }}
             width={this.width}
             height={this.height}
@@ -1006,6 +1011,14 @@ class WorkspaceComponent extends Component {
                         hoverShadowColor={
                           colors.nodeHoverShadow[this.state.theme]
                         }
+                        imageShowing={node.imageShowing}
+                        toggleBox={() => {
+                          const newNodes = this.state.nodes;
+                          newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                          this.setState({
+                            nodes: newNodes,
+                          });
+                        }}
                       />
                     </ContextProvider>
                   )) ||
@@ -1037,6 +1050,14 @@ class WorkspaceComponent extends Component {
                         dblClickHandler={this.dblClicked.bind(this)}
                         removeNode={this.removeNode.bind(this)}
                         updateHashValue={this.updateHashValue.bind(this)}
+                        imageShowing={node.imageShowing}
+                        toggleBox={() => {
+                          const newNodes = this.state.nodes;
+                          newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                          this.setState({
+                            nodes: newNodes,
+                          });
+                        }}
                       />
                     </ContextProvider>
                   ))
@@ -1146,7 +1167,7 @@ class WorkspaceComponent extends Component {
               />
             </Layer>
           </Stage>
-          
+
           <ContextProvider
             width={this.width}
             height={this.height}
@@ -1179,9 +1200,38 @@ class WorkspaceComponent extends Component {
             functionWidth={this.functionWidth}
             valueWidth={this.valueWidth}
           >
-            <Custom menuTabs={this.state.menuTabs}/>
+            <Custom menuTabs={this.state.menuTabs} />
           </ContextProvider>
 
+          {this.state.nodes.map(
+            (node, index) =>
+              node &&
+              node.renderFunction.isRenderable &&
+              node.imageShowing && (
+                <ContextProvider
+                  width={this.width}
+                  height={this.height}
+                  menuHeight={this.menuHeight}
+                  funBarHeight={this.funBarHeight}
+                  functionWidth={this.functionWidth}
+                  valueWidth={this.valueWidth}
+                >
+                  <RenderBox 
+                    x={node.x}
+                    y={node.y}
+                    type={node.type}
+                    renderFunction={node.renderFunction.renderFunction}
+                    toggleBox={() => {
+                      const newNodes = this.state.nodes;
+                      newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                      this.setState({
+                        nodes: newNodes,
+                      });
+                    }}
+                  />
+                </ContextProvider>
+              )
+          )}
         </div>
       </Container>
     );

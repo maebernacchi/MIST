@@ -62,8 +62,8 @@ import gui from "../globals/mistgui-globals.js";
 import MISTImage from "./MISTImage";
 import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions.js";
-import { globalContext } from '../globals/global-context';
-import {fontContext} from '../globals/globals-fonts';
+import { globalContext } from "../globals/global-context";
+import { fontContext } from "../globals/globals-fonts";
 
 // +----------------------------+
 // | All dependent files        |
@@ -76,7 +76,6 @@ function ValNode(props) {
   const index = props.index;
   const rep = gui.values[name].rep;
   const [renderFunction, setRenderFunction] = useState(gui.values[name].rep);
-  const [showImage, setShowImage] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
   const [image] = useImage(require("./trash.png"));
@@ -157,6 +156,9 @@ function ValNode(props) {
           scaleX: 1.1,
           scaleY: 1.1,
         });
+        if (props.renderFunction && props.imageShowing) {
+          props.toggleBox();
+        }
       }}
       onDragEnd={(e) => {
         e.target.to({
@@ -167,6 +169,9 @@ function ValNode(props) {
           shadowOffsetX: 5,
           shadowOffsetY: 5,
         });
+        if (props.renderFunction && props.imageShowing) {
+          props.toggleBox();
+        }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
           index,
@@ -247,7 +252,7 @@ function ValNode(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
-                if(parseFloat(formValue)!== null) {
+                if (parseFloat(formValue) !== null) {
                   setRenderFunction(formValue);
                   props.updateHashValue(index, formValue);
                   setSubmitted(true);
@@ -290,34 +295,24 @@ function ValNode(props) {
         )}
         <Trashcan />
       </Group>
-      {showImage ? (
-        <Portal>
-          <MISTImage //Mini image that can be seen at the bottom right of the node
-            onClick={() => setShowImage(!showImage)}
-            x={x + nodeDimensions.valueImageBoxOffset + props.offsetX}
-            y={y + nodeDimensions.valueImageBoxOffset + props.offsetY}
-            width={nodeDimensions.renderSideLength}
-            height={nodeDimensions.renderSideLength}
-            renderFunction={renderFunction}
-            automated={false}
-          />
-        </Portal>
-      ) : (
-        <Rect
-          onClick={() => setShowImage(!showImage)}
-          name={"imageBox"}
-          x={nodeDimensions.valueImageBoxOffset}
-          y={nodeDimensions.valueImageBoxOffset}
-          width={nodeDimensions.imageBoxSideLength}
-          height={nodeDimensions.imageBoxSideLength}
-          fill={gui.imageBoxColor}
-          expanded={false}
-          shadowColor={"gray"}
-          shadowBlur={2}
-          shadowOffsetX={1}
-          shadowOffsetY={1}
-        />
-      )}
+      <Rect
+        onClick={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
+        name={"imageBox"}
+        x={nodeDimensions.valueImageBoxOffset}
+        y={nodeDimensions.valueImageBoxOffset}
+        width={nodeDimensions.imageBoxSideLength}
+        height={nodeDimensions.imageBoxSideLength}
+        fill={gui.imageBoxColor}
+        expanded={false}
+        shadowColor={"gray"}
+        shadowBlur={2}
+        shadowOffsetX={1}
+        shadowOffsetY={1}
+      />
     </Group>
   );
   // +----------------------------------------+
@@ -326,4 +321,3 @@ function ValNode(props) {
 }
 
 export default ValNode;
-

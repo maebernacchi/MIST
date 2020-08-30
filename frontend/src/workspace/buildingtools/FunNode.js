@@ -52,7 +52,6 @@
 // | Notes |
 // +-------+---------------------------------------------------------
 
-
 // +----------------------------+------------------------------------
 // | All dependent files        |
 // +----------------------------+
@@ -64,10 +63,10 @@ import Portal from "./Portal";
 import gui from "../globals/mistgui-globals.js";
 import MISTImage from "./MISTImage";
 import useImage from "use-image";
-import {nodeContext} from "../globals/globals-nodes-dimensions.js";
-import {globalContext} from '../globals/global-context';
+import { nodeContext } from "../globals/globals-nodes-dimensions.js";
+import { globalContext } from "../globals/global-context";
 import globals from "../globals/globals.js";
-import {fontContext} from '../globals/globals-fonts';
+import { fontContext } from "../globals/globals-fonts";
 
 // +----------------------------+
 // | All dependent files        |
@@ -80,18 +79,23 @@ function FunNode(props) {
   const y = props.y;
   const rep = gui.functions[name].rep;
   const numOutlets = props.numOutlets;
-  const [showImage, setShowImage] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
   const nodeDimensions = useContext(nodeContext);
+  const width = useContext(globalContext).width;
+  const height = useContext(globalContext).height;
+  const funBarHeight = useContext(globalContext).funBarHeight;
+  const menuHeight = useContext(globalContext).menuHeight;
   const functionWidth = useContext(globalContext).functionWidth;
   const fonts = useContext(fontContext);
+  const [onDrag, setOnDrag] = useState(false);
+  const bezPoint = width / 50;
 
-// +----------------------------+------------------------------------
-// | Trashcan                   |
-// +----------------------------+
+  // +----------------------------+------------------------------------
+  // | Trashcan                   |
+  // +----------------------------+
 
   function Trashcan() {
     return (
@@ -116,19 +120,13 @@ function FunNode(props) {
     );
   }
 
-// +----------------------------+
-// | Trashcan                   |
-// +----------------------------+------------------------------------
+  // +----------------------------+
+  // | Trashcan                   |
+  // +----------------------------+------------------------------------
 
-  useEffect(() => {
-    if (!props.renderFunction) {
-      setShowImage(false);
-    }
-  }, [props.renderFunction]); //Re-renders whenever the render function changes
-
-// +----------------------------------------+------------------------
-// | Entire Function Group                  |
-// +----------------------------------------+
+  // +----------------------------------------+------------------------
+  // | Entire Function Group                  |
+  // +----------------------------------------+
 
   return (
     <Group
@@ -136,32 +134,22 @@ function FunNode(props) {
       x={x}
       y={y}
       draggable
-
       // helps keep the function nodes in the designated workspace area
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > window.innerWidth - functionWidth) {
-          pos.x = window.innerWidth - functionWidth;
+        if (pos.x > width - functionWidth) {
+          pos.x = width - functionWidth;
         }
-        if (pos.y < globals.menuHeight) {
-          pos.y = globals.menuHeight;
+        if (pos.y < menuHeight) {
+          pos.y = menuHeight;
         }
-        if (
-          pos.y >
-          window.innerHeight -
-            globals.funBarHeight -
-            functionWidth
-        ) {
-          pos.y =
-            window.innerHeight -
-            globals.funBarHeight -
-            functionWidth;
+        if (pos.y > height - funBarHeight - functionWidth) {
+          pos.y = height - funBarHeight - functionWidth;
         }
         return pos;
       }}
-
       onDragStart={(e) => {
         e.target.setAttrs({
           duration: 0.5,
@@ -173,8 +161,11 @@ function FunNode(props) {
           scaleX: 1.1,
           scaleY: 1.1,
         });
+        if (props.renderFunction && props.imageShowing) {
+          props.toggleBox();
+          setOnDrag(true);
+        }
       }}
-
       onDragEnd={(e) => {
         e.target.to({
           duration: 0.5,
@@ -182,15 +173,25 @@ function FunNode(props) {
           scaleX: 1,
           scaleY: 1,
         });
+        if (props.renderFunction && onDrag) {
+          props.toggleBox();
+        }
         // Updates the x & y coordinates once the node has stopped dragging
-        props.updateNodePosition(index, e.currentTarget.x(), e.currentTarget.y());
+        props.updateNodePosition(
+          index,
+          e.currentTarget.x(),
+          e.currentTarget.y()
+        );
       }}
-
       onDragMove={(e) => {
         // Updates the line position dynamically while the node is being dragged
-        props.updateLinePosition(index, 'fun', e.currentTarget.x(), e.currentTarget.y());
+        props.updateLinePosition(
+          index,
+          "fun",
+          e.currentTarget.x(),
+          e.currentTarget.y()
+        );
       }}
-
       onClick={(e) => {
         if (e.target.attrs.name) {
           props.outletClicked(
@@ -201,7 +202,6 @@ function FunNode(props) {
           props.funClicked(index);
         }
       }}
-
       onDblClick={() => {
         // Generates the temporary line when double clicked
         props.dblClickHandler(index);
@@ -214,13 +214,12 @@ function FunNode(props) {
               duration: 0.5,
               easing: Konva.Easings.ElasticEaseOut,
               scaleX: 1.07,
-              scaleY: 1.07
-            })
+              scaleY: 1.07,
+            });
             return 0;
-          })
+          });
           setHovered(true);
         }}
-
         onMouseLeave={(e) => {
           setHovered(false);
           groupRef.current.children.map((u, i) => {
@@ -228,10 +227,10 @@ function FunNode(props) {
               duration: 0.5,
               easing: Konva.Easings.ElasticEaseOut,
               scaleX: 1,
-              scaleY: 1
-            })
+              scaleY: 1,
+            });
             return 0;
-          })
+          });
         }}
       >
         <Rect
@@ -273,45 +272,30 @@ function FunNode(props) {
         />
         <Trashcan />
       </Group>
-      {showImage ? (
-        <Portal>
-          <MISTImage //Mini image that can be seen at the bottom right of the node
-            onClick={() => setShowImage(false)}
-            x={x + nodeDimensions.functionImageBoxOffset + props.offsetX}
-            y={y + nodeDimensions.functionImageBoxOffset + props.offsetY}
-            width={nodeDimensions.renderSideLength}
-            height={nodeDimensions.renderSideLength}
-            renderFunction={props.renderFunction ? props.renderFunction : ""}
-            automated={false}
-          />
-        </Portal>
-      ) : (
-        <Rect
-          onClick={() => {
-            console.log(props.renderFunction);
-            if (props.renderFunction) {
-              setShowImage(true);
-            }
-          }}
-          name={"imageBox"}
-          x={nodeDimensions.functionImageBoxOffset}
-          y={
-            props.numOutlets <= 3
-              ? nodeDimensions.functionImageBoxOffset
-              : nodeDimensions.functionImageBoxOffset +
-                (props.numOutlets - 3) * nodeDimensions.outletYOffset
+      <Rect
+        onClick={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
           }
-          width={nodeDimensions.imageBoxSideLength}
-          height={nodeDimensions.imageBoxSideLength}
-          fill={gui.imageBoxColor}
-          shadowColor={"gray"}
-          shadowBlur={2}
-          shadowOffsetX={1}
-          shadowOffsetY={1}
-          expanded={false}
-          visible={typeof props.renderFunction === 'string'}
-        />
-      )}
+        }}
+        name={"imageBox"}
+        x={nodeDimensions.functionImageBoxOffset}
+        y={
+          props.numOutlets <= 3
+            ? nodeDimensions.functionImageBoxOffset
+            : nodeDimensions.functionImageBoxOffset +
+              (props.numOutlets - 3) * nodeDimensions.outletYOffset
+        }
+        width={nodeDimensions.imageBoxSideLength}
+        height={nodeDimensions.imageBoxSideLength}
+        fill={gui.imageBoxColor}
+        shadowColor={"gray"}
+        shadowBlur={2}
+        shadowOffsetX={1}
+        shadowOffsetY={1}
+        expanded={false}
+        visible={typeof props.renderFunction === "string"}
+      />
       {name === "rgb"
         ? ["red", "green", "blue"].map((u, i) => (
             <Shape
@@ -319,10 +303,10 @@ function FunNode(props) {
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.bezierCurveTo(
-                  -gui.bezPoint,
-                  -gui.bezPoint,
-                  -gui.bezPoint,
-                  gui.bezPoint,
+                  -bezPoint,
+                  -bezPoint,
+                  -bezPoint,
+                  bezPoint,
                   0,
                   0
                 );
@@ -366,10 +350,10 @@ function FunNode(props) {
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.bezierCurveTo(
-                  -gui.bezPoint,
-                  -gui.bezPoint,
-                  -gui.bezPoint,
-                  gui.bezPoint,
+                  -bezPoint,
+                  -bezPoint,
+                  -bezPoint,
+                  bezPoint,
                   0,
                   0
                 );
@@ -414,8 +398,8 @@ function FunNode(props) {
           ))}
     </Group>
   );
-// +----------------------------------------+
-// | Entire Function Group                  |
-// +----------------------------------------+----------------------
+  // +----------------------------------------+
+  // | Entire Function Group                  |
+  // +----------------------------------------+----------------------
 }
 export default FunNode;
