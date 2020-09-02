@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const passportLocal = require("passport-local-mongoose");
 const sanitize = require("mongo-sanitize");
 const bcrypt = require("bcrypt");
 
@@ -12,291 +11,24 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
 
 mongoose.set("useFindAndModify", false);
 
-// +---------+----------------------------------------------------------
-// | Schemas |
-// +---------+
+// +--------+----------------------------------------------------------
+// | Models |
+// +--------+
 
-const imagesSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "User",
-  },
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }], // of (of comment _ids)
-  title: { type: String, required: true },
-  code: { type: String, required: true },
-  ratings: { type: Number, default: 0 },
-  createdAt: { type: String, default: Date.now },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  flags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Report",
-    },
-  ], // of (of flag_ids)
-  public: Boolean, //true = public, false = private
-  caption: String,
-  featured: {
-    type: Boolean,
-    default: false,
-  },
-});
+// We define each model schema in its own module because it is 
+// strongly recommended by MDN: (link below)
+// https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose 
 
-const commentsSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  imageId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Image",
-  },
-  body: String,
-  createdAt: {
-    type: String,
-    default: Date.now,
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  flags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Report",
-    },
-  ], // of (of flag_ids)
-});
-
-const reportSchema = new mongoose.Schema({
-  type: String, // type: Comment, Album, User, Image
-  reportedId: mongoose.Schema.Types.ObjectId,
-  body: String, // description of the offense, choosen from a list or given by user
-  description: String, //optional description of why this was offensive
-  count: Number, // count of how many times it has been flagged
-  lastFlaggedAt: {
-    // the most recent flag date
-    type: Date,
-    default: Date.now,
-  },
-  flaggedBy: [
-    {
-      //array of users(ids) who flagged it
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ] /*
-  This could be useful for the future, if the moderators would like the id of 
-  the user explitily. For now, the moderator, will have to search the appropirate collection
-  for the given id and then check the user information
-  flaggedUser: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  } */,
-});
-
-const albumsSchema = new mongoose.Schema({
-  name: String,
-  userId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "User",
-    require: true,
-  },
-  images: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "Image",
-    },
-  ], // (of Ids)
-  createdAt: {
-    type: String,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: String,
-    default: Date.now,
-  },
-  public: Boolean, // true = public, false = private
-  active: Boolean,
-  caption: String,
-  flags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Report",
-    },
-  ], // of (of flag_ids)
-});
-
-const workspacesSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: String,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: String,
-    default: Date.now,
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  data: Object,
-});
-
-const usersSchema = new mongoose.Schema({
-  forename: {
-    type: String,
-    required: true,
-  },
-  surname: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  username: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  }, //hashed
-  createdAt: {
-    type: String,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: String,
-    default: Date.now,
-  },
-  verified: Boolean,
-  admin: Boolean,
-  moderator: Boolean,
-  images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image" }], // of image ids
-  albums: [{ type: mongoose.Schema.Types.ObjectId, ref: "Album" }], // of album ids
-  workspaces: [workspacesSchema], // of workspace objects
-  profilepic: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Image",
-    default: null,
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  hidden: {
-    commentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-    albumIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Album" }],
-    imageIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image" }],
-  },
-  blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-  flags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Report",
-    },
-  ], // of (of flag_ids)
-  liked: [{ type: mongoose.Schema.Types.ObjectId }], // of image _ids
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }], //(of comment _ids)
-  about: {
-    String,
-    default: "",
-  },
-  expertWorkspaces: [Object],
-});
-
-const challengeSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.ObjectId,
-    require: true,
-  },
-  name: {
-    type: String,
-    require: true,
-  },
-  title: {
-    type: String,
-    require: true,
-  },
-  category: {
-    type: String,
-    require: true,
-  }, // (Beginning,Intermediate,Advanced)(Greyscale,RGB)(Static,Animated)
-
-  code: {
-    type: String,
-    require: true,
-  },
-  createdAt: {
-    type: String,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: String,
-    default: Date.now,
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  flags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Report",
-    },
-  ], // of (of flag_ids)
-  code: {
-    type: String,
-    require: true,
-  }, // (Beginning,Intermediate,Advanced)(Greyscale,RGB)(Static,Animated)
-  position: {
-    type: String,
-    require: true,
-  },
-  description: {
-    type: String,
-    require: true,
-  },
-});
-
-// Configuring Schemas
-usersSchema.plugin(passportLocal);
-
-// Models
-const User = mongoose.model("User", usersSchema);
-const Image = mongoose.model("Image", imagesSchema);
-const Comment = mongoose.model("Comment", commentsSchema);
-const Album = mongoose.model("Album", albumsSchema);
-const Challenge = mongoose.model("Challenge", challengeSchema);
-const Workspace = mongoose.model("Workspace", workspacesSchema);
-const Report = mongoose.model("Report", reportSchema);
+const Album = require('../Models/Album');
+const Comment = require('../Models/Comment');
+const Challenge = require('../Models/Challenge');
+const Image = require('../Models/Image');
+const Report = require('../Models/Report');
+const Workspace = require('../Models/Workspace');
+const User = require('../Models/User');
 
 // Export models
 module.exports.User = User;
-module.exports.Image = Image;
-module.exports.Comment = Comment;
-module.exports.Album = Album;
-module.exports.Challenge = Challenge;
-module.exports.Workspace = Workspace;
-module.exports.Report = Report;
-
-// Export Utilities
-module.exports.Types = mongoose.Types;
-module.exports.sanitize = sanitize; //sanitizes string
 
 // +------------+-------------------------------------------------
 // | Utitilites |
@@ -381,6 +113,32 @@ module.exports.saveImage = (userId, title, code, res) => {
       res.end(JSON.stringify(error));
     });
 };
+
+/**
+ * Adds an image to an album
+ * @param {String} albumId 
+ * @param {String} imageId 
+ */
+module.exports.addToAlbum = async (albumId, imageId) => {
+  // Sanitize inputs.  Yay!
+  albumId = sanitize(albumId);
+  imageId = sanitize(imageId);
+  return await Album.updateOne({ _id: albumId }, { $addToSet: { images: imageId } }).exec()
+    .then(writeOpResult => (Boolean)(writeOpResult.nModified))
+    .catch(error => { throw error })
+};
+
+// rename an album
+module.exports.renameAlbum = async (albumId, newName) => {
+  // Sanitize inputs.  Yay!
+  albumId = sanitize(albumId);
+  newName = sanitize(newName);
+
+  return await Album.updateOne({ _id: albumId }, { name: newName }).exec()
+    .then(writeOpResult => writeOpResult.nModified)
+    .catch(error => { throw error })
+
+}
 
 // +------------+-------------------------------------------------
 // |   Gallery  |
@@ -613,6 +371,8 @@ module.exports.commentInfo = (userid, imageid, callback) => {
 // |    Users   |
 // +------------+
 
+
+
 /**
  * Checks if the password is secure enough when the user is signing up
  */
@@ -670,7 +430,7 @@ module.exports.changePassword = async (req, callback) => {
         let newPass = await bcrypt.hash(req.body.newPassword, 12);
         User.findOneAndUpdate(
           { _id: req.body._id },
-          { $set: { password: newPass} },
+          { $set: { password: newPass } },
           { new: true },
           (err, doc) => {
             if (err) {
@@ -756,8 +516,8 @@ module.exports.deleteAccount = async (req, callback) => {
     if (result === false) {
       callback("Old Password Does Not Match");
     } else {
-      User.findOneAndDelete({_id: req.body._id}, (err, doc) => {
-        if(err) {
+      User.findOneAndDelete({ _id: req.body._id }, (err, doc) => {
+        if (err) {
           callback(err)
         } else {
           callback("Deleted. Please Sign Out.")
@@ -791,9 +551,10 @@ module.exports.createUser = (req, callback) => {
           username: user.username,
           password: hashedPassword,
           email: user.email,
-          verified: true,
+          verified: false,
           admin: false,
           moderator: false,
+          token: user.token,
         });
         await newUser.save();
         callback("User Created");
@@ -808,6 +569,25 @@ module.exports.getUserIdByUsername = (username, callback) => {
     if (err) return callback(err, null);
     else return callback(null, user._id);
   });
+};
+
+// Returns all images and albums for a user
+module.exports.getCompleteUserProfile = async (userid) => {
+  userid = sanitize(userid);
+  return (User
+    .findById(userid)
+    .populate({
+      path: 'images',
+      match: { active: true },
+    })
+    .populate({
+      path: 'albums',
+      match: { active: true },
+      populate: { path: 'images', match: { active: true } }
+    })
+    .select('-password')
+    .exec())
+  //     .select('images albums')
 };
 
 // +--------------+-------------------------------------------------
@@ -1054,9 +834,170 @@ module.exports.wsexists = async (userid, wsname) =>
     .countDocuments()
     .exec();
 
-module.exports.deletews = async (userId, workspace_name) =>
+module.exports.deletews = async (userId, workspace_name) => (
   User.findOne({ _id: mongoose.Types.ObjectId(userId) })
     .updateOne({
       $pull: { workspaces: { name: workspace_name } },
     })
-    .exec();
+    .exec()
+)
+
+// +--------+----------------------------------------------------------
+// | Albums |
+// +--------+
+
+// create Album
+module.exports.createAlbum = async (userid, name) => {
+  userid = sanitize(userid);
+  name = sanitize(name);
+  let album = new Album({
+    name: name,
+    userId: userid,
+    public: false,
+    active: true,
+    flag: false,
+    caption: '',
+  }) // create album document object 
+  try {
+    //save the album object
+    const albumObject = await album.save();
+    if (albumObject) {
+      return (
+        User
+          .updateOne({ _id: userid }, { $push: { albums: albumObject._id } })
+          .exec()
+          .then(writeOpResult => writeOpResult.nModified)
+          .catch(error => { throw error })
+      );
+    } else {
+      throw 'Failed to safe for Unkown reason'
+    }
+  } catch (error) {
+    throw error;
+  }
+}; // createAlbum
+
+/**
+* deletes an album
+* DANGEROUS DOES NOT CHECK FOR AUTHORIZATION
+* @param userId: the object ID for the user
+* @param albumId: the object ID for the album
+*/
+module.exports.deleteAlbum = async (albumId) => {
+  // sanitize ID's
+  albumId = sanitize(albumId);
+  return await Album.updateOne({ _id: albumId }, { active: false, updatedAt: Date.now }).exec()
+    .then(writeOpResult => writeOpResult.nModified)
+    .catch(error => { throw error })
+}
+
+// +----------+----------------------------------------------------------
+// | Reporting/Hiding/Blocking |
+// +---------------------------+
+
+/**
+ * hide content from a user
+ * @param userid: the objectId of the user wanting to hide something
+ * @param type: the type of content being hidden: "comment", "image", or "album" 
+ * @param contentid: the objectId of the content being hidden 
+ * return true if successfull, false elsewise 
+ */
+module.exports.hideContent = async (userid, type, contentid) => {
+  userid = sanitize(userid);
+  type = sanitize(type);
+  contentid = sanitize(contentid);
+  try {
+    let update;
+    switch (type) {
+      case "comment":
+        update = { $push: { "hidden.commentIds": contentid } }
+        break;
+      case "album":
+        update = { $push: { "hidden.albumIds": contentid } }
+        break;
+      case "image":
+        update = { $push: { "hidden.imageIds": contentid } }
+        break;
+      default:
+        throw "invalid type";
+    }
+    const { nModified } = await User.updateOne({ _id: userid }, update).exec();
+    return (Boolean)(nModified);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * unhide content from a user
+ * @param userid: the objectId of the user wanting to unhide something
+ * @param type: the type of content being hidden: "comment", "image", or "album" 
+ * @param contentid: the objectId of the content being unhidden 
+ * return true if successfull, false elsewise 
+ */
+module.exports.unhideContent = async (userid, type, contentid) => {
+  try {
+    let update;
+    switch (type) {
+      case "comment":
+        update = { $pull: { "hidden.commentIds": contentid } }
+        break;
+      case "album":
+        update = { $pull: { "hidden.albumIds": contentid } }
+        break;
+      case "image":
+        update = { $pull: { "hidden.imageIds": contentid } }
+        break;
+      default:
+        throw "invalid type";
+    }
+    const { nModified } = await User.updateOne({ _id: userid }, update).exec();
+    return (Boolean)(nModified);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * blocks a user
+ * @param userid: the objectId of the user who wants to block a user 
+ * @param contentid: the objectId of the user to be blocked 
+ * returns true if successfull, false otherwise
+ */
+module.exports.blockUser = async (userid, contentid) => {
+  return await User.updateOne({ _id: userid }, { $push: { blockedUsers: contentid } }).exec()
+    .then(writeOpResult => (Boolean)(writeOpResult.nModified))
+    .catch(error => { throw error })
+}
+
+/**
+ * unblocks a user
+ * @param userid: the objectId of the user who wants to block a user 
+ * @param contentid: the objectId of the user to be blocked 
+ * returns true if successfull, false otherwise
+ */
+module.exports.unblockUser = async (userid, contentid) => {
+  return await User.updateOne({ _id: userid }, { $pull: { blockedUsers: contentid } }).exec()
+    .then(writeOpResult => (Boolean)(writeOpResult.nModified))
+    .catch(error => { throw error })
+}
+
+
+
+// +-------+-------------------------------------------------
+// | Misc. |
+// +-------+
+
+
+module.exports.isAdminOrModerator = async (userId) => (
+  User.findOne({
+    _id: userId,
+    $or: [{ admin: true }, { moderator: true }]
+  }).countDocuments().exec()
+)
+
+module.exports.updateAuthorizationCheck = async (userId, model, objectId) => (
+  Models[model]
+    .findOne({ _id: objectId, userId: userId })
+    .countDocuments()
+    .exec())

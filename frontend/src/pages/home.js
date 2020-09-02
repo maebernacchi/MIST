@@ -43,7 +43,6 @@ import { NavLink } from "react-router-dom";
 import "./../design/styleSheets/home.css";
 import MistLogo from "./../design/Logos/logoFinal.png";
 /* imports icons */
-import { AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
 /* MISTImage and LinkButton */
 import MISTImage from "./components/MISTImageGallery"
@@ -231,7 +230,7 @@ class FeaturedImages extends Component {
               <Row >
                 {featuredImages.map((featuredImage) => {
                   return (
-                    <Col>
+                    <Col key={featuredImage._id}>
                       {/* the two lines below are placeholders, we need to pass in MIST images instead */}
                       <MISTImage code={featuredImage.code} resolution="150" />
                       {/*<p> {featuredImage.code}</p>*/}

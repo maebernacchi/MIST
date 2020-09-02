@@ -54,15 +54,16 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { Rect, Group, Text, Image } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
-import gui from "./mistgui-globals.js";
+import gui from "../globals/mistgui-globals.js";
 import MISTImage from "./MISTImage";
 import useImage from "use-image";
-import nodeDimensions from "./globals-nodes-dimensions.js";
-import { width, height, funBarHeight, menuHeight } from "./globals.js";
+import { nodeContext } from "../globals/globals-nodes-dimensions.js";
+import { globalContext } from "../globals/global-context";
+import { fontContext } from "../globals/globals-fonts";
 
 // +----------------------------+
 // | All dependent files        |
@@ -75,13 +76,19 @@ function ValNode(props) {
   const index = props.index;
   const rep = gui.values[name].rep;
   const [renderFunction, setRenderFunction] = useState(gui.values[name].rep);
-  const [showImage, setShowImage] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
   const [formValue, setFormValue] = useState("");
-  //const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const nodeDimensions = useContext(nodeContext);
+  const width = useContext(globalContext).width;
+  const height = useContext(globalContext).height;
+  const funBarHeight = useContext(globalContext).funBarHeight;
+  const menuHeight = useContext(globalContext).menuHeight;
+  const valueWidth = useContext(globalContext).valueWidth;
+  const fonts = useContext(fontContext);
 
   // +----------------------------+------------------------------------
   // | Trashcan                   |
@@ -129,14 +136,14 @@ function ValNode(props) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > width - nodeDimensions.valueWidth) {
-          pos.x = width - nodeDimensions.valueWidth;
+        if (pos.x > width - valueWidth) {
+          pos.x = width - valueWidth;
         }
         if (pos.y < menuHeight) {
           pos.y = menuHeight;
         }
-        if (pos.y > height - funBarHeight - nodeDimensions.valueWidth) {
-          pos.y = height - funBarHeight - nodeDimensions.valueWidth;
+        if (pos.y > height - funBarHeight - valueWidth) {
+          pos.y = height - funBarHeight - valueWidth;
         }
         return pos;
       }}
@@ -149,6 +156,9 @@ function ValNode(props) {
           scaleX: 1.1,
           scaleY: 1.1,
         });
+        if (props.renderFunction && props.imageShowing) {
+          props.toggleBox();
+        }
       }}
       onDragEnd={(e) => {
         e.target.to({
@@ -159,6 +169,9 @@ function ValNode(props) {
           shadowOffsetX: 5,
           shadowOffsetY: 5,
         });
+        if (props.renderFunction && props.imageShowing) {
+          props.toggleBox();
+        }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
           index,
@@ -239,7 +252,7 @@ function ValNode(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
-                if(parseFloat(formValue)!== null) {
+                if (parseFloat(formValue) !== null) {
                   setRenderFunction(formValue);
                   props.updateHashValue(index, formValue);
                   //setSubmitted(true);
@@ -254,8 +267,8 @@ function ValNode(props) {
                   type="text"
                   placeholder="#"
                   style={{
-                    width: 0.45 * nodeDimensions.valueWidth,
-                    height: 0.45 * nodeDimensions.valueWidth,
+                    width: 0.45 * valueWidth,
+                    height: 0.45 * valueWidth,
                     backgroundColor: "#D8AB24",
                     border: "none"
                   }}
@@ -270,13 +283,13 @@ function ValNode(props) {
         ) : (
           <Text
             text={renderFunction}
-            fontFamily={gui.globalFont}
+            fontFamily={fonts.globalFont}
             fill={"black"}
-            fontSize={gui.nodeFontSize}
+            fontSize={fonts.valueFontSize}
             x={0}
             y={0}
-            width={nodeDimensions.valueWidth}
-            height={nodeDimensions.valueWidth}
+            width={valueWidth}
+            height={valueWidth}
             align={"center"}
             verticalAlign={"middle"}
             _useStrictMode
@@ -284,34 +297,24 @@ function ValNode(props) {
         )}
         <Trashcan />
       </Group>
-      {showImage ? (
-        <Portal>
-          <MISTImage //Mini image that can be seen at the bottom right of the node
-            onClick={() => setShowImage(!showImage)}
-            x={x + nodeDimensions.valueImageBoxOffset + props.offsetX}
-            y={y + nodeDimensions.valueImageBoxOffset + props.offsetY}
-            width={nodeDimensions.renderSideLength}
-            height={nodeDimensions.renderSideLength}
-            renderFunction={renderFunction}
-            automated={false}
-          />
-        </Portal>
-      ) : (
-        <Rect
-          onClick={() => setShowImage(!showImage)}
-          name={"imageBox"}
-          x={nodeDimensions.valueImageBoxOffset}
-          y={nodeDimensions.valueImageBoxOffset}
-          width={nodeDimensions.imageBoxSideLength}
-          height={nodeDimensions.imageBoxSideLength}
-          fill={gui.imageBoxColor}
-          expanded={false}
-          shadowColor={"gray"}
-          shadowBlur={2}
-          shadowOffsetX={1}
-          shadowOffsetY={1}
-        />
-      )}
+      <Rect
+        onClick={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
+        name={"imageBox"}
+        x={nodeDimensions.valueImageBoxOffset}
+        y={nodeDimensions.valueImageBoxOffset}
+        width={nodeDimensions.imageBoxSideLength}
+        height={nodeDimensions.imageBoxSideLength}
+        fill={gui.imageBoxColor}
+        expanded={false}
+        shadowColor={"gray"}
+        shadowBlur={2}
+        shadowOffsetX={1}
+        shadowOffsetY={1}
+      />
     </Group>
   );
   // +----------------------------------------+
@@ -320,4 +323,3 @@ function ValNode(props) {
 }
 
 export default ValNode;
-

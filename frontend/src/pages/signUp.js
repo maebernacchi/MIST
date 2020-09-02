@@ -72,6 +72,7 @@ const SignUp = () => {
       username: username,
       password: password,
       email: email,
+      token: ''
     };
 
     //post user to database
@@ -87,22 +88,6 @@ const SignUp = () => {
         } else {
           window.location.href = "/";
         }
-      });
-
-    // login user
-    fetch("/api", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ action: "signIn", ...user }),
-    })
-      //redirect user to home page
-      .then((res) => res.json())
-      .then((message) => {
-        console.log("message = " + message);
-        if (message === "Success") window.location.href = "/";
       });
   };
 

@@ -36,12 +36,10 @@ import {
     Nav,
     Navbar,
     OverlayTrigger,
-    Row,
     Tooltip,
 } from 'react-bootstrap';
 import { BsCloud, BsFullscreen, BsFullscreenExit, BsQuestionCircle } from 'react-icons/bs';
 import { FaRegShareSquare } from 'react-icons/fa';
-import { Link } from "react-router-dom";
 
 function Menu(props) {
     // A reference to keep track of the name that the user picks for their workspace

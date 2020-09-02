@@ -98,7 +98,8 @@ class CanvasCard extends Component {
                         expand_code = replace_all(expand_code, `{${param}}`, default_params[idx])
                     });
                 } else {
-                    throw 'There is a mismatch between default_params and params';
+                    const error_message = 'There is a mismatch between default_params and params';
+                    throw error_message;
                 }
             }
             expand_code = expand_macros(expand_code, this.props.getStateFunctions());

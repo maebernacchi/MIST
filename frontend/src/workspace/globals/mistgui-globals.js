@@ -4,7 +4,7 @@
  *   within the object/prototype.)
  */
 
-import { width, height } from "./globals";
+import { width, height } from "./globals.js";
 
 const globalFont = "Arial";
 const functionFont = "Courier New";
@@ -33,9 +33,9 @@ const globalScale = width / 900; // for elements that are more difficult to scal
 
 const funNames = [
   "add",
-  "wrapsum",
   "multiply",
   "average",
+  "wrapsum",
   "square",
   "negate",
   "sine",
@@ -43,7 +43,7 @@ const funNames = [
   "absolute",
   "sign",
   "mistif",
-  "rgb",
+  "rgb"
 ];
 const functions = {
   add: { rep: "sum", max: 20, min: 2, prefix: "sum", color: functionMultColor },

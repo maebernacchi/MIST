@@ -5,7 +5,7 @@
 // Workspace's background.
 const workspaceBackground = {
   classic: "#FAFBFF",
-  dusk: "#f0f5ff",
+  dusk: "#edf2fd",
   dark: "black",
 };
 
@@ -36,7 +36,7 @@ const nodeHoverShadow = {
 // Menu background color.
 const menuBackground = {
     classic: 'white',
-    dusk: '#EEF0FF',
+    dusk: 'white',
     dark: '#1c170f',
 }
 
@@ -53,27 +53,33 @@ const workspaceButton = {
 }
 
 const menuFunTab = {
-  classic: menuBackground.classic, //'#f5bcce',
-  dusk: menuBackground.dusk, // '#401724',
-  dark: menuBackground.dark // '#401724'
+  classic: '#9c0c4d', //'#f5bcce',
+  dusk: '#9c0c4d', // '#401724',
+  dark: '#9c0c4d' // '#401724'
 }
 
 const menuValTab = {
-  classic: menuBackground.classic, //'#fcf7ac',
-  dusk: menuBackground.dusk, // '#5c591e',
-  dark: menuBackground.dark // '#5c591e'
+  classic: '#d4bc0d', //'#fcf7ac',
+  dusk: '#d4bc0d', // '#5c591e',
+  dark: '#d4bc0d' // '#5c591e'
 }
 
 const menuCustomTab = {
-  classic: menuBackground.classic, //'#bae3ff',
-  dusk: menuBackground.dusk, // '#24465e',
-  dark: menuBackground.dark // '#24465e'
+  classic: '#2668d4', //'#bae3ff',
+  dusk: '#2668d4', // '#24465e',
+  dark: '#2668d4' // '#24465e'
 }
 
 const menuSavedTab = {
-  classic: menuBackground.classic, //'#cffcdb',
-  dusk: menuBackground.dusk, // '#1b4f2a',
-  dark: menuBackground.dark // '#1b4f2a'
+  classic: '#80d22d', //'#cffcdb',
+  dusk: '	#80d22d', // '#1b4f2a',
+  dark: '	#80d22d' // '#1b4f2a'
+}
+
+const menuSettingsTab = {
+  classic: '#490679',
+  dusk: '#490679',
+  dark: '#490679'
 }
 
 // +---------------+-------------------------------------------------
@@ -103,6 +109,7 @@ export default {
   menuValTab,
   menuCustomTab,
   menuSavedTab,
+  menuSettingsTab,
   workspaceButton,
   funBarBackground,
 };

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import MIST from "./mistui.js";
+import React, { Component, useEffect, useState } from "react";
+import MIST from "../mist/mistui.js";
 
 /* MISTImage props
  *   resolution: the resolution used to render the image (may be smaller than

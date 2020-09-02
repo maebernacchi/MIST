@@ -74,7 +74,7 @@ import { MIST } from "./mist.js";
 import React, { useState, useEffect } from "react";
 import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
 import ValNode from "./ValNode";
-import nodeDimensions from "./globals-nodes-dimensions.js";
+import { nodeContext } from "./globals-nodes-dimensions.js";
 
 // +----------------------------+
 // | All dependent files        |
@@ -83,6 +83,8 @@ import nodeDimensions from "./globals-nodes-dimensions.js";
 //container for everything related to the create workspace
 export default function Workspace(props) {
   useStrictMode(true);
+
+  const nodeDimensions = useContext(nodeContext);
 
   //example layouts for testing
   let layout1 = new MIST.Layout();
