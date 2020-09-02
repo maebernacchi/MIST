@@ -1,3 +1,18 @@
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // +-------+------------------------------------------------------------------------
 // | Notes |
 // +-------+
@@ -18,11 +33,13 @@ import {
     ButtonGroup,
     Card,
     Form,
-    Modal,
     OverlayTrigger,
     Row,
+    Tab,
+    Tabs,
     Tooltip,
 } from 'react-bootstrap';
+import { BsQuestionCircle } from 'react-icons/bs'
 import { FiSave } from 'react-icons/fi';
 import { GrPowerReset } from 'react-icons/gr'
 import Editor from 'react-simple-code-editor';
@@ -32,6 +49,7 @@ function WorkspaceCard(props) {
     // Class toggles are used to force a highlight update when moving through the code
     // TODO: see if there's a better way to do this
     const [, setHighlightSwitch] = useState(true);
+    const [key, setKey] = useState('createFunction');
     const updateHighlight = () => setHighlightSwitch(hs => !hs);
 
     useEffect(() => {
@@ -44,81 +62,145 @@ function WorkspaceCard(props) {
 
     return (
         <Card className='scroll panel' id='expert-workspace'>
+
+            {
+                console.log('rendering workspace')
+            }
             <Card.Title >Create Your Custom Function</Card.Title>
-            <Card.Body>
-                <FunctionHeader
-                    addUserDefinedFunction={props.addUserDefinedFunction}
-                    clearFunction={props.clearFunction}
-                    currentForm={props.getCurrentWorkspace().form}
-                    doesFunctionExist={props.doesFunctionExist}
-                    expertRef={props.expertRef}
-                    loadFunction={props.loadFunction}
-                />
+            <Tabs
+                id="controlled-center-body"
+                activeKey={key}
+                onSelect={(k) => setKey(k)}
+            >
+                <Tab eventKey="createFunction" title="Create Function">
+                    <Card.Body>
+                        <FunctionButtons
+                            addUserDefinedFunction={props.addUserDefinedFunction}
+                            clearFunction={props.clearFunction}
+                            currentForm={props.getCurrentWorkspace().form}
+                            doesFunctionExist={props.doesFunctionExist}
+                            expertRef={props.expertRef}
+                            loadFunction={props.loadFunction}
 
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            className="formTextbox"
-                            onChange={(e) => props.setName(e.target.value)}
-                            placeholder="Please name your MIST Function"
-                            rows="1"
-                            value={props.name}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Params</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            className="formTextbox"
-                            onChange={(e) => props.setParams(e.target.value)}
-                            placeholder="Please list your params, separated by commas and no spaces"
-                            rows="1"
-                            value={props.params}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            className="formTextbox"
-                            onChange={(e) => props.setDescription(e.target.value)}
-                            placeholder="Please describe your MIST image"
-                            rows="2"
-                            value={props.description}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Code</Form.Label>
+                            triggerPopup={props.triggerPopup}
+                        >
 
-                        <Editor
-                            className='formTextbox'
-                            highlight={code => (
-                              highlight(code, "code-editor")
-                            )}
-                            id='expert-code'
-                            onKeyUp={updateHighlight}
-                            onValueChange={code => props.setCode(code)}
-                            padding={10}
-                            ref={props.codeRef}
-                            tabSize={4}
-                            textareaId='code-editor'
-                            value={props.code}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Control
-                            as="textarea"
-                            id="message"
-                            className="formTextbox"
-                            value={props.message}
-                            readOnly
-                            rows="3" />
-                    </Form.Group>
+                            <Form>
+                                <Form.Group>
+                                    <Form.Label>
+                                        Name&nbsp;
+                                        <HelpText text="The name of your MIST function. Your function name can include numbers and capital or lowercase letters. The name should not conflict with a MIST builtin function." id="mist-function-name-tooltip" />
+                                    </Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        className="formTextbox"
+                                        onChange={(e) => props.setName(e.target.value.replace(/[^ a-zA-Z0-9]/g, ""))}
+                                        placeholder="Please name your MIST Function"
+                                        rows="1"
+                                        value={props.name}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>
+                                        Parameters&nbsp;
+                                        <HelpText text="The parameters to your MIST function. Separate parameters with commas. Parameter names can include numbers and capital or lowercase letters." id="mist-function-params-tooltip" />
+                                    </Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        className="formTextbox"
+                                        onChange={(e) => props.setParams(e.target.value.replace(/[^ a-zA-Z0-9,]/g, ""))}
+                                        placeholder="Please list your params, separated by commas"
+                                        rows="1"
+                                        value={props.params}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>
+                                        Testing Parameters&nbsp;
+                                        <HelpText text="Parameter values that are used when rendering your function directly. Separate testing parameters with commas." id="mist-function-test-params-tooltip" />
+                                    </Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        className="formTextbox"
+                                        onChange={(e) => props.setDefaultParams(e.target.value)}
+                                        placeholder="Please pick your default params, separated by commas"
+                                        rows="1"
+                                        value={props.default_params}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Description</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        className="formTextbox"
+                                        onChange={(e) => props.setDescription(e.target.value)}
+                                        placeholder="Please describe your MIST function"
+                                        rows="2"
+                                        value={props.description}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Code</Form.Label>
 
-                </Form>
-            </Card.Body>
+                                    <Editor
+                                        className='formTextbox'
+                                        highlight={code => (
+                                            highlight(code, "code-editor")
+                                        )}
+                                        id='expert-code'
+                                        onKeyUp={updateHighlight}
+                                        onValueChange={code => props.setCode(code)}
+                                        padding={10}
+                                        ref={props.codeRef}
+                                        tabSize={4}
+                                        textareaId='code-editor'
+                                        value={props.code}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Message Box</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        id="message"
+                                        className="formTextbox"
+                                        value={props.message}
+                                        readOnly
+                                        rows="3" />
+                                </Form.Group>
+
+                            </Form>
+                        </FunctionButtons>
+
+                    </Card.Body>
+                </Tab>
+
+                <Tab eventKey="createImage" title="Create Image">
+                    <Card.Body>
+                        <Form>
+                            <Form.Group>
+                                <Form.Label>Code</Form.Label>
+
+                                <Editor
+                                    className='formTextbox'
+                                    highlight={code => (
+                                        highlight(code, "code-editor")
+                                    )}
+                                    id='expert-code'
+                                    onKeyUp={updateHighlight}
+                                    onValueChange={code => props.setCode(code)}
+                                    padding={10}
+                                    ref={props.codeRef}
+                                    tabSize={4}
+                                    textareaId='code-editor'
+                                    value={props.code}
+                                />
+                            </Form.Group>
+                        </Form>
+                    </Card.Body>
+                </Tab>
+
+            </Tabs>
+
         </Card>
     )
 }
@@ -132,13 +214,9 @@ WorkspaceCard.propTypes = {
 
 // FunctionDropdown
 // Contains all actions related directly to the function form
-function FunctionHeader(props) {
-
-    const [clearFunctionModalShow, setClearFunctionModalShow] = useState(false);
-    const [addUserDefinedFunctionShow, setAddUserDefinedFunctionShow] = useState(false);
+function FunctionButtons(props) {
 
     // check if form is in use
-
     const checkIfFormInUse = () => {
         const currentForm = props.currentForm;
         return (currentForm.name || currentForm.params || currentForm.description || currentForm.code);
@@ -147,99 +225,75 @@ function FunctionHeader(props) {
     // check if workspace is in use
 
     return (
-
-        <Row style={{ justifyContent: 'space-between' }}>
-
-            <ButtonGroup>
-                <OverlayTrigger
-                    container={props.expertRef}
-                    key={'addToWorkspace'}
-                    placement="right"
-                    overlay={
-                        <Tooltip>
-                            Save your function to your workspace
+        <>
+            <Row style={{ justifyContent: 'space-between', flexDirection: 'row-reverse' }}>
+                <ButtonGroup>
+                    <OverlayTrigger
+                        container={props.expertRef}
+                        key={'clearFunction'}
+                        placement="right"
+                        overlay={
+                            <Tooltip>
+                                Reset the function form to the default state
                         </Tooltip>
-                    }>
-                    <Button onClick={() => {
-                        const fun_name = props.currentForm.name;
-                        if (props.doesFunctionExist(fun_name)) {
-                            setAddUserDefinedFunctionShow(true);
-                        } else {
-                            props.addUserDefinedFunction();
-                        }
-                    }}><FiSave /></Button>
-                </OverlayTrigger>
-
-                <Modal
-                    container={props.expertRef}
-                    show={addUserDefinedFunctionShow}
-                    onHide={() => setAddUserDefinedFunctionShow(false)}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add Custom Function</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body> You are about to overwrite a previous custom function. Are you sure that you want
-                    to continue?
-                </Modal.Body>
-                    <Modal.Footer>
+                        }>
                         <Button
-                            onClick={() => setAddUserDefinedFunctionShow(false)}
-                            variant="secondary">Close</Button>
-                        <Button
-                            onClick={() => { props.addUserDefinedFunction(); setAddUserDefinedFunctionShow(false); }}
-                            variant="primary">
-                            Continue</Button>
-                    </Modal.Footer>
-                </Modal>
+                            onClick={() => {
+                                const warning_message = ' Your function form is currently in use. Are you sure that you want to clear it?'
+                                if (checkIfFormInUse())
+                                    props.triggerPopup({
+                                        message: warning_message,
+                                        onConfirm: () => props.clearFunction(),
+                                    });
+                            }}
+                        >
+                            <GrPowerReset />
+                        </Button>
+                    </OverlayTrigger>
+                </ButtonGroup>
 
-            </ButtonGroup>
-
-            <ButtonGroup>
-
-                <OverlayTrigger
-                    container={props.expertRef}
-                    key={'clearFunction'}
-                    placement="right"
-                    overlay={
-                        <Tooltip>
-                            Reset the function form to the default state
+                <ButtonGroup>
+                    <OverlayTrigger
+                        container={props.expertRef}
+                        key={'addToWorkspace'}
+                        placement="right"
+                        overlay={
+                            <Tooltip>
+                                Save your function to your workspace
                         </Tooltip>
-                    }>
-                    <Button
-                        onClick={() => {
-                            if (checkIfFormInUse())
-                                setClearFunctionModalShow(true);
-                        }}
-                    >
-                        <GrPowerReset />
-                    </Button>
-                </OverlayTrigger>
+                        }>
+                        <Button onClick={() => {
+                            const fun_name = props.currentForm.name;
+                            const warning_message = 'You are about to overwrite a previous custom function. Are you sure that you want to continue?'
+                            if (props.doesFunctionExist(fun_name)) {
+                                props.triggerPopup({
+                                    message: warning_message,
+                                    onConfirm: () => props.addUserDefinedFunction(),
+                                });
+                            } else {
+                                props.addUserDefinedFunction();
+                            }
+                        }}><FiSave /></Button>
+                    </OverlayTrigger>
 
-                <Modal
-                    container={props.expertRef}
-                    show={clearFunctionModalShow}
-                    onHide={() => setClearFunctionModalShow(false)}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Clear your function</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body> Your function form is currently in use. Are you sure that you want
-                    to clear it?
-                </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            onClick={() => setClearFunctionModalShow(false)}
-                            variant="secondary">Close</Button>
-                        <Button
-                            onClick={() => { props.clearFunction(); setClearFunctionModalShow(false); }}
-                            variant="primary">
-                            Clear</Button>
-                    </Modal.Footer>
-                </Modal>
+                </ButtonGroup>
 
-            </ButtonGroup>
-        </Row>
+            </Row >
+            {props.children}
+        </>
     )
+}
+
+function HelpText(props) {
+    return (
+        <OverlayTrigger
+            container={props.expertRef}
+            overlay={<Tooltip id={props.id}>{props.text}</Tooltip>}
+            placement="right"
+        >
+            <BsQuestionCircle />
+        </OverlayTrigger>
+    );
 }
 
 export default WorkspaceCard;

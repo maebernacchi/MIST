@@ -239,13 +239,13 @@ function ValNode(props) {
           shadowOffsetY={1}
           _useStrictMode
         />
-        {rep === "#" && !submitted ? (
+        {rep === "#" ?  (
           <Portal>
             <form
               id="form#"
               style={{
                 position: "absolute",
-                left: x + props.offsetX + 10,
+                left: x + props.offsetX + 20,
                 top: y + props.offsetY + 10,
               }}
               onSubmit={(e) => {
@@ -255,7 +255,7 @@ function ValNode(props) {
                 if (parseFloat(formValue) !== null) {
                   setRenderFunction(formValue);
                   props.updateHashValue(index, formValue);
-                  setSubmitted(true);
+                  //setSubmitted(true);
                 } else {
                   console.log("Invalid Number");
                 }
@@ -267,8 +267,10 @@ function ValNode(props) {
                   type="text"
                   placeholder="#"
                   style={{
-                    width: 0.5 * valueWidth,
-                    height: 0.5 * valueWidth,
+                    width: 0.45 * valueWidth,
+                    height: 0.45 * valueWidth,
+                    backgroundColor: "#D8AB24",
+                    border: "none"
                   }}
                   onChange={(e) => {
                     setFormValue(e.target.value);

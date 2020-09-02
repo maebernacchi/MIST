@@ -781,12 +781,15 @@ MIST.tokenize = function(str) {
         ch.text = num;
         tokens.push(ch);
       }
-      else if (/[A-Za-z]/.test(ch.text)) {
+      /* TODO: we're allowing underscores for custom variables, but that may
+       * bring about other bugs (see the while statement inside of this, as well
+       */
+      else if (/[A-Za-z_]/.test(ch.text)) {
         var col = ch.col;
         var row = ch.row;
         var id = ch.text;
         var c;
-        while ((c = input.peek()) && /[A-Za-z0-9.]/.test(c)) {
+        while ((c = input.peek()) && /[A-Za-z0-9._]/.test(c)) {
           id += c;
           input.next();
         } // while
@@ -992,17 +995,22 @@ function MISTbody2fun(body)
 
 /**
  * Convert a MIST expression to something that returns an RGB
- * list.  env is the 'environment' - a mapping of names to MIST
+ * list. env is the 'environment' - a mapping of names to MIST
  * expressions
  */
-MIST.expToRGB = function(name,exp,env) {
-  var type = MIST.expType(exp, env);
-  var tmp = [];
+MIST.expToRGB = function(name, exp, env) {
+  const type = MIST.expType(exp, env);
+  const {code: expString, variables} = MIST.simplifyCode(exp.code);
+  const variableCode = variables.map(
+    ({name, code}) => `const ${name} = ${code};`
+  ).join("");
+
+  const tmp = [];
    // Contexts as objects
-  for (var c in env) {
-    tmp.push("var " + c + " = " + env[c].toString());
+  for (const c in env) {
+    tmp.push("const " + c + " = " + env[c].toString());
   }
-  var envCode = tmp.join(";");
+  const envCode = tmp.join(";");
 
   // For RGB functions
   //   function(x,y,t,m,p) {
@@ -1010,9 +1018,9 @@ MIST.expToRGB = function(name,exp,env) {
   //      ...
   //      return (exp).map(r2c);
   //   };
-  if (type == MIST.TYPE.RGB) {
-    var code = "(function(x,y,t,m,p) { " + envCode +
-        "; return (" + exp.toString() + ").map(r2c); })";
+  if (type === MIST.TYPE.RGB) {
+    const code = "(function(x,y,t,m,p) { " + variableCode + envCode +
+      "; return (" + expString + ").map(r2c); })";
      //console.log(code);
     return eval(code);
   }
@@ -1022,10 +1030,9 @@ MIST.expToRGB = function(name,exp,env) {
   //      ...
   //      var _tmp_ = r2c(-exp);
   //      return [_tmp_, _tmp_, _tmp];
-  else if (type == MIST.TYPE.NUMBER) {
-    var code = "(function(x,y,t,m,p) { " + envCode +
-        "; var _tmp_ = r2c(-" + exp.toString() +
-        "); return [_tmp_, _tmp_, _tmp_]; })";
+  else if (type === MIST.TYPE.NUMBER) {
+    const code = "(function(x,y,t,m,p) { " + variableCode + envCode +
+      "; var _tmp_ = r2c(-" + expString + "); return [_tmp_, _tmp_, _tmp_]; })";
     //console.log(code);
     return eval(code);
   }
@@ -1233,6 +1240,258 @@ var fun2 = new MIST.Fun(["i"],
 var pp = function(str) {
   console.log(MIST.parse(str).prettyPrint());
 }
+/*
+ * Create variables for common subsequences
+ */
+MIST.simplifyCode = function(code) {
+  const MAX = 100;
+
+  const root_node = MIST.parse(code);
+  const nodes = {};
+
+  /* Takes a number and returns a unique variable name */
+  function get_variable(i) {
+    const variable_names = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKMLNOPQRSTUVWXYZ";
+    if (i < variable_names.length) {
+      // Start all variable names with an underscore to avoid conflicts with builtins
+      return "_" + variable_names[i];
+    } else {
+      return get_variable(Math.floor(i / variable_names.length) - 1)
+        + variable_names[i % variable_names.length];
+    }
+  }
+
+  function count_occurences(node, nodes, depth=1) {
+    // Don't try to count_occurences values
+    if (node.class === "MIST.Val") {
+      return;
+    }
+    if (!(node.code in nodes)) {
+      nodes[node.code] = {depth: depth, times: 1};
+    } else {
+      nodes[node.code].times++;
+    }
+    if (node.operands) {
+      node.operands.forEach(operand => count_occurences(operand, nodes, depth + 1));
+    }
+  }
+
+  count_occurences(root_node, nodes);
+  const keys = Object.keys(nodes);
+  // TODO: consider weighting by function type/depth also
+  const sorted = keys.filter(e => nodes[e].times > 1).sort((a, b) => (
+    nodes[b].times - nodes[a].times
+  )).slice(0, MAX);
+
+  const code_to_variable = {};
+  const variable_to_code = {}
+  let variable_index = 0;
+  sorted.forEach(key => {
+    const varname = get_variable(variable_index++);
+    code_to_variable[key] = varname;
+    variable_to_code[varname] = key;
+  });
+
+  // Substitute common subsequences in the code with the corresponding variable
+  let code_short = root_node.code;
+  const code_order = Object.keys(code_to_variable).sort((a, b) => nodes[a].depth - nodes[b].depth);
+  code_order.forEach(val => {
+    while (code_short.indexOf(val) !== -1) {
+      code_short = code_short.replace(val, code_to_variable[val]);
+    }
+  });
+
+  // Substitute common subsequences in the variables with the corresponding variable
+  const variable_order = Object.keys(variable_to_code).sort((a, b) => (
+    nodes[variable_to_code[a]].depth - nodes[variable_to_code[b]].depth
+  ));
+  variable_order.forEach(varname => {
+    variable_order.forEach(varname2 => {
+      const code = variable_to_code[varname2]
+      if (varname2 !== varname) {
+        while (variable_to_code[varname].indexOf(code) !== -1) {
+          variable_to_code[varname] = variable_to_code[varname].replace(code, varname2);
+        }
+      }
+    });
+  })
+
+  return {
+    variables: variable_order.reverse().map(varname => ({
+      name: varname,
+      code: variable_to_code[varname]
+    })),
+    code: code_short
+  };
+}
+/**
+ * Convert a MIST expression into a WebGL fragment shader
+ */
+MIST.expToGL = (function() {
+  const literals = {
+    x: "x",
+    y: "y",
+    "t.s": "t.x",
+    "t.m": "t.y",
+    "t.h": "t.z",
+    "t.d": "t.w",
+    "m.x": "m.x",
+    "m.y": "m.y"
+  };
+
+  function func(name, limit) {
+    if (limit) {
+      return function() {
+        return `${name}(${[...arguments].slice(0, limit).join(",")})`;
+      }
+    } else {
+      return function() {
+        return `${name}(${[...arguments].join(",")})`;
+      }
+    }
+  }
+
+  function joiner(name) {
+    return function() {
+      return `(${[...arguments].map(arg => "(" + arg + ")").join(name)})`;
+    }
+  }
+
+  const functions = {
+    cos: func("COS", 1),
+    sign: func("SIGN", 1),
+    sin: func("SIN", 1),
+    square: func("SQUARE", 1),
+    wrap: func("WRAP", 1),
+    mistif: func("MISTIF", 3),
+
+    abs: func("abs"),
+    signz: func("sign"),
+
+    mult: joiner("*"),
+    sum: joiner("+"),
+    
+    // rgb is the only function that returns an object because it uses a different fragment shader
+    rgb(r, g, b) {
+      return {r: r, g: g, b: b};
+    },
+
+    neg(x) {
+      return `(-(${x}))`;
+    },
+
+    avg() {
+      return `(${this.sum.apply(this, arguments)}/${arguments.length}.0)`;
+    },
+
+    wsum() {
+      return this.wrap(this.sum.apply(this, arguments));
+    },
+  }
+
+  function to_gl(node) {
+    if (node.class == "MIST.Val") {
+      if (node.name in literals) {
+        return literals[node.name]
+      } else {
+        let val = parseFloat(node.name);
+        if (isNaN(val)) {
+          // return -1.0 on unknown literals
+          return "-1.0";
+        } else {
+          val = val.toString();
+          // add a .0 to integers to turn them into floats
+          return (val.search(/[.e]/) == -1) ? val + ".0" : val;
+        }
+      }
+    } else if (node.class == "MIST.App") {
+      if (node.operation in functions) {
+        return functions[node.operation].apply(functions, node.operands.map(to_gl));
+      } else {
+        return "-1.0";
+      }
+    } else {
+      return "-1.0";
+    }
+  }
+
+  const fs = `
+    #ifdef GL_FRAGMENT_PRECISION_HIGH 
+      precision highp float;
+    #else
+      precision mediump float;
+    #endif
+
+    uniform vec2 u_resolution;
+    uniform vec2 u_mouse;
+    uniform vec4 u_time;
+
+    #define PI 3.1415926535897932384626433832795
+    #define CTM(x) ((x) * 2.0 - 1.0)
+    #define MTC(x) (((x) + 1.0) / 2.0)
+    #define SIN(x) sin((x) * PI)
+    #define COS(x) cos((x) * PI)
+    #define SQUARE(x) ((x) * (x))
+    #define SIGN(x) ((x) >= 0.0 ? 1.0 : -1.0)
+    #define MISTIF(test, pos, neg) ((test) >= 0.0 ? (pos) : (neg))
+
+    float WRAP(float val) {
+      if (val > 1.0) {
+        float res = mod((val + 1.0), 2.0) - 1.0;
+        // This case ensures a nonbreaking change with the recursive version
+        if (res == -1.0)
+          return 1.0;
+        return res;
+      }
+      if (val < -1.0) {
+        float res = -(mod((-val + 1.0), 2.0) - 1.0);
+        // This case ensures a nonbreaking change with the recursive version
+        if (res == 1.0)
+          return -1.0;
+        return res;
+      }
+      return val;
+    }
+
+    void main() {
+      float x = CTM(gl_FragCoord.x / u_resolution.x);
+      float y = -CTM(gl_FragCoord.y / u_resolution.y); // WebGL has the opposite y-axis orientation
+      vec2 m = u_mouse;
+      vec4 t = u_time;
+      {calc_color}
+    }
+  `;
+
+  const fs_bw = `
+    float col = 1.0 - MTC({calc});
+    gl_FragColor = vec4(col, col, col, 1);
+  `
+
+  const fs_rgb = `
+    float r = MTC({r});
+    float g = MTC({g});
+    float b = MTC({b});
+    gl_FragColor = vec4(r, g, b, 1);
+  `;
+
+  return function(exp) {
+    const fragment = to_gl(exp);
+    if (MIST.expType(exp) == MIST.TYPE.RGB) {
+      return fs.replace(
+        "{calc_color}",
+        fs_rgb.replace(
+          "{r}", fragment.r || "-1.0"
+        ).replace(
+          "{g}", fragment.g || "-1.0"
+        ).replace(
+          "{b}", fragment.b || "-1.0"
+        )
+      );
+    } else {
+      return fs.replace("{calc_color}", fs_bw.replace("{calc}", fragment));
+    }
+  };
+})();
 /**
  * mist-builtin-functions.js
  *   The collection of builtin functions
@@ -1290,23 +1549,15 @@ function cap(val)
 /**
  * Wrap around
  */
-function wrap(val) {
-  if (val > 1) {
-    const res = (val + 1) % 2 - 1;
-    // This case ensures a nonbreaking change with the recursive version
-    if (res == -1)
-      return 1;
-    return res;
-  }
-  if (val < -1) {
-    const res = (val - 1) % 2 + 1;
-    // This case ensures a nonbreaking change with the recursive version
-    if (res == 1)
-      return -1;
-    return res;
-  }
-  return val;
-}
+function wrap(val)
+{
+  if (val < -1)
+    return wrap (val + 2);
+  else if (val > 1)
+    return wrap (val - 2);
+  else
+    return val;
+} // wrap
 MIST.wrap = wrap;
  
 // +-------------------+---------------------------------------------
@@ -1428,8 +1679,7 @@ var mistif = function(test, pos, neg) {
   else
     return neg;
 };
-BUILTIN("mistif", "if", "if test is greater than or equal to zero, return pos, if test is less than zero, return neg", "test, pos, neg", 3, 3, "GENERAL");
-/**
+BUILTIN("mistif", "if", "if test is greater than or equal to zero, return pos, if test is less than zero, return neg", "test, pos, neg", 3, 3, "GENERAL");/**
  * mist-layout.js
  *   Information on the layout of a MIST editing session.
  */
@@ -1881,7 +2131,7 @@ function Mouse(x, y, cx, cy)
 
 
 MIST.render = function(exp, context, canvas, renderWidth, renderHeight,
-    imgLeft, imgTop, imgWidth, imgHeight) {
+    imgLeft, imgTop, imgWidth, imgHeight, renderData) {
   // Get the time.
   var d = new Date();
  
@@ -1894,14 +2144,14 @@ MIST.render = function(exp, context, canvas, renderWidth, renderHeight,
   }; 
 
   // Use the core function
-  MIST.renderAt(t, exp, context, canvas, renderWidth, renderHeight,
-      imgLeft, imgTop, imgWidth, imgHeight);
+  const newRenderData = MIST.renderAt(t, exp, context, canvas, renderWidth,
+    renderHeight, imgLeft, imgTop, imgWidth, imgHeight, renderData);
   // Return the time (for use elsewhere)
-  return t;
+  return {time: t, renderData: newRenderData};
 } // MIST.render
 
 MIST.renderGIF = function(d, exp, context, canvas, renderWidth, renderHeight, 
-    imgLeft, imgTop, imgWidth, imgHeight) {
+    imgLeft, imgTop, imgWidth, imgHeight, renderData) {
 
   var t = {
     s: d.ms / 500 - 1,
@@ -1912,114 +2162,143 @@ MIST.renderGIF = function(d, exp, context, canvas, renderWidth, renderHeight,
 
   // Use the core function
   MIST.renderAt(t, exp, context, canvas, renderWidth, renderHeight,
-      imgLeft, imgTop, imgWidth, imgHeight);
+      imgLeft, imgTop, imgWidth, imgHeight, renderData);
   // Return the time (for use elsewhere)
   return t;
 } // MIST.renderGIF
-    
-
-
 
 /**
  * Render an expression at a particular time.
+ * Note that renderAt is wrapped in a IIFE in order to encapsulate the buffer canvas
  */
-MIST.renderAt = function(t, exp, context, canvas, 
-    renderWidth, renderHeight, imgLeft, imgTop, imgWidth, imgHeight) {
-  // Make sure that we have bounds.
-  if (!imgLeft) { imgLeft = 0; }
-  if (!imgTop) { imgTop = 0; }
-  if (!imgWidth) { imgWidth = canvas.width - imgLeft; }
-  if (!imgHeight) { imgHeight = canvas.height - imgTop; }
-  if (!renderWidth) { renderWidth = imgWidth; }
-  if (!renderHeight) { renderHeight = imgHeight; }
-  if (renderWidth > imgWidth) { renderWidth = imgWidth; }
-  if (renderHeight > imgHeight) { renderHeight = imgHeight; }
+MIST.renderAt = (function() {
+  const buffer = document.createElement("canvas");
 
-  // Make sure that the rendering width and height are whole numbers
-  renderWidth = Math.round(renderWidth);
-  renderHeight = Math.round(renderHeight);
+  let bufferContext;
+  let contextIsWebGL = false;
+  let vertex_shader;
+  bufferContext = buffer.getContext("webgl") || buffer.getContext("experimental-webgl");
+  if (bufferContext) {
+    contextIsWebGL = true;
+    vertex_shader = `
+      attribute vec4 a_position;
+      void main() {
+        gl_Position = a_position;
+      }
+    `;
+  } else {
+    bufferContext = buffer.getContext("2d");
+  }
 
-  // Grab the canvas buffer.
-  var buffer = document.getElementById("canvas-buffer");
-  if (!buffer ) {
-    buffer = document.createElement("canvas");
-    buffer.id = "canvas-buffer";
-    buffer.style.display = "none";
-    document.body.appendChild(buffer);
-  } // if (!buffer)
-  buffer.width = renderWidth;
-  buffer.height = renderHeight;
+  return function(t, exp, context, canvas, 
+    renderWidth, renderHeight, imgLeft, imgTop, imgWidth, imgHeight,
+    renderData) {
+    // Make sure that we have bounds.
+    if (!imgLeft) { imgLeft = 0; }
+    if (!imgTop) { imgTop = 0; }
+    if (!imgWidth) { imgWidth = canvas.width - imgLeft; }
+    if (!imgHeight) { imgHeight = canvas.height - imgTop; }
+    if (!renderWidth) { renderWidth = imgWidth; }
+    if (!renderHeight) { renderHeight = imgHeight; }
+    if (renderWidth > imgWidth) { renderWidth = imgWidth; }
+    if (renderHeight > imgHeight) { renderHeight = imgHeight; }
 
-  // Determine scale factors
-  var hscale = imgWidth/renderWidth;
-  var vscale = imgHeight/renderHeight;
+    // Make sure that the rendering width and height are whole numbers
+    renderWidth = Math.round(renderWidth);
+    renderHeight = Math.round(renderHeight);
 
-  // Set up how much we change x and y each time.
-  var deltaX = 2.0/renderWidth;
-  var deltaY = 2.0/renderHeight;
+    buffer.width = renderWidth;
+    buffer.height = renderHeight;
 
-  // Get contexts for both canvases
-  var canvasContext = canvas.getContext("2d");
-  var bufferContext = buffer.getContext("2d");
+    // Get context for the canvas
+    const canvasContext = canvas.getContext("2d");
 
-  // Set up the image data
-  var region = bufferContext.createImageData(renderWidth,renderHeight);
+    if (contextIsWebGL) {
+      if (!renderData) {
+        const programInfo = twgl.createProgramInfo(bufferContext, [vertex_shader,
+          MIST.expToGL(exp)]);
+        const arrays = {
+          // a_position holds the positions of six vertices
+          // that define two triangles, which take up the entire screen
+          a_position: [-1, -1, 0, -1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1,
+            0]
+        };
+        const bufferInfo = twgl.createBufferInfoFromArrays(bufferContext,
+          arrays);
+        renderData = {programInfo, bufferInfo};
+      }
 
-  // Set up the mouse (we don't want it changing while rendering).
-  var m = {
-    x: MIST.mouseX,
-    y: MIST.mouseY,
-    X: MIST.clickX,
-    Y: MIST.clickY
-  };
+      bufferContext.canvas.width = renderWidth;
+      bufferContext.canvas.height = renderHeight;
+      bufferContext.viewport(0, 0, bufferContext.canvas.width,
+        bufferContext.canvas.height);
 
-  // Build the function
-  var fun = MIST.expToRGB("untitled image", exp, context);
-  // Set up our main variables
-  var x = -1;
-  var y = -1 - deltaY;
+      const uniforms = {
+        u_resolution: [bufferContext.canvas.width, bufferContext.canvas.height],
+        u_mouse: [MIST.mouseX, MIST.mouseY],
+        u_time: [t.s, t.m, t.h, t.d]
+      };
 
-  // Loop through all of the pixels
-  for (var i = 0; i < region.data.length; i+= 4)
-    {
-      // When we reach the end of the row, move on to the next row
-      if ((i % (4*renderWidth)) == 0)
-        { 
-          x = -1;
-          y += deltaY;
-        } // if (i % (4*imgWidth)) == 0
+      bufferContext.useProgram(renderData.programInfo.program);
+      twgl.setBuffersAndAttributes(bufferContext, renderData.programInfo,
+        renderData.bufferInfo);
+      twgl.setUniforms(renderData.programInfo, uniforms);
+      twgl.drawBufferInfo(bufferContext, renderData.bufferInfo);
+    } else {
+      // Set up how much we change x and y each time.
+      const deltaX = 2.0/renderWidth;
+      const deltaY = 2.0/renderHeight;
 
-      // Evaluate the function
-      var rgb = fun(x,y,t,m);
+      // Set up the image data
+      const region = bufferContext.createImageData(renderWidth,renderHeight);
 
-      // Exploration
-      // if (i < 4*imgWidth) { console.log("i",i, "x",x, "y",y, "rgb",rgb); }
- 
-      // Copy the pixels
-      region.data[i+0] = rgb[0];
-      region.data[i+1] = rgb[1];
-      region.data[i+2] = rgb[2];
-      region.data[i+3] = 255;
- 
-      // And advance to the next pixel
-      x += deltaX;
-    } // for
+      // Set up the mouse (we don't want it changing while rendering).
+      const m = {
+        x: MIST.mouseX,
+        y: MIST.mouseY,
+        X: MIST.clickX,
+        Y: MIST.clickY
+      };
 
-  // Random computations
-  var renderLeft = imgLeft*renderWidth/imgWidth;
-  var renderTop = imgTop*renderHeight/imgHeight;
+      if (!renderData) {
+        // Build the function
+        renderData = {fun: MIST.expToRGB("untitled image", exp, context)};
+      }
+      const fun = renderData.fun;
+      // Set up our main variables
+      let x = -1;
+      let y = -1 - deltaY;
 
-  // Draw and scale
-  bufferContext.putImageData(region, 0, 0);
-  canvasContext.drawImage(buffer, imgLeft, imgTop, imgWidth, imgHeight);
+      // Loop through all of the pixels
+      for (let i = 0; i < region.data.length; i+= 4)
+        {
+          // When we reach the end of the row, move on to the next row
+          if ((i % (4*renderWidth)) == 0)
+            { 
+              x = -1;
+              y += deltaY;
+            } // if (i % (4*imgWidth)) == 0
 
-//canvasContext.fillStyle = "rgb(200, 0, 0)";
-//canvasContext.fillRect (10,10,75,50);
+          // Evaluate the function
+          const rgb = fun(x,y,t,m);
 
-//return t;
+          // Copy the pixels
+          region.data[i+0] = rgb[0];
+          region.data[i+1] = rgb[1];
+          region.data[i+2] = rgb[2];
+          region.data[i+3] = 255;
+     
+          // And advance to the next pixel
+          x += deltaX;
+        } // for
 
-} // MIST.renderAt
-
+      // Draw and scale
+      bufferContext.putImageData(region, 0, 0);
+    }
+    canvasContext.drawImage(buffer, imgLeft, imgTop, imgWidth, imgHeight);
+    return renderData;
+  }
+})() // MIST.renderAt
 /**
  * mist-utils.js
  *   A few assorted utilities for MIST and other applications.

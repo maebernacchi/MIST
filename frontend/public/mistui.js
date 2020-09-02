@@ -325,16 +325,30 @@ MIST.ui.Animator.prototype.frame = function() {
 
 
 
-  // Make the frame
+  // Make the frame: if we are recording, we need to simulate time
   try {
-    this.time = MIST.render(this.expParsed, this.context, this.canvas,
-        this.renderWidth, this.renderHeight, this.left, this.top,
-        this.width, this.height);
+    const result = MIST.render(this.expParsed, this.context, this.canvas,
+      this.renderWidth, this.renderHeight, this.left, this.top, this.width,
+      this.height, this.renderData);
+    this.time = result.time;
+    this.renderData = result.renderData;
   }  
   catch(err) {
     this.log(err);
   }   
 } // frame
+
+/**
+ * Create a jpg and switch to that.
+ */
+MIST.ui.Animator.prototype.jpg = function() {
+  var data = canvas.toDataURL("image/jpeg");
+  //document.location = data;
+  $("#test").html("hell goats");
+
+ // $("#change").attr("content", "http://www.cs.grinnell.edu/~hansonse17/main/twit.png");
+  //$("meta[property='og\\:image']").attr("content", "http://www.cs.grinnell.edu/~hansonse17/main/widescreenbackscodes.png");
+} // MIST.ui.Animator.prototype.jpg
 
 /**
  * Create a jpeg and put it in the body of the page.
@@ -530,6 +544,20 @@ var HELP_ID = "helptext";
 // +-----------+-----------------------------------------------------
 // | Functions |
 // +-----------+
+
+/**
+ * Add help to an element with the specified id.
+ */
+MISTui.addHelp = function(id,helptext) {
+  var selector = "#" + id;
+  var showhelp = function(event) {
+    var loc = document.getElementById(id).getBoundingClientRect();
+    MISTui.showHelp(helptext, loc.right-5, loc.top+3); // Yay magic numbers
+  };
+  $(selector).mouseenter(showhelp);
+  $(selector).mouseover(showhelp);
+  $(selector).mouseout(MISTui.hideHelp);
+}; // MISTui.addHelp
 
 /**
  * Hide the help text.

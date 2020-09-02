@@ -1,8 +1,21 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * privacy.js
+ * 
+ * This exports the privacy policy page, which is not yet completed.
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
 import React from "react";
 import { Container } from "react-bootstrap";
 
-//Privacy Policy 
-
+//full page
 function Privacy() {
   return (
     <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
@@ -20,6 +33,7 @@ function Privacy() {
         </ul>
       </div>
     </Container>
+    // OLD PRIVACY POLICY BELOW
     /* 
         <Container className="center">
             <div id="pageTitleGeneral">

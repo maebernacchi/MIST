@@ -1,27 +1,55 @@
-import React from "react";
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * settings.js
+ *
+ * This exports the settings page.
+ * To be developed:
+ * changing user info updates database
+ * accessibility options work
+ * unhiding/blocking content
+ *   commented out is the interface for doing this, but it
+ *   has not been incorporated into the refactored settings yet
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
+import React, { useState, useEffect } from "react";
 import "./../design/styleSheets/tutorial.css";
 
 import {
   Accordion,
-  Card,
   Button,
   ButtonGroup,
+  Card,
   Container,
   Form,
   OverlayTrigger,
-  Popover
+  Popover,
 } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.css";
 
+// +-------------------+----------------------------------------------------------------------
+// | settings.js        |
+// +-------------------+
 //Page Header
-function Contact() {
+function Settings() {
   return (
-    <Container fluid style={{marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem"}}>
+    <Container
+      fluid
+      style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}
+    >
+      {/* Title */}
       <Container>
         <h1>Account Settings</h1>
       </Container>
-      <Container fluid>
+      {/* settings */}
+      <Container>
         <SettingsTable />
       </Container>
     </Container>
@@ -30,16 +58,201 @@ function Contact() {
 
 //Tables with all setting options
 function SettingsTable() {
+  const [newEmail, setNewEmail] = useState("");
+  const [newUsername, setNewUsername] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch("/api?action=getUser", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((user) => {
+        if (user) {
+          setUser(user);
+        }
+      });
+  }, [user]);
+
+  function changeEmail(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeEmail",
+        newEmail: newEmail,
+        ...user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
+  function changeUsername(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeUsername",
+        newUsername: newUsername,
+        ...user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
+  function changePassword(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changePassword",
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        ...user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
+  function deleteAccount(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "deleteAccount",
+        currentPassword: currentPassword,
+        ...user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => {
+        if(message === "Deleted. Please Sign Out.") {
+          window.location.href = "/";
+          alert(message);
+        }
+      })
+  }
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Change Email</Popover.Title>
+
+      <Popover.Content>
+        <Form onSubmit={changeEmail}>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
+              type="email"
+              placeholder="Enter new email"
+              onChange={(e) => setNewEmail(e.target.value)}
+            />
+            <Form.Text className="text-muted"></Form.Text>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+  const usernamePopover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Change Username</Popover.Title>
+
+      <Popover.Content>
+        <Form>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
+              type="username"
+              placeholder="Enter new username"
+              onChange={(e) => setNewUsername(e.target.value)}
+            />
+            <Form.Text className="text-muted"></Form.Text>
+            <Button onClick = {changeUsername}>Confirm Changes</Button>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+  const password = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Change Password</Popover.Title>
+      <Popover.Content>
+        <Form onSubmit = {changePassword}>
+          <Form.Group controlId="formBasicPassword">
+            <Form.Control
+              type="password"
+              placeholder="Enter old password"
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <Form.Control
+              type="password"
+              placeholder="Enter new password"
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <Form.Text className="text-muted"></Form.Text>
+            <Button onClick = {changePassword}>Confirm Changes</Button>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+  const deletePopover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Delete Account</Popover.Title>
+      <Popover.Content>
+        <Form>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
+              type="password"
+              placeholder="Enter Password"
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <Form.Text className="text-muted"></Form.Text>
+            <Button onClick = {deleteAccount}>Confirm</Button>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
   return (
     <Accordion defaultActiveKey="0">
       <Card>
+        {/* User Settings */}
         <Accordion.Toggle as={Card.Header} eventKey="0">
           User Settings
         </Accordion.Toggle>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
             <ButtonGroup vertical>
+              {/* Privacy */}
               <Button>Privacy</Button>
+
               <OverlayTrigger
                 trigger="click"
                 placement="right"
@@ -53,14 +266,32 @@ function SettingsTable() {
                 placement="right"
                 overlay={password}
               >
-                <Button>Password</Button>
+                <Button>Change Password</Button>
               </OverlayTrigger>
+
+              <OverlayTrigger
+                trigger="click"
+                placement="right"
+                overlay={usernamePopover}
+              >
+                <Button>Change Username</Button>
+              </OverlayTrigger>
+
               <Button>Blocked Content</Button>
+
+              <OverlayTrigger
+                trigger="click"
+                placement="right"
+                overlay={deletePopover}
+              >
+                <Button>Delete Account</Button>
+              </OverlayTrigger>
             </ButtonGroup>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
 
+      {/* Accessibility */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="1">
           Accessibility
@@ -76,6 +307,7 @@ function SettingsTable() {
         </Accordion.Collapse>
       </Card>
 
+      {/* Message Settings */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="2">
           Message Settings
@@ -114,6 +346,7 @@ function SettingsTable() {
         </Accordion.Collapse>
       </Card>
 
+      {/* Notifications */}
       <Card>
         <Accordion.Toggle as={Card.Header} eventKey="3">
           Notifications
@@ -169,35 +402,8 @@ function SettingsTable() {
 }
 
 //Popover bubble to change email
-const popover = (
-  <Popover id="popover-basic">
-    <Popover.Title as="h3"> Change Email</Popover.Title>
 
-    <Popover.Content>
-      <Form>
-        <Form.Group controlId="formBasicEmail">
-          <Form.Control type="email" placeholder="Enter new email" />
-          <Form.Text className="text-muted"></Form.Text>
-        </Form.Group>
-      </Form>
-    </Popover.Content>
-  </Popover>
-);
 
-const password = (
-  <Popover id="popover-basic">
-    <Popover.Title as="h3"> Change Password</Popover.Title>
-    <Popover.Content>
-      <Form>
-        <Form.Group controlId="formBasicPassword">
-          <Form.Control type="password" placeholder="Enter old password" />
-          <Form.Control type="password" placeholder="Enter new password" />
-          <Form.Text className="text-muted"></Form.Text>
-        </Form.Group>
-      </Form>
-    </Popover.Content>
-  </Popover>
-);
 /*const popover = (
   <Popover id="popover-basic">
     <Popover.Title as="h3">Popover right</Popover.Title>
@@ -376,4 +582,4 @@ function OptionFour() {
 }
 */
 
-export default Contact;
+export default Settings;

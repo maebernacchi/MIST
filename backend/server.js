@@ -1,6 +1,7 @@
 // server.js
 
 //================= Load Modules =========================
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -30,12 +31,12 @@ app.use(flash());
 
 app.use(
   session({
-    secret: "some",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false
   })
 );
-app.use(cookieParser("some"));
+app.use(cookieParser(process.env.SECRET));
 
 
 //=================== Setup Passport =======================
@@ -55,7 +56,7 @@ require('./app/loginStrategy')(passport, database.User);
 require('./app/signupStrategy')(passport, database.User); */
 
 //=================== Routes ================================
-require('./app/routes')(app, passport, database);
+require('./app/routes')(app);
 
 //=================== Serving Static Files ==================
 //app.use(express.static("public"));

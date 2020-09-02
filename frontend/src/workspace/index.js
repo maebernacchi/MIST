@@ -42,7 +42,7 @@
 
   4. The indices in redoFromIndices are where re-adjusting the
      render functions need to start from. The render function
-     gets updated at each index, and renderFunctionReo gets called
+     gets updated at each index, and renderFunctionRedo gets called
      recursively to do the same for all of the child nodes.
 
   5. UseStrictMode is a good react-konva practice.
@@ -132,7 +132,7 @@ class WorkspaceComponent extends Component {
     if (prevState.nodes !== this.state.nodes) {
       console.log("nodes changed");
     }
-    if (prevState.lines != this.state.lines) {
+    if (prevState.lines !== this.state.lines) {
       console.log("lines changed");
     }
     if (prevState.redoFromIndices !== this.state.redoFromIndices) {
@@ -182,7 +182,7 @@ class WorkspaceComponent extends Component {
       newNodes.push(outermost);
     } else {
       // it's a value
-      if (gui.values[expression.name] == undefined) {
+      if (gui.values[expression.name] === undefined) {
         return Error();
       }
       const val = {
@@ -216,20 +216,20 @@ class WorkspaceComponent extends Component {
         ) {
           return Error(
             newNodes[sinkIndex].name +
-              " must contain between " +
-              gui.functions[newNodes[sinkIndex].name].min +
-              " and " +
-              gui.functions[newNodes[sinkIndex].name].max +
-              " parameters"
+            " must contain between " +
+            gui.functions[newNodes[sinkIndex].name].min +
+            " and " +
+            gui.functions[newNodes[sinkIndex].name].max +
+            " parameters"
           );
         }
       } else {
         if (operands.length !== gui.functions[newNodes[sinkIndex].name].min) {
           return Error(
             this.state.nodes[sinkIndex].name +
-              " must contain " +
-              gui.functions[this.state.nodes[sinkIndex].name].min +
-              " parameters"
+            " must contain " +
+            gui.functions[this.state.nodes[sinkIndex].name].min +
+            " parameters"
           );
         }
       }
@@ -280,7 +280,7 @@ class WorkspaceComponent extends Component {
           if (
             newNodes[sinkIndex].numInputs >= newNodes[sinkIndex].numOutlets &&
             gui.functions[newNodes[sinkIndex].name].color ===
-              gui.functionMultColor
+            gui.functionMultColor
           ) {
             // Adding a new outlet once existing outlets are used
             newNodes[sinkIndex].numOutlets += 1;
@@ -289,7 +289,7 @@ class WorkspaceComponent extends Component {
           newNodes[sinkIndex].activeOutlets[i] = lineIndex;
         } else {
           // value
-          if (gui.values[operands[i].name] == undefined) {
+          if (gui.values[operands[i].name] === undefined) {
             return Error();
           }
           const sourceNode = {
@@ -331,7 +331,7 @@ class WorkspaceComponent extends Component {
           if (
             newNodes[sinkIndex].numInputs >= newNodes[sinkIndex].numOutlets &&
             gui.functions[newNodes[sinkIndex].name].color ===
-              gui.functionMultColor
+            gui.functionMultColor
           ) {
             // Adding a new outlet once existing outlets are used
             newNodes[sinkIndex].numOutlets += 1;
@@ -359,7 +359,7 @@ class WorkspaceComponent extends Component {
    * @param {float} y
    */
   pushNode = (type, name, x, y) => {
-    const newIndex = this.state.nodes.length;
+    //const newIndex = this.state.nodes.length;
     let rf = {};
     switch (type) {
       case "fun":
@@ -385,7 +385,7 @@ class WorkspaceComponent extends Component {
       activeOutlets:
         type === "fun"
           ? // e.g. if the function is 'add', this will be [false, false]
-            Array(gui.functions[name].min).fill(false)
+          Array(gui.functions[name].min).fill(false)
           : null,
       parentNodes: [],
       imageShowing: false,
@@ -467,9 +467,9 @@ class WorkspaceComponent extends Component {
   updateLinePosition = (nodeIndex, end, x, y) => {
     console.log(
       "updateLinePosition " +
-        this.state.nodes[nodeIndex].numInputs +
-        " " +
-        this.state.nodes[nodeIndex].lineOut.length
+      this.state.nodes[nodeIndex].numInputs +
+      " " +
+      this.state.nodes[nodeIndex].lineOut.length
     );
     if (
       this.state.nodes[nodeIndex].numInputs > 0 ||
@@ -620,7 +620,14 @@ class WorkspaceComponent extends Component {
    */
   updateHashValue = (index, value) => {
     this.state.nodes[index].renderFunction.renderFunction = value;
-  };
+    const temp = [];
+    for (let i = 0; i < this.state.nodes[index].lineOut.length; i++) {
+      temp.push(this.state.lines[this.state.nodes[index].lineOut[i]].sinkIndex)
+    }
+    this.setState({
+      redoFromIndices: temp
+    })
+  }
 
   /**
    * Updates the render function of the node at index as well as all the nodes that branch out of it
@@ -772,6 +779,124 @@ class WorkspaceComponent extends Component {
     });
   };
 
+  // +-----------+----------------------------------------
+  // | Workspace |
+  // +-----------+
+
+  /**
+   * Save your workspace to the server
+   * Pre: User is authenticated and user does not already have a workspace by the given name
+   */
+  _saveWorkspace = (name) => {
+    // build workspace
+    const workspace = {
+      name: name,
+      data: {
+        ...this.state
+      },
+    }
+    // async POST fetch request
+    fetch('api/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'savews', workspace: (workspace) })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success)
+          alert('Succesfully saved workspace ' + name);
+        else
+          throw (data.message);
+      })
+      .catch(error => { alert(error) })
+  }
+
+  /**
+   * Checks if the workspace exists in the server by the same name
+   * @param {String} name 
+   */
+  checkIfWorkspaceExists = async (name) => {
+    const res = await fetch('api/?action=wsexists&name=' + name);
+    if (!res.ok)
+      throw new Error(`HTTP error! status: ${res.status}`);
+    else {
+      return await res.json()
+        .then(data => {
+          if (data === 'logged out')
+            throw new Error('You needed to be logged in!')
+          if (data.success) {
+            return data.exists;
+          }
+          else {
+            throw new Error(data.message);
+          }
+        });
+    }
+  }
+
+  /**
+   * Retrieve a user's workspaces from the server
+   */
+  getWorkspaces = async () => {
+    const res = await fetch('api/?action=getws');
+    if (!res.ok)
+      throw new Error(`HTTP error! status: ${res.status}`);
+    else {
+      return await res.json()
+        .then(data => {
+          if (data === 'logged out')
+            throw new Error('You needed to be logged in!')
+          if (data.success) {
+            return data.workspaces;
+          }
+          else {
+            throw new Error(data.message);
+          }
+        });
+    }
+  }
+
+  /**
+   * Delete a workspace of a name
+   * @param {String} name 
+   */
+  deleteWorkspace = async (name) => {
+    // async POST fetch request
+    const res = await fetch('api/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'deletews', name: name })
+    });
+    if(!res.ok)
+      throw new Error(`HTTP error! status: ${res.status}`);
+    else{
+      return await res.json()
+        .then(data => {
+          if (data === 'logged out')
+            throw new Error('You needed to be logged in!')
+          if (data.success) {
+            return 'Successfully deleted workspace';
+          }
+          else {
+            throw new Error(data.message);
+          }
+        });
+    }
+  }
+
+  /**
+   * Load a workspace onto the state
+   */
+  loadWorkspace = (workspaceToLoad) => {
+    this.setState({
+      ...workspaceToLoad
+    })
+  }
+
   // +------------------------+
   // | Updating the Workspace |
   // +------------------------+----------------------------------------
@@ -826,7 +951,7 @@ class WorkspaceComponent extends Component {
       this.state.newSource !== sinkIndex &&
       this.state.nodes[sinkIndex].activeOutlets[outletIndex] === false &&
       this.state.nodes[sinkIndex].numInputs <
-        gui.functions[this.state.nodes[sinkIndex].name].max
+      gui.functions[this.state.nodes[sinkIndex].name].max
     ) {
       // a line coming out of source
       this.pushLine(this.state.newSource, sinkIndex, outletIndex);
@@ -875,23 +1000,25 @@ class WorkspaceComponent extends Component {
 
   render() {
     return (
-      <Container
+      /* <Container
         style={{
           marginLeft: "0",
           paddingLeft: "0",
           marginBottom: "0",
           paddingBottom: "7.5rem",
         }}
-      >
+      > */
         <div
           id="workspace"
           style={{
             position: "relative",
             width: this.width,
             height: this.height,
+            margin: 'auto',
             backgroundColor: colors.workspaceBackground[this.state.theme],
           }}
         >
+          {/* <div onClick={()=>this.deleteWorkspaces('a').then(alert).catch(alert)}>Delete ws</div> */}
           <Stage
             ref={(ref) => {
               this.stageRef = ref;
@@ -919,6 +1046,7 @@ class WorkspaceComponent extends Component {
               }
             }}
           >
+
             <Layer>
               {this.state.tempLine && (
                 <ContextProvider
@@ -944,6 +1072,7 @@ class WorkspaceComponent extends Component {
                 </ContextProvider>
               )}
             </Layer>
+
             <Layer>
               {this.state.nodes.length !== 0 &&
                 this.state.lines.map(
@@ -975,6 +1104,7 @@ class WorkspaceComponent extends Component {
                     )
                 )}
             </Layer>
+
             <Layer>
               {this.state.nodes.map(
                 (node, index) =>
@@ -1063,6 +1193,7 @@ class WorkspaceComponent extends Component {
                   ))
               )}
             </Layer>
+
             <Layer>
               <ContextProvider
                 width={this.width}
@@ -1107,10 +1238,17 @@ class WorkspaceComponent extends Component {
                         settingsOpen: settingsOpen,
                       },
                     });
+                    
                   }}
+                  checkIfWorkspaceExists={this.checkIfWorkspaceExists.bind(this)}
+                  deleteWorkspace={this.deleteWorkspace.bind(this)}
+                  getWorkspaces={this.getWorkspaces.bind(this)}
+                  loadWorkspace={this.loadWorkspace.bind(this)}
+                  saveWorkspace={this._saveWorkspace.bind(this)}
                 />
               </ContextProvider>
             </Layer>
+
             <Layer>
               <ContextProvider
                 width={this.width}
@@ -1166,6 +1304,7 @@ class WorkspaceComponent extends Component {
                 }}
               />
             </Layer>
+
           </Stage>
 
           <ContextProvider
@@ -1233,7 +1372,7 @@ class WorkspaceComponent extends Component {
               )
           )}
         </div>
-      </Container>
+      /* </Container> */
     );
   }
 }

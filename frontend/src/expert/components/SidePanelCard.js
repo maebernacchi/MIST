@@ -1,3 +1,18 @@
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // +--------------------------------------------------------------------------------
 // | Notes |
 // +-------+
@@ -30,96 +45,137 @@ import {
     FaPen,
     FaRegTrashAlt,
 } from 'react-icons/fa';
-import { MIST_builtin_functions } from '../Utilities';
+import {
+    MIST_builtin_functions,
+    MIST_builtin_values,
+} from '../expertGlobals';
 
 function SidePanelCard(props) {
 
-    // add functions
-    const insertFunctions = (functions, specifiedKeys = null, userDefined = false) => {
-        let keys = specifiedKeys || Object.keys(functions).sort();
+    /**
+     * Makes a component draggable. Generates a key using the obj passed as well as
+     * and the function createKeyFromObj and an index using a index passed. 
+     * If no function is passed, no key will be generated. 
+     * 
+     * @param {React component} component 
+     * @param {Object} obj 
+     * @param {Object} param3
+     */
+    const make_draggable = (component, obj,
+        { createKeyFromObj = () => null,
+            index = 0,
+        }) => (
+            <Draggable
+                draggableId={createKeyFromObj(obj)}
+                index={index}
+                key={createKeyFromObj(obj)}
+            >
+                {(provided) =>
+                    (<div
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                    >
+                        {component}
+                    </div>)
+                }
+            </Draggable>
+        ) // make_draggable(Object,Object,Object)
 
-        const wrap_user_defined_button = (button, fun_name, userDefined) => {
-            if (userDefined) {
-                return (
-                    <>
-                        <Col>
-                            <IconContext.Provider
-                                value={{ style: { color: 'white', cursor: 'pointer' } }}
-                            >
-                                <div>
-                                    <FaRegTrashAlt onClick={() => props.deleteFunction(fun_name)} />
-                                </div>
-                            </IconContext.Provider>
-                        </Col>
-                        <Col xs={6} padding={0}>
-                            {button}
-                        </Col>
-                        <Col>
-                            <IconContext.Provider
-                                value={{ color: 'white', style: { cursor: 'pointer' } }}
-                            >
-                                <div>
-                                    <FaPen onClick={() => props.loadFunction(functions[fun_name])} />
-                                </div>
-                            </IconContext.Provider>
-                        </Col>
+    /**
+     * Wraps a component in a Row react-bootstrap component. Generates a 
+     * key using the obj passed and the function {createKeyFromObj}.
+     * If no function is passed, no key will be generated. 
+     * 
+     * @param {React component} component 
+     * @param {Object} obj 
+     * @param {Object} param3 
+     */
+    const wrap_in_row = (component, obj, { createKeyFromObj }) => (
+        <Row
+            key={createKeyFromObj(obj)}
+            style={{
+                justifyContent: "space-between",
+                marginBottom: '6px'
+            }}>
+            {component}
+        </Row>
+    ) // wrap_in_row(Object,Object,Object)
 
+    /**
+     * Adds an Overlay to a React Component. Creates the overlay using a
+     * createOverlayFromObj function and the obj passed. Also creates a 
+     * key using a createKeyFromObj function and the obj passed. And
+     * determines placement using placement field passed.
+     * 
+     * @param {React component} component 
+     * @param {Object} obj 
+     * @param {Object} param3 
+     */
+    const wrap_button_in_overlay = (component, obj, {
+        createKeyFromObj = () => null,
+        createOverlayFromObj = () => <Tooltip></Tooltip> },
+    ) => (
+            <OverlayTrigger
+                container={props.expertRef}
+                key={createKeyFromObj(obj)}
+                placement='right'
+                overlay={(createOverlayFromObj(obj))}>
+                {component}
+            </OverlayTrigger>
+        )
+    // modify button function
+    const wrap_custom_icons = (button, obj) => {
+        const _warningMessage = 'You are about to delete the saved function ' + obj.name + '. Are you sure you want to continue?';
+        return (
+            <>
+                <Col>
+                    <IconContext.Provider
+                        value={{ style: { color: 'white', cursor: 'pointer' } }}
+                    >
+                        <div>
+                            <FaRegTrashAlt onClick={() => {
+                                props.triggerPopup({
+                                    message: _warningMessage,
+                                    onConfirm: () => props.deleteFunction(obj.name),
+                                });
+                            }} />
+                        </div>
+                    </IconContext.Provider>
+                </Col>
+                <Col xs={6} padding={0}>
+                    {button}
+                </Col>
+                <Col>
+                    <IconContext.Provider
+                        value={{ color: 'white', style: { cursor: 'pointer' } }}
+                    >
+                        <div>
+                            <FaPen onClick={() => props.loadSavedFunction(obj.name)} />
+                        </div>
+                    </IconContext.Provider>
+                </Col>
+            </>)
+    }
 
-
-                    </>
+    function createButtons(objects, specifiedKeys = null, { button_name, insert_text, wrap_button = (button) => button }) {
+        let keys = specifiedKeys || Object.keys(objects).sort();
+        return (
+            keys.map((obj, idx) => {
+                return wrap_button(
+                    <Button
+                        block
+                        className='insertButton'
+                        variant='dark'
+                        key={idx}
+                        onClick={() => { insertText(insert_text(objects[obj])) }}>
+                        {button_name(objects[obj])}
+                    </Button>,
+                    objects[obj],
+                    idx
                 )
-            } else {
-                return button;
-            }
-        }
-
-        return (keys.map((fun_name, idx) => {
-            let fun = functions[fun_name];
-            let fun_signature = fun_name + "(" + fun.params + ")";
-
-            return (
-                <Draggable
-                    draggableId={fun_name}
-                    index={idx}
-                    key={fun_name}
-                >
-                    {(provided) =>
-                        (<div
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
-                        >
-                            <Row style={{ justifyContent: "space-between", marginBottom: '6px'}}>
-                                {wrap_user_defined_button(<OverlayTrigger
-                                    container={props.expertRef}
-                                    key={idx}
-                                    placement="right"
-                                    overlay={
-                                        <Tooltip>
-                                            {fun.about + '\n'}
-                                            <hr />
-                                            {fun_signature}
-                                        </Tooltip>
-                                    }>
-
-                                    <Button
-                                        block
-                                        className='insertButton'
-                                        variant='dark'
-                                        key={idx}
-                                        onClick={() => { insertText(fun_signature) }}>
-                                        {fun_name}
-                                    </Button>
-
-                                </OverlayTrigger>, fun_name, userDefined)}
-                            </Row>
-                        </div>)
-                    }
-
-                </Draggable>
-            )
-        }))
-    }; // insertFunctions
+            }))
+    }
 
     /**
     * Insert text into the code field.
@@ -169,41 +225,81 @@ function SidePanelCard(props) {
     return (
         <Card className='scroll panel'>
             {console.log('rendering sidepanelcard')}
-
             <Card.Body>
+                <Card.Title style={{ color: 'white' }}>WS Functions</Card.Title>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable
                         droppableId='user_defined_functions'
                     >
                         {(provided) => (
-                            <Container
-                                ref={provided.innerRef}
+                            <Container ref={provided.innerRef}
                                 {...provided.droppableProps}>
                                 {
-                                    insertFunctions(
-                                        props.getStateFunctions(),
-                                        props.getFunctions(),
-                                        true)
+                                    createButtons(props.getStateFunctions(), props.getFunctions(), {
+                                        button_name: object => object.name,
+                                        insert_text: object => (object.name + ((object.params.length === 0) ? '' : '(' + object.params + ')')),
+                                        wrap_button: (button, object, idx) => (
+                                            make_draggable(wrap_in_row(
+                                                wrap_custom_icons(
+                                                    wrap_button_in_overlay(button, object,
+                                                        {
+                                                            createKeyFromObj: object => object.name,
+                                                            createOverlayFromObj: object => (<Tooltip>{object.about}<hr />{(object.name + '(' + object.params + ')')}</Tooltip>)
+                                                        }),
+                                                    object),
+                                                object,
+                                                { createKeyFromObj: object => object.name }
+                                            ), object, {
+                                                createKeyFromObj: object => object.name,
+                                                index: idx
+                                            })
+                                        )
+                                    })
                                 }
-                                {provided.placeholder}
-                            </Container>)}
-                    </Droppable>
-                    <hr style={{ backgroundColor: 'white' }} />
-                    <Droppable
-                        droppableId='built_in_functions'
-                    >
-                        {(provided) => (
-                            <Container
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}>
-                                {
-                                    insertFunctions(MIST_builtin_functions)
-                                }
-
                                 {provided.placeholder}
                             </Container>
                         )}
                     </Droppable>
+                    <hr style={{ backgroundColor: 'white' }} />
+                    <Container>
+                        {
+                            createButtons(MIST_builtin_functions, null, {
+                                button_name: object => object.display,
+                                insert_text: object => (object.display + '(' + object.params + ')'),
+                                wrap_button: (button, object, idx) => (
+                                    wrap_in_row(
+                                        wrap_button_in_overlay(button, object,
+                                            {
+                                                createKeyFromObj: object => object.name,
+                                                createOverlayFromObj: object => (<Tooltip>{object.about}<hr />{(object.display + '(' + object.params + ')')}</Tooltip>)
+                                            }),
+                                        object,
+                                        { createKeyFromObj: object => object.name }
+                                    )
+                                )
+                            })
+                        }
+                    </Container>
+                    <hr style={{ backgroundColor: 'white' }} />
+                    <Container>
+                        {
+                            createButtons(MIST_builtin_values, null, {
+                                button_name: object => object.name,
+                                insert_text: object => object.name,
+                                wrap_button: (button, object, idx) => (
+                                    wrap_in_row(
+                                        wrap_button_in_overlay(button, object,
+                                            {
+                                                createKeyFromObj: object => object.name,
+                                                createOverlayFromObj: object => (<Tooltip>{object.about}</Tooltip>)
+                                            }),
+                                        object,
+                                        { createKeyFromObj: object => object.name }
+                                    )
+                                )
+                            })
+                        }
+                    </Container>
                 </DragDropContext>
             </Card.Body>
         </Card>
@@ -211,7 +307,6 @@ function SidePanelCard(props) {
 }
 
 SidePanelCard.propTypes = {
-    codeRef: PropTypes.object.isRequired,
     getFormState: PropTypes.func.isRequired,
     getStateFunctions: PropTypes.func.isRequired,
     getFunctions: PropTypes.func.isRequired,

@@ -1,12 +1,46 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * profile.js
+ * 
+ * This exports the profile page, which is the user's personal profile page.
+ * When a user views another user's profile page, they see user.js not profile.js.
+ * Not yet developed:
+    * Albums are the user's own albums. Currently, what is displayed is fake data.
+    * Images are the user's own images. Currently, the images displayed are the same 
+    *   images from the gallery 
+ 
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+
+// +----------------+-----------------------------------------------------------------------
+// | Design Issues  |
+// +----------------+
+
+/**
+ * The page is made up of the following parts:
+ *    --First Part
+ *        | Profile Image + user information
+ *        | IconsBar: # of pictures, likes, badges, challenges
+ *    --Profile Nav
+ *        | images: calls displayImages.js
+ *        | albums: function Albums 
+ *            + Carousel
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
 import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Container, Row, Form, Col, Nav, Tab, Card, Carousel } from "react-bootstrap";
-/** 6745662 */
+import { Button, Card, Carousel, Container, Col, Form, Nav, Row, } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
-
+/* icons */
 import {
   AiOutlinePicture,
   AiOutlineStar,
@@ -15,6 +49,9 @@ import {
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 
+// +-------------------+----------------------------------------------------------------------
+// | profile.js        |
+// +-------------------+
 export default function Profile() {
 
   /**
@@ -34,25 +71,35 @@ export default function Profile() {
   const [userImages, setUserImages] = useState([]);
   const [userAlbums, setUserAlbums] = useState([]);
 
+  // grab user's information, images, and albums
   useEffect(() => {
-   
-    fetch('/api/gallery/recent')
-        .then(req => req.json())
-        .then(cards => { setUserImages(cards)});
-
-    fetch('/api/profile')
-      .then(req => req.json())
-      .then((userInfo) => {
-        setUser(userInfo.user);
-        setUserAlbums(userInfo.userAlbums);
-      });
+    fetch('/api/?action=getAuthenticatedCompleteUserProfile')
+      .then(res => res.json())
+      .then(function ({ user }) {
+        setUser(
+          {
+            forename: user.forename,
+            surname: user.surname,
+            username: user.username,
+            createdAt: user.createdAt,
+            about: user.about,
+            profilepic: (user.profilepic) ? user.profilepic : ''
+          }
+        );
+        setUserImages(user.images.map(image => ({ ...image, userId: { username: image.username } })))
+        setUserAlbums(user.albums);
+      })
+      .catch(alert)
   }, [])
 
   return (
     <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
+      {/* Title */}
       <Container>
         <h1> Profile </h1>
       </Container>
+
+      {/* First Part: Profile Picture + information */}
       <Container style={{ marginTop: "3vh", marginBottom: "3vh" }}>
         <FirstPart name={user.forename + " " + user.surname}
           username={user.username}
@@ -62,12 +109,13 @@ export default function Profile() {
         />
       </Container>
 
+      {/* Tabs for images, albums */}
       <ProfileNav images={userImages} albums={userAlbums} />
     </Container>
   );
 }
 
-
+// user information: profile pic, username, name, email, member since
 function FirstPart(props) {
   return (
     <Container style={{ width: "90%" }}>
@@ -75,6 +123,7 @@ function FirstPart(props) {
         {" "}
       </Row>
       <Row style={{ justifyContent: "space-between" }}>
+        {/* Displays profile picture + option to change it + settings */}
         <Container style={{ width: "25%", justifyContent: "center" }}>
           <MISTImage code={props.code} resolution="275" />
           <Nav.Link eventKey="link-1">Change Image</Nav.Link>
@@ -84,10 +133,10 @@ function FirstPart(props) {
         </Container>
 
         {/** User informations + icon bar*/}
-
         <Container style={{ width: "50%", alignItems: "center" }}>
           <Form>
             <Form.Group as={Row} controlId="formPlaintextEmail">
+              {/* name */}
               <Form.Label column sm="4">
                 Name
               </Form.Label>
@@ -102,6 +151,7 @@ function FirstPart(props) {
                 <Nav.Link eventKey="link-1">Change</Nav.Link>
               </Col>
 
+              {/* username */}
               <Form.Label column sm="4">
                 Username
               </Form.Label>
@@ -112,18 +162,18 @@ function FirstPart(props) {
                 <Nav.Link eventKey="link-1">Change</Nav.Link>
               </Col>
 
+              {/* member since */}
               <Form.Label column sm="4">
                 Member since
               </Form.Label>
-
               <Col sm="6">
                 <Form.Control plaintext readOnly value={props.date} />
               </Col>
 
+              {/* bio */}
               <Form.Label column sm="4">
                 Bio
               </Form.Label>
-
               <Col sm="7">
                 <Form.Control as="textarea" readOnly rows="3" value={props.bio} />
               </Col>
@@ -132,15 +182,19 @@ function FirstPart(props) {
               </Col>
             </Form.Group>
           </Form>
+
+          {/* icons bar */}
           <hr />
           <IconsBar />
           <hr />
+
         </Container>
       </Row>
     </Container>
   );
 }
 
+/* # of pictures, likes, badges, challenges and their icons */ 
 function IconsBar() {
   const icons = [
     { iconName: <AiOutlinePicture size={28} />, num: 8, category: "images" },
@@ -166,22 +220,45 @@ function IconsBar() {
   );
 }
 
-function ProfileNav(props) {
-  return (
-    <Container>
-    <Tab.Container>
-      <Nav fill variant="tabs" defaultActiveKey="images">
-        <Nav.Item>
-          <Nav.Link eventKey="images" style={{ color: "black" }}>
-            Images
+class ProfileNav extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: <DisplayImages cards={props.images} cardsLoaded={true} />
+    }
+  }
+
+  updateContent = () => {
+    this.setState({ message: "Updated Content!" });
+  }
+
+  openImagesView = () => {
+    this.setState({ message: <DisplayImages cards={this.props.images} cardsLoaded={true} /> });
+  }
+
+  openAlbumsView = () => {
+    this.setState({ message: <Albums albums={this.props.albums} message={this.state.message} /> });
+  }
+
+  openedAlbum = () => {
+    this.setState({ message: <AlbumsView albums={this.props.albums} /> });
+  }
+
+  render() {
+    return (
+      <Container>
+        <Nav fill variant="tabs" defaultActiveKey="images">
+          <Nav.Item>
+            <Nav.Link onClick={this.openImagesView} style={{ color: "black" }}>
+              Images
           </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="albums" style={{ color: "black" }}>
-            Albums
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link onClick={this.openAlbumsView} style={{ color: "black" }}>
+              Albums
           </Nav.Link>
-        </Nav.Item>
-        {/*  Not implemented in back-end 
+          </Nav.Item>
+          {/*  Not implemented in back-end 
         <Nav.Item>
           <Nav.Link eventKey="link-4" style={{ color: "black" }}>
             Badges
@@ -197,30 +274,71 @@ function ProfileNav(props) {
             Saved
           </Nav.Link>
   </Nav.Item> */}
-      </Nav>
+        </Nav>
 
-      <Tab.Content>
-        <Tab.Pane eventKey="images">
-          <DisplayImages cards={props.images} cardsLoaded={true} />
-        </Tab.Pane>
+        <Container>
+          {this.state.message}
+        </Container>
 
-        <Tab.Pane eventKey="albums">
-          <Row>
-            {props.albums.map((album) => (
-              <Album title={album.name} description={album.caption} date={album.createdAt} />
-            ))}
-          </Row>
-        </Tab.Pane>
-
-
-      </Tab.Content>
-    </Tab.Container>
-    </Container>
-  );
+      </Container>
+    );
+  }
 }
 
-// this is just a quick component I wrote
-// we need to implement an albums page and a real album component
+function Albums(props) {
+
+  const [mode, setMode] = useState("albumsView");
+  const [images, setImages] = useState([]);
+  function openAlbumsView() { setMode("albumsView") };
+  function openAlbum(images) { setMode("openedAlbum"); setImages(images) };
+
+  if (mode === "albumsView") {
+    return (
+
+      /* default mode*/
+      <Row>
+        {props.albums.map((album) => (
+          <Card
+            style={{ padding: "1em", width: "30%", margin: "1em" }}
+          >
+            <Card.Header>
+              {/* EMPTY HEADER */}
+            </Card.Header>
+            {/* ICONS */}
+            <Card.Body style={{ justifyContent: "space-between" }}>
+              <Card.Title style={{ margin: "auto" }}>
+                <p>{album.name}</p>
+              </Card.Title>
+              <ControlledCarousel images={album.images} openAlbum={openAlbum} />
+              <p>{album.caption}</p>
+              <p>{album.createdAt}</p>
+            </Card.Body>
+          </Card>
+        ))}
+      </Row>
+    );
+  } else if (mode === "openedAlbum") {
+    return (
+      <OpenedAlbum images={images} onClick={openAlbumsView} />
+    )
+  } else {
+    return (
+      /* signIn mode*/
+      <OpenedAlbum images={[]} onClick={openAlbumsView} />
+    );
+  }
+}
+
+function AlbumsView(props) {
+  return (
+    <Row>
+      {props.albums.map((album) => (
+        <Album title={album.name} description={album.caption} date={album.createdAt} images={album.images} message={props.message} />
+      ))}
+    </Row>
+  )
+}
+// album component
 function Album(props) {
   return (
     <Card
@@ -232,7 +350,7 @@ function Album(props) {
         </Card.Title>
         {/* ICONS */}
         <Card.Body style={{ justifyContent: "space-between" }}>
-          <ControlledCarousel />
+          <ControlledCarousel images={props.images} message={props.message} />
           <p>{props.description}</p>
           <p>{props.date}</p>
         </Card.Body>
@@ -241,43 +359,40 @@ function Album(props) {
   )
 }
 
-function ControlledCarousel() {
+// carousel used for looking through albums
+function ControlledCarousel(props) {
   const [index, setIndex] = useState(0);
-
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
 
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
-      <Carousel.Item >
-        <Row style={{ justifyContent: "center" }}>
-          <MISTImage
-            code="x"
-            resolution="250"
-          />
-        </Row>
-        <Carousel.Caption>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-
-        <Row style={{ justifyContent: "center" }}>
-          <MISTImage
-            code="x"
-            resolution="250"
-          />
-        </Row>
-
-      </Carousel.Item>
-      <Carousel.Item>
-        <Row style={{ justifyContent: "center" }}>
-          <MISTImage
-            code="x"
-            resolution="250"
-          />
-        </Row>
-      </Carousel.Item>
+      {props.images.map((album) => (
+        <Carousel.Item >
+          <Row style={{ justifyContent: "center" }}>
+            <Nav.Link onClick={() => props.openAlbum(props.images)}>
+              <MISTImage
+                code={album.code}
+                resolution="250"
+              />
+            </Nav.Link>
+          </Row>
+          <Carousel.Caption>
+          </Carousel.Caption>
+        </Carousel.Item>
+      ))}
     </Carousel>
   );
+}
+
+function OpenedAlbum(props) {
+  return (
+    <Container>
+      <Row>
+        <Button onClick={props.onClick}> Back </Button>
+      </Row>
+      <DisplayImages cards={props.images} cardsLoaded={true} />
+    </Container>
+  )
 }

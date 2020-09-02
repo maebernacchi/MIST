@@ -1,3 +1,18 @@
+/**
+ * MIST is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // +-------+------------------------------------------------------------------------
 // | Notes |
 // +-------+
@@ -17,35 +32,181 @@ import {
     DropdownButton,
     Form,
     FormControl,
-    Modal,
+    ListGroup,
+    Nav,
     Navbar,
+    OverlayTrigger,
+    Tooltip,
 } from 'react-bootstrap';
-import { BsFullscreen, BsFullscreenExit } from 'react-icons/bs';
+import { BsCloud, BsFullscreen, BsFullscreenExit, BsQuestionCircle } from 'react-icons/bs';
+import { FaRegShareSquare } from 'react-icons/fa';
 
 function Menu(props) {
-
+    // A reference to keep track of the name that the user picks for their workspace
     const workspaceNameRef = createRef('workspaceName');
-
+    const finalimageNameRef = createRef('finalimageName');
     return (
-        <Navbar id='menu' bg="dark" variant="dark">
-            <FileDropdown
-                getCurrentWorkspace={props.getCurrentWorkspace}
-                loadWorkspace={props.loadWorkspace}
-                resetWorkspace={props.resetWorkspace}
-                workspaceNameRef={workspaceNameRef}
-            />
-            <Form inline>
-                <FormControl
-                    className="mr-sm-2"
-                    placeholder="Name your Workspace"
-                    ref={workspaceNameRef}
-                    type="text"
+        <Navbar id='menu' bg="dark" variant="dark" style={{ justifyContent: 'space-between', }}>
+            <Nav>
+
+                <Button
+                    className='menu-btn'
+                    onClick={() => {
+                        props.triggerPopup({
+                            footer: false,
+                            message: (
+                                <div>
+                                    <ListGroup>
+                                        <ListGroup.Item>
+                                            The <b>Side Panel</b> is the left-most panel is where you
+                                        access builtin MIST functions and values as well as your saved functions.
+                                        </ListGroup.Item>
+
+                                        <ListGroup.Item>
+                                            The <b>Central Panel</b> is where you can write and save your own MIST function with however many
+                                        parameters as well as write your MIST Image.
+                                        </ListGroup.Item>
+
+                                        <ListGroup.Item>
+                                            The <b>Final Image Panel</b> is where you can render and see the MIST image that you wrote out
+                                        in the Central Panel.
+                                        </ListGroup.Item>
+
+                                        <ListGroup.Item>
+                                            The <b>Workspace</b> you save is both the functions that you have saved as well as the contents
+                                        of the function that you are currently writing.
+                                        </ListGroup.Item>
+
+                                        <ListGroup.Item>
+                                            If you need additional help to start using the Expert UI, click the following button to
+                                            checkout our tutorial!
+                                            <a href='/tutorial/#expert-ui'>
+                                                <Button>To Tutorials</Button>
+                                            </a>
+                                        </ListGroup.Item>
+
+                                    </ListGroup>
+                                </div>
+                            ),
+                            title: 'MIST Expert UI Terminology',
+                        })
+                    }}
+                    variant="outline-light">
+                    <BsQuestionCircle
+
+                    />
+                </Button>
+                <FileDropdown
+                    deleteWorkspace={props.deleteWorkspace}
+                    getCurrentWorkspace={props.getCurrentWorkspace}
+                    getUserExpertWS={props.getUserExpertWS}
+                    isWorkspaceInUse={props.isWorkspaceInUse}
+                    loadWorkspace={props.loadWorkspace}
+                    resetWorkspace={props.resetWorkspace}
+                    togglePopup={props.togglePopup}
+                    triggerPopup={props.triggerPopup}
+                    workspaceNameRef={workspaceNameRef}
                 />
-            </Form>
+            </Nav>
+            <Nav>
+                <Form inline>
+                    <FormControl
+                        className="mr-sm-2"
+                        placeholder="Name your Workspace"
+                        ref={workspaceNameRef}
+                        type="text"
+                    />
+                </Form>
+                <OverlayTrigger
+                    placement='top'
+                    overlay={<Tooltip>Save your workspace</Tooltip>}
+                >
+                    <Button className='menu-btn'
+                        onClick={() => props.saveWorkspace(workspaceNameRef.current.value)}
+                        variant='outline-light'> <BsCloud /> Save</Button>
+                </OverlayTrigger>
+            </Nav>
+
+            <Nav>
+                <Form inline>
+                    <FormControl
+                        className="mr-sm-2"
+                        placeholder="Name your Final Image"
+                        ref={finalimageNameRef}
+                        type="text"
+                    />
+                </Form>
+                <OverlayTrigger
+                    placement='top'
+                    overlay={<Tooltip>Publish your final image</Tooltip>}
+                >
+                    <Button className='menu-btn'
+                        variant='outline-light'
+                        onClick={() => {
+                            if (!finalimageNameRef.current.value || !props.rendering_code) {
+                                if (!finalimageNameRef.current.value)
+                                    alert('Enter a valid final image name')
+                                else
+                                    alert('Please render an image to save')
+                            } else {
+                                //props.triggerPopup({message: 'You are about to publish the image'finalimageNameRef.current.value, props.rendering_code});
+                                // check if the user already has an image with that title
+                                // or if the user is not logged in 
+                                const title = finalimageNameRef.current.value;
+
+                                let url = "api?action=imageexists&title=" + title;
+                                fetch(url)
+                                    .then((res) => res.json())
+                                    .then((response) => {
+                                        switch (response) {
+                                            case "logged out":
+                                                alert("Please log in to save images.")
+                                                break;
+                                            case "image exists":
+                                                alert("You already have an image with this name; please name it something else.")
+                                                break;
+                                            case "image does not exist":
+                                                let image = {
+                                                    action: "saveimage",
+                                                    title: title,
+                                                    code: props.rendering_code
+                                                }
+                                                // save the image
+                                                fetch("api", {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+                                                    credentials: 'include',
+                                                    body: JSON.stringify(image)
+                                                })
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if (data.success)
+                                                            alert(data.message);
+                                                        else {
+                                                            alert('Failed to save due to ' + (data.message || data))
+                                                        }
+                                                    })
+                                                    .catch(err => alert('Failed to save due to Error: ' + err))
+                                                break;
+                                            default: {
+                                                // we do not expect to reach this state
+                                                console.log('Unexpected result')
+                                            }
+                                        }
+                                    })
+                                    .catch(error => alert('Failed to fetch due to Error: ' + error))
+
+                            }
+                        }}
+                    ><FaRegShareSquare /> Publish</Button>
+                </OverlayTrigger>
+            </Nav>
             <FullscreenButton
                 requestFullscreen={props.requestFullscreen}
                 exitFullscreen={props.exitFullscreen}
-              />
+            />
         </Navbar>
     )
 }
@@ -58,28 +219,62 @@ Menu.propTypes = {
     exitFullscreen: PropTypes.func.isRequired,
 }
 
+/**
+ * Button for the user to toggle fullscreen
+ */
 function FullscreenButton(props) {
     const [fullscreen, setFullscreen] = useState(document.fullscreen);
     useEffect(() => {
-      const listener = () => setFullscreen(document.fullscreen);
-      document.addEventListener('fullscreenchange', listener);
-      return () => {
-        document.removeEventListener('fullscreenchange', listener);
-      }
+        const listener = () => setFullscreen(document.fullscreen);
+        document.addEventListener('fullscreenchange', listener);
+        return () => {
+            document.removeEventListener('fullscreenchange', listener);
+        }
     }, []);
 
     if (fullscreen) {
         return (
-            <Button onClick={props.exitFullscreen}><BsFullscreenExit /></Button>
+            <Button
+                className='menu-btn'
+                onClick={props.exitFullscreen}
+                variant='outline'><BsFullscreenExit /></Button>
         );
     } else {
         return (
-          <Button onClick={props.requestFullscreen}><BsFullscreen /></Button>
+            <Button
+                className='menu-btn'
+                onClick={props.requestFullscreen}
+                variant='outline-light'><BsFullscreen /></Button>
         );
     }
 }
 
+/**
+ * Dropdown for where the user can perform actions related to workspaces other than saving
+ */
 function FileDropdown(props) {
+    const handleDeleteOnClick = async () => {
+        const data = await props.getUserExpertWS();
+        if (data.success) {
+            props.triggerPopup({
+                footer: false,
+                title: 'Choose an Expert Workspace to Delete',
+                message: (<ButtonGroup vertical>
+                    {data.expertWorkspaces.map(expert_workspace => (
+                        <Button
+                            className='menu-btn'
+                            onClick={() => { props.deleteWorkspace(expert_workspace.name); props.togglePopup() }}
+                            variant='outline-primary'
+                        >
+                            {expert_workspace.name}
+                        </Button>
+                    ))}
+                </ButtonGroup>),
+            })
+        } else {
+            alert(data.message)
+        }
+    }
     return (
         <>
             <DropdownButton
@@ -87,24 +282,25 @@ function FileDropdown(props) {
                 className='menu-btn'
                 id="file"
                 title="File"
-                variant="primary"
+                variant="outline-light"
             >
-                <ResetWorkspace
-                    getCurrentWorkspace={props.getCurrentWorkspace}
-                    resetWorkspace={props.resetWorkspace}
-                />
-                <DeleteWorkspace />
-                <SaveWorkspace />
-                <Dropdown.Divider />
+                <Dropdown.Item
+                    onClick={() => {
+                        if (props.isWorkspaceInUse()) {
+                            props.triggerPopup({
+                                message: 'Your workspace is currently in use. Are you sure that you want to reset it?',
+                                onConfirm: props.resetWorkspace,
+                            })
+                        }
+                    }}
+                >Reset Workspace</Dropdown.Item>
 
                 <ImportWorkspace
+                    getUserExpertWS={props.getUserExpertWS}
                     loadWorkspace={props.loadWorkspace}
+                    triggerPopup={props.triggerPopup}
                     workspaceNameRef={props.workspaceNameRef} />
-                <ExportWorkspace
-                    getCurrentWorkspace={props.getCurrentWorkspace}
-                    workspaceNameRef={props.workspaceNameRef}
-                />
-                <ExportWorkspaceAs />
+                <Dropdown.Item onClick={handleDeleteOnClick}>Delete Workspace</Dropdown.Item>
                 <Dropdown.Divider />
 
             </DropdownButton>{' '}
@@ -119,246 +315,38 @@ FileDropdown.propTypes = {
     workspaceNameRef: PropTypes.object.isRequired,
 }
 
-function ResetWorkspace(props) {
-    const [resetWorkspaceModalShow, setResetWorkspaceModalShow] = useState(false);
-
-    const resetModal = (
-        <Modal show={resetWorkspaceModalShow} onHide={() => setResetWorkspaceModalShow(false)}>
-            <Modal.Header closeButton>
-                <Modal.Title>Reset your workspace</Modal.Title>
-            </Modal.Header>
-            <Modal.Body> Your workspace is currently in use. Are you sure that you want
-            to reset it?
-            </Modal.Body>
-            <Modal.Footer>
-                <Button
-                    onClick={() => setResetWorkspaceModalShow(false)}
-                    variant="secondary">Close</Button>
-                <Button
-                    onClick={() => { props.resetWorkspace(); setResetWorkspaceModalShow(false); }}
-                    variant="primary">
-                    Reset Workspace</Button>
-            </Modal.Footer>
-        </Modal>
-    )
-
-    const isWorkspaceInUse = () => {
-        const currentWorkspace = props.getCurrentWorkspace();
-        // check if form is in use
-        const currentForm = currentWorkspace.form;
-        if (currentForm.name || currentForm.params || currentForm.description || currentForm.code)
-            return true;
-        // check if there are any user defined functions
-        const functions = currentWorkspace.functions;
-        if (Object.keys(functions).length > 1)
-            return true;
-        return false;
-    }
-
-    return (
-        <>
-            <Dropdown.Item
-                onClick={() => {
-                    if (isWorkspaceInUse())
-                        setResetWorkspaceModalShow(true)
-                }}
-            >Reset Workspace</Dropdown.Item>
-            {resetModal}
-        </>
-    );
-}
-
-function DeleteWorkspace() {
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    // STUB
-    return (
-        <>
-            <Dropdown.Item onClick={handleShow}>Delete Workspace</Dropdown.Item>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Do you want to delete a workspace?</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Not yet implemented</Modal.Body>
-            </Modal>
-        </>
-    );
-}
-
-function ImportWorkspace(props) {
-
-    // Done in part by following
-    // https://stackoverflow.com/questions/46712554/upload-files-using-react-bootstrap-formcontrol
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    const loadFile = (selectedFiles) => {
-        if (selectedFiles) {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                const json = event.target.result;
-                let workspaceToLoad;
-                try {
-                    workspaceToLoad = JSON.parse(json);
-                }
-                catch (err) {
-                    alert("File does not contain a MIST Workspace");
-                    return;
-                }
-                if (workspaceToLoad.fun.class !== "MIST.FunInfo") {
-                    alert("File does not contain a MIST Workspace");
-                    return;
-                }
-
-                props.loadWorkspace(workspaceToLoad);
-                props.workspaceNameRef.current.value = workspaceToLoad.name;
-            }; // reader.onload
-            reader.readAsText(selectedFiles[0]);
-        } // if (selectedFiles)
-    }
-
-    return (
-        <>
-            <Dropdown.Item onClick={handleShow}>Load a Workspace</Dropdown.Item>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Choose a function to load</Modal.Title>
-                </Modal.Header>
-                <Modal.Body> Select the file to load. Note that MIST Workspace
-                     are typically stored in files with a suffix of .ws. </Modal.Body>
-                <Form.File id="formcheck-api-regular">
-                    <Form.File.Label>Regular file input</Form.File.Label>
-                    <Form.File.Input onChange={(event) => { loadFile(event.target.files); handleClose() }} />
-                </Form.File>
-            </Modal>
-        </>
-    );
-}
-
-function ExportWorkspace(props) {
-    const onClickExportWorkspace = () => {
-        const currentWorkspace = props.getCurrentWorkspace();
-
-        const currentForm = currentWorkspace.form;
-
-        // Extract the fields
-        const about = currentForm.description;
-        const code = currentForm.code;
-        const name = currentForm.name;
-        const params = currentForm.params;
-        const fname = (props.workspaceNameRef.current.value ? props.workspaceNameRef.current.value : "untitled") + ".ws";
-
-        // Build an appropriate object
-        const fun = new window.MIST.FunInfo(name, null, about, params, { code: code });
-
-        // Retrieve the user defined functions
-        const userFuns = currentWorkspace.functions;
-
-        const workspace = {
-            name: fname,
-            fun: fun,
-            userFuns: userFuns,
-        }
-
-        // Convert it to JSON
-        const json = JSON.stringify(workspace);
-
-        // And save it
-        download(fname, "text/json", json);
-    }
-
-    return (
-        <Dropdown.Item onClick={onClickExportWorkspace}>Export Workspace</Dropdown.Item>
-    );
-}
-
-function ExportWorkspaceAs() {
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    // STUB
-    return (
-        <>
-            <Dropdown.Item onClick={handleShow}>Export Workspace as...</Dropdown.Item>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Which file type do you want to export this function as?</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Not yet implemented</Modal.Body>
-            </Modal>
-        </>
-    );
-}
-
-function SaveWorkspace() {
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    // STUB
-    return (
-        <>
-            <Dropdown.Item onClick={handleShow}>Save your Workspace</Dropdown.Item>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Saving your Workspace</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Not yet implemented</Modal.Body>
-            </Modal>
-        </>
-    );
-}
-
-// +-----------+---------------------
-// | Utilities |
-// +-----------+
-
 /**
- * Download something.
- *
- * Based on http://html5-demos.appspot.com/static/a.download.html
+ * Button for the user to load a saved workspace from the server 
  */
-function download(fname, type, content) {
-    // Get our download link
-    var link = document.getElementById("mist-downloader");
-    if (!link) {
-        link = document.createElement("a");
-        link.id = "mist-downloader";
-        document.body.appendChild(link);
+function ImportWorkspace(props) {
+    const handleOnClick = async () => {
+        const data = await props.getUserExpertWS();
+        if (data.success) {
+            props.triggerPopup({
+                footer: false,
+                title: 'Choose an Expert Workspace to Load',
+                message: (<ButtonGroup vertical>
+                    {data.expertWorkspaces.map(expert_workspace => (
+                        <Button
+                            className='menu-btn'
+                            onClick={() => props.loadWorkspace(expert_workspace)}
+                            variant='outline-primary'
+                        >
+                            {expert_workspace.name}
+                        </Button>
+                    ))}
+                </ButtonGroup>),
+            })
+        } else {
+            alert(data.message)
+        }
     }
 
-    // Set up where to download
-    link.download = fname;
-
-    // Build a blob
-    var blob = new Blob([content], { type: type });
-
-    // Build a link to the blob
-    link.href = window.URL.createObjectURL(blob);
-
-    // I think this just makes it easier to drag the link to the desktop,
-    // but I could be wrong.  (Since we're not showing the link, it's
-    // probably irrelevant.  But we might show the link later.)
-    link.dataset.downloadurl = [type, link.download, link.href].join(':');
-
-    // Click the link to trigger the save.
-    link.click();
-} // download
-
-// Menu current never has to rerender
-// since we define all of its to be functions whose
-// definitions never change
-function areEqual(preProps, nextProps) {
-    return true;
+    return (
+        <>
+            <Dropdown.Item onClick={handleOnClick}>Load a Workspace</Dropdown.Item>
+        </>
+    );
 }
 
-export default React.memo(Menu, areEqual);
+export default React.memo(Menu);

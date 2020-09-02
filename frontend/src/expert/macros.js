@@ -36,8 +36,8 @@
  *
  *  2. macros: macros throughout the program is an object that stores a
  *  collection of macros, each key is the name of a macro except for the special
- *  key, "order", which is an array of Strings, where each String is a key of
- *  the object. The array order corresponds to the order in which the macros are
+ *  key, "_order", which is an array of Strings, where each String is a key of
+ *  the object. The array _order corresponds to the order in which the macros are
  *  parsed.
  *
  *  3. node: a node is of type MIST.App or MIST.Val
@@ -97,14 +97,14 @@ function _make_template_string(node, params, templates, macros) {
  *
  * The first parameter is a macro.
  */
-function make_template_string({code, params}, templates, macros) {
+export function make_template_string({code, params}, templates, macros) {
   return _make_template_string(parse(code), new Set(params), templates, macros);
 }
 
 /*
  * replace_all replaces all occurences of old_s in s with new_s
  */
-function replace_all(s, old_s, new_s) {
+export function replace_all(s, old_s, new_s) {
   while (s.indexOf(old_s) !== -1) {
     s = s.replace(old_s, new_s);
   }
@@ -147,7 +147,7 @@ function _expand_macros(node, templates, macros) {
  */
 export default function expand_macros(mist_string, macros) {
   const templates = {};
-  macros.order.forEach(name => {
+  macros._order.forEach(name => {
     templates[name] = make_template_string(macros[name], templates, macros);
   });
   return _expand_macros(parse(mist_string), templates, macros);
@@ -175,7 +175,7 @@ export default function expand_macros(mist_string, macros) {
        code: "wsum(circle(1, 2), circle(3, 4), extra)",
        params: ["extra"]
      },
-     order: ["PI", "E", "circle", "circles"]
+     _order: ["PI", "E", "circle", "circles"]
    };
    
    expand_macros("avg(circles(wsum(E, PI())))", macros);
@@ -186,7 +186,7 @@ export default function expand_macros(mist_string, macros) {
        code: "mistif(x, mistif(y, q4, q1), mistif(y, q3, q2))",
        params: ["q1", "q2", "q3", "q4"]
      },
-     order: ["quadrants"]
+     _order: ["quadrants"]
    });
    => "mistif(x,mistif(y,-1,1),mistif(y,-.33,.33))"
  */

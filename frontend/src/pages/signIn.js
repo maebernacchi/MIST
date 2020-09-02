@@ -1,17 +1,33 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import FacebookIcon from './../design/icons/icons8-facebook-30.png';
-import GoogleIcon from './../design/icons/icons8-google-48.png';
-import React, { useState } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
-import './../design/styleSheets/signInUp.css';
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * signIn.js
+ *
+ * This exports the sign in page.
+ *
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
+import "bootstrap/dist/css/bootstrap.css";
+import FacebookIcon from "./../design/icons/icons8-facebook-30.png";
+import GoogleIcon from "./../design/icons/icons8-google-48.png";
+import React, { useState } from "react";
+import { Form, Button, Container } from "react-bootstrap";
+import "./../design/styleSheets/signInUp.css";
 
+// +-------------------+----------------------------------------------------------------------
+// | signIn.js         |
+// +-------------------+
 const SignIn = () => {
-
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
   const login = (e) => {
-
+    // prevents the page from refreshing on submit
     e.preventDefault();
 
     let user = {
@@ -19,29 +35,34 @@ const SignIn = () => {
       password: loginPassword,
     };
 
-    fetch('/api/login', {
-      method: 'POST',
+    fetch("/api", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
-      body: JSON.stringify(user)
+      credentials: "include",
+      body: JSON.stringify({ action: "signIn", ...user }),
     })
       //redirect user to home page
-      .then(res => res.json())
-      .then(message => {
-        console.log("message = " + message);
-        if (message === "Success") window.location.href = "/";
-      })
-  }
+      .then((res) => res.json())
+      .then((message) => {
+        //console.log("message = " + message);
+        if (message === "Success") {
+          window.location.href = "/";
+        } else {
+          window.location.href = "/";
+          console.log(message)
+          alert(message);
+        }
+      });
+  };
 
   return (
     <Container className="signIn-center">
-      <h1 >Sign In</h1>
-      <Form className="form" >
-
+      <h1>Sign In</h1>
+      <Form className="form">
         {/* username */}
-        <Form.Group controlId="formBasicUsername" >
+        <Form.Group controlId="formBasicUsername">
           <Form.Label>Username</Form.Label>
           <Form.Control
             type="username"
@@ -66,17 +87,25 @@ const SignIn = () => {
         </Form.Group>
 
         {/* Sign In button */}
-        <Button onClick={login} variant="outline-dark" type="submit" id="submitButton" style={{ margin: "auto" }}>
+        <Button
+          onClick={login}
+          variant="outline-dark"
+          type="submit"
+          id="submitButton"
+          style={{ margin: "auto" }}
+        >
           Sign In
-            </Button>
+        </Button>
 
         {/* Icons */}
-        <div className="icons"> <img src={GoogleIcon} alt="Google Logo" className="icon"></img>
-          <img src={FacebookIcon} alt="Facebook Logo" className="icon"></img></div>
+        <div className="icons">
+          {" "}
+          <img src={GoogleIcon} alt="Google Logo" className="icon"></img>
+          <img src={FacebookIcon} alt="Facebook Logo" className="icon"></img>
+        </div>
       </Form>
     </Container>
-  )
-}
-
+  );
+};
 
 export default SignIn;

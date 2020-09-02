@@ -1,8 +1,26 @@
+// +-------+------------------------------------------------------------------------
+// | Notes |
+// +-------+
+/*
+ * development.js
+ * 
+ * This exports the development page, which gives a disclaimer about
+ * how MIST is still in developmental phases.
+ * 
+ * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
+ * This work is licenced under a LGLP 3.0 or later .....
+ */
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
 import React from "react";
 import "./../design/styleSheets/styles.css";
 import "./../design/styleSheets/about.css";
 import { Container } from "react-bootstrap";
 
+// +-------------------+----------------------------------------------------------------------
+// | development.js    |
+// +-------------------+
 //Disclaimer about how MIST is still in developmental phases
 const Development = () => {
   return (
