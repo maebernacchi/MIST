@@ -47,7 +47,6 @@ import { BsClock } from "react-icons/bs";
 /* MISTImage and LinkButton */
 import MISTImage from "./components/MISTImageGallery"
 import LinkButton from "./components/LinkButton";
-
 // +-------------+----------------------------------------------------------------------
 // | Home.js     |
 // +-------------+
