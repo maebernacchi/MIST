@@ -311,19 +311,20 @@ function Albums(props) {
           </Button>
         </Row>
         <Row>
+          {console.log(props.albums)}
           {props.albums.map((album, index) => (
             <Card
               style={{ padding: "1em", width: "30%", margin: "1em" }}
             >
               <Card.Header>
                 <Card.Title style={{ margin: "auto" }}>
-                  <p>{props.title}</p>
+                  <p>{album.name}</p>
                 </Card.Title>
                 {/* ICONS */}
                 <Card.Body style={{ justifyContent: "space-between" }}>
                   <ControlledCarousel albumIndex={index} images={album.images} openAlbum={openAlbum} setImages={setImagesProp} />
-                  <p>{props.description}</p>
-                  <p>{props.date}</p>
+                  <p>{album.caption}</p>
+                  <p>{album.updatedAt}</p>
                 </Card.Body>
               </Card.Header>
             </Card>
