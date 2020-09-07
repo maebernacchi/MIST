@@ -46,10 +46,12 @@ const SignIn = () => {
       //redirect user to home page
       .then((res) => res.json())
       .then((message) => {
-        console.log("message = " + message);
+        //console.log("message = " + message);
         if (message === "Success") {
           window.location.href = "/";
         } else {
+          window.location.href = "/";
+          console.log(message)
           alert(message);
         }
       });

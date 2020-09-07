@@ -14,7 +14,7 @@ class emailVerification extends React.Component {
       credentials: "include",
       body: JSON.stringify({
         action: "verifyEmail",
-        username: params.username,
+        token: params.token,
       }),
     });
   }

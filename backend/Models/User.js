@@ -132,6 +132,8 @@ const usersSchema = new mongoose.Schema({
         default: "",
     },
     expertWorkspaces: [Object],
+    token: String,
+    tokenExpiry: Date
 });
 
 
