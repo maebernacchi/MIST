@@ -76,7 +76,7 @@ export default function Profile() {
   useEffect(() => {
     fetch('/api/?action=getAuthenticatedCompleteUserProfile')
       .then(async function (res) {
-        if(!res.ok) throw await res.text();
+        if (!res.ok) throw await res.text();
         else return await res.json();
       })
       .then(function ({ user }) {
@@ -198,7 +198,7 @@ function FirstPart(props) {
   );
 }
 
-/* # of pictures, likes, badges, challenges and their icons */ 
+/* # of pictures, likes, badges, challenges and their icons */
 function IconsBar() {
   const icons = [
     { iconName: <AiOutlinePicture size={28} />, num: 8, category: "images" },
@@ -414,8 +414,8 @@ function OpenedAlbum(props) {
     <Container>
       <Col style={{ marginTop: "1em" }}>
         <Row style={{ justifyContent: "space-between" }}>
-          <Button variant="outline-secondary" onClick={props.onClick}> 
-          <IoIosArrowBack /> Back 
+          <Button variant="outline-secondary" onClick={props.onClick}>
+            <IoIosArrowBack /> Back
           </Button>
 
           <Button variant="outline-secondary" >
@@ -457,23 +457,37 @@ function AddAlbumModal(props) {
       </Modal.Header>
       <Modal.Body>
         <Container>
-          <Form>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Album name</Form.Label>
-              <Form.Control type="email" placeholder="Enter album name" />
+          <Form onSubmit={(e) => {
+            // following this: https://stackoverflow.com/questions/63182107/react-bootstrap-get-value-from-form-on-submit
+            const formData = new FormData(e.target),
+              formDataObj = Object.fromEntries(formData.entries())
+            fetch('api', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ action: 'createAlbum', ...formDataObj })
+            })
+            .then(res => res.json)
+            .then(data => {console.log(data);}) 
+            .catch(console.log)
 
+          }}>
+
+            <Form.Group controlId="name" >
+              <Form.Label>Album name</Form.Label>
+              <Form.Control as="textarea" rows="1" placeholder="Enter album name" name='name' />
             </Form.Group>
-            <Form.Group controlId="exampleForm.ControlTextarea1">
+
+            <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows="3" />
+              <Form.Control as="textarea" rows="3" placeholder="Enter album description" name='caption' />
             </Form.Group>
+            <Button type='submit'>Submit</Button>
+            <Button onClick={props.onHide}>Cancel</Button>
           </Form>
         </Container>
       </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Submit</Button>
-        <Button onClick={props.onHide}>Cancel</Button>
-      </Modal.Footer>
-    </Modal>
+    </Modal >
   );
 }
