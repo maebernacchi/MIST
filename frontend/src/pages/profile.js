@@ -389,7 +389,7 @@ function ControlledCarousel(props) {
 
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
-      {props.images.map((album) => (
+      {props.images.map(image => (
         <Carousel.Item >
           <Row style={{ justifyContent: "center" }}>
             <Nav.Link onClick={() => {
@@ -397,7 +397,7 @@ function ControlledCarousel(props) {
               props.setImages(props.images);
             }}>
               <MISTImage
-                code={album.code}
+                code={image.code}
                 resolution="250"
               />
             </Nav.Link>
