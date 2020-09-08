@@ -683,8 +683,9 @@ function CommentIcon(props) {
   )
 }
 
-/* More Icon */
+/* Flagging Icon */
 //... = hide, block, report
+
 function FlaggingIcon() {
 
   function hide() {
@@ -709,26 +710,20 @@ function FlaggingIcon() {
 
   return (
 
-    <Dropdown>
-      <Dropdown.Toggle variant="light" >
-        {<FiFlag />}
-      </Dropdown.Toggle>
-      <Dropdown.Menu>
-        {/* Hide */}
-        <Dropdown.Item>
-          <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
-            <Button variant="light" onClick={() => hide()}>Hide</Button>
-          </OverlayTrigger>
-        </Dropdown.Item>
-
-        {/* Report */}
-        <Dropdown.Item href="/report">
-          <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
-            <Button variant="light">Report</Button>
-          </OverlayTrigger>
-        </Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+    <Nav>
+      <NavDropdown title= {<FiFlag />} id="nav-dropdown">
+      <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
+        <NavDropdown.Item onClick={() => hide()}>
+            Hide
+        </NavDropdown.Item>
+        </OverlayTrigger>
+        <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
+        <NavDropdown.Item href="/report">
+            Report         
+        </NavDropdown.Item>
+        </OverlayTrigger>
+      </NavDropdown>
+    </Nav>
   )
 
 }
