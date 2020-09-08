@@ -768,32 +768,39 @@ function AddModal(props) {
       </Modal.Header>
 
       <Modal.Body>
-        <Row style={{ justifyContent: "flex-end", paddingRight: "1em" }}>
-          <Button variant="outline-secondary">
-            <IoMdAdd /> Create Album
-          </Button>
-        </Row>
-        <Form>
+        <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
+          <Col>
+          <Form>
 
-          <div key={'default-checkbox'} className="mb-3">
-            {/* needs to be mapped */}
-            <Form.Check
-              type={'checkbox'}
-              id={`default-checkbox`}
-              label={`Album name 2`}
-            />
-            <Form.Check
-              type={'checkbox'}
-              id={`default-checkbox`}
-              label={`Album name 3`}
-            />
-            <Form.Check
-              type={'checkbox'}
-              id={`default-checkbox`}
-              label={`Album name 4`}
-            />
-          </div>
-        </Form>
+            <div key={'default-checkbox'} className="mb-3">
+              {/* needs to be mapped */}
+              <Form.Check
+                type={'checkbox'}
+                id={`default-checkbox`}
+                label={`Album name 2`}
+              />
+              <Form.Check
+                type={'checkbox'}
+                id={`default-checkbox`}
+                label={`Album name 3`}
+              />
+              <Form.Check
+                type={'checkbox'}
+                id={`default-checkbox`}
+                label={`Album name 4`}
+              />
+            </div>
+          </Form>
+          </Col>
+          <Col>
+          <Row style={{justifyContent: "flex-end"}}>
+            <Button variant="outline-secondary">
+              <IoMdAdd /> Create Album
+          </Button>
+          </Row>
+          </Col>
+        </Row>
+
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
