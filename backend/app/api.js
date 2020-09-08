@@ -587,8 +587,8 @@ handlers.createAlbum = async function (info, req, res) {
   else {
     try {
       const userId = req.user._id;
-      const { name } = info;
-      const success = await database.createAlbum(userId, name);
+      const { name, caption } = info;
+      const success = await database.createAlbum(userId, name, caption);
       if (success) {
         res.json({
           success: true,

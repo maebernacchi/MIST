@@ -847,16 +847,17 @@ module.exports.deletews = async (userId, workspace_name) => (
 // +--------+
 
 // create Album
-module.exports.createAlbum = async (userid, name) => {
+module.exports.createAlbum = async (userid, name, caption) => {
   userid = sanitize(userid);
   name = sanitize(name);
+  caption = sanitize(caption)
   let album = new Album({
     name: name,
     userId: userid,
     public: false,
     active: true,
     flag: false,
-    caption: '',
+    caption: caption,
   }) // create album document object 
   try {
     //save the album object
