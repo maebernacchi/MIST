@@ -34,12 +34,15 @@ import {
 } from "react-bootstrap";
 import { AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
+import { RiFolderAddLine } from "react-icons/ri";
 import {
   FaRegShareSquare, FaRegComments, FaFacebook,
   FaSnapchat
 } from "react-icons/fa";
-import { FiSave, FiCode, FiSend, FiMoreHorizontal } from "react-icons/fi";
+import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag } from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
+import { IoMdAdd } from "react-icons/io"
+
 import {
   BrowserRouter as Router, Switch, Route, Link,
   useHistory, useLocation, useParams
@@ -153,7 +156,9 @@ function CardHeader(props) {
               ) : ("")}
             </p1>
           </Col>
+
           <MoreIcon />
+
         </Row>
 
       </Card.Title>
@@ -201,26 +206,30 @@ function CardBody(props) {
       <Col>
 
         {/* Row 1: Username & Description */}
+        {/* USERNAME + description*/}
         <Row style={{ justifyContent: "space-between" }}>
-          {/* USERNAME + description*/}
-          <div>
-            <Button variant="light" href="/user">
-              {card.userId.username}
-            </Button>
-            {card.caption}
-          </div>
-        </Row>
-
-        {/* Row 2: Icons */}
-        <Row style={{ justifyContent: "space-between", marginTop: "1em", }}>
+          <Button variant="light" href="/user">
+            {card.userId.username}
+          </Button>
           <Nav.Link style={{ color: "black", display: "inline-block" }}>
             <AiOutlineStar />
             {card.ratings}
           </Nav.Link>
+
+
+          {/*   {card.caption}*/}
+        </Row>
+
+        {/* Row 2: Icons */}
+        <Row style={{ justifyContent: "space-between", marginTop: "1em", }}>
+
+
           <CodeIcon code={card.code} />
           <SaveIcon />
           <CommentIcon id={card._id} />
+          <AddIcon />
           <ShareIcon />
+
 
         </Row>
 
@@ -352,7 +361,7 @@ function MyVerticallyCenteredModal(props) {
         width: "100%",
       }}
     >
-       {/* Modal Header: title + close button */}
+      {/* Modal Header: title + close button */}
       <Modal.Header>
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
@@ -440,9 +449,11 @@ function ModalComments(props) {
       <Form.Group >
         {/* All existing comments */}
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
-          {comments.map((comment) => { return (
-            <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
-          )})}
+          {comments.map((comment) => {
+            return (
+              <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
+            )
+          })}
         </Container>
 
         {/* Horizontal Line */}
@@ -502,7 +513,7 @@ function MakeComment(props) {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({action:'postComment',...fullcomment})
+            body: JSON.stringify({ action: 'postComment', ...fullcomment })
           })
             //reset comment state
             .then(setComment(""))
@@ -696,9 +707,10 @@ function MoreIcon() {
   );
 
   return (
+
     <Dropdown>
       <Dropdown.Toggle variant="light" >
-        {<FiMoreHorizontal />}
+        {<FiFlag />}
       </Dropdown.Toggle>
       <Dropdown.Menu>
         {/* Hide */}
@@ -718,6 +730,77 @@ function MoreIcon() {
     </Dropdown>
   )
 
+}
+
+function AddIcon() {
+  const [modalShow, setModalShow] = React.useState(false);
+
+  return (
+    <>
+      <Nav.Link onClick={() => setModalShow(true)}>
+        <RiFolderAddLine style={{ color: "black", display: "inline-block" }} />
+
+
+      </Nav.Link>
+
+
+
+      <AddModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
+    </>
+  );
+}
+
+function AddModal(props) {
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton >
+        <Modal.Title id="contained-modal-title-vcenter">
+          Choose Albums
+          </Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        <Row style={{ justifyContent: "flex-end", paddingRight: "1em" }}>
+          <Button variant="outline-secondary">
+            <IoMdAdd /> Create Album
+          </Button>
+        </Row>
+        <Form>
+
+          <div key={'default-checkbox'} className="mb-3">
+            {/* needs to be mapped */}
+            <Form.Check
+              type={'checkbox'}
+              id={`default-checkbox`}
+              label={`Album name 2`}
+            />
+            <Form.Check
+              type={'checkbox'}
+              id={`default-checkbox`}
+              label={`Album name 3`}
+            />
+            <Form.Check
+              type={'checkbox'}
+              id={`default-checkbox`}
+              label={`Album name 4`}
+            />
+          </div>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={props.onHide}>Close</Button>
+        <Button onClick={props.onHide}>Add</Button>
+      </Modal.Footer>
+    </Modal>
+  );
 }
 
 /* Share Icon */
