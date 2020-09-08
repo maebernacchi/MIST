@@ -117,8 +117,8 @@ function Gallery(props) {
     <Container style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
       <Row style={{ justifyContent: "space-between" }}>
         {/* maps each array in the cards array */}
-        {cards.map((card) => (
-          <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
+        {cards.map((card, idx) => (
+          <Card key={idx} style={{ padding: "1em", width: "30%", margin: "1em" }}>
             <CardHeader card={card} />
             <CardImage card={card} />
             <CardBody card={card} />
@@ -146,12 +146,12 @@ function CardHeader(props) {
         <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
           {/* Title + Clock sign */}
           <Col>
-            <p1>
+            <p>
               {props.card.title}
               {props.card.isAnimated ? (
                 <BsClock size={15} style={{ margin: "1vh" }} />
               ) : ("")}
-            </p1>
+            </p>
           </Col>
           <MoreIcon />
         </Row>
