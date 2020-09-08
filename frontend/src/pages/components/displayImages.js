@@ -157,7 +157,7 @@ function CardHeader(props) {
             </p1>
           </Col>
 
-          <MoreIcon />
+          <FlaggingIcon />
 
         </Row>
 
@@ -588,7 +588,7 @@ export function Comment(props) {
           <div style={{ flexGrow: "2", paddingLeft: "15px", fontSize: "18px" }}>
             {props.comment}
           </div>
-          <MoreIcon />
+          <FlaggingIcon />
         </Card.Body>
       </Card>
     </Row>
@@ -617,8 +617,9 @@ function ModalIcons(props) {
 
       <CodeIcon code={card.code} />
       <SaveIcon />
+      <AddIcon />
       <ShareIcon />
-      <MoreIcon />
+      <FlaggingIcon />
     </Row>
   );
 }
@@ -684,7 +685,7 @@ function CommentIcon(props) {
 
 /* More Icon */
 //... = hide, block, report
-function MoreIcon() {
+function FlaggingIcon() {
 
   function hide() {
     alert("You have hidden this content and will no longer see it again.")
