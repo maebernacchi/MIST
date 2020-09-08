@@ -458,22 +458,22 @@ function AddAlbumModal(props) {
       </Modal.Header>
       <Modal.Body>
         <Container>
-          <Form onSubmit={(e) => {
+          <Form onSubmit={async (e) => {
+            e.preventDefault();
             // following this: https://stackoverflow.com/questions/63182107/react-bootstrap-get-value-from-form-on-submit
             const formData = new FormData(e.target),
               formDataObj = Object.fromEntries(formData.entries())
-            fetch('api', {
+            await fetch('api', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({ action: 'createAlbum', ...formDataObj })
             })
-            .then(res => res.json)
-            .then(data => {console.log(data);}) 
-            .catch(console.log)
-
-          }}>
+              .then(res => res.json())
+              .then(data => window.location.reload())
+              .catch(console.log)
+          }} >
 
             <Form.Group controlId="name" >
               <Form.Label>Album name</Form.Label>
