@@ -10,6 +10,9 @@ export function MenuContextProvider(props) {
 
     const valueMargin = props.valueWidth / 10;
     const functionMargin = props.functionWidth / 10;
+    const settingsMargin = functionMargin;
+
+    const settingsWidth = props.width * 0.2;
   
   return (
     <menuContext.Provider
@@ -18,7 +21,9 @@ export function MenuContextProvider(props) {
         mainMenuHeight: mainMenuHeight,
         menuTabHeight: menuTabHeight,
         valueMargin: valueMargin,
-        functionMargin: functionMargin
+        functionMargin: functionMargin,
+        settingsMargin: settingsMargin,
+        settingsWidth: settingsWidth,
       }}
     >
       {props.children}

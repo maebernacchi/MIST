@@ -24,6 +24,7 @@ import { Rect, Group, Text, Line } from "react-konva";
 import gui from "../globals/mistgui-globals";
 import FuncGroup from "./MakeFunction2";
 import ValGroup from "./MakeValue2";
+import SettingsItem from './SettingsItem';
 import { globalContext } from "../globals/global-context.js";
 import { menuContext } from "../globals/globals-menu-dimensions";
 import { fontContext } from "../globals/globals-fonts";
@@ -46,18 +47,6 @@ function Menu2(props) {
   const [customOpen, setCustomOpen] = useState(false);
   const [savedOpen, setSavedOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-
-  /*  useEffect(() => {
-    console.log("setting menu tabs");
-    props.setMenuTabs(
-      valuesOpen,
-      functionsOpen,
-      customOpen,
-      savedOpen,
-      settingsOpen
-    );
-  }, [valuesOpen, functionsOpen, customOpen, savedOpen, settingsOpen]); */
-
   const [key, setKey] = useState(Math.random());
   const ref = useRef(null);
 
@@ -93,6 +82,7 @@ function Menu2(props) {
       <Tabs {...props} />
       <Values {...props} />
       <Functions {...props} />
+      <Settings {...props} />
     </Group>
   );
 
@@ -170,12 +160,32 @@ function Menu2(props) {
           customOpen: customOpen,
           savedOpen: savedOpen,
           settingsOpen: settingsOpen,
+          leftOpen: functionsOpen,
+          rightOpen: customOpen || savedOpen || settingsOpen,
         }}
         changeKey={changeKey}
         key={index}
         index={index}
       />
     ));
+  }
+
+  function Settings(props) {
+    return [props.theme].map((u, i) => {
+      return <SettingsItem
+        name={u}
+        x={
+          menuDimensions.settingsMargin +
+          i * (menuDimensions.settingsMargin + menuDimensions.settingsWidth * 0.2)
+        }
+        y={
+          menuDimensions.menuTabHeight +
+          (menuDimensions.mainMenuHeight - global.functionWidth) / 2
+        }
+        width={menuDimensions.settingsWidth}
+        height={global.functionWidth}
+      />
+    })
   }
 
   function Tabs(props) {

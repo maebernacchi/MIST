@@ -128,16 +128,18 @@ function FuncGroup(props) {
         from={{
           x: props.tabs.valuesOpen ? global.width :
             props.tabs.functionsOpen ? 0 :
-            props.tabs.customOpen ? - global.width :
+            /* props.tabs.customOpen ? - global.width :
             props.tabs.savedOpen ? - 2 * global.width :
-            - 3 * global.width,
+            - 3 * global.width, */
+            - global.width,
           fontSize: gui.nodeFontSize }}
         to={{
           x: props.tabs.valuesOpen ? global.width :
             props.tabs.functionsOpen ? 0 :
-            props.tabs.customOpen ? - global.width :
+            /* props.tabs.customOpen ? - global.width :
             props.tabs.savedOpen ? - 2 * global.width :
-            - 3 * global.width,
+            - 3 * global.width, */
+            - global.width,
         }}
       >
         {(props) => (
@@ -156,16 +158,18 @@ function FuncGroup(props) {
         from={{
           x: props.tabs.valuesOpen ? global.width :
             props.tabs.functionsOpen ? 0 :
-            props.tabs.customOpen ? - global.width :
+            /* props.tabs.customOpen ? - global.width :
             props.tabs.savedOpen ? - 2 * global.width :
-            - 3 * global.width,
+            - 3 * global.width, */
+            - global.width,
           fontSize: gui.nodeFontSize }}
         to={{
           x: props.tabs.valuesOpen ? global.width :
             props.tabs.functionsOpen ? 0 :
-            props.tabs.customOpen ? - global.width :
+            /* props.tabs.customOpen ? - global.width :
             props.tabs.savedOpen ? - 2 * global.width :
-            - 3 * global.width,
+            - 3 * global.width, */
+            - global.width,
         }}
       >
         {(props) => (
