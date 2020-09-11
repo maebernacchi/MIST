@@ -18,7 +18,7 @@ export default function MISTImage(props) {
     }
     const new_animator = new MIST.ui.Animator(
       props.renderFunction,
-      [],
+      "",
       {},
       canvas.current
     );

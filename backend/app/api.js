@@ -868,3 +868,13 @@ handlers.updateAuthorizationCheck = async function (info, req, res) {
     }
   }
 };
+
+handlers.addImageToAlbum = async function(info, req, res) {
+  try {
+    database.addToAlbum(req.body.album._id, req.body.imgID)
+  } catch (error) {
+    res.json({
+      message: error
+    });
+  }
+}
