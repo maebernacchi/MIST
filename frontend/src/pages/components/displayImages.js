@@ -34,12 +34,15 @@ import {
 } from "react-bootstrap";
 import { AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
+import { RiFolderAddLine } from "react-icons/ri";
 import {
   FaRegShareSquare, FaRegComments, FaFacebook,
   FaSnapchat
 } from "react-icons/fa";
-import { FiSave, FiCode, FiSend, FiMoreHorizontal } from "react-icons/fi";
+import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag } from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
+import { IoMdAdd } from "react-icons/io"
+
 import {
   BrowserRouter as Router, Switch, Route, Link,
   useHistory, useLocation, useParams
@@ -65,13 +68,14 @@ allow users to change views on the overlay modal. */
 export default function DisplayImages(props) {
   return (
     <Router>
-      <ModalSwitch cards={props.cards} />
+      <ModalSwitch cards={props.cards} albums = {props.albums}/>
     </Router>
   );
 }
 
 /** ModalSwitch calls the relevant page based on the URL */
 function ModalSwitch(props) {
+  
   let location = useLocation();
 
   /* This piece of state is set when one of the gallery links is clicked.
@@ -83,17 +87,17 @@ function ModalSwitch(props) {
   return (
     <div>
       <Switch location={background || location}>
-        <Route path="/gallery" children={<Gallery cards={props.cards} />} />
+        <Route path="/gallery" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
         <Route path="/gallery/random" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/featured" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/top-rated" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/recent" children={<Gallery cards={props.cards} />} />
-        <Route path="/profile" children={<Gallery cards={props.cards} />} />
-        <Route path="/img/:id" children={<ImageView cards={props.cards} />} />
+        <Route path="/profile" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
+        <Route path="/img/:id" children={<ImageView cards={props.cards}/>} />
       </Switch>
 
       {/* Show the modal when a background page is set. */}
-      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} />} />}
+      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} albums={props.albums}/>} />}
     </div>
   );
 }
@@ -121,7 +125,7 @@ function Gallery(props) {
           <Card key={idx} style={{ padding: "1em", width: "30%", margin: "1em" }}>
             <CardHeader card={card} />
             <CardImage card={card} />
-            <CardBody card={card} />
+            <CardBody card={card} albums = {props.albums}/>
           </Card>
         ))}
         {/* pagination */}
@@ -153,7 +157,9 @@ function CardHeader(props) {
               ) : ("")}
             </p>
           </Col>
-          <MoreIcon />
+
+          <FlaggingIcon />
+
         </Row>
 
       </Card.Title>
@@ -201,26 +207,30 @@ function CardBody(props) {
       <Col>
 
         {/* Row 1: Username & Description */}
+        {/* USERNAME + description*/}
         <Row style={{ justifyContent: "space-between" }}>
-          {/* USERNAME + description*/}
-          <div>
-            <Button variant="light" href="/user">
-              {card.userId.username}
-            </Button>
-            {card.caption}
-          </div>
-        </Row>
-
-        {/* Row 2: Icons */}
-        <Row style={{ justifyContent: "space-between", marginTop: "1em", }}>
+          <Button variant="light" href="/user">
+            {card.userId.username}
+          </Button>
           <Nav.Link style={{ color: "black", display: "inline-block" }}>
             <AiOutlineStar />
             {card.ratings}
           </Nav.Link>
+
+
+          {/*   {card.caption}*/}
+        </Row>
+
+        {/* Row 2: Icons */}
+        <Row style={{ justifyContent: "space-between", marginTop: "1em", }}>
+
+
           <CodeIcon code={card.code} />
           <SaveIcon />
           <CommentIcon id={card._id} />
+          <AddIcon albums = {props.albums} img = {card}/>
           <ShareIcon />
+
 
         </Row>
 
@@ -296,7 +306,7 @@ function ImageView(props) {
           </Col>
           {/* Comments */}
           <Col xs="8">
-            <ModalComments card={card} />
+            <ModalComments card={card} albums = {props.albums}/>
           </Col>
         </Row>
       </Col>
@@ -317,6 +327,7 @@ function ImageView(props) {
 
 
 function ImageModal(props) {
+  console.log(props.albums)
   let history = useHistory();
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
@@ -352,7 +363,7 @@ function MyVerticallyCenteredModal(props) {
         width: "100%",
       }}
     >
-       {/* Modal Header: title + close button */}
+      {/* Modal Header: title + close button */}
       <Modal.Header>
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
@@ -440,15 +451,17 @@ function ModalComments(props) {
       <Form.Group >
         {/* All existing comments */}
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
-          {comments.map((comment) => { return (
-            <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
-          )})}
+          {comments.map((comment) => {
+            return (
+              <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
+            )
+          })}
         </Container>
 
         {/* Horizontal Line */}
         <hr />
         {/* Icons and to make a comment field */}
-        <ModalIcons card={props.card} />
+        <ModalIcons card={props.card} albums = {props.albums}/>
         <MakeComment imageId={props.card._id} />
 
       </Form.Group>
@@ -502,7 +515,7 @@ function MakeComment(props) {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({action:'postComment',...fullcomment})
+            body: JSON.stringify({ action: 'postComment', ...fullcomment })
           })
             //reset comment state
             .then(setComment(""))
@@ -577,7 +590,7 @@ export function Comment(props) {
           <div style={{ flexGrow: "2", paddingLeft: "15px", fontSize: "18px" }}>
             {props.comment}
           </div>
-          <MoreIcon />
+          <FlaggingIcon />
         </Card.Body>
       </Card>
     </Row>
@@ -606,8 +619,9 @@ function ModalIcons(props) {
 
       <CodeIcon code={card.code} />
       <SaveIcon />
+      <AddIcon albums = {props.albums}/>
       <ShareIcon />
-      <MoreIcon />
+      <FlaggingIcon />
     </Row>
   );
 }
@@ -671,9 +685,10 @@ function CommentIcon(props) {
   )
 }
 
-/* More Icon */
+/* Flagging Icon */
 //... = hide, block, report
-function MoreIcon() {
+
+function FlaggingIcon() {
 
   function hide() {
     alert("You have hidden this content and will no longer see it again.")
@@ -696,28 +711,95 @@ function MoreIcon() {
   );
 
   return (
-    <Dropdown>
-      <Dropdown.Toggle variant="light" >
-        {<FiMoreHorizontal />}
-      </Dropdown.Toggle>
-      <Dropdown.Menu>
-        {/* Hide */}
-        <Dropdown.Item>
-          <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
-            <Button variant="light" onClick={() => hide()}>Hide</Button>
-          </OverlayTrigger>
-        </Dropdown.Item>
 
-        {/* Report */}
-        <Dropdown.Item href="/report">
-          <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
-            <Button variant="light">Report</Button>
-          </OverlayTrigger>
-        </Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+    <Nav>
+      <NavDropdown title= {<FiFlag />} id="nav-dropdown">
+      <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
+        <NavDropdown.Item onClick={() => hide()}>
+            Hide
+        </NavDropdown.Item>
+        </OverlayTrigger>
+        <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
+        <NavDropdown.Item href="/report">
+            Report         
+        </NavDropdown.Item>
+        </OverlayTrigger>
+      </NavDropdown>
+    </Nav>
   )
 
+}
+
+function AddIcon(props) {
+  const [modalShow, setModalShow] = React.useState(false);
+
+  return (
+    <>
+      <Nav.Link onClick={() => setModalShow(true)}>
+        <RiFolderAddLine style={{ color: "black", display: "inline-block" }} />
+      </Nav.Link>
+      <AddModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        albums = {props.albums}
+        img = {props.img}
+      />
+    </>
+  );
+}
+
+
+
+function AddModal(props) {
+
+  const[chosenAlbum, setChosenAlbum] = React.useState({});
+
+  function handleAddToAlbum(e){
+    e.preventDefault();
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
+    })
+  }
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton >
+        <Modal.Title id="contained-modal-title-vcenter">
+          Select Album
+          </Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
+          <Col>
+            {props.albums.map((obj) => (
+              <form onSubmit = {handleAddToAlbum}>
+              <button onClick = {() => setChosenAlbum(obj)}>{obj.name}</button>
+              </form>
+            ))}
+          </Col>
+          <Col>
+          <Row style={{justifyContent: "flex-end"}}>
+          </Row>
+          </Col>
+        </Row>
+
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={props.onHide}>Close</Button>
+        <Button onClick={props.onHide}>Add</Button>
+      </Modal.Footer>
+    </Modal>
+  );
 }
 
 /* Share Icon */
