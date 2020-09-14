@@ -781,7 +781,7 @@ function AddModal(props) {
       <Modal.Body>
         <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
           <Col>
-            {props.albums.map((obj) => (
+            {(!props.albums)? <></> : props.albums.map((obj) => (
               <form onSubmit = {handleAddToAlbum}>
               <button onClick = {() => setChosenAlbum(obj)}>{obj.name}</button>
               </form>
