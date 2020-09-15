@@ -424,20 +424,18 @@ function OpenedAlbum(props) {
           </Button>
 
         </Row>
-        <Row>
 
-
-          {props.images.map((album) => (
+         {/* {props.images.map((image) => (
             <Card style={{ width: '18rem' }}>
               <MISTImage
-                code={album.code}
+                code={image.code}
                 resolution="250"
               />
             </Card>
-          ))}
+          ))}*/}
 
-          {/*  <DisplayImages cards={props.images} cardsLoaded={true} /> */}
-        </Row>
+           <DisplayImages cards={props.images} cardsLoaded={true} /> 
+ 
       </Col>
     </Container>
   )
