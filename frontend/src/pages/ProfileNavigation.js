@@ -37,7 +37,7 @@ import React, { useState, useEffect, Component } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Button, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab } from "react-bootstrap";
+import { Button, ButtonGroup, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab, ToggleButton } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
 /* icons */
@@ -59,22 +59,17 @@ import {
 // +-------------------+
 
 export default function ProfileNavigation (props) {
+  const [activeTab, setActiveTab] = useState(true);
 
+  function ActivateImages(){
+    setActiveTab(true)
+  }
+  function ActivateAlbums(){
+    setActiveTab(false)
+  }
       return (
         <Container>
-          <div className="links">
-          <Nav fill variant="tabs" defaultActiveKey="images">
-            <Nav.Item>
-            <Link to={'/profile/images'} className="link">Images </Link>
-            </Nav.Item>
-            <Nav.Item>
-            <Link to={'/profile/albums'} className="link">Albums</Link>
-            </Nav.Item>
-            <Nav.Item style={{visibility: "hidden", maxWidth: "0%"}}>
-            <Link to={'/profile/:id'} className="link">OpenedAlbum</Link>
-            </Nav.Item>
-            </Nav>
-          </div>
+          {activeTab ? <ActiveImages onClick={ActivateAlbums}/> : <ActiveAlbums onClick={ActivateImages}/>}
           <div className="tabs">
             <Switch>
               <Route path={'/profile'} exact component={() => <Images images={props.images} />} />
@@ -86,6 +81,62 @@ export default function ProfileNavigation (props) {
         </Container>
       );
     
+  }
+
+  function ActiveImages(props){
+    return(
+      <div className="links">
+          <Nav fill variant="tabs" defaultActiveKey="images">
+          
+            <Nav.Item>
+            <Link to={'/profile/images'} className="link">
+              <Button variant="light" style={{width: "100%"}} active
+              > 
+              Images 
+              </Button>
+              </Link>
+            </Nav.Item>
+            <Nav.Item>
+            <Link to={'/profile/albums'} className="link"><Button variant="light" style={{width: "100%"}} 
+            onClick={() => {
+              props.onClick();
+            }}>
+          
+            Albums </Button></Link>
+            </Nav.Item>
+            <Nav.Item style={{visibility: "hidden", maxWidth: "0%"}}>
+            <Link to={'/profile/:id'} className="link">OpenedAlbum</Link>
+            </Nav.Item>
+            </Nav>
+          </div>
+    )
+  }
+
+  function ActiveAlbums(props){
+    return(
+      <div className="links">
+          <Nav fill variant="tabs" defaultActiveKey="images">
+          
+            <Nav.Item>
+            <Link to={'/profile/images'} className="link">
+              <Button variant="light" style={{width: "100%"}}
+              onClick={() => {
+                props.onClick();
+              }}>
+              Images 
+              </Button>
+              </Link>
+            </Nav.Item>
+            <Nav.Item>
+            <Link to={'/profile/albums'} className="link"><Button variant="light" style={{width: "100%"}} active
+            >Albums </Button></Link>
+            </Nav.Item>
+            <Nav.Item style={{visibility: "hidden", maxWidth: "0%"}}>
+            <Link to={'/profile/:id'} className="link">OpenedAlbum</Link>
+            </Nav.Item>
+            </Nav>
+          </div>
+    )
   }
   
   function Images(props){
