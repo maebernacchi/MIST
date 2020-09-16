@@ -30,7 +30,7 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   Card, Button, Pagination, Container, Row,
   Col, Nav, NavDropdown, Popover, Overlay, Form,
-  Modal, OverlayTrigger, Dropdown
+  Modal, OverlayTrigger, Dropdown, FormControl, Navbar
 } from "react-bootstrap";
 import { AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
@@ -203,12 +203,12 @@ function CardBody(props) {
   let card = props.card;
   return (
     <Card.Body style={{ justifyContent: "space-between" }}>
-      <Col>
+      
 
         {/* Row 1: Username & Description */}
         {/* USERNAME + description*/}
-        <Row style={{ justifyContent: "space-between" }}>
-          <Nav.Link variant="light" href="/user" style={{paddingLeft: "0"}}>
+        <Nav style={{ justifyContent: "space-between" }}>
+          <Nav.Link variant="light" href="/user" >
             {card.userId.username}
           </Nav.Link>
           <Nav.Link style={{ color: "black", display: "inline-block" }}>
@@ -218,10 +218,10 @@ function CardBody(props) {
 
 
           {/*   {card.caption}*/}
-        </Row>
+        </Nav>
 
         {/* Row 2: Icons */}
-        <Row style={{ justifyContent: "space-between", marginTop: "1em", }}>
+        <Row style={{margin: "0", justifyContent: "space-between"}}>
 
 
           <CodeIcon code={card.code} />
@@ -233,9 +233,12 @@ function CardBody(props) {
 
         </Row>
 
+        
+
         {/* Row 3: Comment Box */}
-        <MakeComment imageId={card._id} />
-      </Col>
+        <Nav>
+        <MakeComment imageId={card._id}/>
+        </Nav>
     </Card.Body>
   );
 }
@@ -525,32 +528,27 @@ function MakeComment(props) {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Row style={{
-        justifyContent: "space-between",
-        marginTop: "1em",
-      }}>
-        {/* Box to type comment in */}
-        <Col xs={10}>
+    <Navbar>
+    <Form onSubmit={handleSubmit} inline>
+      
           <Form.Control
             name="comment"
             as="textarea"
             rows="1"
+            xs="9"
             placeholder="Type comment here"
             value={comment}
             onChange={handleChange}
           />
-        </Col>
 
         {/* Send message button */}
-        <Col>
-          <Button variant="light" type="submit">
-            <FiSend style={{ color: "black" }} />
-          </Button>
-        </Col>
 
-      </Form.Row>
+          <Nav.Link variant="light" type="submit" style={{paddingRight: "0"}}>
+            <FiSend style={{ color: "black" }} />
+          </Nav.Link>
+       
     </Form>
+    </Navbar>
   );
 }
 
@@ -638,9 +636,11 @@ function CodeIcon(props) {
 
   return (
     <div ref={ref}>
-      <Nav.Link onClick={handleClick} style={{ color: "black", paddingLeft: "0", paddingRight: "0" }}>
+      <Nav.Item>
+      <Nav.Link onClick={handleClick} style={{ color: "black"}}>
         <FiCode />
       </Nav.Link>
+      </Nav.Item>
       <Overlay
         show={show}
         target={target}
@@ -666,6 +666,8 @@ function CodeIcon(props) {
 function CommentIcon(props) {
   let location = useLocation();
   return (
+    <Nav.Item  >
+      <Nav.Link>
     <Link
       to={{
         pathname: `/img/${props.id}`,
@@ -673,14 +675,16 @@ function CommentIcon(props) {
         // the `background` in location state.
         state: { background: location },
       }}
-      style={{ paddingTop: "0.5em" }}
+     
     >
 
       <FaRegComments
-        style={{ color: "black", display: "inline-block" }}
+        style={{ color: "black"}}
       />
-
+   
     </Link>
+    </Nav.Link>
+      </Nav.Item>
   )
 }
 
@@ -735,7 +739,7 @@ function AddIcon(props) {
   return (
     <>
       <Nav.Link onClick={() => setModalShow(true)}>
-        <RiFolderAddLine style={{ color: "black", display: "inline-block" }} />
+        <RiFolderAddLine style={{ color: "black"}} />
       </Nav.Link>
       <AddModal
         show={modalShow}
@@ -804,8 +808,7 @@ function AddModal(props) {
 /* Share Icon */
 function ShareIcon() {
   return (
-    <Nav >
-      <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown">
+      <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown" >
         {/* Facebook */}
         <NavDropdown.Item eventKey="4.1">
           {" "}
@@ -823,7 +826,7 @@ function ShareIcon() {
           <FaSnapchat /> Snapchat
         </NavDropdown.Item>
       </NavDropdown>
-    </Nav>
+
   );
 }
 
@@ -831,11 +834,9 @@ function ShareIcon() {
 /* Save Icon */
 function SaveIcon() {
   return (
-    <Nav>
       <NavDropdown title={<FiSave />} id="nav-dropdown">
         <NavDropdown.Item eventKey="4.1">as image</NavDropdown.Item>
         <NavDropdown.Item eventKey="4.2"> as video</NavDropdown.Item>
       </NavDropdown>
-    </Nav>
   );
 }
