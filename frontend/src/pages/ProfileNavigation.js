@@ -68,7 +68,7 @@ export default function ProfileNavigation (props) {
             <Link to={'/profile/images'} className="link">Images </Link>
             </Nav.Item>
             <Nav.Item>
-            <Link to={'/profile/albums'} className="link">Comments</Link>
+            <Link to={'/profile/albums'} className="link">Albums</Link>
             </Nav.Item>
             <Nav.Item style={{visibility: "hidden", maxWidth: "0%"}}>
             <Link to={'/profile/:id'} className="link">OpenedAlbum</Link>
@@ -95,12 +95,7 @@ export default function ProfileNavigation (props) {
   }
   
   function Albums(props){
-    
-  const [mode, setMode] = useState("albumsView");
   const [images, setImages] = useState("");
-
-  function setImagesProp(images) { setImages(images) };
-
   const [modalShow, setModalShow] = React.useState(false);
     return(
       <Col style={{ marginTop: "1em" }}>
@@ -122,7 +117,7 @@ export default function ProfileNavigation (props) {
                 {/* ICONS */}
                 <Card.Body style={{ justifyContent: "space-between" }}>
                 
-                  <ControlledCarousel album={album} albumIndex={album.index} images={album.images} setImages={setImagesProp} />
+                  <ControlledCarousel album={album} />
                   
                   <p>{album.caption}</p>
                   <p>{album.updatedAt}</p>
@@ -138,8 +133,6 @@ export default function ProfileNavigation (props) {
       </Col>
     )
   }
-
-
   
 // carousel used for looking through albums
 function ControlledCarousel(props) {
@@ -150,7 +143,7 @@ function ControlledCarousel(props) {
 
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
-      {props.images.map(image => (
+      {props.album.images.map(image => (
         <Carousel.Item >
           <Row style={{ justifyContent: "center" }}>
           <Link to={{ pathname: `/profile/${props.album._id}`}} className="link">
@@ -218,17 +211,6 @@ function AddAlbumModal(props) {
     </Modal >
   );
 }
-
-function OpenedAlbum2(props){
-  let { id } = useParams();
-  let album = props.albums.find(elem => elem._id === id);
-  if (!album) return null;
-  return(
-    <Container>
-    Needs to be fixed
-    </Container>
-  )
-}
   
   function OpenedAlbum(props){
     let { id } = useParams();
@@ -238,16 +220,14 @@ function OpenedAlbum2(props){
       <div>
       <Col style={{ marginTop: "1em" }}>
         <Row style={{ justifyContent: "space-between" }}>
-          <Button variant="outline-secondary" onClick={props.onClick} style={{marginLeft: "2em"}}>
-            <IoIosArrowBack /> Back
+          <Button variant="outline-secondary" style={{marginLeft: "2em"}}>
+            <Link to={'/profile/albums'} className="link"><IoIosArrowBack /> Back</Link>
           </Button>
 
           <Button variant="outline-secondary" >
             <IoMdAdd /> Add Image
           </Button>
-
         </Row>
-
            <DisplayImages cards={album.images} cardsLoaded={true} /> 
  
       </Col>
