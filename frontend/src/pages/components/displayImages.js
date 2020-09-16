@@ -129,8 +129,9 @@ function Gallery(props) {
           </Card>
         ))}
         {/* pagination */}
-        <PageCounter style={{ margin: "auto" }} />
+        
       </Row>
+      <PageCounter style={{ margin: "auto" }} />
     </Container>
   );
 }
