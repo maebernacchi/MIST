@@ -150,14 +150,12 @@ function CardHeader(props) {
       <Card.Title style={{ margin: "auto" }}>
         <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
           {/* Title + Clock sign */}
-          <Col>
-            <p>
+            <Col>
               {props.card.title}
               {props.card.isAnimated ? (
                 <BsClock size={15} style={{ margin: "1vh" }} />
               ) : ("")}
-            </p>
-          </Col>
+            </Col>
 
           <FlaggingIcon />
 
@@ -210,9 +208,9 @@ function CardBody(props) {
         {/* Row 1: Username & Description */}
         {/* USERNAME + description*/}
         <Row style={{ justifyContent: "space-between" }}>
-          <Button variant="light" href="/user">
+          <Nav.Link variant="light" href="/user" style={{paddingLeft: "0"}}>
             {card.userId.username}
-          </Button>
+          </Nav.Link>
           <Nav.Link style={{ color: "black", display: "inline-block" }}>
             <AiOutlineStar />
             {card.ratings}
