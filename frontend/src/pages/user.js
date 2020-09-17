@@ -18,6 +18,7 @@
 // | IMPORTS           |
 // +-------------------+
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
@@ -56,12 +57,12 @@ export default function User() {
     const [userImages, setUserImages] = useState([]);
     const [userAlbums, setUserAlbums] = useState([]);
 
-    // for testing - delete when done
-    let userid = "5f1f6d77c28eda4d4c405161";
+    // grabs the id from the url (everything after the last slash)
+    const id = (window.location.href).split('/').slice(-1)[0];
 
     // grab user's information, images, and albums
     useEffect(() => {
-        fetch('/api/?action=getAuthenticatedCompleteUserProfile&userid=' + userid)
+        fetch('/api/?action=getAuthenticatedCompleteUserProfile&userid=' + id)
             .then(async function (res) {
                 if (!res.ok) throw await res.text();
                 else return await res.json();

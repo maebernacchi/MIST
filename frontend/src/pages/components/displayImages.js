@@ -202,7 +202,9 @@ function CardImage(props) {
  * Takes in the information of one card.
  */
 function CardBody(props) {
+  let pathname = "/user/" + props.card.userId._id
   let card = props.card;
+  console.log("props: ", props);
   return (
     <Card.Body style={{ justifyContent: "space-between" }}>
       <Col>
@@ -210,7 +212,7 @@ function CardBody(props) {
         {/* Row 1: Username & Description */}
         {/* USERNAME + description*/}
         <Row style={{ justifyContent: "space-between" }}>
-          <Button variant="light" href="/user">
+          <Button variant="light" href={pathname}>
             {card.userId.username}
           </Button>
           <Nav.Link style={{ color: "black", display: "inline-block" }}>
@@ -287,6 +289,7 @@ function ImageView(props) {
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
   if (!card) return <div>Image not found</div>;
+  let pathname = "/user/" + props.card.userId._id
 
   return (
     <Container style={{ width: "65%", justifyContent: "center", marginTop: "1em" }}>
@@ -296,7 +299,7 @@ function ImageView(props) {
             <h1 style={{ fontSize: "150%", textAlign: "left" }} >{card.title}</h1>
             <MISTImage code={card.code} resolution="300" />
             <Row>
-              <Button variant="light" href="/user">
+              <Button variant="light" href={pathname}>
                 {<b>{card.userId.username}</b>}
               </Button>
             </Row>
@@ -392,6 +395,7 @@ function MyVerticallyCenteredModal(props) {
  */
 function SideView(props) {
   let card = props.card;
+  let pathname = "/user/" + props.card.userId._id
 
   return (
     <Modal.Body>
@@ -399,7 +403,7 @@ function SideView(props) {
         {/* Col 1: usernamame, image, caption, range*/}
         <Col>
           {/* username */}
-          <Button variant="light" href="/user">
+          <Button variant="light" href={pathname}>
             {card.userId.username}
           </Button>
 
@@ -454,7 +458,7 @@ function ModalComments(props) {
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
           {comments.map((comment) => {
             return (
-              <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
+              <Comment id={comment.userId._id} username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
             )
           })}
         </Container>
@@ -559,6 +563,7 @@ function MakeComment(props) {
 /* Example comment */
 export function Comment(props) {
 
+  let pathname = '/user/' + props.id;
   function convertTime(date) {
     const timeAgo = new TimeAgo('en-US')
     if (typeof date === 'string')
@@ -581,7 +586,7 @@ export function Comment(props) {
             flexFlow: "column nowrap",
             justifyContent: "flex-start"
           }}>
-            <Button size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start" }}>
+            <Button size="sm" variant="light" href={pathname} style={{ alignSelf: "flex-start" }}>
               {props.username}
             </Button>
             <div style={{ fontSize: "15px" }}>
