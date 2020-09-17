@@ -89,8 +89,7 @@ export default function Profile() {
             username: user.username,
             createdAt: date.toDateString(),
             about: user.about,
-           //profilepic: (user.profilepic) ? user.profilepic : ''
-           profilepic: user.profilepic
+            profilepic: user.profilepic
           }
         );
         setUserImages(user.images.map(image => ({ ...image, userId: { username: image.username } })))
@@ -233,13 +232,13 @@ class ProfileNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: <DisplayImages cards={props.images} cardsLoaded={true} albums = {props.albums}/>
+      message: <DisplayImages cards={props.images} cardsLoaded={true} albums={props.albums} />
     }
   }
 
   /* update message with Display Images; when someone clicks the "Images" tab*/
   openImagesView = () => {
-    this.setState({ message: <DisplayImages cards={this.props.images} cardsLoaded={true} albums = {this.props.albums}/> });
+    this.setState({ message: <DisplayImages cards={this.props.images} cardsLoaded={true} albums={this.props.albums} /> });
   }
 
   /* update message with Albums; when someone clicks the "Album" tab*/
@@ -471,9 +470,9 @@ function AddAlbumModal(props) {
               },
               body: JSON.stringify({ action: 'createAlbum', ...formDataObj })
             })
-            .then(res => res.json)
-            .then(data => {console.log(data);}) 
-            .catch(console.log)
+              .then(res => res.json)
+              .then(data => { console.log(data); })
+              .catch(console.log)
 
           }}>
 

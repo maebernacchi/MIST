@@ -76,8 +76,7 @@ export default function User() {
                         username: user.username,
                         createdAt: date.toDateString(),
                         about: user.about,
-                        // this is blank for some reason
-                        profilepic: (user.profilepic) ? user.profilepic : ''
+                        profilepic: user.profilepic
                     }
                 );
                 setUserImages(user.images.map(image => ({ ...image, userId: { username: image.username } })))
@@ -183,7 +182,7 @@ function FirstPart(props) {
                                 Bio </Form.Label>
 
                             <Col sm="7">
-                                <Form.Control plaintext rows="3" value={props.bio} />
+                                <Form.Control as="textarea" readOnly rows="3" value={props.bio} />
                             </Col>
                         </Form.Group>
                     </Form>
