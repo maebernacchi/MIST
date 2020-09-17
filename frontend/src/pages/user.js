@@ -67,12 +67,13 @@ export default function User() {
                 else return await res.json();
             })
             .then(function ({ user }) {
+                var date = new Date(parseInt(user.createdAt))
                 setUser(
                     {
                         forename: user.forename,
                         surname: user.surname,
                         username: user.username,
-                        createdAt: user.createdAt,
+                        createdAt: date.toDateString(),
                         about: user.about,
                         // this is blank for some reason
                         profilepic: (user.profilepic) ? user.profilepic : ''
@@ -111,7 +112,7 @@ export default function User() {
 function FirstPart(props) {
     console.log("code: ", props.code);
     console.log("props: ", props);
-    
+
     let [blocked, setBlocked] = useState(false);
 
     let blockPopover = (
@@ -141,7 +142,7 @@ function FirstPart(props) {
         <Container style={{ width: "90%" }}>
             <Row style={{ justifyContent: "space-between" }}>
                 <Container style={{ width: "30%", justifyContent: "center" }}>
-                    <MISTImage code="sin(x)" resolution="300" />
+                    <MISTImage code={props.code} resolution="275" />
                     <OverlayTrigger trigger="hover" placement="right" overlay={blockPopover}>
                         <Button variant="secondary" onClick={() => block()}>
                             {blocked ? "Blocked" : "Block"}

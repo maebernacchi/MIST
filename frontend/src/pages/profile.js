@@ -80,15 +80,17 @@ export default function Profile() {
         else return await res.json();
       })
       .then(function ({ user }) {
-        //console.log("user: ", user);
+        var date = new Date(parseInt(user.createdAt))
+
         setUser(
           {
             forename: user.forename,
             surname: user.surname,
             username: user.username,
-            createdAt: user.createdAt,
+            createdAt: date.toDateString(),
             about: user.about,
-            profilepic: (user.profilepic) ? user.profilepic : ''
+           //profilepic: (user.profilepic) ? user.profilepic : ''
+           profilepic: user.profilepic
           }
         );
         setUserImages(user.images.map(image => ({ ...image, userId: { username: image.username } })))
