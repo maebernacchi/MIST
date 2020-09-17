@@ -93,6 +93,7 @@ function ModalSwitch(props) {
         <Route path="/gallery/top-rated" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/recent" children={<Gallery cards={props.cards} />} />
         <Route path="/profile" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
+        <Route path="/user" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
         <Route path="/img/:id" children={<ImageView cards={props.cards}/>} />
       </Switch>
 

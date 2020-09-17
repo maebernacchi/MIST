@@ -571,8 +571,8 @@ module.exports.getUserIdByUsername = (username, callback) => {
   });
 };
 
-// Returns all images and albums for a user
-module.exports.getCompleteUserProfile = async (userid) => {
+// Returns all images and albums for the user's profile
+module.exports.getCompletePersonalProfile = async (userid) => {
   userid = sanitize(userid);
   return (User
     .findById(userid)
@@ -588,6 +588,35 @@ module.exports.getCompleteUserProfile = async (userid) => {
     .select('-password')
     .exec())
   //     .select('images albums')
+};
+
+// Returns all images and albums for viewing another user's profile
+module.exports.getCompleteUserProfile = async (userid) => {
+  userid = sanitize(userid);
+  return (User
+    .findById(userid)
+    .populate({
+      path: 'images',
+      match: {
+        active: true,
+        public: true
+      },
+    })
+    .populate({
+      path: 'albums',
+      match: {
+        active: true,
+        public: true
+      },
+      populate: {
+        path: 'images', match: {
+          active: true,
+          public: true
+        }
+      }
+    })
+    .select('-password')
+    .exec())
 };
 
 // +--------------+-------------------------------------------------

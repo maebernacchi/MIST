@@ -74,12 +74,13 @@ export default function Profile() {
 
   // grab user's information, images, and albums
   useEffect(() => {
-    fetch('/api/?action=getAuthenticatedCompleteUserProfile')
+    fetch('/api/?action=getAuthenticatedCompletePersonalProfile')
       .then(async function (res) {
         if (!res.ok) throw await res.text();
         else return await res.json();
       })
       .then(function ({ user }) {
+        //console.log("user: ", user);
         setUser(
           {
             forename: user.forename,
