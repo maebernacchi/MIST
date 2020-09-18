@@ -811,6 +811,18 @@ handlers.deleteAccount = function (info, req, res) {
   });
 };
 
+handlers.changeName = function (info, req, res) {
+  database.changeName(req, (message) => res.json(message));
+};
+
+handlers.changeBio = function (info, req, res) {
+  database.changeBio(req, (message) => res.json(message));
+};
+
+handlers.changeProfilePic = function (info, req, res) {
+  database.changeProfilePic(req, (message) => res.json(message));
+};
+
 // +--------+------------------------------------------------------
 // | Misc.  |
 // +--------+

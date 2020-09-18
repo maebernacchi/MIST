@@ -473,8 +473,12 @@ module.exports.changeEmail = (req, callback) => {
  * Changes the username of the user in the database
  */
 module.exports.changeUsername = (req, callback) => {
+
   User.findOneAndUpdate(
-    { _id: req.body._id },
+    // this allows for both uses of changeUsername to work
+    // the first use is in settings which passes the entire user
+    // the second use is in profile which passes only the user id 
+    { _id: req.body._id ? req.body._id : req.body.id},
     { $set: { username: req.body.newUsername } },
     { new: true },
     (err, doc) => {
@@ -486,6 +490,84 @@ module.exports.changeUsername = (req, callback) => {
     }
   );
 };
+
+/**
+ *
+ * @param {*} req
+ * @param {*} callback
+ * Changes the name of the user in the database
+ */
+module.exports.changeName = (req, callback) => {
+  User.findOneAndUpdate(
+    { _id: req.body.id },
+    {
+      $set: {
+        forename: req.body.newFirstName,
+        surname: req.body.newLastName
+      }
+    },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback("Successfully Updated Name");
+      }
+    }
+  );
+};
+
+/**
+ *
+ * @param {*} req
+ * @param {*} callback
+ * Changes the bio of the user in the database
+ */
+module.exports.changeBio = (req, callback) => {
+  User.findOneAndUpdate(
+    { _id: req.body.id },
+    {
+      $set: {
+        about: req.body.newBio
+      }
+    },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback("Successfully Updated Bio");
+      }
+    }
+  );
+};
+
+
+/**
+ *
+ * @param {*} req
+ * @param {*} callback
+ * Changes the profile picture of the user in the database
+ */
+module.exports.changeProfilePic = (req, callback) => {
+  User.findOneAndUpdate(
+    { _id: req.body.id },
+    {
+      $set: {
+        profilepic: req.body.newProfilePic
+      }
+    },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback("Successfully Updated Profile Picture");
+      }
+    }
+  );
+};
+
 
 // given a userId, returns the username
 module.exports.getUsername = (userId, callback) => {

@@ -37,7 +37,7 @@ import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Button, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab } from "react-bootstrap";
+import { Button, Card, Carousel, Container, Col, Form, Modal, Nav, Row, OverlayTrigger, Popover } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
 /* icons */
@@ -62,6 +62,7 @@ export default function Profile() {
    * same applies for albums
    */
   const [user, setUser] = useState({
+    id: "",
     forename: "",
     surname: "",
     username: "",
@@ -84,6 +85,7 @@ export default function Profile() {
 
         setUser(
           {
+            id: user._id,
             forename: user.forename,
             surname: user.surname,
             username: user.username,
@@ -108,10 +110,13 @@ export default function Profile() {
       {/* First Part: Profile Picture + information */}
       <Container style={{ marginTop: "3vh", marginBottom: "3vh" }}>
         <FirstPart name={user.forename + " " + user.surname}
+          userid={user.id}
           username={user.username}
           date={user.createdAt}
           bio={user.about}
           code={user.profilepic}
+          firstname={user.forename}
+          lastname={user.surname}
         />
       </Container>
 
@@ -123,6 +128,170 @@ export default function Profile() {
 
 // user information: profile pic, username, name, email, member since
 function FirstPart(props) {
+  const [newFirstName, setNewFirstName] = useState("");
+  const [newLastName, setNewLastName] = useState("");
+  const [newUsername, setNewUsername] = useState("");
+  const [newBio, setNewBio] = useState("");
+  const [newProfilePic, setNewProfilePic] = useState("");
+
+  function changeName(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeName",
+        newFirstName: newFirstName ? newFirstName : props.firstname,
+        newLastName: newLastName ? newLastName : props.lastname,
+        id: props.userid,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
+  const namePopover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Change Name </Popover.Title>
+
+      <Popover.Content>
+        <Form>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
+              type="firstname"
+              placeholder="Enter new firstname"
+              onChange={(e) => setNewFirstName(e.target.value)}
+            />
+            <Form.Control
+              type="lastname"
+              placeholder="Enter new lastname"
+              onChange={(e) => setNewLastName(e.target.value)}
+            />
+            <Button onClick={changeName}>Confirm Changes</Button>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+  function changeUsername(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeUsername",
+        newUsername: newUsername,
+        id: props.userid,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
+  const usernamePopover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Change Username </Popover.Title>
+
+      <Popover.Content>
+        <Form>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
+              type="username"
+              placeholder="Enter new username"
+              onChange={(e) => setNewUsername(e.target.value)}
+            />
+            <Button onClick={changeUsername}>Confirm Changes</Button>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+  function changeBio(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeBio",
+        newBio: newBio,
+        id: props.userid,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
+  const bioPopover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Change Bio </Popover.Title>
+
+      <Popover.Content>
+        <Form>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
+              type="bio"
+              placeholder="Enter new bio"
+              onChange={(e) => setNewBio(e.target.value)}
+            />
+            <Button onClick={changeBio}>Confirm Changes</Button>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+  function changeProfilePic(e) {
+    e.preventDefault();
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeProfilePic",
+        newProfilePic: newProfilePic,
+        id: props.userid,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
+  const profilePicPopover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3"> Change Profile Picture </Popover.Title>
+
+      <Popover.Content>
+        <Form>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Control
+              type="firstname"
+              placeholder="Enter code"
+              onChange={(e) => setNewProfilePic(e.target.value)}
+            />
+            <Form.Text className="text-muted">
+              Copy and paste code from one of your favorite images!
+            </Form.Text>
+            <Button onClick={changeProfilePic}>Confirm Changes</Button>
+          </Form.Group>
+        </Form>
+      </Popover.Content>
+    </Popover>
+  );
+
+
   return (
     <Container style={{ width: "90%" }}>
       <Row style={{ justifyContent: "flex-start" }}>
@@ -132,7 +301,13 @@ function FirstPart(props) {
         {/* Displays profile picture + option to change it + settings */}
         <Container style={{ width: "25%", justifyContent: "center" }}>
           <MISTImage code={props.code} resolution="275" />
-          <Nav.Link eventKey="link-1">Change Image</Nav.Link>
+          <OverlayTrigger
+            trigger="click"
+            placement="bottom"
+            overlay={profilePicPopover}
+          >
+            <Button variant='light'>Change Image</Button>
+          </OverlayTrigger>
           <Nav.Link href="/settings">
             <AiOutlineSetting size={28} /> Account Settings
           </Nav.Link>
@@ -154,7 +329,13 @@ function FirstPart(props) {
                 />
               </Col>
               <Col sm="1">
-                <Nav.Link eventKey="link-1">Change</Nav.Link>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="bottom"
+                  overlay={namePopover}
+                >
+                  <Button variant='light'>Change</Button>
+                </OverlayTrigger>
               </Col>
 
               {/* username */}
@@ -165,7 +346,13 @@ function FirstPart(props) {
                 <Form.Control plaintext readOnly value={"@" + props.username} />
               </Col>
               <Col sm="1">
-                <Nav.Link eventKey="link-1">Change</Nav.Link>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="bottom"
+                  overlay={usernamePopover}
+                >
+                  <Button variant='light'>Change</Button>
+                </OverlayTrigger>
               </Col>
 
               {/* member since */}
@@ -184,7 +371,13 @@ function FirstPart(props) {
                 <Form.Control as="textarea" readOnly rows="3" value={props.bio} />
               </Col>
               <Col sm="1">
-                <Nav.Link eventKey="link-1">Change</Nav.Link>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="bottom"
+                  overlay={bioPopover}
+                >
+                  <Button variant='light'>Change</Button>
+                </OverlayTrigger>
               </Col>
             </Form.Group>
           </Form>
