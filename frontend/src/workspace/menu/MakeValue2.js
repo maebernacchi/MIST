@@ -126,24 +126,24 @@ function ValGroup(props) {
         from={{
           x: props.tabs.valuesOpen
             ? 0 + nodeDimensions.valueOffset
-            : props.tabs.functionsOpen
-            ? -global.width + nodeDimensions.valueOffset
+            : /* props.tabs.functionsOpen
+            ?  */-global.width + nodeDimensions.valueOffset/* 
             : props.tabs.customOpen
             ? -2 * global.width + nodeDimensions.valueOffset
             : props.tabs.savedOpen
             ? -3 * global.width + nodeDimensions.valueOffset
-            : -4 * global.width + nodeDimensions.valueOffset,
+            : -4 * global.width + nodeDimensions.valueOffset */,
         }}
         to={{
           x: props.tabs.valuesOpen
-            ? 0 + nodeDimensions.valueOffset
-            : props.tabs.functionsOpen
-            ? -global.width + nodeDimensions.valueOffset
-            : props.tabs.customOpen
-            ? -2 * global.width + nodeDimensions.valueOffset
-            : props.tabs.savedOpen
-            ? -3 * global.width + nodeDimensions.valueOffset
-            : -4 * global.width + nodeDimensions.valueOffset,
+          ? 0 + nodeDimensions.valueOffset
+          : /* props.tabs.functionsOpen
+          ?  */-global.width + nodeDimensions.valueOffset/* 
+          : props.tabs.customOpen
+          ? -2 * global.width + nodeDimensions.valueOffset
+          : props.tabs.savedOpen
+          ? -3 * global.width + nodeDimensions.valueOffset
+          : -4 * global.width + nodeDimensions.valueOffset */,
         }}
       >
         {(props) => (
@@ -163,24 +163,24 @@ function ValGroup(props) {
         from={{
           x: props.tabs.valuesOpen
             ? 0
-            : props.tabs.functionsOpen
-            ? -global.width
+            : /* props.tabs.functionsOpen
+            ?  */-global.width/* 
             : props.tabs.customOpen
             ? -2 * global.width
             : props.tabs.savedOpen
             ? -3 * global.width
-            : -4 * global.width,
+            : -4 * global.width */,
         }}
         to={{
           x: props.tabs.valuesOpen
             ? 0
-            : props.tabs.functionsOpen
-            ? -global.width
+            : /* props.tabs.functionsOpen
+            ?  */-global.width/* 
             : props.tabs.customOpen
             ? -2 * global.width
             : props.tabs.savedOpen
             ? -3 * global.width
-            : -4 * global.width,
+            : -4 * global.width */,
         }}
       >
         {(props) => (

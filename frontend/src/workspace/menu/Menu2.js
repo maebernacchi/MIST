@@ -24,7 +24,7 @@ import { Rect, Group, Text, Line } from "react-konva";
 import gui from "../globals/mistgui-globals";
 import FuncGroup from "./MakeFunction2";
 import ValGroup from "./MakeValue2";
-import SettingsItem from './SettingsItem';
+import SettingsItem from "./SettingsItem";
 import { globalContext } from "../globals/global-context.js";
 import { menuContext } from "../globals/globals-menu-dimensions";
 import { fontContext } from "../globals/globals-fonts";
@@ -129,10 +129,6 @@ function Menu2(props) {
         }
         tabs={{
           valuesOpen: valuesOpen,
-          functionsOpen: functionsOpen,
-          customOpen: customOpen,
-          savedOpen: savedOpen,
-          settingsOpen: settingsOpen,
         }}
         changeKey={changeKey}
         key={index}
@@ -155,12 +151,8 @@ function Menu2(props) {
           (menuDimensions.mainMenuHeight - global.functionWidth) / 2
         }
         tabs={{
-          valuesOpen: valuesOpen,
           functionsOpen: functionsOpen,
-          customOpen: customOpen,
-          savedOpen: savedOpen,
-          settingsOpen: settingsOpen,
-          leftOpen: functionsOpen,
+          leftOpen: valuesOpen,
           rightOpen: customOpen || savedOpen || settingsOpen,
         }}
         changeKey={changeKey}
@@ -171,21 +163,34 @@ function Menu2(props) {
   }
 
   function Settings(props) {
-    return [props.theme].map((u, i) => {
-      return <SettingsItem
-        name={u}
-        x={
-          menuDimensions.settingsMargin +
-          i * (menuDimensions.settingsMargin + menuDimensions.settingsWidth * 0.2)
-        }
-        y={
-          menuDimensions.menuTabHeight +
-          (menuDimensions.mainMenuHeight - global.functionWidth) / 2
-        }
-        width={menuDimensions.settingsWidth}
-        height={global.functionWidth}
-      />
-    })
+    return [props.theme, "save", "delete"].map((u, i) => {
+      return (
+        <SettingsItem
+          name={u}
+          x={
+            menuDimensions.settingsMargin +
+            i *
+              (menuDimensions.settingsMargin +
+                menuDimensions.settingsWidth)
+          }
+          y={
+            menuDimensions.menuTabHeight +
+            (menuDimensions.mainMenuHeight - global.functionWidth) / 2
+          }
+          width={menuDimensions.settingsWidth}
+          height={global.functionWidth}
+          tabs={{ settingsOpen: settingsOpen }}
+          handler={
+            u === "save"
+              ? props.saveWorkspace
+              : u === "delete"
+              ? props.deleteWorkspace
+              : props.toggleTheme
+          }
+          theme={props.theme}
+        />
+      );
+    });
   }
 
   function Tabs(props) {

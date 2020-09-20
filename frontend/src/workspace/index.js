@@ -1016,6 +1016,7 @@ class WorkspaceComponent extends Component {
             height: this.height,
             margin: 'auto',
             backgroundColor: colors.workspaceBackground[this.state.theme],
+            overflow: 'hidden',
           }}
         >
           {/* <div onClick={()=>this.deleteWorkspaces('a').then(alert).catch(alert)}>Delete ws</div> */}
@@ -1240,6 +1241,14 @@ class WorkspaceComponent extends Component {
                     });
                     
                   }}
+                  toggleTheme={() => {
+                    let i = (this.state.themeIndex + 1) % this.themes.length;
+                    this.setState({
+                      themeIndex: i,
+                      theme: this.themes[i],
+                    });
+                  }
+                  }
                   checkIfWorkspaceExists={this.checkIfWorkspaceExists.bind(this)}
                   deleteWorkspace={this.deleteWorkspace.bind(this)}
                   getWorkspaces={this.getWorkspaces.bind(this)}
@@ -1287,22 +1296,6 @@ class WorkspaceComponent extends Component {
                   }}
                 />
               </ContextProvider>
-              <Text
-                x={10}
-                y={130}
-                width={200}
-                height={50}
-                text={"CHANGE THEME"}
-                fill={this.state.theme === "dark" ? "white" : "black"}
-                fontSize={14}
-                onClick={() => {
-                  let i = (this.state.themeIndex + 1) % this.themes.length;
-                  this.setState({
-                    themeIndex: i,
-                    theme: this.themes[i],
-                  });
-                }}
-              />
             </Layer>
 
           </Stage>

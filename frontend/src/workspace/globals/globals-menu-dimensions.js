@@ -12,7 +12,7 @@ export function MenuContextProvider(props) {
     const functionMargin = props.functionWidth / 10;
     const settingsMargin = functionMargin;
 
-    const settingsWidth = props.width * 0.2;
+    const settingsWidth = props.width * 0.08;
   
   return (
     <menuContext.Provider

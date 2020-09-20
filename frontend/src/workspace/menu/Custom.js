@@ -15,39 +15,37 @@ function Custom(props) {
   const savedOpen = props.menuTabs.savedOpen;
   const settingsOpen = props.menuTabs.settingsOpen;
   const [formValue, setFormValue] = useState("Enter a MIST expression");
+  const vis = props.menuTabs.customOpen;
+  const padx = global.width * 0.01;
+  const pady = global.width * 0.01;
   const formStyle = useSpring({
     from: {
       position: "absolute",
       top: menuDimensions.menuTabHeight + 2,
-      left: valuesOpen
-        ? 2 * global.width
-        : functionsOpen
+      left: valuesOpen || functionsOpen
         ? global.width
         : customOpen
         ? 0
-        : savedOpen
-        ? -global.width
-        : -2 * global.width,
+        : -global.width,
     },
     to: {
       position: "absolute",
-      top: menuDimensions.menuTabHeight + 3,
-      left: valuesOpen
-        ? 2 * global.width
-        : functionsOpen
-        ? global.width
-        : customOpen
-        ? 0
-        : savedOpen
-        ? -global.width
-        : -2 * global.width,
+      top: menuDimensions.menuTabHeight + 2,
+      left: valuesOpen || functionsOpen
+      ? global.width
+      : customOpen
+      ? 0
+      : -global.width,
     },
   });
 
   return (
     <div
       style={{
+        top: pady,
+        left: padx,
         position: "absolute",
+        opacity: vis ? 1 : 0,
       }}
     >
       <animated.form
@@ -69,8 +67,8 @@ function Custom(props) {
         <input
           id={"input"}
           style={{
-            width: global.width,
-            height: menuDimensions.mainMenuHeight - 4,
+            width: global.width - 2 * padx,
+            height: menuDimensions.mainMenuHeight - 2 * pady,
             backgroundColor: props.bgColor,
             border: "none",
           }}
