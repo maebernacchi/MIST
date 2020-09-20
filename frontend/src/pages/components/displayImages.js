@@ -68,13 +68,14 @@ allow users to change views on the overlay modal. */
 export default function DisplayImages(props) {
   return (
     <Router>
-      <ModalSwitch cards={props.cards} />
+      <ModalSwitch cards={props.cards} albums = {props.albums}/>
     </Router>
   );
 }
 
 /** ModalSwitch calls the relevant page based on the URL */
 function ModalSwitch(props) {
+  
   let location = useLocation();
 
   /* This piece of state is set when one of the gallery links is clicked.
@@ -86,17 +87,18 @@ function ModalSwitch(props) {
   return (
     <div>
       <Switch location={background || location}>
-        <Route path="/gallery" children={<Gallery cards={props.cards} />} />
+        <Route path="/gallery" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
         <Route path="/gallery/random" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/featured" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/top-rated" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/recent" children={<Gallery cards={props.cards} />} />
-        <Route path="/profile" children={<Gallery cards={props.cards} />} />
-        <Route path="/img/:id" children={<ImageView cards={props.cards} />} />
+        <Route path="/profile" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
+        <Route path="/user" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
+        <Route path="/img/:id" children={<ImageView cards={props.cards}/>} />
       </Switch>
 
       {/* Show the modal when a background page is set. */}
-      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} />} />}
+      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} albums={props.albums}/>} />}
     </div>
   );
 }
@@ -124,7 +126,7 @@ function Gallery(props) {
           <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
             <CardHeader card={card} />
             <CardImage card={card} />
-            <CardBody card={card} />
+            <CardBody card={card} albums = {props.albums}/>
           </Card>
         ))}
         {/* pagination */}
@@ -200,7 +202,9 @@ function CardImage(props) {
  * Takes in the information of one card.
  */
 function CardBody(props) {
+  let pathname = "/user/" + props.card.userId._id
   let card = props.card;
+  console.log("props: ", props);
   return (
     <Card.Body style={{ justifyContent: "space-between" }}>
       <Col>
@@ -208,7 +212,7 @@ function CardBody(props) {
         {/* Row 1: Username & Description */}
         {/* USERNAME + description*/}
         <Row style={{ justifyContent: "space-between" }}>
-          <Button variant="light" href="/user">
+          <Button variant="light" href={pathname}>
             {card.userId.username}
           </Button>
           <Nav.Link style={{ color: "black", display: "inline-block" }}>
@@ -227,7 +231,7 @@ function CardBody(props) {
           <CodeIcon code={card.code} />
           <SaveIcon />
           <CommentIcon id={card._id} />
-          <AddIcon />
+          <AddIcon albums = {props.albums} img = {card}/>
           <ShareIcon />
 
 
@@ -285,6 +289,7 @@ function ImageView(props) {
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
   if (!card) return <div>Image not found</div>;
+  let pathname = "/user/" + props.card.userId._id
 
   return (
     <Container style={{ width: "65%", justifyContent: "center", marginTop: "1em" }}>
@@ -294,7 +299,7 @@ function ImageView(props) {
             <h1 style={{ fontSize: "150%", textAlign: "left" }} >{card.title}</h1>
             <MISTImage code={card.code} resolution="300" />
             <Row>
-              <Button variant="light" href="/user">
+              <Button variant="light" href={pathname}>
                 {<b>{card.userId.username}</b>}
               </Button>
             </Row>
@@ -305,7 +310,7 @@ function ImageView(props) {
           </Col>
           {/* Comments */}
           <Col xs="8">
-            <ModalComments card={card} />
+            <ModalComments card={card} albums = {props.albums}/>
           </Col>
         </Row>
       </Col>
@@ -326,6 +331,7 @@ function ImageView(props) {
 
 
 function ImageModal(props) {
+  console.log(props.albums)
   let history = useHistory();
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
@@ -389,6 +395,7 @@ function MyVerticallyCenteredModal(props) {
  */
 function SideView(props) {
   let card = props.card;
+  let pathname = "/user/" + props.card.userId._id
 
   return (
     <Modal.Body>
@@ -396,7 +403,7 @@ function SideView(props) {
         {/* Col 1: usernamame, image, caption, range*/}
         <Col>
           {/* username */}
-          <Button variant="light" href="/user">
+          <Button variant="light" href={pathname}>
             {card.userId.username}
           </Button>
 
@@ -451,7 +458,7 @@ function ModalComments(props) {
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
           {comments.map((comment) => {
             return (
-              <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
+              <Comment id={comment.userId._id} username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
             )
           })}
         </Container>
@@ -459,7 +466,7 @@ function ModalComments(props) {
         {/* Horizontal Line */}
         <hr />
         {/* Icons and to make a comment field */}
-        <ModalIcons card={props.card} />
+        <ModalIcons card={props.card} albums = {props.albums}/>
         <MakeComment imageId={props.card._id} />
 
       </Form.Group>
@@ -556,6 +563,7 @@ function MakeComment(props) {
 /* Example comment */
 export function Comment(props) {
 
+  let pathname = '/user/' + props.id;
   function convertTime(date) {
     const timeAgo = new TimeAgo('en-US')
     if (typeof date === 'string')
@@ -578,7 +586,7 @@ export function Comment(props) {
             flexFlow: "column nowrap",
             justifyContent: "flex-start"
           }}>
-            <Button size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start" }}>
+            <Button size="sm" variant="light" href={pathname} style={{ alignSelf: "flex-start" }}>
               {props.username}
             </Button>
             <div style={{ fontSize: "15px" }}>
@@ -617,7 +625,7 @@ function ModalIcons(props) {
 
       <CodeIcon code={card.code} />
       <SaveIcon />
-      <AddIcon />
+      <AddIcon albums = {props.albums}/>
       <ShareIcon />
       <FlaggingIcon />
     </Row>
@@ -728,28 +736,41 @@ function FlaggingIcon() {
 
 }
 
-function AddIcon() {
+function AddIcon(props) {
   const [modalShow, setModalShow] = React.useState(false);
 
   return (
     <>
       <Nav.Link onClick={() => setModalShow(true)}>
         <RiFolderAddLine style={{ color: "black", display: "inline-block" }} />
-
-
       </Nav.Link>
-
-
-
       <AddModal
         show={modalShow}
         onHide={() => setModalShow(false)}
+        albums = {props.albums}
+        img = {props.img}
       />
     </>
   );
 }
 
+
+
 function AddModal(props) {
+
+  const[chosenAlbum, setChosenAlbum] = React.useState({});
+
+  function handleAddToAlbum(e){
+    e.preventDefault();
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
+    })
+  }
+
   return (
     <Modal
       {...props}
@@ -759,40 +780,21 @@ function AddModal(props) {
     >
       <Modal.Header closeButton >
         <Modal.Title id="contained-modal-title-vcenter">
-          Choose Albums
+          Select Album
           </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
           <Col>
-          <Form>
-
-            <div key={'default-checkbox'} className="mb-3">
-              {/* needs to be mapped */}
-              <Form.Check
-                type={'checkbox'}
-                id={`default-checkbox`}
-                label={`Album name 2`}
-              />
-              <Form.Check
-                type={'checkbox'}
-                id={`default-checkbox`}
-                label={`Album name 3`}
-              />
-              <Form.Check
-                type={'checkbox'}
-                id={`default-checkbox`}
-                label={`Album name 4`}
-              />
-            </div>
-          </Form>
+            {(!props.albums)? <></> : props.albums.map((obj) => (
+              <form onSubmit = {handleAddToAlbum}>
+              <button onClick = {() => setChosenAlbum(obj)}>{obj.name}</button>
+              </form>
+            ))}
           </Col>
           <Col>
           <Row style={{justifyContent: "flex-end"}}>
-            <Button variant="outline-secondary">
-              <IoMdAdd /> Create Album
-          </Button>
           </Row>
           </Col>
         </Row>

@@ -104,10 +104,14 @@ const usersSchema = new mongoose.Schema({
     images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image" }], // of image ids
     albums: [{ type: mongoose.Schema.Types.ObjectId, ref: "Album" }], // of album ids
     workspaces: [workspaceSchema], // of workspace objects
-    profilepic: {
+    /* profilepic: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Image",
         default: null,
+    }, */
+    profilepic: {
+        type: String,
+        default: ""
     },
     active: {
         type: Boolean,
