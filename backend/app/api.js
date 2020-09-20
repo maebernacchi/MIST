@@ -503,7 +503,7 @@ handlers.getUser = function (info, req, res) {
 /** */
 handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
   try {
-    if (!req.isAuthenticated()) throw "User is not authenticated";
+    if (!req.isAuthenticated()) throw "You needs to login to view your profile!";
     const userid = req.user._id;
     const complete_user = await database.getCompleteUserProfile(userid);
     res.json({
