@@ -14,38 +14,105 @@
  * 
  */
 
-import React from "react";
-import "../design/styleSheets/profile.css";
-import "../design/styleSheets/generalStyles.css";
-import { Button, Container, Row, Form, Col, Nav, OverlayTrigger, Popover } from "react-bootstrap";
-import { useState } from "react";
+// +-------------------+----------------------------------------------------------------------
+// | IMPORTS           |
+// +-------------------+
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import DisplayImages from "./components/displayImages";
+import "./../design/styleSheets/profile.css";
+import "./../design/styleSheets/generalStyles.css";
+import { Button, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab, OverlayTrigger, Popover } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from './components/MISTImageGallery'
+import MISTImage from "./components/MISTImageGallery"
+
+/* icons */
 import {
     AiOutlinePicture,
     AiOutlineStar,
+    AiOutlineSetting,
 } from "react-icons/ai";
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
+import { IoIosArrowBack, IoMdAdd } from "react-icons/io"
 
 // full profile
+// pass down username of profile from all other pages 
 export default function User() {
+
+    /**
+   * These are seperate because of how the db is organized
+   * users only store the id's of their images, so finding a user
+   * and retrieving their images are seperate queries in the back-end,
+   * same applies for albums
+   */
+    const [user, setUser] = useState({
+        forename: "",
+        surname: "",
+        username: "",
+        createdAt: "",
+        about: "",
+        profilepic: ""
+    });
+    const [userImages, setUserImages] = useState([]);
+    const [userAlbums, setUserAlbums] = useState([]);
+
+    // grabs the id from the url (everything after the last slash)
+    const id = (window.location.href).split('/').slice(-1)[0];
+
+    // grab user's information, images, and albums
+    useEffect(() => {
+        fetch('/api/?action=getAuthenticatedCompleteUserProfile&userid=' + id)
+            .then(async function (res) {
+                if (!res.ok) throw await res.text();
+                else return await res.json();
+            })
+            .then(function ({ user }) {
+                var date = new Date(parseInt(user.createdAt))
+                setUser(
+                    {
+                        forename: user.forename,
+                        surname: user.surname,
+                        username: user.username,
+                        createdAt: date.toDateString(),
+                        about: user.about,
+                        profilepic: user.profilepic
+                    }
+                );
+                setUserImages(user.images.map(image => ({ ...image, userId: { username: image.username } })))
+                setUserAlbums(user.albums);
+            })
+            .catch(alert)
+    }, [])
+
     return (
-        <div>
+        <Container fluid style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
+            {/* Title */}
             <Container>
-                <h1> Example User </h1>
-            </Container>
-            <Container style={{ marginTop: "3vh", marginBottom: "3vh" }}>
-                <FirstPart />
+                <h1> {user.forename}'s Profile </h1>
             </Container>
 
-            <ProfileNav />
-        </div>
+            {/* First Part: Profile Picture + information */}
+            <Container style={{ marginTop: "3vh", marginBottom: "3vh" }}>
+                <FirstPart name={user.forename + " " + user.surname}
+                    username={user.username}
+                    date={user.createdAt}
+                    bio={user.about}
+                    code={user.profilepic}
+                />
+            </Container>
+
+            {/* Tabs for images, albums */}
+            <ProfileNav images={userImages} albums={userAlbums} />
+        </Container>
     );
 }
 
 // user information: profile pic, username, name, email, member since, block, report
-function FirstPart() {
+function FirstPart(props) {
+    console.log("code: ", props.code);
+    console.log("props: ", props);
+
     let [blocked, setBlocked] = useState(false);
 
     let blockPopover = (
@@ -73,14 +140,9 @@ function FirstPart() {
 
     return (
         <Container style={{ width: "90%" }}>
-            {/*
-      <Row style={{ justifyContent: "flex-start" }}>
-        {" "}
-        <BsEnvelope size={28} /> <AiOutlineSetting size={28} />
-        </Row> */ }
             <Row style={{ justifyContent: "space-between" }}>
                 <Container style={{ width: "30%", justifyContent: "center" }}>
-                    <MISTImage code="sin(x)" resolution="300" />
+                    <MISTImage code={props.code} resolution="275" />
                     <OverlayTrigger trigger="hover" placement="right" overlay={blockPopover}>
                         <Button variant="secondary" onClick={() => block()}>
                             {blocked ? "Blocked" : "Block"}
@@ -101,26 +163,26 @@ function FirstPart() {
                                 <Form.Control
                                     plaintext
                                     readOnly
-                                    defaultValue="Shrek"
+                                    value={props.name}
                                 />
                             </Col>
 
                             <Form.Label column sm="4"> Username </Form.Label>
                             <Col sm="7">
-                                <Form.Control plaintext readOnly defaultValue="@donkey" />
+                                <Form.Control plaintext readOnly value={"@" + props.username} />
                             </Col>
                             <Form.Label column sm="4">
                                 Member since </Form.Label>
 
                             <Col sm="6">
-                                <Form.Control plaintext readOnly defaultValue="June, 2020" />
+                                <Form.Control plaintext readOnly value={props.date} />
                             </Col>
 
                             <Form.Label column sm="4">
                                 Bio </Form.Label>
 
                             <Col sm="7">
-                                <Form.Control plaintext rows="3" defaultValue="First the worst, Shrek the best" />
+                                <Form.Control as="textarea" readOnly rows="3" value={props.bio} />
                             </Col>
                         </Form.Group>
                     </Form>
@@ -159,38 +221,210 @@ function IconsBar() {
     );
 }
 
-// images, albums
-function ProfileNav() {
+/* Profile navigation bar: for now, it is only images and albums */
+class ProfileNav extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            message: <DisplayImages cards={props.images} cardsLoaded={true} albums={props.albums} />
+        }
+    }
+
+    /* update message with Display Images; when someone clicks the "Images" tab*/
+    openImagesView = () => {
+        this.setState({ message: <DisplayImages cards={this.props.images} cardsLoaded={true} albums={this.props.albums} /> });
+    }
+
+    /* update message with Albums; when someone clicks the "Album" tab*/
+    openAlbumsView = () => {
+        this.setState({ message: <Albums albums={this.props.albums} /> });
+    }
+
+    /* update message with AlbumsView; when someone tries to open an album*/
+    openedAlbum = () => {
+        this.setState({ message: <AlbumsView albums={this.props.albums} /> });
+    }
+
+    render() {
+        return (
+            <Container>
+                <Nav fill variant="tabs" defaultActiveKey="images">
+                    <Nav.Item>
+                        <Nav.Link onClick={this.openImagesView} style={{ color: "black" }}>
+                            Images
+            </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link onClick={this.openAlbumsView} style={{ color: "black" }}>
+                            Albums
+            </Nav.Link>
+                    </Nav.Item>
+                    {/*  Not implemented in back-end 
+          <Nav.Item>
+            <Nav.Link eventKey="link-4" style={{ color: "black" }}>
+              Badges
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="link-3" style={{ color: "black" }}>
+              Challenges
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="link-5" style={{ color: "black" }}>
+              Saved
+            </Nav.Link>
+    </Nav.Item> */}
+                </Nav>
+
+                <Container>
+                    {this.state.message}
+                </Container>
+
+            </Container>
+        );
+    }
+}
+
+function Albums(props) {
+
+    const [mode, setMode] = useState("albumsView");
+    const [images, setImages] = useState("");
+
+    function openAlbumsView() { setMode("albumsView") };
+    function openAlbum(props) { setMode("openedAlbum") };
+    function setImagesProp(images) { setImages(images) };
+
+    const [modalShow, setModalShow] = React.useState(false);
+    if (mode === "albumsView") {
+        return (
+
+            /* default mode*/
+            <Col style={{ marginTop: "1em" }}>
+                <Row>
+                    {props.albums.map((album, index) => (
+                        <Card
+                            style={{ padding: "1em", width: "30%", margin: "1em" }}
+                        >
+                            <Card.Header>
+                                <Card.Title style={{ margin: "auto" }}>
+                                    <p>{props.title}</p>
+                                </Card.Title>
+                                {/* ICONS */}
+                                <Card.Body style={{ justifyContent: "space-between" }}>
+                                    <ControlledCarousel albumIndex={index} images={album.images} openAlbum={openAlbum} setImages={setImagesProp} />
+                                    <p>{props.description}</p>
+                                    <p>{props.date}</p>
+                                </Card.Body>
+                            </Card.Header>
+                        </Card>
+                    ))}
+                </Row>
+            </Col>
+        );
+    } else if (mode === "openedAlbum") {
+        return (
+            <OpenedAlbum images={images} onClick={openAlbumsView} />
+        )
+    } else {
+        return (
+            /* signIn mode*/
+            <OpenedAlbum images={[]} onClick={openAlbumsView} />
+        );
+    }
+}
+
+function AlbumsView(props) {
+    return (
+        <Row>
+            {props.albums.map((album) => (
+                <Album title={album.name} description={album.caption} date={album.createdAt} images={album.images} message={props.message} />
+            ))}
+        </Row>
+
+    )
+}
+// album component
+function Album(props) {
+
+    return (
+        <Card
+            style={{ padding: "1em", width: "30%", margin: "1em" }}
+        >
+            <Card.Header>
+                <Card.Title style={{ margin: "auto" }}>
+                    <p>{props.title}</p>
+                </Card.Title>
+                {/* ICONS */}
+                <Card.Body style={{ justifyContent: "space-between" }}>
+                    <ControlledCarousel images={props.images} message={props.message} />
+                    <p>{props.description}</p>
+                    <p>{props.date}</p>
+                </Card.Body>
+            </Card.Header>
+        </Card>
+    )
+}
+
+// carousel used for looking through albums
+function ControlledCarousel(props) {
+    const [index, setIndex] = useState(0);
+    const handleSelect = (selectedIndex, e) => {
+        setIndex(selectedIndex);
+    };
+
+    return (
+        <Carousel activeIndex={index} onSelect={handleSelect}>
+            {props.images.map((album) => (
+                <Carousel.Item >
+                    <Row style={{ justifyContent: "center" }}>
+                        <Nav.Link onClick={() => {
+                            props.openAlbum();
+                            props.setImages(props.images);
+                        }}>
+                            <MISTImage
+                                code={album.code}
+                                resolution="250"
+                            />
+                        </Nav.Link>
+                    </Row>
+                    <Carousel.Caption>
+                    </Carousel.Caption>
+                </Carousel.Item>
+            ))}
+        </Carousel>
+    );
+}
+
+function OpenedAlbum(props) {
     return (
         <Container>
-            <Nav fill variant="tabs" defaultActiveKey="link-1">
-                <Nav.Item>
-                    <Nav.Link eventKey="link-1" style={{ color: "black" }}>
-                        Images
-          </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="link-2" style={{ color: "black" }}>
-                        Albums
-          </Nav.Link>
-                </Nav.Item>
-                {/*  Not implemented in back-end 
-        <Nav.Item>
-          <Nav.Link eventKey="link-4" style={{ color: "black" }}>
-            Badges
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="link-3" style={{ color: "black" }}>
-            Challenges
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="link-5" style={{ color: "black" }}>
-            Saved
-          </Nav.Link>
-  </Nav.Item> */}
-            </Nav>
+            <Col style={{ marginTop: "1em" }}>
+                <Row style={{ justifyContent: "space-between" }}>
+                    <Button variant="outline-secondary" onClick={props.onClick}>
+                        <IoIosArrowBack /> Back
+            </Button>
+
+                    <Button variant="outline-secondary" >
+                        <IoMdAdd /> Add Image
+            </Button>
+
+                </Row>
+                <Row>
+
+
+                    {props.images.map((album) => (
+                        <Card style={{ width: '18rem' }}>
+                            <MISTImage
+                                code={album.code}
+                                resolution="250"
+                            />
+                        </Card>
+                    ))}
+
+                    {/*  <DisplayImages cards={props.images} cardsLoaded={true} /> */}
+                </Row>
+            </Col>
         </Container>
-    );
+    )
 }
