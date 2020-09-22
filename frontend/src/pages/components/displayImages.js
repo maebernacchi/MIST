@@ -26,7 +26,7 @@
 // +---------+
 
 import MISTImage from "./MISTImageGallery"
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Component } from "react";
 import {
   Card, Button, Pagination, Container, Row,
   Col, Nav, NavDropdown, Popover, Overlay, Form,
@@ -42,6 +42,7 @@ import {
 import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag } from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
 import { IoMdAdd } from "react-icons/io"
+import {MdVisibilityOff} from "react-icons/md"
 
 import {
   BrowserRouter as Router, Switch, Route, Link,
@@ -236,9 +237,9 @@ function CardBody(props) {
         
 
         {/* Row 3: Comment Box */}
-        <Nav>
+        <Navbar>
         <MakeComment imageId={card._id}/>
-        </Nav>
+        </Navbar>
     </Card.Body>
   );
 }
@@ -370,6 +371,7 @@ function MyVerticallyCenteredModal(props) {
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
         </Container>
+        
         <Link to={{ pathname: "/gallery" }}>Close</Link>
       </Modal.Header>
 
@@ -399,11 +401,14 @@ function SideView(props) {
       <Row >
         {/* Col 1: usernamame, image, caption, range*/}
         <Col>
+        <Row style={{justifyContent: "space-between"}}>
           {/* username */}
-          <Button variant="light" href="/user">
+          <Nav.Link variant="light" href="/user">
             {card.userId.username}
-          </Button>
+          </Nav.Link>
 
+          <FlaggingIcon />
+          </Row>
           {/* image */}
           <Row style={{ justifyContent: "center", marginTop: "1em" }}>
             <MISTImage code={card.code} resolution="250" />
@@ -528,14 +533,14 @@ function MakeComment(props) {
   };
 
   return (
-    <Navbar>
+   
     <Form onSubmit={handleSubmit} inline>
       
           <Form.Control
             name="comment"
             as="textarea"
             rows="1"
-            xs="9"
+            
             placeholder="Type comment here"
             value={comment}
             onChange={handleChange}
@@ -548,12 +553,74 @@ function MakeComment(props) {
           </Nav.Link>
        
     </Form>
-    </Navbar>
   );
 }
 
+class Comment extends Component {
+  constructor(props) {
+    super(props);
+    this.handleMouseHover = this.handleMouseHover.bind(this);
+    this.state = {
+      isHovering: false,
+    };
+    this.convertTime = this.convertTime.bind(this);
+  }
+
+   convertTime(date) {
+    const timeAgo = new TimeAgo('en-US')
+    if (typeof date === 'string')
+      date = parseInt(date);
+    return timeAgo.format(date);
+  }
+
+  handleMouseHover() {
+    this.setState(this.toggleHoverState);
+  }
+
+  toggleHoverState(state) {
+    return {
+      isHovering: !state.isHovering,
+    };
+  }
+  render() {
+    return (
+      <Row>
+      <Card style={{ width: "100%", margin: "0.5em" }} 
+       onMouseEnter={this.handleMouseHover}
+          onMouseLeave={this.handleMouseHover}>
+        <Card.Body style={{
+          display: "flex",
+          flexFlow: "row nowrap",
+          justifyContent: "space-around",
+          alignItems: "center",
+          padding: "0.5em"
+        }}>
+          <div style={{
+            display: "flex",
+            flexFlow: "column nowrap",
+            justifyContent: "flex-start"
+          }}>
+            <Nav.Link size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start", paddingLeft: "0" }}>
+              {this.props.username}
+            </Nav.Link>
+            <div style={{ fontSize: "15px" }}>
+              {this.convertTime(this.props.date)}
+            </div>
+          </div>
+          <div style={{ flexGrow: "2", fontSize: "18px" }}>
+            {this.props.comment}
+          </div>
+          {this.state.isHovering && <FlaggingIcon />}
+          
+        </Card.Body>
+      </Card>
+    </Row>
+    );
+  }
+}
+
 /* Example comment */
-export function Comment(props) {
+export function Comment2(props) {
 
   function convertTime(date) {
     const timeAgo = new TimeAgo('en-US')
@@ -565,26 +632,27 @@ export function Comment(props) {
   return (
 
     <Row>
-      <Card style={{ width: "100%", margin: "0.5vh" }}>
+      <Card style={{ width: "100%", margin: "0.5em" }}>
         <Card.Body style={{
           display: "flex",
           flexFlow: "row nowrap",
           justifyContent: "space-around",
           alignItems: "center",
+          padding: "0.5em"
         }}>
           <div style={{
             display: "flex",
             flexFlow: "column nowrap",
             justifyContent: "flex-start"
           }}>
-            <Button size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start" }}>
+            <Nav.Link size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start", paddingLeft: "0" }}>
               {props.username}
-            </Button>
+            </Nav.Link>
             <div style={{ fontSize: "15px" }}>
               {convertTime(props.date)}
             </div>
           </div>
-          <div style={{ flexGrow: "2", paddingLeft: "15px", fontSize: "18px" }}>
+          <div style={{ flexGrow: "2", fontSize: "18px" }}>
             {props.comment}
           </div>
           <FlaggingIcon />
@@ -618,7 +686,7 @@ function ModalIcons(props) {
       <SaveIcon />
       <AddIcon albums = {props.albums}/>
       <ShareIcon />
-      <FlaggingIcon />
+      
     </Row>
   );
 }
@@ -653,7 +721,7 @@ function CodeIcon(props) {
           <Popover.Content>
             <Container>{props.code}</Container>
             <Row style={{ justifyContent: "flex-end" }}>
-              <Nav.Link style={{ color: "black" }} > Copy</Nav.Link>
+              <Button variant="light" style={{ color: "black", marginRight: "1em", marginLeft: "1em" }} > Copy</Button>
             </Row>
           </Popover.Content>
         </Popover>
@@ -715,20 +783,20 @@ function FlaggingIcon() {
 
   return (
 
-    <Nav>
-      <NavDropdown title= {<FiFlag />} id="nav-dropdown">
+   
+      <NavDropdown title= {<FiMoreHorizontal  style={{color: "grey"}}/>} id="nav-dropdown" >
       <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
         <NavDropdown.Item onClick={() => hide()}>
-            Hide
+          <MdVisibilityOff/>  Hide
         </NavDropdown.Item>
         </OverlayTrigger>
         <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
         <NavDropdown.Item href="/report">
-            Report         
+        <FiFlag /> Report         
         </NavDropdown.Item>
         </OverlayTrigger>
       </NavDropdown>
-    </Nav>
+  
   )
 
 }

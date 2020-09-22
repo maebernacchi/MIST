@@ -141,7 +141,7 @@ export default function ProfileNavigation (props) {
   
   function Images(props){
     return(
-      <DisplayImages cards={props.images} cardsLoaded={true} /> 
+      <DisplayImages cards={props.images} cardsLoaded={true} albums={props.albums}/> 
     )
   }
   
@@ -279,7 +279,7 @@ function AddAlbumModal(props) {
             <IoMdAdd /> Add Image
           </Button>
         </Row>
-           <DisplayImages cards={album.images} cardsLoaded={true} /> 
+           <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums}/> 
  
       </Col>
     </div>
