@@ -123,7 +123,7 @@ function Gallery(props) {
       <Row style={{ justifyContent: "space-between" }}>
         {/* maps each array in the cards array */}
         {cards.map((card, idx) => (
-          <Card key={idx} style={{ padding: "1em", width: "30%", margin: "1em" }}>
+          <Card key={idx} style={{ padding: "0.5em", width: "31%", margin: "0.5em" }}>
             <CardHeader card={card} />
             <CardImage card={card} />
             <CardBody card={card} albums = {props.albums}/>
@@ -854,7 +854,7 @@ function AddModal(props) {
           <Col>
             {(!props.albums)? <></> : props.albums.map((obj) => (
               <form onSubmit = {handleAddToAlbum}>
-              <button onClick = {() => setChosenAlbum(obj)}>{obj.name}</button>
+              <Button onClick = {() => setChosenAlbum(obj)} variant="light">{obj.name}</Button>
               </form>
             ))}
           </Col>
@@ -866,7 +866,7 @@ function AddModal(props) {
 
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
+        <Button onClick={props.onHide} variant="light">Cancel</Button>
         <Button onClick={props.onHide}>Add</Button>
       </Modal.Footer>
     </Modal>

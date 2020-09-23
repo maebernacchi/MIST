@@ -58,6 +58,8 @@ import {
 // | profile.js        |
 // +-------------------+
 
+/** Returns images, albums, or an opened album view -- also changes the URL */
+
 export default function ProfileNavigation (props) {
   const [activeTab, setActiveTab] = useState(true);
 
@@ -72,8 +74,8 @@ export default function ProfileNavigation (props) {
           {activeTab ? <ActiveImages onClick={ActivateAlbums}/> : <ActiveAlbums onClick={ActivateImages}/>}
           <div className="tabs">
             <Switch>
-              <Route path={'/profile'} exact component={() => <Images images={props.images} />} />
-              <Route path={'/profile/images'} exact component={() => <Images images={props.images} />} />
+              <Route path={'/profile'} exact component={() => <Images images={props.images} albums={props.albums} />} />
+              <Route path={'/profile/images'} exact component={() => <Images images={props.images} albums={props.albums} />} />
               <Route path={'/profile/albums'} component={() => <Albums albums={props.albums} />} />
               <Route path={'/profile/:id'} component={() => <OpenedAlbum albums={props.albums} />} />
             </Switch>
@@ -83,6 +85,7 @@ export default function ProfileNavigation (props) {
     
   }
 
+/** Navigation Bar looks like this when Images is clicked */
   function ActiveImages(props){
     return(
       <div className="links">
@@ -112,6 +115,7 @@ export default function ProfileNavigation (props) {
     )
   }
 
+/** Navigation Bar looks like this when Albums is clicked */
   function ActiveAlbums(props){
     return(
       <div className="links">
@@ -139,12 +143,14 @@ export default function ProfileNavigation (props) {
     )
   }
   
+  /** Displays images if Images is called */
   function Images(props){
     return(
       <DisplayImages cards={props.images} cardsLoaded={true} albums={props.albums}/> 
     )
   }
   
+  /** Displays albums view when Albums is called */
   function Albums(props){
   const [images, setImages] = useState("");
   const [modalShow, setModalShow] = React.useState(false);
@@ -263,6 +269,7 @@ function AddAlbumModal(props) {
   );
 }
   
+/** Displays images of an album when album is clicked */
   function OpenedAlbum(props){
     let { id } = useParams();
     let album = props.albums.find(elem => elem._id === id);
@@ -274,9 +281,14 @@ function AddAlbumModal(props) {
           <Button variant="outline-secondary" style={{marginLeft: "2em"}}>
             <Link to={'/profile/albums'} className="link"><IoIosArrowBack /> Back</Link>
           </Button>
-
+          {/*
           <Button variant="outline-secondary" >
             <IoMdAdd /> Add Image
+          </Button>
+          */}
+          <h3> {album.name}</h3>
+          <Button variant="outline-secondary" >
+            <AiOutlineSetting /> Settings
           </Button>
         </Row>
            <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums}/> 
