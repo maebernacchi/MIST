@@ -470,25 +470,32 @@ module.exports.changeEmail = (req, callback) => {
  *
  * @param {*} req
  * @param {*} callback
- * Changes the username of the user in the database
+ * Changes the username of the user in the database 
+ * Returns a message if the username is taken
  */
 module.exports.changeUsername = (req, callback) => {
 
-  User.findOneAndUpdate(
-    // this allows for both uses of changeUsername to work
-    // the first use is in settings which passes the entire user
-    // the second use is in profile which passes only the user id 
-    { _id: req.body._id ? req.body._id : req.body.id},
-    { $set: { username: req.body.newUsername } },
-    { new: true },
-    (err, doc) => {
-      if (err) {
-        callback(err);
-      } else {
-        callback("Successfully Updated Username");
-      }
+  User.find({ username: req.body.newUsername }, (err, docs) => {
+    if (docs.length) {
+      callback("Username already in use, try something else")
+    } else {
+      User.findOneAndUpdate(
+        // this allows for both uses of changeUsername to work
+        // the first use is in settings which passes the entire user
+        // the second use is in profile which passes only the user id 
+        { _id: req.body._id ? req.body._id : req.body.id },
+        { $set: { username: req.body.newUsername } },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+            callback(err);
+          } else {
+            callback("Successfully Updated Username");
+          }
+        }
+      );
     }
-  );
+  })
 };
 
 /**

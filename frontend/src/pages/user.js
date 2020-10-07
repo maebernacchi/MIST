@@ -18,11 +18,10 @@
 // | IMPORTS           |
 // +-------------------+
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Button, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab, OverlayTrigger, Popover } from "react-bootstrap";
+import { Button, Card, Carousel, Container, Col, Form, Nav, Row, OverlayTrigger, Popover } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
 
@@ -30,7 +29,6 @@ import MISTImage from "./components/MISTImageGallery"
 import {
     AiOutlinePicture,
     AiOutlineStar,
-    AiOutlineSetting,
 } from "react-icons/ai";
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
@@ -295,7 +293,7 @@ function Albums(props) {
     function openAlbum(props) { setMode("openedAlbum") };
     function setImagesProp(images) { setImages(images) };
 
-    const [modalShow, setModalShow] = React.useState(false);
+    //const [modalShow, setModalShow] = React.useState(false);
     if (mode === "albumsView") {
         return (
 

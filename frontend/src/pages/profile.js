@@ -242,6 +242,8 @@ function FirstPart(props) {
             <Form.Control
               type="bio"
               placeholder="Enter new bio"
+              as="textarea"
+              rows="4"
               onChange={(e) => setNewBio(e.target.value)}
             />
             <Button onClick={changeBio}>Confirm Changes</Button>
@@ -281,8 +283,9 @@ function FirstPart(props) {
               placeholder="Enter code"
               onChange={(e) => setNewProfilePic(e.target.value)}
             />
-            <Form.Text className="text-muted">
+            <Form.Text>
               Copy and paste code from one of your favorite images!
+              Or select "make my profile image" from an image!
             </Form.Text>
             <Button onClick={changeProfilePic}>Confirm Changes</Button>
           </Form.Group>
