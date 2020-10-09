@@ -61,6 +61,15 @@ require('./app/routes')(app);
 //=================== Serving Static Files ==================
 //app.use(express.static("public"));
 
+//Serve Static assets if we are in production mode
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  });
+}
+
 const port = process.env.PORT || 8000;
 app.listen(port);
 
