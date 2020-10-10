@@ -68,14 +68,14 @@ allow users to change views on the overlay modal. */
 export default function DisplayImages(props) {
   return (
     <Router>
-      <ModalSwitch cards={props.cards} albums = {props.albums}/>
+      <ModalSwitch cards={props.cards} albums={props.albums} />
     </Router>
   );
 }
 
 /** ModalSwitch calls the relevant page based on the URL */
 function ModalSwitch(props) {
-  
+
   let location = useLocation();
 
   /* This piece of state is set when one of the gallery links is clicked.
@@ -87,18 +87,18 @@ function ModalSwitch(props) {
   return (
     <div>
       <Switch location={background || location}>
-        <Route path="/gallery" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
+        <Route path="/gallery" children={<Gallery cards={props.cards} albums={props.albums} />} />
         <Route path="/gallery/random" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/featured" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/top-rated" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/recent" children={<Gallery cards={props.cards} />} />
-        <Route path="/profile" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
-        <Route path="/user" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
-        <Route path="/img/:id" children={<ImageView cards={props.cards}/>} />
+        <Route path="/profile" children={<Gallery cards={props.cards} albums={props.albums} />} />
+        <Route path="/user" children={<Gallery cards={props.cards} albums={props.albums} />} />
+        <Route path="/img/:id" children={<ImageView cards={props.cards} />} />
       </Switch>
 
       {/* Show the modal when a background page is set. */}
-      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} albums={props.albums}/>} />}
+      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} albums={props.albums} />} />}
     </div>
   );
 }
@@ -126,7 +126,7 @@ function Gallery(props) {
           <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
             <CardHeader card={card} />
             <CardImage card={card} />
-            <CardBody card={card} albums = {props.albums}/>
+            <CardBody card={card} albums={props.albums} />
           </Card>
         ))}
         {/* pagination */}
@@ -229,9 +229,9 @@ function CardBody(props) {
 
 
           <CodeIcon code={card.code} />
-          <SaveIcon />
+          <SaveIcon code={card.code} />
           <CommentIcon id={card._id} />
-          <AddIcon albums = {props.albums} img = {card}/>
+          <AddIcon albums={props.albums} img={card} />
           <ShareIcon />
 
 
@@ -310,7 +310,7 @@ function ImageView(props) {
           </Col>
           {/* Comments */}
           <Col xs="8">
-            <ModalComments card={card} albums = {props.albums}/>
+            <ModalComments card={card} albums={props.albums} />
           </Col>
         </Row>
       </Col>
@@ -466,7 +466,7 @@ function ModalComments(props) {
         {/* Horizontal Line */}
         <hr />
         {/* Icons and to make a comment field */}
-        <ModalIcons card={props.card} albums = {props.albums}/>
+        <ModalIcons card={props.card} albums={props.albums} />
         <MakeComment imageId={props.card._id} />
 
       </Form.Group>
@@ -624,8 +624,8 @@ function ModalIcons(props) {
       </Nav.Link>
 
       <CodeIcon code={card.code} />
-      <SaveIcon />
-      <AddIcon albums = {props.albums}/>
+      <SaveIcon code={card.code} />
+      <AddIcon albums={props.albums} />
       <ShareIcon />
       <FlaggingIcon />
     </Row>
@@ -719,15 +719,15 @@ function FlaggingIcon() {
   return (
 
     <Nav>
-      <NavDropdown title= {<FiFlag />} id="nav-dropdown">
-      <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
-        <NavDropdown.Item onClick={() => hide()}>
+      <NavDropdown title={<FiFlag />} id="nav-dropdown">
+        <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
+          <NavDropdown.Item onClick={() => hide()}>
             Hide
         </NavDropdown.Item>
         </OverlayTrigger>
         <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
-        <NavDropdown.Item href="/report">
-            Report         
+          <NavDropdown.Item href="/report">
+            Report
         </NavDropdown.Item>
         </OverlayTrigger>
       </NavDropdown>
@@ -747,8 +747,8 @@ function AddIcon(props) {
       <AddModal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        albums = {props.albums}
-        img = {props.img}
+        albums={props.albums}
+        img={props.img}
       />
     </>
   );
@@ -758,9 +758,9 @@ function AddIcon(props) {
 
 function AddModal(props) {
 
-  const[chosenAlbum, setChosenAlbum] = React.useState({});
+  const [chosenAlbum, setChosenAlbum] = React.useState({});
 
-  function handleAddToAlbum(e){
+  function handleAddToAlbum(e) {
     e.preventDefault();
     fetch('/api', {
       method: 'POST',
@@ -787,15 +787,15 @@ function AddModal(props) {
       <Modal.Body>
         <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
           <Col>
-            {(!props.albums)? <></> : props.albums.map((obj) => (
-              <form onSubmit = {handleAddToAlbum}>
-              <button onClick = {() => setChosenAlbum(obj)}>{obj.name}</button>
+            {(!props.albums) ? <></> : props.albums.map((obj) => (
+              <form onSubmit={handleAddToAlbum}>
+                <button onClick={() => setChosenAlbum(obj)}>{obj.name}</button>
               </form>
             ))}
           </Col>
           <Col>
-          <Row style={{justifyContent: "flex-end"}}>
-          </Row>
+            <Row style={{ justifyContent: "flex-end" }}>
+            </Row>
           </Col>
         </Row>
 
@@ -836,10 +836,30 @@ function ShareIcon() {
 
 
 /* Save Icon */
-function SaveIcon() {
+function SaveIcon(props) {
+
+  const newProfilePic = props.code;
+
+  function changeProfilePic() {
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeProfilePic",
+        newProfilePic: newProfilePic,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
   return (
     <Nav>
       <NavDropdown title={<FiSave />} id="nav-dropdown">
+        <NavDropdown.Item onClick={() => changeProfilePic()}> as my profile image </NavDropdown.Item>
         <NavDropdown.Item eventKey="4.1">as image</NavDropdown.Item>
         <NavDropdown.Item eventKey="4.2"> as video</NavDropdown.Item>
       </NavDropdown>

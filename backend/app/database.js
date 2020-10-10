@@ -450,11 +450,12 @@ module.exports.changePassword = async (req, callback) => {
  * @param {*} req
  * @param {*} callback
  * Chnages the email of the user in the database
+ * Returns a message if the email was succesfully updated or an error occured
  */
 module.exports.changeEmail = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body._id },
-    { $set: { email: req.body.newEmail } },
+  User.updateOne(
+    { _id: req.user._id },
+    { $set: { email: sanitize(req.body.newEmail) } },
     { new: true },
     (err, doc) => {
       if (err) {
@@ -470,25 +471,33 @@ module.exports.changeEmail = (req, callback) => {
  *
  * @param {*} req
  * @param {*} callback
- * Changes the username of the user in the database
+ * Changes the username of the user in the database 
+ * Returns a message if the username is taken, was succesfully updated, or an error occured
  */
 module.exports.changeUsername = (req, callback) => {
 
-  User.findOneAndUpdate(
-    // this allows for both uses of changeUsername to work
-    // the first use is in settings which passes the entire user
-    // the second use is in profile which passes only the user id 
-    { _id: req.body._id ? req.body._id : req.body.id},
-    { $set: { username: req.body.newUsername } },
-    { new: true },
-    (err, doc) => {
-      if (err) {
-        callback(err);
+  if (req.body.newUsername === "")
+    callback("Username cannot be blank")
+  else {
+    User.find({ username: req.body.newUsername }, (err, docs) => {
+      if (docs.length) {
+        callback("Username already in use, try something else")
       } else {
-        callback("Successfully Updated Username");
+        User.updateOne(
+          { _id: req.user._id },
+          { $set: { username: sanitize(req.body.newUsername) } },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback("Successfully Updated Username");
+            }
+          }
+        );
       }
-    }
-  );
+    })
+  }
 };
 
 /**
@@ -496,14 +505,15 @@ module.exports.changeUsername = (req, callback) => {
  * @param {*} req
  * @param {*} callback
  * Changes the name of the user in the database
+ * Returns a message if the name was succesfully updated or an error occured
  */
 module.exports.changeName = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body.id },
+  User.updateOne(
+    { _id: req.user._id },
     {
       $set: {
-        forename: req.body.newFirstName,
-        surname: req.body.newLastName
+        forename: sanitize(req.body.newFirstName),
+        surname: sanitize(req.body.newLastName)
       }
     },
     { new: true },
@@ -522,13 +532,14 @@ module.exports.changeName = (req, callback) => {
  * @param {*} req
  * @param {*} callback
  * Changes the bio of the user in the database
+ * Returns a message if the bio was succesfully updated or an error occured
  */
 module.exports.changeBio = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body.id },
+  User.updateOne(
+    { _id: req.user._id },
     {
       $set: {
-        about: req.body.newBio
+        about: sanitize(req.body.newBio)
       }
     },
     { new: true },
@@ -548,13 +559,14 @@ module.exports.changeBio = (req, callback) => {
  * @param {*} req
  * @param {*} callback
  * Changes the profile picture of the user in the database
+ * Returns a message if the profile picture was succesfully updated or an error occured
  */
 module.exports.changeProfilePic = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body.id },
+  User.updateOne(
+    { _id: req.user._id },
     {
       $set: {
-        profilepic: req.body.newProfilePic
+        profilepic: sanitize(req.body.newProfilePic)
       }
     },
     { new: true },
