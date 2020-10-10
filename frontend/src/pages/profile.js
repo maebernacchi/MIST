@@ -145,12 +145,15 @@ function FirstPart(props) {
       body: JSON.stringify({
         action: "changeName",
         newFirstName: newFirstName ? newFirstName : props.firstname,
-        newLastName: newLastName ? newLastName : props.lastname,
-        id: props.userid,
+        newLastName: newLastName ? newLastName : props.lastname
       }),
     })
       .then((res) => res.json())
-      .then((message) => alert(message));
+      .then((message) => alert(message))
+      .catch((error) => {
+        console.error('Error in changeName:', error)
+        alert("Uh-oh, an error occured. Please try again later.")
+      });
   }
 
   const namePopover = (
@@ -187,12 +190,15 @@ function FirstPart(props) {
       credentials: "include",
       body: JSON.stringify({
         action: "changeUsername",
-        newUsername: newUsername,
-        id: props.userid,
+        newUsername: newUsername
       }),
     })
       .then((res) => res.json())
-      .then((message) => alert(message));
+      .then((message) => alert(message))
+      .catch((error) => {
+        console.error('Error in changeUsername:', error)
+        alert("Uh-oh, an error occured. Please try again later.")
+      });
   }
 
   const usernamePopover = (
@@ -224,12 +230,15 @@ function FirstPart(props) {
       credentials: "include",
       body: JSON.stringify({
         action: "changeBio",
-        newBio: newBio,
-        id: props.userid,
+        newBio: newBio
       }),
     })
       .then((res) => res.json())
-      .then((message) => alert(message));
+      .then((message) => alert(message))
+      .catch((error) => {
+        console.error('Error in changeBio:', error)
+        alert("Uh-oh, an error occured. Please try again later.")
+      });
   }
 
   const bioPopover = (
@@ -253,8 +262,7 @@ function FirstPart(props) {
     </Popover>
   );
 
-  function changeProfilePic(e) {
-    e.preventDefault();
+  function changeProfilePic() {
     fetch("/api", {
       method: "POST",
       headers: {
@@ -264,11 +272,14 @@ function FirstPart(props) {
       body: JSON.stringify({
         action: "changeProfilePic",
         newProfilePic: newProfilePic,
-        id: props.userid,
       }),
     })
       .then((res) => res.json())
-      .then((message) => alert(message));
+      .then((message) => alert(message))
+      .catch((error) => {
+        console.error('Error in changeProfilePic:', error)
+        alert("Uh-oh, an error occured. Please try again later.")
+      });
   }
 
   const profilePicPopover = (

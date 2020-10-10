@@ -293,6 +293,8 @@ function Albums(props) {
     function openAlbum(props) { setMode("openedAlbum") };
     function setImagesProp(images) { setImages(images) };
 
+    // this is commented out because it is currently not in use but was part of this album
+    // implementation that we may or may not still use
     //const [modalShow, setModalShow] = React.useState(false);
     if (mode === "albumsView") {
         return (

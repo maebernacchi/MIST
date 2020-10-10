@@ -841,35 +841,19 @@ function SaveIcon(props) {
   const newProfilePic = props.code;
 
   function changeProfilePic() {
-    //grab the user's id
-    fetch('/api?action=getUser', {
-      method: 'GET',
+    fetch("/api", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include'
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeProfilePic",
+        newProfilePic: newProfilePic,
+      }),
     })
-      .then(res => res.json())
-      .then(user => {
-        if (user) {
-
-          // change the user's profile picture
-          fetch("/api", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              action: "changeProfilePic",
-              newProfilePic: newProfilePic,
-              id: user._id,
-            }),
-          })
-            .then((res) => res.json())
-            .then((message) => alert(message));
-        }
-      })
+      .then((res) => res.json())
+      .then((message) => alert(message));
   }
 
   return (
