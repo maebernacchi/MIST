@@ -40,6 +40,7 @@ import "./../design/styleSheets/generalStyles.css";
 import { Button, ButtonGroup, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab, ToggleButton } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
+import EdiText from 'react-editext'
 /* icons */
 import {
   AiOutlinePicture,
@@ -273,22 +274,12 @@ function AddAlbumModal(props) {
 function OpenedAlbum(props) {
   const { id } = useParams();
   let album = props.albums.find(elem => elem._id === id);
-  // This is a fetch request that renames the album
-  const renameAlbum = async () => (
-    fetch('/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/JSON'
-      },
-      body: JSON.stringify({ action: 'renameAlbum', albumId: id, newName: 'stock' })
-    })
-  );
+  // Controls whether the AlbumSettings Modal is Open
 
   if (!album) return null;
   return (
     <div>
       <Col style={{ marginTop: "1em" }}>
-        <Button onClick={async ()=>{const res = await renameAlbum()}}>Rename Album to Stock</Button>
         <Row style={{ justifyContent: "space-between" }}>
           <Button variant="outline-secondary" style={{ marginLeft: "2em" }}>
             <Link to={'/profile/albums'} className="link"><IoIosArrowBack /> Back</Link>
@@ -299,9 +290,9 @@ function OpenedAlbum(props) {
           </Button>
           */}
           <h3> {album.name}</h3>
-          <Button variant="outline-secondary" >
-            <AiOutlineSetting /> Settings
-          </Button>
+      <AlbumSettings
+        album={album}
+      />
         </Row>
         <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} />
 
@@ -310,4 +301,54 @@ function OpenedAlbum(props) {
   )
 }
 
-  
+function AlbumSettings(props) {
+  const [albumSettingsIsOpen, setAlbumSettingsIsOpen] = useState(false);
+  const album = props.album;
+  // This is a fetch request that renames the album
+  const renameAlbum = async (newName) => (
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/JSON'
+      },
+      body: JSON.stringify({ action: 'renameAlbum', albumId: album._id, newName: newName })
+    })
+  );
+  return (
+    <>
+      <Modal
+        onHide={() => { setAlbumSettingsIsOpen(false) }}
+        show={albumSettingsIsOpen}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Album Settings
+        </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <p>You might have to refresh the album page to the changes take effect.</p>
+            <div>Album Name:</div>
+            <EdiText
+              type='text'
+              value={album.name}
+              onSave={async (val) => {
+                const res = await renameAlbum(val);
+                const data = await res.json();
+                if (data.success) {
+                  alert('success');
+                } else { alert('fail') }
+              }}
+            />
+          </Container>
+        </Modal.Body>
+      </Modal>
+      <Button variant="outline-secondary" onClick={() => setAlbumSettingsIsOpen(true)}>
+        <AiOutlineSetting /> Settings
+          </Button>
+    </>
+  )
+}
