@@ -824,16 +824,16 @@ function AddIcon(props) {
 function AddModal(props) {
 
   const[chosenAlbum, setChosenAlbum] = React.useState({});
+  console.log(props.albums);
 
   function handleAddToAlbum(e){
-    e.preventDefault();
     fetch('/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
-    })
+    }).then(window.location.reload())
   }
 
   return (
@@ -853,9 +853,7 @@ function AddModal(props) {
         <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
           <Col>
             {(!props.albums)? <></> : props.albums.map((obj) => (
-              <form onSubmit = {handleAddToAlbum}>
-              <Button onClick = {() => setChosenAlbum(obj)} variant="light">{obj.name}</Button>
-              </form>
+              <Button onClick = {() => setChosenAlbum(obj)} variant="light">{obj.name}</Button>         
             ))}
           </Col>
           <Col>
@@ -867,7 +865,7 @@ function AddModal(props) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide} variant="light">Cancel</Button>
-        <Button onClick={props.onHide}>Add</Button>
+        <Button onClick={handleAddToAlbum}>Add</Button>
       </Modal.Footer>
     </Modal>
   );

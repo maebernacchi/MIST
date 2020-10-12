@@ -886,9 +886,8 @@ module.exports.createAlbum = async (userid, name, caption) => {
 */
 module.exports.deleteAlbum = async (albumId) => {
   // sanitize ID's
-  albumId = sanitize(albumId);
-  return await Album.updateOne({ _id: albumId }, { active: false, updatedAt: Date.now }).exec()
-    .then(writeOpResult => writeOpResult.nModified)
+  //albumId = sanitize(albumId);
+  return await Album.deleteOne({ _id: albumId })
     .catch(error => { throw error })
 }
 
