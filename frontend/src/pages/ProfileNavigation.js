@@ -240,7 +240,7 @@ function AddAlbumModal(props) {
             // following this: https://stackoverflow.com/questions/63182107/react-bootstrap-get-value-from-form-on-submit
             const formData = new FormData(e.target),
               formDataObj = Object.fromEntries(formData.entries())
-            await fetch('api', {
+            await fetch('/api', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
