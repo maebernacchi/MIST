@@ -273,17 +273,18 @@ function AddAlbumModal(props) {
 /** Displays images of an album when album is clicked */
 function OpenedAlbum(props) {
   const { id } = useParams();
+  const [albumID, setAlbumID] = useState(id);
   let album = props.albums.find(elem => elem._id === id);
   // Controls whether the AlbumSettings Modal is Open
 
-  function handleDeleteAlbum(albumID){
+  function handleDeleteAlbum(){
     fetch('/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ action: 'deleteAlbum', albumID: albumID })
-    })
+    }).then(window.location.reload())
   }
   if (!album) return null;
   return (
@@ -293,7 +294,7 @@ function OpenedAlbum(props) {
         <Button variant="outline-secondary" style={{marginLeft: "2em"}}>
           <Link to={'/profile/albums'} className="link"><IoIosArrowBack /> Back</Link>
         </Button>
-        <Button variant="outline-secondary" style={{marginLeft: "2em"}} onClick={() => handleDeleteAlbum(id)}>
+        <Button variant="outline-secondary" style={{marginLeft: "2em"}} onClick={handleDeleteAlbum}>
         <Link to = {'/profile/albums'} className="link"> <IoIosClose />Delete Album</Link>
         </Button>
           {/*
