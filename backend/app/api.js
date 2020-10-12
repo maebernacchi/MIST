@@ -623,7 +623,7 @@ handlers.deleteAlbum = async function (info, req, res) {
   } else {
     try {
       const { albumId } = info;
-      const success = await database.deleteAlbum(albumId);
+      const success = await database.deleteAlbum(req.body.albumId);
       const response = success
         ? {
             message: "Succesfully deleted album ",

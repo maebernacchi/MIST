@@ -48,7 +48,7 @@ import {
 } from "react-icons/ai";
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
-import { IoIosArrowBack, IoMdAdd } from "react-icons/io"
+import { IoIosArrowBack, IoMdAdd, IoIosClose } from "react-icons/io"
 import {
   BrowserRouter as Router, Switch, Route, Link,
   useHistory, useLocation, useParams
@@ -265,37 +265,51 @@ function AddAlbumModal(props) {
           </Form>
         </Container>
       </Modal.Body>
-    </Modal >
+    </Modal>
   );
 }
   
 /** Displays images of an album when album is clicked */
-  function OpenedAlbum(props){
-    let { id } = useParams();
-    let album = props.albums.find(elem => elem._id === id);
-    if (!album) return null;
-    return(
-      <div>
-      <Col style={{ marginTop: "1em" }}>
-        <Row style={{ justifyContent: "space-between" }}>
-          <Button variant="outline-secondary" style={{marginLeft: "2em"}}>
-            <Link to={'/profile/albums'} className="link"><IoIosArrowBack /> Back</Link>
-          </Button>
-          {/*
-          <Button variant="outline-secondary" >
-            <IoMdAdd /> Add Image
-          </Button>
-          */}
-          <h3> {album.name}</h3>
-          <Button variant="outline-secondary" >
-            <AiOutlineSetting /> Settings
-          </Button>
-        </Row>
-           <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums}/> 
- 
-      </Col>
-    </div>
-    )
+function OpenedAlbum(props){
+  //const [albumID, setAlbumID] = useState("");
+
+  function handleDeleteAlbum(albumID){
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'deleteAlbum', albumID: albumID })
+    })
   }
+
+  let { id } = useParams();
+  let album = props.albums.find(elem => elem._id === id);
+  if (!album) return null;
+  return(
+    <div>
+    <Col style={{ marginTop: "1em" }}>
+      <Row style={{ justifyContent: "space-between" }}>
+        <Button variant="outline-secondary" style={{marginLeft: "2em"}}>
+          <Link to={'/profile/albums'} className="link"><IoIosArrowBack /> Back</Link>
+        </Button>
+        <Button variant="outline-secondary" style={{marginLeft: "2em"}} onClick={() => handleDeleteAlbum(id)}>
+        <Link to = {'/profile/albums'} className="link"> <IoIosClose />Delete Album</Link>
+        </Button>
+        {/*
+        <Button variant="outline-secondary" >
+          <IoMdAdd /> Add Image
+        </Button>
+        */}
+        <h3> {album.name}</h3>
+        <Button variant="outline-secondary">
+          <AiOutlineSetting /> Settings
+        </Button>
+      </Row>
+         <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums}/> 
+    </Col>
+  </div>
+  )
+}
   
   
