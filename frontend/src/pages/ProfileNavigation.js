@@ -270,15 +270,27 @@ function AddAlbumModal(props) {
 }
   
 /** Displays images of an album when album is clicked */
-  function OpenedAlbum(props){
-    let { id } = useParams();
-    let album = props.albums.find(elem => elem._id === id);
-    if (!album) return null;
-    return(
-      <div>
+function OpenedAlbum(props) {
+  const { id } = useParams();
+  let album = props.albums.find(elem => elem._id === id);
+  // This is a fetch request that renames the album
+  const renameAlbum = async () => (
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/JSON'
+      },
+      body: JSON.stringify({ action: 'renameAlbum', albumId: id, newName: 'stock' })
+    })
+  );
+
+  if (!album) return null;
+  return (
+    <div>
       <Col style={{ marginTop: "1em" }}>
+        <Button onClick={async ()=>{const res = await renameAlbum()}}>Rename Album to Stock</Button>
         <Row style={{ justifyContent: "space-between" }}>
-          <Button variant="outline-secondary" style={{marginLeft: "2em"}}>
+          <Button variant="outline-secondary" style={{ marginLeft: "2em" }}>
             <Link to={'/profile/albums'} className="link"><IoIosArrowBack /> Back</Link>
           </Button>
           {/*
@@ -291,11 +303,11 @@ function AddAlbumModal(props) {
             <AiOutlineSetting /> Settings
           </Button>
         </Row>
-           <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums}/> 
- 
+        <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} />
+
       </Col>
     </div>
-    )
-  }
-  
+  )
+}
+
   

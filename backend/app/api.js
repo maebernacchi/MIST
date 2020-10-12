@@ -651,32 +651,33 @@ handlers.deleteAlbum = async function (info, req, res) {
  * }
  */
 handlers.renameAlbum = async function (info, req, res) {
-  if (false && !req.isAuthenticated()) {
+  if (!req.isAuthenticated()) {
     res.json({
       success: false,
       message: "You need to be logged in to rename an album",
     });
-  }
-  try {
-    const { albumId, newName } = info;
-    const success = await database.renameAlbum(albumId, newName);
-    if (success) {
-      res.json({
-        success: true,
-        message: "Successfully renamed album",
-      });
-    } else {
+  } else {
+    try {
+      const { albumId, newName } = info;
+      const success = await database.renameAlbum(albumId, newName);
+      if (success) {
+        res.json({
+          success: true,
+          message: "Successfully renamed album",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: "Failed to rename album due to unknown reason",
+        });
+      };
+    } catch (error) {
       res.json({
         success: false,
-        message: "Failed to rename album due to unknown reason",
+        message: error,
       });
     }
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error,
-    });
-  }
+  };
 };
 
 // +----------+----------------------------------------------------------
