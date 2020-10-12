@@ -82,7 +82,7 @@ import SignIn from "./pages/signIn";
 import SignUp from "./pages/signUp";
 import Tutorial from "./pages/tutorial";
 import User from "./pages/user";
-import UserProfile from "./pages/profile2";
+import UserProfile from "./pages/profile";
 //import WorkSpace from "./Workspace";
 import WorkspaceComponent from './workspace';
 
