@@ -39,7 +39,7 @@ import {
   FaRegShareSquare, FaRegComments, FaFacebook,
   FaSnapchat
 } from "react-icons/fa";
-import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag } from "react-icons/fi";
+import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag, FiLock, FiUnlock } from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
 import { IoMdAdd } from "react-icons/io"
 import {MdVisibilityOff} from "react-icons/md"
@@ -119,11 +119,10 @@ function Gallery(props) {
 
   return (
     /* styling helps with footer */
-    <Container style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
       <Row style={{ justifyContent: "space-between" }}>
         {/* maps each array in the cards array */}
         {cards.map((card, idx) => (
-          <Card key={idx} style={{ padding: "0.5em", width: "31%", margin: "0.5em" }}>
+          <Card key={idx}  style={{width: "31%", marginTop: "1em", marginBottom: "1em" }}>
             <CardHeader card={card} />
             <CardImage card={card} />
             <CardBody card={card} albums = {props.albums}/>
@@ -132,8 +131,6 @@ function Gallery(props) {
         {/* pagination */}
         
       </Row>
-      <PageCounter style={{ margin: "auto" }} />
-    </Container>
   );
 }
 
@@ -154,11 +151,12 @@ function CardHeader(props) {
             <Col>
               {props.card.title}
               {props.card.isAnimated ? (
-                <BsClock size={15} style={{ margin: "1vh" }} />
+                <BsClock size={15} style={{ margin: "1em" }} />
               ) : ("")}
             </Col>
 
           <FlaggingIcon />
+          <FiLock size={15}/>
 
         </Row>
 
@@ -784,7 +782,7 @@ function FlaggingIcon() {
   return (
 
    
-      <NavDropdown title= {<FiMoreHorizontal  style={{color: "grey"}}/>} id="nav-dropdown" >
+      <NavDropdown title= {<FiMoreHorizontal  size={15} style={{color: "grey"}}/>} id="nav-dropdown" >
       <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
         <NavDropdown.Item onClick={() => hide()}>
           <MdVisibilityOff/>  Hide

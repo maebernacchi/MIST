@@ -46,6 +46,7 @@ import {
   AiOutlinePicture,
   AiOutlineStar,
   AiOutlineSetting,
+  AiOutlineDelete
 } from "react-icons/ai";
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
@@ -61,137 +62,146 @@ import {
 
 /** Returns images, albums, or an opened album view -- also changes the URL */
 
-export default function ProfileNavigation (props) {
+export default function ProfileNavigation(props) {
   const [activeTab, setActiveTab] = useState(true);
 
-  function ActivateImages(){
+  function ActivateImages() {
     setActiveTab(true)
   }
-  function ActivateAlbums(){
+  function ActivateAlbums() {
     setActiveTab(false)
   }
-      return (
-        <Container>
-          {activeTab ? <ActiveImages onClick={ActivateAlbums}/> : <ActiveAlbums onClick={ActivateImages}/>}
-          <div className="tabs">
-            <Switch>
-              <Route path={'/profile'} exact component={() => <Images images={props.images} albums={props.albums} />} />
-              <Route path={'/profile/images'} exact component={() => <Images images={props.images} albums={props.albums} />} />
-              <Route path={'/profile/albums'} component={() => <Albums albums={props.albums} />} />
-              <Route path={'/profile/:id'} component={() => <OpenedAlbum albums={props.albums} />} />
-            </Switch>
-          </div>
-        </Container>
-      );
-    
-  }
+  return (
+    <Container>
+      {activeTab ? <ActiveImages onClick={ActivateAlbums} /> : <ActiveAlbums onClick={ActivateImages} />}
+      <div className="tabs">
+        <Switch>
+          <Route path={'/profile'} exact component={() => <Images images={props.images} albums={props.albums} />} />
+          <Route path={'/profile/images'} exact component={() => <Images images={props.images} albums={props.albums} />} />
+          <Route path={'/profile/albums'} component={() => <Albums albums={props.albums} />} />
+          <Route path={'/profile/:id'} component={() => <OpenedAlbum albums={props.albums} />} />
+        </Switch>
+      </div>
+    </Container>
+  );
+
+}
 
 /** Navigation Bar looks like this when Images is clicked */
-  function ActiveImages(props){
-    return(
-      <div className="links">
-          <Nav fill variant="tabs" defaultActiveKey="images">
-          
-            <Nav.Item>
-            <Link to={'/profile/images'} className="link">
-              <Button variant="light" style={{width: "100%"}} active
-              > 
-              Images 
+function ActiveImages(props) {
+  return (
+    <div className="links">
+      <Nav fill variant="tabs" defaultActiveKey="images">
+
+        <Nav.Item>
+          <Link to={'/profile/images'} className="link">
+            <Button variant="light" style={{ width: "100%" }} active
+            >
+              Images
               </Button>
-              </Link>
-            </Nav.Item>
-            <Nav.Item>
-            <Link to={'/profile/albums'} className="link"><Button variant="light" style={{width: "100%"}} 
+          </Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Link to={'/profile/albums'} className="link"><Button variant="light" style={{ width: "100%" }}
             onClick={() => {
               props.onClick();
             }}>
-          
+
             Albums </Button></Link>
-            </Nav.Item>
-            <Nav.Item style={{visibility: "hidden", maxWidth: "0%"}}>
-            <Link to={'/profile/:id'} className="link">OpenedAlbum</Link>
-            </Nav.Item>
-            </Nav>
-          </div>
-    )
-  }
+        </Nav.Item>
+        <Nav.Item style={{ visibility: "hidden", maxWidth: "0%" }}>
+          <Link to={'/profile/:id'} className="link">OpenedAlbum</Link>
+        </Nav.Item>
+      </Nav>
+    </div>
+  )
+}
 
 /** Navigation Bar looks like this when Albums is clicked */
-  function ActiveAlbums(props){
-    return(
-      <div className="links">
-          <Nav fill variant="tabs" defaultActiveKey="images">
-          
-            <Nav.Item>
-            <Link to={'/profile/images'} className="link">
-              <Button variant="light" style={{width: "100%"}}
+function ActiveAlbums(props) {
+  return (
+    <div className="links">
+      <Nav fill variant="tabs" defaultActiveKey="images">
+
+        <Nav.Item>
+          <Link to={'/profile/images'} className="link">
+            <Button variant="light" style={{ width: "100%" }}
               onClick={() => {
                 props.onClick();
               }}>
-              Images 
+              Images
               </Button>
-              </Link>
-            </Nav.Item>
-            <Nav.Item>
-            <Link to={'/profile/albums'} className="link"><Button variant="light" style={{width: "100%"}} active
-            >Albums </Button></Link>
-            </Nav.Item>
-            <Nav.Item style={{visibility: "hidden", maxWidth: "0%"}}>
-            <Link to={'/profile/:id'} className="link">OpenedAlbum</Link>
-            </Nav.Item>
-            </Nav>
-          </div>
-    )
-  }
-  
-  /** Displays images if Images is called */
-  function Images(props){
-    return(
-      <DisplayImages cards={props.images} cardsLoaded={true} albums={props.albums}/> 
-    )
-  }
-  
-  /** Displays albums view when Albums is called */
-  function Albums(props){
+          </Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Link to={'/profile/albums'} className="link"><Button variant="light" style={{ width: "100%" }} active
+          >Albums </Button></Link>
+        </Nav.Item>
+        <Nav.Item style={{ visibility: "hidden", maxWidth: "0%" }}>
+          <Link to={'/profile/:id'} className="link">OpenedAlbum</Link>
+        </Nav.Item>
+      </Nav>
+    </div>
+  )
+}
+
+/** Displays images if Images is called */
+function Images(props) {
+  return (
+    <Col>
+      <Row style={{ justifyContent: "space-between", marginTop: "1em" }}>
+        <h3> Images</h3>
+        <Button variant="light" href="/createWorkspace">
+          <IoMdAdd /> Create Image
+        </Button>
+      </Row>
+    <DisplayImages cards={props.images} cardsLoaded={true} albums={props.albums} />
+    </Col>
+  )
+}
+
+/** Displays albums view when Albums is called */
+function Albums(props) {
   const [images, setImages] = useState("");
   const [modalShow, setModalShow] = React.useState(false);
-    return(
-      <Col style={{ marginTop: "1em" }}>
-        <Row style={{ justifyContent: "flex-end" }}>
-          <Button variant="outline-secondary" onClick={() => setModalShow(true)}>
-            <IoMdAdd /> Create Album
-          </Button>
-        </Row>
-        <Row>
-          {console.log(props.albums)}
-          {props.albums.map((album, index) => (
-            <Card
-              style={{ padding: "1em", width: "30%", margin: "1em" }}
-            >
-              <Card.Header>
-                <Card.Title style={{ margin: "auto" }}>
-                  <p>{album.name}</p>
-                </Card.Title>
-                {/* ICONS */}
-                <Card.Body style={{ justifyContent: "space-between" }}>
-                
-                  <ControlledCarousel album={album} />
-                  
-                  <p>{album.caption}</p>
-                  <p>{album.updatedAt}</p>
-                </Card.Body>
-              </Card.Header>
-            </Card>
-          ))}
-        </Row>
-        <AddAlbumModal
-          show={modalShow}
-          onHide={() => setModalShow(false)}
-        />
-      </Col>
-    )
-  }
-  
+  return (
+    <Col style={{ marginTop: "1em" }}>
+      <Row style={{ justifyContent: "space-between", marginTop: "1em" }}>
+        <h3> Albums</h3>
+        <Button variant="light" onClick={() => setModalShow(true)}>
+          <IoMdAdd /> Create Album
+        </Button>
+      </Row>
+      <Row style={{justifyContent: "space-between"}}>
+        {console.log(props.albums)}
+        {props.albums.map((album, index) => (
+          <Card
+            style={{ padding: "1em", width: "31%", marginTop: "1em", marginBottom: "1em" }}
+          >
+            <Card.Header>
+              <Card.Title style={{ margin: "auto" }} className='linkItem'>
+              <Link to={{ pathname: `/profile/${album._id}` }} className="link"><p>{album.name}</p></Link>
+              </Card.Title>
+              {/* ICONS */}
+              <Card.Body style={{ justifyContent: "space-between" }}>
+
+                <ControlledCarousel album={album} />
+
+                <p>{album.caption}</p>
+                <p>{album.updatedAt}</p>
+              </Card.Body>
+            </Card.Header>
+          </Card>
+        ))}
+      </Row>
+      <AddAlbumModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
+    </Col>
+  )
+}
+
 // carousel used for looking through albums
 function ControlledCarousel(props) {
   const [index, setIndex] = useState(0);
@@ -204,12 +214,12 @@ function ControlledCarousel(props) {
       {props.album.images.map(image => (
         <Carousel.Item >
           <Row style={{ justifyContent: "center" }}>
-          <Link to={{ pathname: `/profile/${props.album._id}`}} className="link">
+            <Link to={{ pathname: `/profile/${props.album._id}` }} className="link">
               <MISTImage
                 code={image.code}
                 resolution="250"
               />
-              </Link>
+            </Link>
           </Row>
           <Carousel.Caption>
           </Carousel.Caption>
@@ -269,7 +279,7 @@ function AddAlbumModal(props) {
     </Modal>
   );
 }
-  
+
 /** Displays images of an album when album is clicked */
 function OpenedAlbum(props) {
   const { id } = useParams();
@@ -277,7 +287,7 @@ function OpenedAlbum(props) {
   let album = props.albums.find(elem => elem._id === id);
   // Controls whether the AlbumSettings Modal is Open
 
-  function handleDeleteAlbum(){
+  function handleDeleteAlbum() {
     fetch('/api', {
       method: 'POST',
       headers: {
@@ -291,21 +301,30 @@ function OpenedAlbum(props) {
     <div>
       <Col style={{ marginTop: "1em" }}>
         <Row style={{ justifyContent: "space-between" }}>
-        <Button variant="outline-secondary" style={{marginLeft: "2em"}}>
-          <Link to={'/profile/albums'} className="link"><IoIosArrowBack /> Back</Link>
-        </Button>
-        <Button variant="outline-secondary" style={{marginLeft: "2em"}} onClick={handleDeleteAlbum}>
-        <Link to = {'/profile/albums'} className="link"> <IoIosClose />Delete Album</Link>
-        </Button>
+          <Button variant="light" className='linkItem' >
+            <Link to={'/profile/albums'} className="link" style={{ color: "black", styleDecoration: "none" }}><IoIosArrowBack /> Back</Link>
+          </Button>
+
           {/*
           <Button variant="outline-secondary" >
             <IoMdAdd /> Add Image
           </Button>
           */}
           <h3> {album.name}</h3>
-      <AlbumSettings
-        album={album}
-      />
+          <Row>
+            <AlbumSettings
+              album={album}
+            />
+            <Button variant="light" style={{ marginLeft: "1em", marginRight: "1em" }} onClick={handleDeleteAlbum}>
+              <Link to={'/profile/albums'} className="link" style={{ color: "black", styleDecoration: "none" }}> <AiOutlineDelete /></Link>
+            </Button>
+            <Button variant="light" style={{ marginRight: "1em" }}>
+              <IoMdAdd />
+            </Button>
+          </Row>
+        </Row>
+        <Row>
+        <p>{album.caption}</p>
         </Row>
         <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} />
 
@@ -343,7 +362,72 @@ function AlbumSettings(props) {
         </Modal.Header>
         <Modal.Body>
           <Container>
-            <p>You might have to refresh the album page to the changes take effect.</p>
+            <p2>You might have to refresh the album page to the changes take effect.</p2>
+            <div style={{ width: "90%"}}>
+          <Form>
+            <Form.Group as={Row} controlId="formPlaintextEmail">
+              {/* name */}
+              <Form.Label column sm="4">
+                Album name
+              </Form.Label>
+              <Col sm="7">
+              <EdiText
+              type='text'
+              value={album.name}
+              onSave={async (val) => {
+                const res = await renameAlbum(val);
+                const data = await res.json();
+                if (data.success) {
+                  alert('success');
+                } else { alert('fail') }
+              }}
+            />
+              </Col>
+
+              {/* username */}
+              <Form.Label column sm="4">
+                Album description
+              </Form.Label>
+              <Col sm="7">
+              <EdiText
+              type='text'
+              value={album.caption}
+              onSave={async (val) => {
+                const res = await renameAlbum(val);
+                const data = await res.json();
+                if (data.success) {
+                  alert('success');
+                } else { alert('fail') }
+              }}
+            />
+              </Col>
+              <Col sm="1">
+                <Nav.Link eventKey="link-1">Change</Nav.Link>
+              </Col>
+
+              {/* member since */}
+              <Form.Label column sm="4">
+                Member since
+              </Form.Label>
+              <Col sm="6">
+                <Form.Control plaintext readOnly value={props.date} />
+              </Col>
+
+              {/* bio */}
+              <Form.Label column sm="4">
+                Bio
+              </Form.Label>
+              <Col sm="7">
+                <Form.Control as="textarea" readOnly rows="3" value={props.bio} />
+              </Col>
+              <Col sm="1">
+                <Nav.Link eventKey="link-1">Change</Nav.Link>
+              </Col>
+            </Form.Group>
+          </Form>
+
+        </div>
+
             <div>Album Name:</div>
             <EdiText
               type='text'
@@ -359,9 +443,9 @@ function AlbumSettings(props) {
           </Container>
         </Modal.Body>
       </Modal>
-      <Button variant="outline-secondary" onClick={() => setAlbumSettingsIsOpen(true)}>
-        <AiOutlineSetting /> Settings
-          </Button>
+      <Button variant="light" onClick={() => setAlbumSettingsIsOpen(true)}>
+        <AiOutlineSetting />
+      </Button>
     </>
   )
 }
