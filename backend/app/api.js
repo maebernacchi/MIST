@@ -501,9 +501,9 @@ handlers.getUser = function (info, req, res) {
 };
 
 /** */
-handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
+handlers.getAuthenticatedCompletePersonalProfile = async function (info, req, res) {
   try {
-    if (!req.isAuthenticated()) throw "You needs to login to view your profile!";
+    if (!req.isAuthenticated()) throw "You need to login to view your profile!";
     const userid = req.user._id;
     const complete_user = await database.getCompleteUserProfile(userid);
     res.json({
@@ -518,7 +518,7 @@ handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
 handlers.getCompleteUserProfile = async function (info, req, res) {
   try {
     const { userid } = info;
-    const complete_user = await database.getCompleteUserProfile(userid);
+    const complete_user = await database.getCompletePersonalProfile(userid);
     console.log(complete_user);
     res.json({
       user: complete_user,
@@ -812,6 +812,18 @@ handlers.deleteAccount = function (info, req, res) {
   });
 };
 
+handlers.changeName = function (info, req, res) {
+  database.changeName(req, (message) => res.json(message));
+};
+
+handlers.changeBio = function (info, req, res) {
+  database.changeBio(req, (message) => res.json(message));
+};
+
+handlers.changeProfilePic = function (info, req, res) {
+  database.changeProfilePic(req, (message) => res.json(message));
+};
+
 // +--------+------------------------------------------------------
 // | Misc.  |
 // +--------+
@@ -879,3 +891,21 @@ handlers.addImageToAlbum = async function(info, req, res) {
     });
   }
 }
+
+// +--------+------------------------------------------------------
+// |  Users |
+// +--------+
+
+/** */
+handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
+  try {
+    if (!req.isAuthenticated()) throw "You need to login to view a profile!";
+    const userid = info.userid;
+    const complete_user = await database.getCompleteUserProfile(userid);
+    res.json({
+      user: complete_user,
+    });
+  } catch (error) {
+    fail(res, error);
+  }
+};
