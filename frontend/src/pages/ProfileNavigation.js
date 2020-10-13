@@ -194,11 +194,7 @@ function Albums(props) {
                <Col><FiLock size={15} /></Col> 
                   <Col>
                     {album.name}
-
                   </Col>
-
-
-                 
                   <FlaggingIcon />
                 </Row>
         {/*
@@ -240,7 +236,9 @@ function ControlledCarousel(props) {
     setIndex(selectedIndex);
   };
 
+
   return (
+    (props.album.images.length != 0) ?
     <Carousel activeIndex={index} onSelect={handleSelect}>
       {props.album.images.map(image => (
         <Carousel.Item >
@@ -256,9 +254,19 @@ function ControlledCarousel(props) {
           </Carousel.Caption>
         </Carousel.Item>
       ))}
-    </Carousel>
-  );
+      </Carousel> :
+      <Button variant="light" style={{minWidth: "100%", height: "250px"}}>Add Images</Button>
+      /*
+      <Link to={{ pathname: `/profile/${props.album._id}` }} className="link">
+        Hello
+            <MISTImage
+          code={"-1"}
+          resolution="250"
+        />
+      </Link>*/
+)
 }
+
 
 
 function AddAlbumModal(props) {
