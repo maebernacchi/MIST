@@ -51,10 +51,19 @@ import {
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 import { IoIosArrowBack, IoMdAdd, IoIosClose } from "react-icons/io"
+import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag, FiLock, FiUnlock } from "react-icons/fi";
 import {
   BrowserRouter as Router, Switch, Route, Link,
   useHistory, useLocation, useParams
 } from "react-router-dom";
+import {
+  SaveIcon,
+  ShareIcon,
+  AddIcon,
+  CommentIcon,
+  CodeIcon,
+  FlaggingIcon
+} from "./components/icons.js"
 
 // +-------------------+----------------------------------------------------------------------
 // | profile.js        |
@@ -180,7 +189,29 @@ function Albums(props) {
           >
             <Card.Header>
               <Card.Title style={{ margin: "auto" }} className='linkItem'>
-              <Link to={{ pathname: `/profile/${album._id}` }} className="link"><p>{album.name}</p></Link>
+
+                <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
+               <Col><FiLock size={15} /></Col> 
+                  <Col>
+                    {album.name}
+
+                  </Col>
+
+
+                 
+                  <FlaggingIcon />
+                </Row>
+        {/*
+                <Row style={{ justifyContent: "space-between" }}>
+                  <Row style={{ marginRight: "1em" }}></Row>
+                  <Row>
+                   <Link to={{ pathname: `/profile/${album._id}` }} className="link"><p>{album.name}</p></Link>
+                   </Row>
+                  <Row>
+                    <FiLock size={15} />
+                    <FlaggingIcon />
+                  </Row>
+        </Row>*/}
               </Card.Title>
               {/* ICONS */}
               <Card.Body style={{ justifyContent: "space-between" }}>
