@@ -344,7 +344,7 @@ function AlbumSettings(props) {
         <Modal.Body>
           <Container>
             <p>You might have to refresh the album page to the changes take effect.</p>
-            <div>Album Name:</div>
+            <div><strong>Album Name:</strong></div>
             <EdiText
               type='text'
               value={album.name}
