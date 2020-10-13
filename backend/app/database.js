@@ -138,7 +138,18 @@ module.exports.renameAlbum = async (albumId, newName) => {
     .then(writeOpResult => writeOpResult.nModified)
     .catch(error => { throw error })
 
-}
+};
+
+// change an album's caption
+module.exports.changeAlbumCaption = async (albumId, newCaption) => {
+  // Sanitize inputs.  Yay!
+  albumId = sanitize(albumId);
+  newCaption = sanitize(newCaption);
+  
+  return await Album.updateOne({ _id: albumId }, { caption: newCaption }).exec()
+    .then(writeOpResult => writeOpResult.nModified)
+    .catch(error => { throw error })
+};
 
 // +------------+-------------------------------------------------
 // |   Gallery  |

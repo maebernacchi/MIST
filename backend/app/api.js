@@ -679,7 +679,36 @@ handlers.renameAlbum = async function (info, req, res) {
     }
   };
 };
-
+// changes the ablums caption
+handlers.changeAlbumCaption = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    res.json({
+      success: false,
+      message: "You need to be logged in to modify an album's caption",
+    });
+  } else {
+    try {
+      const { albumId, newCaption } = info;
+      const success = await database.changeAlbumCaption(albumId, newCaption);
+      if (success) {
+        res.json({
+          success: true,
+          message: "Successfully modified album's caption",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: "Failed to modify album due to unknown reason",
+        });
+      };
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      });
+    }
+  };
+};
 // +----------+----------------------------------------------------------
 // | Reporting/Hiding/Blocking |
 // +---------------------------+

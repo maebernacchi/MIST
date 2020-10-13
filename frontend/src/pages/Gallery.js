@@ -18,7 +18,7 @@
 // +-------------+
 import React, { useState, useEffect } from "react";
 import DisplayImages from "./components/displayImages";
-import { Button } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 
 
 export default function Gallery() {
@@ -73,7 +73,9 @@ export default function Gallery() {
           Random
         </Button>
       </div>
+      <Container>
       <DisplayImages cards={cards} cardsLoaded={cardsLoaded} />
+      </Container>
     </div>
   );
 }
