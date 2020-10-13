@@ -378,12 +378,14 @@ function AlbumSettings(props) {
     }));
   // This fetch request changes the albums caption/description
   const changeAlbumCaption = async (newCaption) => (
-    //STUB
-    {
-      val: newCaption,
-      json: ()=>({ success: false })
-    });
-
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/JSON'
+      },
+      body: JSON.stringify({ action: 'changeAlbumCaption', albumId: album._id, newCaption: newCaption })
+    }));
+    
   return (
     <>
       <Modal
@@ -432,8 +434,7 @@ function AlbumSettings(props) {
                         try {
                           const res = await changeAlbumCaption(val);
                           const data = await res.json();
-                          //  alert(data.success ? 'success' : 'fail');
-                          alert('not yet implemented');
+                          alert(data.success ? 'success' : 'fail');
                         } catch (error) {
                           console.log(error);
                         }
