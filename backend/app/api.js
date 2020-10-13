@@ -505,7 +505,7 @@ handlers.getAuthenticatedCompletePersonalProfile = async function (info, req, re
   try {
     if (!req.isAuthenticated()) throw "You need to login to view your profile!";
     const userid = req.user._id;
-    const complete_user = await database.getCompleteUserProfile(userid);
+    const complete_user = await database.getCompletePersonalProfile(userid);
     res.json({
       user: complete_user,
     });
@@ -518,7 +518,7 @@ handlers.getAuthenticatedCompletePersonalProfile = async function (info, req, re
 handlers.getCompleteUserProfile = async function (info, req, res) {
   try {
     const { userid } = info;
-    const complete_user = await database.getCompletePersonalProfile(userid);
+    const complete_user = await database.getCompleteUserProfile(userid);
     console.log(complete_user);
     res.json({
       user: complete_user,
