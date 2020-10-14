@@ -902,6 +902,10 @@ module.exports.deleteAlbum = async (albumId) => {
     .catch(error => { throw error })
 }
 
+// remove image from album
+module.exports.removeImageFromAlbum = async (imageId, albumId) => {
+  return Album.updateOne({ _id: sanitize(albumId) }, { $pull: { "images": sanitize(imageId) } }).exec();
+}
 // +----------+----------------------------------------------------------
 // | Reporting/Hiding/Blocking |
 // +---------------------------+
