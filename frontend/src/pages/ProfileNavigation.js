@@ -336,6 +336,37 @@ function OpenedAlbum(props) {
       body: JSON.stringify({ action: 'deleteAlbum', albumID: albumID })
     }).then(window.location.reload())
   }
+
+  // This fetch requests removes an image from an album
+  const removeImageFromAlbum = async (imageId) => {
+    console.log(`imageId: ${imageId}, albumId: ${id}`);
+    return fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({action: 'removeImageFromAlbum', albumId: albumID, imageId: imageId})
+    });
+  }
+
+  // This button removes an image from this album
+  const removeImageFromAlbumButtonFactory = (imageId) => (
+    <Button onClick={async () => {
+      try {
+        const res = await removeImageFromAlbum(imageId);
+        const data = await res.json();
+        if (data.success) {
+          alert(`${data.message}`)
+        } else {
+          alert(`Failed because: ${data.message}`)
+        }
+      } catch (error) {
+        alert(`Failed because: ${error}`);
+      }
+    }}>
+      Remove
+    </Button>)
+
   if (!album) return null;
   return (
     <div>
@@ -366,7 +397,7 @@ function OpenedAlbum(props) {
         <Row>
         <p>{album.caption}</p>
         </Row>
-        <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} />
+        <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} removeImageFromAlbumButtonFactory={removeImageFromAlbumButtonFactory}/>
 
       </Col>
     </div>
@@ -376,7 +407,7 @@ function OpenedAlbum(props) {
 function AlbumSettings(props) {
   const [albumSettingsIsOpen, setAlbumSettingsIsOpen] = useState(false);
   const album = props.album;
-  // This is a fetch request that renames the album
+  // This fetch request renames the album
   const renameAlbum = async (newName) => (
     fetch('/api', {
       method: 'POST',
@@ -384,8 +415,17 @@ function AlbumSettings(props) {
         'Content-Type': 'application/JSON'
       },
       body: JSON.stringify({ action: 'renameAlbum', albumId: album._id, newName: newName })
-    })
-  );
+    }));
+  // This fetch request changes the albums caption/description
+  const changeAlbumCaption = async (newCaption) => (
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/JSON'
+      },
+      body: JSON.stringify({ action: 'changeAlbumCaption', albumId: album._id, newCaption: newCaption })
+    }));
+    
   return (
     <>
       <Modal
@@ -403,83 +443,57 @@ function AlbumSettings(props) {
         <Modal.Body>
           <Container>
             <p2>You might have to refresh the album page to the changes take effect.</p2>
-            <div style={{ width: "90%"}}>
-          <Form>
-            <Form.Group as={Row} controlId="formPlaintextEmail">
-              {/* name */}
-              <Form.Label column sm="4">
-                Album name
-              </Form.Label>
-              <Col sm="7">
-              <EdiText
-              type='text'
-              value={album.name}
-              onSave={async (val) => {
-                const res = await renameAlbum(val);
-                const data = await res.json();
-                if (data.success) {
-                  alert('success');
-                } else { alert('fail') }
-              }}
-            />
-              </Col>
+            <div style={{ width: "90%" }}>
+              <Form>
+                <Form.Group as={Row} controlId="formPlaintextEmail">
+                  {/* name */}
+                  <Form.Label column sm="4">
+                    Album name
+                  </Form.Label>
+                  <Col sm="7">
+                    <EdiText
+                      type='text'
+                      value={album.name}
+                      onSave={async (val) => {
+                        const res = await renameAlbum(val);
+                        const data = await res.json();
+                        alert(data.success ? 'success' : 'fail');
+                      }}
+                    />
+                  </Col>
 
-              {/* username */}
-              <Form.Label column sm="4">
-                Album description
-              </Form.Label>
-              <Col sm="7">
-              <EdiText
-              type='text'
-              value={album.caption}
-              onSave={async (val) => {
-                const res = await renameAlbum(val);
-                const data = await res.json();
-                if (data.success) {
-                  alert('success');
-                } else { alert('fail') }
-              }}
-            />
-              </Col>
-              <Col sm="1">
-                <Nav.Link eventKey="link-1">Change</Nav.Link>
-              </Col>
+                  {/* username */}
+                  <Form.Label column sm="4">
+                    Album description
+                  </Form.Label>
+                  <Col sm="7">
+                    <EdiText
+                      type='textarea'
+                      value={album.caption}
+                      onSave={async (val) => {
+                        try {
+                          const res = await changeAlbumCaption(val);
+                          const data = await res.json();
+                          alert(data.success ? 'success' : 'fail');
+                        } catch (error) {
+                          console.log(error);
+                        }
+                      }}
+                    />
+                  </Col>
 
-              {/* member since */}
-              <Form.Label column sm="4">
-                Member since
-              </Form.Label>
-              <Col sm="6">
-                <Form.Control plaintext readOnly value={props.date} />
-              </Col>
+                  {/* member since */}
+                  <Form.Label column sm="4">
+                    Member since
+                  </Form.Label>
+                  <Col sm="6">
+                    <Form.Control plaintext readOnly value={props.date} />
+                  </Col>
 
-              {/* bio */}
-              <Form.Label column sm="4">
-                Bio
-              </Form.Label>
-              <Col sm="7">
-                <Form.Control as="textarea" readOnly rows="3" value={props.bio} />
-              </Col>
-              <Col sm="1">
-                <Nav.Link eventKey="link-1">Change</Nav.Link>
-              </Col>
-            </Form.Group>
-          </Form>
+                </Form.Group>
+              </Form>
 
-        </div>
-
-            <div>Album Name:</div>
-            <EdiText
-              type='text'
-              value={album.name}
-              onSave={async (val) => {
-                const res = await renameAlbum(val);
-                const data = await res.json();
-                if (data.success) {
-                  alert('success');
-                } else { alert('fail') }
-              }}
-            />
+            </div>
           </Container>
         </Modal.Body>
       </Modal>
