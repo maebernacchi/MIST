@@ -709,6 +709,42 @@ handlers.changeAlbumCaption = async function (info, req, res) {
     }
   };
 };
+
+handlers.removeImageFromAlbum = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    res.json({
+      success: false,
+      message: "You need to be logged in to modify an album's caption",
+    });
+  } else {
+    try {
+      const { albumId, imageId } = info;
+      const writeOpResult = await database.removeImageFromAlbum(imageId, albumId);
+      if (writeOpResult.nMatched === 0) {
+        // strange no documents were match
+        res.json({
+          success: false,
+          message: "Could not find your chosen album."
+        })
+      } else if (writeOpResult.nModified === 0) {
+        // strange no documents were modified
+        res.json({
+          success: false,
+          message: "Image not found in album."
+        })
+      } else {
+        // yay some document was matched
+        res.json({
+          success: true,
+          message: 'Successfully removed image'
+        })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
 // +----------+----------------------------------------------------------
 // | Reporting/Hiding/Blocking |
 // +---------------------------+

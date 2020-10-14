@@ -327,6 +327,37 @@ function OpenedAlbum(props) {
       body: JSON.stringify({ action: 'deleteAlbum', albumID: albumID })
     }).then(window.location.reload())
   }
+
+  // This fetch requests removes an image from an album
+  const removeImageFromAlbum = async (imageId) => {
+    console.log(`imageId: ${imageId}, albumId: ${id}`);
+    return fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({action: 'removeImageFromAlbum', albumId: albumID, imageId: imageId})
+    });
+  }
+
+  // This button removes an image from this album
+  const removeImageFromAlbumButtonFactory = (imageId) => (
+    <Button onClick={async () => {
+      try {
+        const res = await removeImageFromAlbum(imageId);
+        const data = await res.json();
+        if (data.success) {
+          alert(`${data.message}`)
+        } else {
+          alert(`Failed because: ${data.message}`)
+        }
+      } catch (error) {
+        alert(`Failed because: ${error}`);
+      }
+    }}>
+      Remove
+    </Button>)
+
   if (!album) return null;
   return (
     <div>
@@ -357,7 +388,7 @@ function OpenedAlbum(props) {
         <Row>
         <p>{album.caption}</p>
         </Row>
-        <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} />
+        <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} removeImageFromAlbumButtonFactory={removeImageFromAlbumButtonFactory}/>
 
       </Col>
     </div>
