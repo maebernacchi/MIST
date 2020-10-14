@@ -20,7 +20,7 @@ import {
   Col, Nav, NavDropdown, Popover, Overlay, Form,
   Modal, OverlayTrigger, Dropdown, FormControl, Navbar
 } from "react-bootstrap";
-import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineStar,  AiOutlineDelete } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
 import { RiFolderAddLine } from "react-icons/ri";
 import {
@@ -178,6 +178,56 @@ function CodeIcon(props) {
     )
   }
 
+  function DeleteAlbumIcon(props){
+    const id = props.id;
+    const album = props.album;
+    function handleDeleteAlbum() {
+      fetch('/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'deleteAlbum', albumID: album._id})
+      }).then(window.location.reload())
+    }
+  
+    // This fetch requests removes an image from an album
+    const removeImageFromAlbum = async (imageId) => {
+      console.log(`imageId: ${imageId}, albumId: ${id}`);
+      return fetch('/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({action: 'removeImageFromAlbum', albumID: album._id, imageId: imageId})
+      });
+    }
+  
+    // This button removes an image from this album
+    const removeImageFromAlbumButtonFactory = (imageId) => (
+      <Button onClick={async () => {
+        try {
+          const res = await removeImageFromAlbum(imageId);
+          const data = await res.json();
+          if (data.success) {
+            alert(`${data.message}`)
+          } else {
+            alert(`Failed because: ${data.message}`)
+          }
+        } catch (error) {
+          alert(`Failed because: ${error}`);
+        }
+      }}>
+        Remove
+      </Button>)
+  
+    return (
+      <Button variant="light" style={{ marginLeft: "1em", marginRight: "1em" }} onClick={props.handleDeleteAlbum}>
+        <Link to={'/profile/albums'} className="link" style={{ color: "black", styleDecoration: "none" }}> <AiOutlineDelete /></Link>
+      </Button>
+    )
+  }
+
   /* Flagging Icon */
 //... = hide, block, report
 
@@ -239,7 +289,7 @@ function FlaggingIcon() {
     render() {
       return (
    
-          <Nav.Link style={{color: "black"}} onClick={this.handlePrivateClick}>
+          <Nav.Link style={{color: "black", marginRight: "0", paddingRight: "0"}} onClick={this.handlePrivateClick}> 
             {this.state.private ? <FiLock size={15}/> : <MdPublic size={15}/>}
           </Nav.Link>
       );
@@ -321,6 +371,7 @@ export {
     AddIcon,
     CodeIcon,
     CommentIcon,
+    DeleteAlbumIcon,
     FlaggingIcon,
     PrivacyIcon,
     SaveIcon,

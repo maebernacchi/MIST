@@ -6,11 +6,7 @@
  * 
  * This exports the profile page, which is the user's personal profile page.
  * When a user views another user's profile page, they see user.js not profile.js.
- * Not yet developed:
-    * Albums are the user's own albums. Currently, what is displayed is fake data.
-    * Images are the user's own images. Currently, the images displayed are the same 
-    *   images from the gallery 
- 
+ * 
  *
  * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
  * This work is licenced under a LGLP 3.0 or later .....
@@ -25,10 +21,9 @@
  *    --First Part
  *        | Profile Image + user information
  *        | IconsBar: # of pictures, likes, badges, challenges
- *    --Profile Nav
+ *    --Profile Nav (ProfileNavigation.js)
  *        | images: calls displayImages.js
- *        | albums: function Albums 
- *            + Carousel
+ *        | albums: album cards; albums view
  */
 // +-------------------+----------------------------------------------------------------------
 // | IMPORTS           |
