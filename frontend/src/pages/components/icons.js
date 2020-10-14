@@ -20,7 +20,7 @@ import {
   Col, Nav, NavDropdown, Popover, Overlay, Form,
   Modal, OverlayTrigger, Dropdown, FormControl, Navbar
 } from "react-bootstrap";
-import { AiOutlineStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
 import { RiFolderAddLine } from "react-icons/ri";
 import {
@@ -30,7 +30,7 @@ import {
 import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag, FiLock, FiUnlock } from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
 import { IoMdAdd } from "react-icons/io"
-import {MdVisibilityOff} from "react-icons/md"
+import {MdVisibilityOff, MdPublic} from "react-icons/md"
 
 import {
   BrowserRouter as Router, Switch, Route, Link,
@@ -45,235 +45,207 @@ TimeAgo.addLocale(en)
 // | Icons       |
 // +-------------+
 
-function ModalIcons(props) {
-
-  let card = props.card;
-
-  return (
-    <Row style={{ justifyContent: "flex-start" }}>
-      {/* Rating */}
-      {/** need to add that onClick,
-       *      if signed in, the star changes to a filled version of it,
-       *      else, alerts that "please sign in" and a sign in option in */}
-
-      <Nav.Link style={{ color: "black", display: "inline-block" }}>
-        <AiOutlineStar />
-        {card.ratings}
-      </Nav.Link>
-
-      <CodeIcon code={card.code} />
-      <SaveIcon />
-      <AddIcon albums = {props.albums}/>
-      <ShareIcon />
-      
-    </Row>
-  );
-}
-
-/* Code Icon */
-function CodeIcon(props) {
-  const [show, setShow] = useState(false);
-  const [target, setTarget] = useState(null);
-  const ref = useRef(null);
-
-  const handleClick = (event) => {
-    setShow(!show);
-    setTarget(event.target);
-  };
-
-  return (
-    <div ref={ref}>
-      <Nav.Item>
-      <Nav.Link onClick={handleClick} style={{ color: "black"}}>
-        <FiCode />
-      </Nav.Link>
-      </Nav.Item>
-      <Overlay
-        show={show}
-        target={target}
-        placement="bottom"
-        container={ref.current}
-        containerPadding={20}
+function AddIcon(props) {
+    const [modalShow, setModalShow] = React.useState(false);
+  
+    return (
+      <>
+        <Nav.Link onClick={() => setModalShow(true)}>
+          <RiFolderAddLine style={{ color: "black"}} />
+        </Nav.Link>
+        <AddModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          albums = {props.albums}
+          img = {props.img}
+        />
+      </>
+    );
+  }
+  
+  function AddModal(props) {
+  
+    const[chosenAlbum, setChosenAlbum] = React.useState({});
+    console.log(props.albums);
+  
+    function handleAddToAlbum(e){
+      fetch('/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
+      }).then(window.location.reload())
+    }
+  
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
       >
-        <Popover id="popover-contained">
-          <Popover.Title as="h3" title={"<FiCode/>"}></Popover.Title>
-          <Popover.Content>
-            <Container>{props.code}</Container>
-            <Row style={{ justifyContent: "flex-end" }}>
-              <Button variant="light" style={{ color: "black", marginRight: "1em", marginLeft: "1em" }} > Copy</Button>
+        <Modal.Header closeButton >
+          <Modal.Title id="contained-modal-title-vcenter">
+            Select Album
+            </Modal.Title>
+        </Modal.Header>
+  
+        <Modal.Body>
+          <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
+            <Col>
+              {(!props.albums)? <></> : props.albums.map((obj) => (
+                <Button onClick = {() => setChosenAlbum(obj)} variant="light">{obj.name}</Button>         
+              ))}
+            </Col>
+            <Col>
+            <Row style={{justifyContent: "flex-end"}}>
             </Row>
-          </Popover.Content>
-        </Popover>
-      </Overlay>
-    </div>
-  );
-}
-
-/* Comment Icon */
-function CommentIcon(props) {
-  let location = useLocation();
-  return (
-    <Nav.Item  >
-      <Nav.Link>
-    <Link
-      to={{
-        pathname: `/img/${props.id}`,
-        // This is the trick! This link sets
-        // the `background` in location state.
-        state: { background: location },
-      }}
+            </Col>
+          </Row>
+  
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide} variant="light">Cancel</Button>
+          <Button onClick={handleAddToAlbum}>Add</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+  
+  /* Code Icon */
+function CodeIcon(props) {
+    const [show, setShow] = useState(false);
+    const [target, setTarget] = useState(null);
+    const ref = useRef(null);
+  
+    const handleClick = (event) => {
+      setShow(!show);
+      setTarget(event.target);
+    };
+  
+    return (
+      <div ref={ref}>
+        <Nav.Item>
+        <Nav.Link onClick={handleClick} style={{ color: "black"}}>
+          <FiCode />
+        </Nav.Link>
+        </Nav.Item>
+        <Overlay
+          show={show}
+          target={target}
+          placement="bottom"
+          container={ref.current}
+          containerPadding={20}
+        >
+          <Popover id="popover-contained">
+            <Popover.Title as="h3" title={"<FiCode/>"}></Popover.Title>
+            <Popover.Content>
+              <Container>{props.code}</Container>
+              <Row style={{ justifyContent: "flex-end" }}>
+                <Button variant="light" style={{ color: "black", marginRight: "1em", marginLeft: "1em" }} > Copy</Button>
+              </Row>
+            </Popover.Content>
+          </Popover>
+        </Overlay>
+      </div>
+    );
+  }
+  
+  /* Comment Icon */
+  function CommentIcon(props) {
+    let location = useLocation();
+    return (
+      <Nav.Item  >
+        <Nav.Link>
+      <Link
+        to={{
+          pathname: `/img/${props.id}`,
+          // This is the trick! This link sets
+          // the `background` in location state.
+          state: { background: location },
+        }}
+       
+      >
+  
+        <FaRegComments
+          style={{ color: "black"}}
+        />
      
-    >
+      </Link>
+      </Nav.Link>
+        </Nav.Item>
+    )
+  }
 
-      <FaRegComments
-        style={{ color: "black"}}
-      />
-   
-    </Link>
-    </Nav.Link>
-      </Nav.Item>
-  )
-}
-
-/* Flagging Icon */
+  /* Flagging Icon */
 //... = hide, block, report
 
 function FlaggingIcon() {
 
-  function hide() {
-    alert("You have hidden this content and will no longer see it again.")
-  }
-
-  let hidePopover = (
-    <Popover id="popover-basic">
-      <Popover.Content>
-        This content will be hidden from you.
-    </Popover.Content>
-    </Popover>
-  );
-
-  let reportPopover = (
-    <Popover id="popover-basic">
-      <Popover.Content>
-        Report this content.
-    </Popover.Content>
-    </Popover>
-  );
-
-  return (
-
-   
-      <NavDropdown title= {<FiMoreHorizontal  size={15} style={{color: "grey"}}/>} id="nav-dropdown" >
-      <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
-        <NavDropdown.Item onClick={() => hide()}>
-          <MdVisibilityOff/>  Hide
-        </NavDropdown.Item>
-        </OverlayTrigger>
-        <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
-        <NavDropdown.Item href="/report">
-        <FiFlag /> Report         
-        </NavDropdown.Item>
-        </OverlayTrigger>
-      </NavDropdown>
+    function hide() {
+      alert("You have hidden this content and will no longer see it again.")
+    }
   
-  )
-
-}
-
-function AddIcon(props) {
-  const [modalShow, setModalShow] = React.useState(false);
-
-  return (
-    <>
-      <Nav.Link onClick={() => setModalShow(true)}>
-        <RiFolderAddLine style={{ color: "black"}} />
-      </Nav.Link>
-      <AddModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        albums = {props.albums}
-        img = {props.img}
-      />
-    </>
-  );
-}
-
-function AddModal(props) {
-
-  const[chosenAlbum, setChosenAlbum] = React.useState({});
-  console.log(props.albums);
-
-  function handleAddToAlbum(e){
-    fetch('/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
-    }).then(window.location.reload())
+    let hidePopover = (
+      <Popover id="popover-basic">
+        <Popover.Content>
+          This content will be hidden from you.
+      </Popover.Content>
+      </Popover>
+    );
+  
+    let reportPopover = (
+      <Popover id="popover-basic">
+        <Popover.Content>
+          Report this content.
+      </Popover.Content>
+      </Popover>
+    );
+  
+    return (
+  
+     
+        <NavDropdown title= {<FiMoreHorizontal  size={15} style={{color: "grey"}}/>} id="nav-dropdown" >
+        <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
+          <NavDropdown.Item onClick={() => hide()}>
+            <MdVisibilityOff/>  Hide
+          </NavDropdown.Item>
+          </OverlayTrigger>
+          <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
+          <NavDropdown.Item href="/report">
+          <FiFlag /> Report         
+          </NavDropdown.Item>
+          </OverlayTrigger>
+        </NavDropdown>
+    
+    )
+  
   }
-
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton >
-        <Modal.Title id="contained-modal-title-vcenter">
-          Select Album
-          </Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body>
-        <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
-          <Col>
-            {(!props.albums)? <></> : props.albums.map((obj) => (
-              <Button onClick = {() => setChosenAlbum(obj)} variant="light">{obj.name}</Button>         
-            ))}
-          </Col>
-          <Col>
-          <Row style={{justifyContent: "flex-end"}}>
-          </Row>
-          </Col>
-        </Row>
-
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide} variant="light">Cancel</Button>
-        <Button onClick={handleAddToAlbum}>Add</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-}
-
-/* Share Icon */
-function ShareIcon() {
-  return (
-      <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown" >
-        {/* Facebook */}
-        <NavDropdown.Item eventKey="4.1">
-          {" "}
-          <FaFacebook /> Facebook
-        </NavDropdown.Item>
-
-        {/* Instagram */}
-        <NavDropdown.Item eventKey="4.2">
-          <TiSocialInstagram /> Instagram
-        </NavDropdown.Item>
-
-        {/* Snapchat */}
-        <NavDropdown.Item eventKey="4.3">
-          {" "}
-          <FaSnapchat /> Snapchat
-        </NavDropdown.Item>
-      </NavDropdown>
-
-  );
-}
-
-
+  
+  class PrivacyIcon extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {private: true};
+      this.handlePrivateClick = this.handlePrivateClick.bind(this);
+    }
+  
+    handlePrivateClick() {
+      this.setState(state => ({
+        private: !state.private
+      }));
+    }
+  
+    render() {
+      return (
+   
+          <Nav.Link style={{color: "black"}} onClick={this.handlePrivateClick}>
+            {this.state.private ? <FiLock size={15}/> : <MdPublic size={15}/>}
+          </Nav.Link>
+      );
+    }
+  }
+  
 /* Save Icon */
 function SaveIcon() {
   return (
@@ -284,11 +256,74 @@ function SaveIcon() {
   );
 }
 
+
+
+  /* Share Icon */
+  function ShareIcon() {
+    return (
+        <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown" >
+          {/* Facebook */}
+          <NavDropdown.Item eventKey="4.1">
+            {" "}
+            <FaFacebook /> Facebook
+          </NavDropdown.Item>
+  
+          {/* Instagram */}
+          <NavDropdown.Item eventKey="4.2">
+            <TiSocialInstagram /> Instagram
+          </NavDropdown.Item>
+  
+          {/* Snapchat */}
+          <NavDropdown.Item eventKey="4.3">
+            {" "}
+            <FaSnapchat /> Snapchat
+          </NavDropdown.Item>
+        </NavDropdown>
+  
+    );
+  }
+
+function StarIcon(props){
+  const [liked, setLiked] = useState(false);
+  function likeCount(){
+    props.card.ratings++;
+  }
+  function dislikeCount(){
+    props.card.ratings--;
+  }
+  function handleClick(){
+    setLiked(!liked);
+  }
+  return(
+    <div>
+      {liked ?
+       <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={() => {
+        handleClick();
+        dislikeCount();
+      }}>
+        <AiFillStar size={15} />
+        {props.card.ratings}
+      </Nav.Link>
+      :
+      <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={() => {
+        handleClick();
+        likeCount();
+      }}>
+        <AiOutlineStar size={15} />
+        {props.card.ratings}
+      </Nav.Link>
+      }
+      </div>
+    
+  )
+}
 export {
+    AddIcon,
+    CodeIcon,
+    CommentIcon,
+    FlaggingIcon,
+    PrivacyIcon,
     SaveIcon,
     ShareIcon,
-    CommentIcon,
-    CodeIcon,
-    AddIcon,
-    FlaggingIcon
+    StarIcon
 }

@@ -55,7 +55,9 @@ import {
   AddIcon,
   CommentIcon,
   CodeIcon,
-  FlaggingIcon
+  FlaggingIcon,
+  StarIcon,
+  PrivacyIcon
 } from "./icons.js"
 import "../../design/styleSheets/gallery.css";
 import TimeAgo from 'javascript-time-ago'
@@ -166,7 +168,7 @@ function CardHeader(props) {
             </Col>
 
           
-          <FiLock size={15} style={{leftMargin: "1em"}}/>
+          <PrivacyIcon />
           <FlaggingIcon />
         </Row>
 
@@ -222,10 +224,7 @@ function CardBody(props) {
           <Nav.Link variant="light" href={pathname} >
             {card.userId.username}
           </Nav.Link>
-          <Nav.Link style={{ color: "black", display: "inline-block" }}>
-            <AiOutlineStar />
-            {card.ratings}
-          </Nav.Link>
+          <StarIcon card={card}/>
 
 
           {/*   {card.caption}*/}
@@ -690,11 +689,7 @@ function ModalIcons(props) {
        *      if signed in, the star changes to a filled version of it,
        *      else, alerts that "please sign in" and a sign in option in */}
 
-      <Nav.Link style={{ color: "black", display: "inline-block" }}>
-        <AiOutlineStar />
-        {card.ratings}
-      </Nav.Link>
-
+      <StarIcon card={card} />
       <CodeIcon code={card.code} />
       <SaveIcon code={card.code} />
       <AddIcon albums={props.albums} />

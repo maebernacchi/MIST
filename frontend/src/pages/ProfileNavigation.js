@@ -62,7 +62,8 @@ import {
   AddIcon,
   CommentIcon,
   CodeIcon,
-  FlaggingIcon
+  FlaggingIcon,
+  PrivacyIcon
 } from "./components/icons.js"
 
 // +-------------------+----------------------------------------------------------------------
@@ -191,14 +192,10 @@ function Albums(props) {
               <Card.Title style={{ margin: "auto" }} className='linkItem'>
 
                 <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
-               <Col><FiLock size={15} /></Col> 
+               <Col><PrivacyIcon/></Col> 
                   <Col>
-                    {album.name}
-
+                  <Link to={{ pathname: `/profile/${album._id}` }} className="link" style={{color: "black"}}>{album.name}</Link>
                   </Col>
-
-
-                 
                   <FlaggingIcon />
                 </Row>
         {/*
@@ -240,7 +237,9 @@ function ControlledCarousel(props) {
     setIndex(selectedIndex);
   };
 
+
   return (
+    (props.album.images.length != 0) ?
     <Carousel activeIndex={index} onSelect={handleSelect}>
       {props.album.images.map(image => (
         <Carousel.Item >
@@ -256,9 +255,19 @@ function ControlledCarousel(props) {
           </Carousel.Caption>
         </Carousel.Item>
       ))}
-    </Carousel>
-  );
+      </Carousel> :
+      <Button variant="light" style={{minWidth: "100%", height: "250px"}}>Add Images</Button>
+      /*
+      <Link to={{ pathname: `/profile/${props.album._id}` }} className="link">
+        Hello
+            <MISTImage
+          code={"-1"}
+          resolution="250"
+        />
+      </Link>*/
+)
 }
+
 
 
 function AddAlbumModal(props) {
