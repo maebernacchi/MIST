@@ -62,7 +62,8 @@ import {
   AddIcon,
   CommentIcon,
   CodeIcon,
-  FlaggingIcon
+  FlaggingIcon,
+  PrivacyIcon
 } from "./components/icons.js"
 
 // +-------------------+----------------------------------------------------------------------
@@ -191,9 +192,9 @@ function Albums(props) {
               <Card.Title style={{ margin: "auto" }} className='linkItem'>
 
                 <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
-               <Col><FiLock size={15} /></Col> 
+               <Col><PrivacyIcon/></Col> 
                   <Col>
-                    {album.name}
+                  <Link to={{ pathname: `/profile/${album._id}` }} className="link" style={{color: "black"}}>{album.name}</Link>
                   </Col>
                   <FlaggingIcon />
                 </Row>
