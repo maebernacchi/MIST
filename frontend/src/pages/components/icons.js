@@ -282,8 +282,42 @@ function SaveIcon() {
   
     );
   }
-  
 
+function StarIcon(props){
+  const [liked, setLiked] = useState(false);
+  function likeCount(){
+    props.card.ratings++;
+  }
+  function dislikeCount(){
+    props.card.ratings--;
+  }
+  function handleClick(){
+    setLiked(!liked);
+  }
+  return(
+    <div>
+      {liked ?
+       <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={() => {
+        handleClick();
+        dislikeCount();
+      }}>
+        <AiFillStar size={15} />
+        {props.card.ratings}
+      </Nav.Link>
+      :
+      <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={() => {
+        handleClick();
+        likeCount();
+      }}>
+        <AiOutlineStar size={15} />
+        {props.card.ratings}
+      </Nav.Link>
+      }
+      </div>
+    
+  )
+}
+/*
 class StarIcon extends React.Component {
     constructor(props) {
       super(props);
@@ -311,12 +345,12 @@ class StarIcon extends React.Component {
         return (
         <div>
             {this.state.liked ?
-                    <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={this.handleLikeClick}>
+                    <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={this.handleLikeClick }>
                         <AiFillStar size={15} />
                         {this.props.card.ratings}
                     </Nav.Link>
                      :
-                    <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={this.handleDislikeClick}>
+                    <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={this.handleDisikeClick}>
                         <AiOutlineStar size={15} />
                         {this.props.card.ratings}
                     </Nav.Link>
@@ -328,7 +362,7 @@ class StarIcon extends React.Component {
         );
     }
 }
-
+*/
 export {
     AddIcon,
     CodeIcon,
