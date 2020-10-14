@@ -317,52 +317,6 @@ function StarIcon(props){
     
   )
 }
-/*
-class StarIcon extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {liked: false};
-      this.handleLikeClick = this.handleLikeClick.bind(this);
-      this.handleDislikeClick = this.handleDislikeClick(this);
-    }
-  
-    handleLikeClick() {
-      this.setState(state => ({
-        liked: !state.liked
-        
-      }));
-      this.props.card.rating++;
-    }
-
-    handleDislikeClick(){
-        this.setState(state => ({
-            liked: !state.liked
-        }));
-        this.props.card.rating--;
-    }
-
-    render() {
-        return (
-        <div>
-            {this.state.liked ?
-                    <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={this.handleLikeClick }>
-                        <AiFillStar size={15} />
-                        {this.props.card.ratings}
-                    </Nav.Link>
-                     :
-                    <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={this.handleDisikeClick}>
-                        <AiOutlineStar size={15} />
-                        {this.props.card.ratings}
-                    </Nav.Link>
-            }
-            </div>
-
-
-
-        );
-    }
-}
-*/
 export {
     AddIcon,
     CodeIcon,
