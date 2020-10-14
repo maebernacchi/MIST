@@ -723,19 +723,19 @@ handlers.removeImageFromAlbum = async function (info, req, res) {
       if (writeOpResult.nMatched === 0) {
         // strange no documents were match
         res.json({
-          succcess: false,
+          success: false,
           message: "Could not find your chosen album."
         })
       } else if (writeOpResult.nModified === 0) {
         // strange no documents were modified
         res.json({
-          succcess: false,
+          success: false,
           message: "Image not found in album."
         })
       } else {
         // yay some document was matched
         res.json({
-          succes: true,
+          success: true,
           message: 'Successfully removed image'
         })
       }
