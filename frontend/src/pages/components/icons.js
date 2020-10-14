@@ -30,7 +30,7 @@ import {
 import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag, FiLock, FiUnlock } from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
 import { IoMdAdd } from "react-icons/io"
-import {MdVisibilityOff} from "react-icons/md"
+import {MdVisibilityOff, MdPublic} from "react-icons/md"
 
 import {
   BrowserRouter as Router, Switch, Route, Link,
@@ -240,7 +240,7 @@ function FlaggingIcon() {
       return (
    
           <Nav.Link style={{color: "black"}} onClick={this.handlePrivateClick}>
-            {this.state.private ? <FiLock size={15}/> : <FiUnlock size={15}/>}
+            {this.state.private ? <FiLock size={15}/> : <MdPublic size={15}/>}
           </Nav.Link>
       );
     }
