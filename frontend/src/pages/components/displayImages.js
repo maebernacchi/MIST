@@ -78,7 +78,7 @@ allow users to change views on the overlay modal. */
 export default function DisplayImages(props) {
   return (
     <Router>
-      <ModalSwitch cards={props.cards} albums = {props.albums}/>
+      <ModalSwitch cards={props.cards} albums = {props.albums} {...props}/>
     </Router>
   );
 }
@@ -102,7 +102,7 @@ function ModalSwitch(props) {
         <Route path="/gallery/featured" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/top-rated" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/recent" children={<Gallery cards={props.cards} />} />
-        <Route path="/profile" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
+        <Route path="/profile" children={<Gallery cards={props.cards} albums = {props.albums} removeImageFromAlbumButtonFactory={props.removeImageFromAlbumButtonFactory}/>} />
         <Route path="/img/:id" children={<ImageView cards={props.cards}/>} />
       </Switch>
 
@@ -125,13 +125,13 @@ function ModalSwitch(props) {
  */
 function Gallery(props) {
   let cards = props.cards;
-
   return (
     /* styling helps with footer */
       <Row style={{ justifyContent: "space-between" }}>
         {/* maps each array in the cards array */}
         {cards.map((card, idx) => (
           <Card key={idx}  style={{width: "31%", marginTop: "1em", marginBottom: "1em" }}>
+            {props.removeImageFromAlbumButtonFactory ? props.removeImageFromAlbumButtonFactory(card._id): console.log('failed')}
             <CardHeader card={card} />
             <CardImage card={card} />
             <CardBody card={card} albums = {props.albums}/>

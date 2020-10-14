@@ -327,6 +327,17 @@ function OpenedAlbum(props) {
       body: JSON.stringify({ action: 'deleteAlbum', albumID: albumID })
     }).then(window.location.reload())
   }
+
+  // This fetch requests removes an image from an album
+  function removeImageFromAlbum(imageId) {
+    console.log(`imageId: ${imageId}, albumId: ${id}`);
+  }
+
+  const removeImageFromAlbumButtonFactory = (imageId) => (
+  <Button onClick={()=>removeImageFromAlbum(imageId)}>
+    Remove
+  </Button>)
+
   if (!album) return null;
   return (
     <div>
@@ -357,7 +368,7 @@ function OpenedAlbum(props) {
         <Row>
         <p>{album.caption}</p>
         </Row>
-        <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} />
+        <DisplayImages cards={album.images} cardsLoaded={true} albums={props.albums} removeImageFromAlbumButtonFactory={removeImageFromAlbumButtonFactory}/>
 
       </Col>
     </div>
