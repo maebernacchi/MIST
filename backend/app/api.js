@@ -937,7 +937,11 @@ handlers.updateAuthorizationCheck = async function (info, req, res) {
 
 handlers.addImageToAlbum = async function(info, req, res) {
   try {
-    database.addToAlbum(req.body.album._id, req.body.imgID)
+    const writeOpResult = await database.addToAlbum(req.body.album._id, req.body.imgID);
+    res.json({
+      success: writeOpResult,
+      message: writeOpResult ? 'Successfully added image!': 'Failed to add image for unknown reason.'
+    });
   } catch (error) {
     res.json({
       message: error

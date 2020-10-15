@@ -75,7 +75,7 @@ function AddIcon(props) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
-      }).then(window.location.reload())
+      }).then(()=>window.location.reload())
     }
   
     return (
