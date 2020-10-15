@@ -156,9 +156,10 @@ module.exports = (app) => {
     };
     res.json(userInfo);
   });
+
+  app.post('/api/emailVerification/:username', (req, res) => {
+    console.log(req.params.username);
+  });
 };
-    app.post('/api/emailVerification/:username', (req,res) => {
-        console.log(req.params.username);
-    })
 
 
