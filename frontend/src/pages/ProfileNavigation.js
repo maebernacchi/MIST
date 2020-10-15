@@ -216,7 +216,7 @@ function Albums(props) {
                 <ControlledCarousel album={album} />
 
                 <p>{album.caption}</p>
-                <p>{album.updatedAt}</p>
+                <p>{new Date(parseInt(album.updatedAt)).toString()}</p>
               </Card.Body>
             </Card.Header>
           </Card>
