@@ -424,15 +424,21 @@ handlers.signUp = async function (info, req, res) {
       req.body.token,
   };
 
-  transporter.sendMail(mail, (err, data) => {
-    if (err) {
-      console.log(err);
+  database.createUser(req, (message) => {
+    if (message === 'User Created') {
+      transporter.sendMail(mail, (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json(err);
+        } else {
+          console.log("Sent!");
+          res.json(message);
+        }
+      });
     } else {
-      console.log("Sent!");
-    }
+      res.json(message);
+    };
   });
-
-  database.createUser(req, (message) => res.json(message));
 };
 
 /*
