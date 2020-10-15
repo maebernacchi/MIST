@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 
 const mongoURI = process.env.ATLAS_URI || "mongodb://localhost:27017/usersDB";
 // why was this changed to acme??
+// Following suggestion in https://mongoosejs.com/docs/connections.html 
 mongoose.connect(mongoURI, {
   useCreateIndex: true,
   useNewUrlParser: true,
