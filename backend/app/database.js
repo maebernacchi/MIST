@@ -2,12 +2,24 @@ const mongoose = require("mongoose");
 const sanitize = require("mongo-sanitize");
 const bcrypt = require("bcrypt");
 
+const mongoURI = process.env.ATLAS_URI || "mongodb://localhost:27017/usersDB";
 // why was this changed to acme??
-mongoose.connect("mongodb://localhost:27017/usersDB", {
+// Following suggestion in https://mongoosejs.com/docs/connections.html 
+mongoose.connect(mongoURI, {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}); // make connection to database or create it if it does not yet exist
+}) // make connection to database or create it if it does not yet exist
+  .then(
+    () => {
+      /** ready to use. The `mongoose.connect()` promise resolves to mongoose instance. */
+      console.log(`Connection made to ${mongoURI}.`);
+    },
+    err => {
+      /** handle initial connection error */
+      console.log(`ERROR: ${err}`);
+    }
+  );
 
 mongoose.set("useFindAndModify", false);
 
