@@ -123,7 +123,7 @@ module.exports.addToAlbum = async (albumId, imageId) => {
   // Sanitize inputs.  Yay!
   albumId = sanitize(albumId);
   imageId = sanitize(imageId);
-  return await Album.updateOne({ _id: albumId }, { $addToSet: { images: imageId } }).exec()
+  return await Album.updateOne({ _id: albumId }, { $addToSet: { images: imageId }, updatedAt: Date.now() }).exec()
     .then(writeOpResult => (Boolean)(writeOpResult.nModified))
     .catch(error => { throw error })
 };
@@ -134,7 +134,7 @@ module.exports.renameAlbum = async (albumId, newName) => {
   albumId = sanitize(albumId);
   newName = sanitize(newName);
 
-  return await Album.updateOne({ _id: albumId }, { name: newName }).exec()
+  return await Album.updateOne({ _id: albumId }, { name: newName, updatedAt: Date.now() }).exec()
     .then(writeOpResult => writeOpResult.nModified)
     .catch(error => { throw error })
 
@@ -146,7 +146,7 @@ module.exports.changeAlbumCaption = async (albumId, newCaption) => {
   albumId = sanitize(albumId);
   newCaption = sanitize(newCaption);
   
-  return await Album.updateOne({ _id: albumId }, { caption: newCaption }).exec()
+  return await Album.updateOne({ _id: albumId }, { caption: newCaption, updatedAt: Date.now() }).exec()
     .then(writeOpResult => writeOpResult.nModified)
     .catch(error => { throw error })
 };
@@ -904,7 +904,7 @@ module.exports.deleteAlbum = async (albumId) => {
 
 // remove image from album
 module.exports.removeImageFromAlbum = async (imageId, albumId) => {
-  return Album.updateOne({ _id: sanitize(albumId) }, { $pull: { "images": sanitize(imageId) } }).exec();
+  return Album.updateOne({ _id: sanitize(albumId) }, { $pull: { "images": sanitize(imageId) }, updatedAt: Date.now() }).exec();
 }
 // +----------+----------------------------------------------------------
 // | Reporting/Hiding/Blocking |
