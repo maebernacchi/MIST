@@ -461,11 +461,12 @@ module.exports.changePassword = async (req, callback) => {
  * @param {*} req
  * @param {*} callback
  * Chnages the email of the user in the database
+ * Returns a message if the email was succesfully updated or an error occured
  */
 module.exports.changeEmail = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body._id },
-    { $set: { email: req.body.newEmail } },
+  User.updateOne(
+    { _id: req.user._id },
+    { $set: { email: sanitize(req.body.newEmail) } },
     { new: true },
     (err, doc) => {
       if (err) {
@@ -481,22 +482,115 @@ module.exports.changeEmail = (req, callback) => {
  *
  * @param {*} req
  * @param {*} callback
- * Changes the username of the user in the database
+ * Changes the username of the user in the database 
+ * Returns a message if the username is taken, was succesfully updated, or an error occured
  */
 module.exports.changeUsername = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body._id },
-    { $set: { username: req.body.newUsername } },
+
+  if (req.body.newUsername === "")
+    callback("Username cannot be blank")
+  else {
+    User.find({ username: req.body.newUsername }, (err, docs) => {
+      if (docs.length) {
+        callback("Username already in use, try something else")
+      } else {
+        User.updateOne(
+          { _id: req.user._id },
+          { $set: { username: sanitize(req.body.newUsername) } },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback("Successfully Updated Username");
+            }
+          }
+        );
+      }
+    })
+  }
+};
+
+/**
+ *
+ * @param {*} req
+ * @param {*} callback
+ * Changes the name of the user in the database
+ * Returns a message if the name was succesfully updated or an error occured
+ */
+module.exports.changeName = (req, callback) => {
+  User.updateOne(
+    { _id: req.user._id },
+    {
+      $set: {
+        forename: sanitize(req.body.newFirstName),
+        surname: sanitize(req.body.newLastName)
+      }
+    },
     { new: true },
     (err, doc) => {
       if (err) {
         callback(err);
       } else {
-        callback("Successfully Updated Username");
+        callback("Successfully Updated Name");
       }
     }
   );
 };
+
+/**
+ *
+ * @param {*} req
+ * @param {*} callback
+ * Changes the bio of the user in the database
+ * Returns a message if the bio was succesfully updated or an error occured
+ */
+module.exports.changeBio = (req, callback) => {
+  User.updateOne(
+    { _id: req.user._id },
+    {
+      $set: {
+        about: sanitize(req.body.newBio)
+      }
+    },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback("Successfully Updated Bio");
+      }
+    }
+  );
+};
+
+
+/**
+ *
+ * @param {*} req
+ * @param {*} callback
+ * Changes the profile picture of the user in the database
+ * Returns a message if the profile picture was succesfully updated or an error occured
+ */
+module.exports.changeProfilePic = (req, callback) => {
+  User.updateOne(
+    { _id: req.user._id },
+    {
+      $set: {
+        profilepic: sanitize(req.body.newProfilePic)
+      }
+    },
+    { new: true },
+    (err, doc) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback("Successfully Updated Profile Picture");
+      }
+    }
+  );
+};
+
 
 // given a userId, returns the username
 module.exports.getUsername = (userId, callback) => {
@@ -582,8 +676,8 @@ module.exports.getUserIdByUsername = (username, callback) => {
   });
 };
 
-// Returns all images and albums for a user
-module.exports.getCompleteUserProfile = async (userid) => {
+// Returns all images and albums for the user's profile
+module.exports.getCompletePersonalProfile = async (userid) => {
   userid = sanitize(userid);
   return (User
     .findById(userid)
@@ -599,6 +693,35 @@ module.exports.getCompleteUserProfile = async (userid) => {
     .select('-password')
     .exec())
   //     .select('images albums')
+};
+
+// Returns all images and albums for viewing another user's profile
+module.exports.getCompleteUserProfile = async (userid) => {
+  userid = sanitize(userid);
+  return (User
+    .findById(userid)
+    .populate({
+      path: 'images',
+      match: {
+        active: true,
+        public: true
+      },
+    })
+    .populate({
+      path: 'albums',
+      match: {
+        active: true,
+        public: true
+      },
+      populate: {
+        path: 'images', match: {
+          active: true,
+          public: true
+        }
+      }
+    })
+    .select('-password')
+    .exec())
 };
 
 // +--------------+-------------------------------------------------

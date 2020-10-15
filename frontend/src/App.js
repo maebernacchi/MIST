@@ -127,7 +127,7 @@ function App() {
             <Route path="/signIn" component={SignIn} />
             <Route path="/signUp" component={SignUp} />
             <Route path="/tutorial" component={Tutorial} />
-            <Route path="/user" children={User} />
+            <Route path="/user" component={User} />
             <Route path="/emailVerification/:token" component={EmailVerification} />
             {/* workspace */}
             <Route path="/createWorkspace" children={<WorkspaceComponent />} />

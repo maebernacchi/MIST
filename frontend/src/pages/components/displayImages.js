@@ -87,7 +87,7 @@ export default function DisplayImages(props) {
 
 /** ModalSwitch calls the relevant page based on the URL */
 function ModalSwitch(props) {
-  
+
   let location = useLocation();
 
   /* This piece of state is set when one of the gallery links is clicked.
@@ -99,17 +99,18 @@ function ModalSwitch(props) {
   return (
     <div>
       <Switch location={background || location}>
-        <Route path="/gallery" children={<Gallery cards={props.cards} albums = {props.albums}/>} />
+        <Route path="/gallery" children={<Gallery cards={props.cards} albums={props.albums} />} />
         <Route path="/gallery/random" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/featured" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/top-rated" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/recent" children={<Gallery cards={props.cards} />} />
         <Route path="/profile" children={<Gallery cards={props.cards} albums = {props.albums} removeImageFromAlbumButtonFactory={props.removeImageFromAlbumButtonFactory}/>} />
-        <Route path="/img/:id" children={<ImageView cards={props.cards}/>} />
+        <Route path="/user" children={<Gallery cards={props.cards} albums={props.albums} />} />
+        <Route path="/img/:id" children={<ImageView cards={props.cards} />} />
       </Switch>
 
       {/* Show the modal when a background page is set. */}
-      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} albums={props.albums}/>} />}
+      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} albums={props.albums} />} />}
     </div>
   );
 }
@@ -136,7 +137,7 @@ function Gallery(props) {
             {props.removeImageFromAlbumButtonFactory ? props.removeImageFromAlbumButtonFactory(card._id): console.log('failed')}
             <CardHeader card={card} />
             <CardImage card={card} />
-            <CardBody card={card} albums = {props.albums}/>
+            <CardBody card={card} albums={props.albums} />
           </Card>
         ))}
         {/* pagination */}
@@ -210,7 +211,9 @@ function CardImage(props) {
  * Takes in the information of one card.
  */
 function CardBody(props) {
+  let pathname = "/user/" + props.card.userId._id
   let card = props.card;
+  console.log("props: ", props);
   return (
     <Card.Body style={{ justifyContent: "space-between" }}>
       
@@ -218,7 +221,7 @@ function CardBody(props) {
         {/* Row 1: Username & Description */}
         {/* USERNAME + description*/}
         <Nav style={{ justifyContent: "space-between" }}>
-          <Nav.Link variant="light" href="/user" >
+          <Nav.Link variant="light" href={pathname} >
             {card.userId.username}
           </Nav.Link>
           <StarIcon card={card}/>
@@ -232,9 +235,9 @@ function CardBody(props) {
 
 
           <CodeIcon code={card.code} />
-          <SaveIcon code={card.code}/>
+          <SaveIcon code={card.code} />
           <CommentIcon id={card._id} />
-          <AddIcon albums = {props.albums} img = {card}/>
+          <AddIcon albums={props.albums} img={card} />
           <ShareIcon />
 
 
@@ -295,6 +298,7 @@ function ImageView(props) {
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
   if (!card) return <div>Image not found</div>;
+  let pathname = "/user/" + props.card.userId._id
 
   return (
     <Container style={{ width: "65%", justifyContent: "center", marginTop: "1em" }}>
@@ -304,7 +308,7 @@ function ImageView(props) {
             <h1 style={{ fontSize: "150%", textAlign: "left" }} >{card.title}</h1>
             <MISTImage code={card.code} resolution="300" />
             <Row>
-              <Button variant="light" href="/user">
+              <Button variant="light" href={pathname}>
                 {<b>{card.userId.username}</b>}
               </Button>
             </Row>
@@ -315,7 +319,7 @@ function ImageView(props) {
           </Col>
           {/* Comments */}
           <Col xs="8">
-            <ModalComments card={card} albums = {props.albums}/>
+            <ModalComments card={card} albums={props.albums} />
           </Col>
         </Row>
       </Col>
@@ -401,6 +405,7 @@ function MyVerticallyCenteredModal(props) {
  */
 function SideView(props) {
   let card = props.card;
+  let pathname = "/user/" + props.card.userId._id
 
   return (
     <Modal.Body>
@@ -409,7 +414,7 @@ function SideView(props) {
         <Col>
         <Row style={{justifyContent: "space-between"}}>
           {/* username */}
-          <Nav.Link variant="light" href="/user">
+          <Nav.Link variant="light" href={pathname}>
             {card.userId.username}
           </Nav.Link>
 
@@ -466,7 +471,7 @@ function ModalComments(props) {
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
           {comments.map((comment) => {
             return (
-              <Comment username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
+              <Comment id={comment.userId._id} username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
             )
           })}
         </Container>
@@ -474,7 +479,7 @@ function ModalComments(props) {
         {/* Horizontal Line */}
         <hr />
         {/* Icons and to make a comment field */}
-        <ModalIcons card={props.card} albums = {props.albums}/>
+        <ModalIcons card={props.card} albums={props.albums} />
         <MakeComment imageId={props.card._id} />
 
       </Form.Group>
@@ -628,6 +633,7 @@ class Comment extends Component {
 /* Example comment */
 export function Comment2(props) {
 
+  let pathname = '/user/' + props.id;
   function convertTime(date) {
     const timeAgo = new TimeAgo('en-US')
     if (typeof date === 'string')
@@ -651,7 +657,7 @@ export function Comment2(props) {
             flexFlow: "column nowrap",
             justifyContent: "flex-start"
           }}>
-            <Nav.Link size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start", paddingLeft: "0" }}>
+            <Nav.Link size="sm" variant="light" href={pathname} style={{ alignSelf: "flex-start", paddingLeft: "0" }}>
               {props.username}
             </Nav.Link>
             <div style={{ fontSize: "15px" }}>
@@ -686,7 +692,7 @@ function ModalIcons(props) {
       <StarIcon card={card} />
       <CodeIcon code={card.code} />
       <SaveIcon code={card.code} />
-      <AddIcon albums = {props.albums}/>
+      <AddIcon albums={props.albums} />
       <ShareIcon />
       
     </Row>
