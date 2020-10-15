@@ -250,16 +250,33 @@ function FlaggingIcon() {
   }
   
 /* Save Icon */
-function SaveIcon() {
+function SaveIcon(props) {
+  const newProfilePic = props.code;
+
+  function changeProfilePic() {
+    fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "changeProfilePic",
+        newProfilePic: newProfilePic,
+      }),
+    })
+      .then((res) => res.json())
+      .then((message) => alert(message));
+  }
+
   return (
-      <NavDropdown title={<FiSave />} id="nav-dropdown">
-        <NavDropdown.Item eventKey="4.1">as image</NavDropdown.Item>
-        <NavDropdown.Item eventKey="4.2"> as video</NavDropdown.Item>
-      </NavDropdown>
+    <NavDropdown title={<FiSave />} id="nav-dropdown">
+      <NavDropdown.Item onClick={() => changeProfilePic()}> as my profile image </NavDropdown.Item>
+      <NavDropdown.Item eventKey="4.1">as image</NavDropdown.Item>
+      <NavDropdown.Item eventKey="4.2"> as video</NavDropdown.Item>
+    </NavDropdown>
   );
 }
-
-
 
   /* Share Icon */
   function ShareIcon() {

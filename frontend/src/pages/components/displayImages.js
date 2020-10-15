@@ -232,7 +232,7 @@ function CardBody(props) {
 
 
           <CodeIcon code={card.code} />
-          <SaveIcon />
+          <SaveIcon code={card.code}/>
           <CommentIcon id={card._id} />
           <AddIcon albums = {props.albums} img = {card}/>
           <ShareIcon />
@@ -685,7 +685,7 @@ function ModalIcons(props) {
 
       <StarIcon card={card} />
       <CodeIcon code={card.code} />
-      <SaveIcon />
+      <SaveIcon code={card.code} />
       <AddIcon albums = {props.albums}/>
       <ShareIcon />
       
