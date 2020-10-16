@@ -75,7 +75,7 @@ function UserHeader(props) {
       .then(user => {
         if (user) setUser(user);
       })
-  }, [user])
+  }, [])
 
   return (
     <div>
