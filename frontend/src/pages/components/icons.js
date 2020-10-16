@@ -14,7 +14,7 @@
 // +---------+
 
 import MISTImage from "./MISTImageGallery"
-import React, { useState, useRef, useEffect, Component } from "react";
+import React, { useContext, useState, useRef, useEffect, Component } from "react";
 import {
   Card, Button, Pagination, Container, Row,
   Col, Nav, NavDropdown, Popover, Overlay, Form,
@@ -31,7 +31,7 @@ import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag, FiLock, FiUnlock } fr
 import { TiSocialInstagram } from "react-icons/ti";
 import { IoMdAdd } from "react-icons/io"
 import {MdVisibilityOff, MdPublic} from "react-icons/md"
-
+import { UserContext } from './Contexts/UserContext';
 import {
   BrowserRouter as Router, Switch, Route, Link,
   useHistory, useLocation, useParams
@@ -46,76 +46,78 @@ TimeAgo.addLocale(en)
 // +-------------+
 
 function AddIcon(props) {
-    const [modalShow, setModalShow] = React.useState(false);
-  
-    return (
-      <>
-        <Nav.Link onClick={() => setModalShow(true)}>
-          <RiFolderAddLine style={{ color: "black"}} />
-        </Nav.Link>
-        <AddModal
-          show={modalShow}
-          onHide={() => setModalShow(false)}
-          albums = {props.albums}
-          img = {props.img}
-        />
-      </>
-    );
-  }
-  
-  function AddModal(props) {
-  
-    const[chosenAlbum, setChosenAlbum] = React.useState({});
-    console.log(props.albums);
-  
-    function handleAddToAlbum(e){
-      fetch('/api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
-      }).then(res => res.json()).
+  const [modalShow, setModalShow] = React.useState(false);
+  const user = useContext(UserContext);
+  return (
+    <>
+      <Nav.Link onClick={() => setModalShow(true)}>
+        <RiFolderAddLine style={{ color: "black" }} />
+      </Nav.Link>
+      <AddModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        albums={user ? user.albums : null}
+        img={props.img}
+      />
+    </>
+  );
+}
+
+function AddModal(props) {
+
+  const [chosenAlbum, setChosenAlbum] = React.useState({});
+  const notSignedInMessage = 'You have to be logged in to add images to albums.';
+  console.log(props.albums);
+
+  function handleAddToAlbum(e) {
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
+    }).then(res => res.json()).
       then(data => alert(data.message)).
-      then(()=>window.location.reload()).
+      then(() => window.location.reload()).
       catch(console.log)
-    }
-  
-    return (
-      <Modal
-        {...props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton >
-          <Modal.Title id="contained-modal-title-vcenter">
-            Select Album
-            </Modal.Title>
-        </Modal.Header>
-  
-        <Modal.Body>
-          <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
-            <Col>
-              {(!props.albums)? <></> : props.albums.map((obj) => (
-                <Button onClick = {() => setChosenAlbum(obj)} variant="light">{obj.name}</Button>         
-              ))}
-            </Col>
-            <Col>
-            <Row style={{justifyContent: "flex-end"}}>
-            </Row>
-            </Col>
-          </Row>
-  
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={props.onHide} variant="light">Cancel</Button>
-          <Button onClick={handleAddToAlbum}>Add</Button>
-        </Modal.Footer>
-      </Modal>
-    );
   }
-  
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton >
+        <Modal.Title id="contained-modal-title-vcenter">
+          Select Album
+            </Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
+          <Col>
+            {(props.albums === null) ? notSignedInMessage : <></>}
+            {(!props.albums) ? <></> : props.albums.map((obj) => (
+              <Button onClick={() => setChosenAlbum(obj)} variant="light">{obj.name}</Button>
+            ))}
+          </Col>
+          <Col>
+            <Row style={{ justifyContent: "flex-end" }}>
+            </Row>
+          </Col>
+        </Row>
+
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={props.onHide} variant="light">Cancel</Button>
+        <Button onClick={handleAddToAlbum}>Add</Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
   /* Code Icon */
 function CodeIcon(props) {
     const [show, setShow] = useState(false);

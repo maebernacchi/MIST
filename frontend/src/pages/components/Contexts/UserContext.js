@@ -6,7 +6,7 @@ const UserContextProvider = (props) => {
     const [data, setData] = useState();
 
     useEffect(() => {
-        fetch('/api?action=getUser', {
+        fetch('/api?action=getAuthenticatedCompletePersonalProfile', {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json',
@@ -14,8 +14,8 @@ const UserContextProvider = (props) => {
             credentials: 'include'
           }) 
           .then(res => res.json())
-          .then(user => {setData(user);
-          })
+          .then(data => setData(data.user))
+          .catch(console.log)
     }, []);
 
     // Fetch method to get the data
