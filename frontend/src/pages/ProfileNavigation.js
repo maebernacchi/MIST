@@ -384,7 +384,7 @@ function OpenedAlbum(props) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ action: 'deleteAlbum', albumID: albumID })
-    }).then(window.location.reload())
+    }).then(res => res.json()).then(data => alert(data.message)).then(()=>window.location.reload())
   }
 
   // This fetch requests removes an image from an album
