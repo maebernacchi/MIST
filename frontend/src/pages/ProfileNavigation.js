@@ -373,19 +373,9 @@ function PrivacySettingToggle() {
  * */
 function OpenedAlbum(props) {
   const { id } = useParams();
-  const [albumID, setAlbumID] = useState(id);
   let album = props.albums.find(elem => elem._id === id);
   // Controls whether the AlbumSettings Modal is Open
 
-  function handleDeleteAlbum() {
-    fetch('/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ action: 'deleteAlbum', albumID: albumID })
-    }).then(res => res.json()).then(data => alert(data.message)).then(()=>window.location.reload())
-  }
 
   // This fetch requests removes an image from an album
   const removeImageFromAlbum = async (imageId) => {
@@ -395,7 +385,7 @@ function OpenedAlbum(props) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({action: 'removeImageFromAlbum', albumId: albumID, imageId: imageId})
+      body: JSON.stringify({action: 'removeImageFromAlbum', albumId: id, imageId: imageId})
     });
   }
 
@@ -435,10 +425,7 @@ function OpenedAlbum(props) {
             {/* settings */}
             <AlbumSettings album={album} />
             {/* delete */}
-            {/*<DeleteAlbumIcon/>*/}
-            <Button variant="light" style={{ marginLeft: "1em", marginRight: "1em" }} onClick={handleDeleteAlbum}>
-              <Link to={'/profile/albums'} className="link" style={{ color: "black", styleDecoration: "none" }}> <AiOutlineDelete /></Link>
-            </Button>
+            <DeleteAlbumIcon albumId={id}/>
             {/* add */}
             <Button variant="light" style={{ marginRight: "1em" }}>
               <IoMdAdd />

@@ -181,55 +181,25 @@ function CodeIcon(props) {
     )
   }
 
-  function DeleteAlbumIcon(props){
-    const id = props.id;
-    const album = props.album;
-    function handleDeleteAlbum() {
-      fetch('/api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'deleteAlbum', albumID: album._id})
-      }).then(window.location.reload())
-    }
-  
-    // This fetch requests removes an image from an album
-    const removeImageFromAlbum = async (imageId) => {
-      console.log(`imageId: ${imageId}, albumId: ${id}`);
-      return fetch('/api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({action: 'removeImageFromAlbum', albumID: album._id, imageId: imageId})
-      });
-    }
-  
-    // This button removes an image from this album
-    const removeImageFromAlbumButtonFactory = (imageId) => (
-      <Button onClick={async () => {
-        try {
-          const res = await removeImageFromAlbum(imageId);
-          const data = await res.json();
-          if (data.success) {
-            alert(`${data.message}`)
-          } else {
-            alert(`Failed because: ${data.message}`)
-          }
-        } catch (error) {
-          alert(`Failed because: ${error}`);
-        }
-      }}>
-        Remove
-      </Button>)
-  
-    return (
-      <Button variant="light" style={{ marginLeft: "1em", marginRight: "1em" }} onClick={props.handleDeleteAlbum}>
-        <Link to={'/profile/albums'} className="link" style={{ color: "black", styleDecoration: "none" }}> <AiOutlineDelete /></Link>
-      </Button>
-    )
+// This button deletes the album corresponding to the given albumId from the database
+function DeleteAlbumIcon(props) {
+  const { albumId } = props;
+  function handleDeleteAlbum() {
+    fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'deleteAlbum', albumID: albumId })
+    }).then(res => res.json()).then(data => alert(data.message)).then(() => window.location.reload())
   }
+
+  return (
+    <Button variant="light" style={{ marginLeft: "1em", marginRight: "1em" }} onClick={handleDeleteAlbum}>
+      <Link to={'/profile/albums'} className="link" style={{ color: "black", styleDecoration: "none" }}> <AiOutlineDelete /></Link>
+    </Button>
+  )
+}
 
   /* Flagging Icon */
 //... = hide, block, report
