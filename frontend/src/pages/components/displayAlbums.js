@@ -3,7 +3,7 @@
 // +-------------------+
 import React, { useState, useEffect, Component, useContext } from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, Carousel, Container, Col, Row } from "react-bootstrap";
+import { Button, Card, Carousel, Col, Row } from "react-bootstrap";
 import MISTImage from "./MISTImageGallery"
 import {UserContext} from './Contexts/UserContext';
 
@@ -12,10 +12,8 @@ import "../../design/styleSheets/generalStyles.css";
 import "bootstrap/dist/css/bootstrap.css";
 /* icons */
 import {
-  SaveIcon,
   MoreIcon,
   PrivacyIcon,
-  DeleteAlbumIcon
 } from "./icons.js"
 
 // +-------------------+----------------------------------------------------------------------

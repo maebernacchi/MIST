@@ -33,8 +33,8 @@ import {
   FaSnapchat
 } from "react-icons/fa";
 import { 
-  FiSave, FiCode, FiSend, FiMoreHorizontal, 
-  FiFlag, FiLock, FiUnlock, FiClock } 
+  FiSave, FiCode, FiMoreHorizontal, 
+  FiFlag, FiLock,  FiClock } 
 from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
 import { IoMdAdd } from "react-icons/io"
@@ -114,7 +114,6 @@ function AddImageToAlbumModal(props) {
         <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
         <Col xs={4}>Your Albums:</Col>
           <Col >
-            
             {(albums === null) ? notSignedInMessage : <></>}
             {(!albums) ? <></> : albums.map((obj) => (
               <Row style={{marginBottom: "1em"}}>
