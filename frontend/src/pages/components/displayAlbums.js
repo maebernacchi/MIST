@@ -2,25 +2,15 @@
 // | IMPORTS           |
 // +-------------------+
 import React, { useState, useEffect, Component, useContext } from "react";
-import DisplayImages from "./displayImages";
+import { Link } from "react-router-dom";
+import { Button, Card, Carousel, Container, Col, Row } from "react-bootstrap";
+import MISTImage from "./MISTImageGallery"
+import {UserContext} from './Contexts/UserContext';
+
 import "../../design/styleSheets/profile.css";
 import "../../design/styleSheets/generalStyles.css";
-import { Button, Card, Carousel, Container, Col, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from "./MISTImageGallery"
-import EdiText from 'react-editext'
 /* icons */
-import {
-  AiOutlinePicture,
-  AiOutlineStar,
-  AiOutlineSetting,
-  AiOutlineDelete
-} from "react-icons/ai";
-import {
-  Link,
-  useHistory, useLocation, useParams
-} from "react-router-dom";
-import {UserContext} from './Contexts/UserContext';
 import {
   SaveIcon,
   MoreIcon,
@@ -28,15 +18,10 @@ import {
   DeleteAlbumIcon
 } from "./icons.js"
 
-
 // +-------------------+----------------------------------------------------------------------
-// | profile.js        |
+// | displayAlbums.js  |
 // +-------------------+
-// +----------------+----------------------------------------------------------------------
-// | 3. Albums View |
-// +----------------+
-/** Displays albums view when Albums is called 
- *  props: albums
+/** Displays albums view when Albums is called
  */
 function DisplayAlbums() {
     const [images, setImages] = useState("");
@@ -52,13 +37,14 @@ function DisplayAlbums() {
               <Card.Header>
                 {/* Privacy Icon + Title + MoreIcon */}
                 <Card.Title style={{ margin: "auto" }} className='linkItem'>
-  
                   <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
                     <Col>
                       <PrivacyIcon />
                     </Col>
                     <Col>
-                      <Link to={{ pathname: `/profile/${album._id}` }} className="link" style={{ color: "black" }}>{album.name}</Link>
+                      <Link to={{ pathname: `/profile/${album._id}` }} className="link" style={{ color: "black" }}>
+                        {album.name}
+                      </Link>
                     </Col>
                     <MoreIcon />
                   </Row>

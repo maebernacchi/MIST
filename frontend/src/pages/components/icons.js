@@ -46,7 +46,13 @@ TimeAgo.addLocale(en)
 // | Icons       |
 // +-------------+
 
-function AddIcon(props) {
+// +------------------+-----------------------------------------------------------
+// | AddImageToAlbum  |
+// +------------------+
+/** An Add to Album Icon (RiFolderAddLine)
+ *  Calls AddImageToAlbumModal
+ */
+function AddImageToAlbumIcon(props) {
   const [modalShow, setModalShow] = React.useState(false);
   const user = useContext(UserContext);
   return (
@@ -54,7 +60,7 @@ function AddIcon(props) {
       <Nav.Link onClick={() => setModalShow(true)}>
         <RiFolderAddLine style={{ color: "black" }} />
       </Nav.Link>
-      <AddModal
+      <AddImageToAlbumModal
         show={modalShow}
         onHide={() => setModalShow(false)}
         albums={user ? user.albums : null}
@@ -64,8 +70,7 @@ function AddIcon(props) {
   );
 }
 
-function AddModal(props) {
-
+function AddImageToAlbumModal(props) {
   const [chosenAlbum, setChosenAlbum] = React.useState({});
   const notSignedInMessage = 'You have to be logged in to add images to albums.';
   console.log(props.albums);
@@ -119,6 +124,16 @@ function AddModal(props) {
   );
 }
 
+// +------------------+-----------------------------------------------------------
+// | AddImagesIcon    |
+// +------------------+
+function AddImagesIcon(props){
+  return(
+  <Button variant="light" style={{ marginRight: "1em" }}>
+              <IoMdAdd />
+            </Button>
+  )
+}
   /* Code Icon */
 function CodeIcon(props) {
     const [show, setShow] = useState(false);
@@ -184,6 +199,9 @@ function CodeIcon(props) {
     )
   }
 
+// +------------------+-----------------------------------------------------------
+// | DeleteAlbum      |
+// +------------------+
 // This button deletes the album corresponding to the given albumId from the database
 function DeleteAlbumIcon(props) {
   const { albumId } = props;
@@ -204,9 +222,11 @@ function DeleteAlbumIcon(props) {
   )
 }
 
-  /* Flagging Icon */
+// +------------------+-----------------------------------------------------------
+// | More             |
+// +------------------+
+/* More Icon */
 //... = hide, block, report
-
 function MoreIcon() {
 
     function hide() {
@@ -249,6 +269,9 @@ function MoreIcon() {
   
   }
   
+// +------------------+-----------------------------------------------------------
+// | Privacy Icon     |
+// +------------------+
   class PrivacyIcon extends React.Component {
     constructor(props) {
       super(props);
@@ -301,7 +324,10 @@ function SaveIcon(props) {
   );
 }
 
-  /* Share Icon */
+// +------------------+-----------------------------------------------------------
+// | Share Icon     |
+// +------------------+
+/* Share Icon */
   function ShareIcon() {
     return (
         <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown" >
@@ -361,7 +387,8 @@ function StarIcon(props){
   )
 }
 export {
-    AddIcon,
+    AddImageToAlbumIcon,
+    AddImagesIcon,
     CodeIcon,
     CommentIcon,
     DeleteAlbumIcon,

@@ -58,35 +58,26 @@
 // | IMPORTS           |
 // +-------------------+
 import React, { useState, useEffect, Component, useContext } from "react";
+import {BrowserRouter as Router, Switch, Route, Link, useParams } from "react-router-dom";
+import { Button, ButtonGroup,Container, Col, Form, Modal, Nav, Row, Tab, ToggleButton } from "react-bootstrap";
+
+import EdiText from 'react-editext'
+import {UserContext} from './components/Contexts/UserContext';
 import DisplayImages from "./components/displayImages";
+import {DisplayAlbums} from './components/displayAlbums';
+
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Button, ButtonGroup, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab, ToggleButton } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import MISTImage from "./components/MISTImageGallery"
-import EdiText from 'react-editext'
 /* icons */
-import {
-  AiOutlinePicture,
-  AiOutlineStar,
-  AiOutlineSetting,
-  AiOutlineDelete
-} from "react-icons/ai";
-import { IoIosArrowBack, IoMdAdd, IoIosClose } from "react-icons/io"
-import { FiFlag, FiLock, FiUnlock } from "react-icons/fi";
+import { AiOutlineSetting } from "react-icons/ai";
+import { DeleteAlbumIcon } from "./components/icons.js"
+import { IoIosArrowBack, IoMdAdd } from "react-icons/io"
+import { FiLock } from "react-icons/fi";
 import { MdPublic } from "react-icons/md";
-import {
-  BrowserRouter as Router, Switch, Route, Link,
-  useHistory, useLocation, useParams
-} from "react-router-dom";
-import {
-  SaveIcon,
-  MoreIcon,
-  PrivacyIcon,
-  DeleteAlbumIcon
-} from "./components/icons.js"
-import {UserContext} from './components/Contexts/UserContext';
-import {DisplayAlbums} from './components/displayAlbums';
+import {AddImagesIcon} from "./components/icons";
+
+
 // +-------------------+----------------------------------------------------------------------
 // | profile.js        |
 // +-------------------+
@@ -136,7 +127,9 @@ export default function ProfileNavigation(props) {
 // +----------------------------+----------------------------------------------------------------------
 // | 2. Profile Navigation tabs |
 // +----------------------------+
-/** Navigation Bar looks like this when Images is clicked */
+/** Navigation Bar looks like this when Images is clicked
+ *   props: onClick
+ */
 function ActiveImages(props) {
   return (
     <div className="links">
@@ -168,7 +161,9 @@ function ActiveImages(props) {
   )
 }
 
-/** Navigation Bar looks like this when Albums is clicked */
+/** Navigation Bar looks like this when Albums is clicked 
+ *   props: onClick
+ */
 function ActiveAlbums(props) {
   return (
     <div className="links">
@@ -187,8 +182,11 @@ function ActiveAlbums(props) {
 
         {/* Active Albums Tab */}
         <Nav.Item>
-          <Link to={'/profile/albums'} className="link"><Button variant="light" style={{ width: "100%" }} active
-          >Albums </Button></Link>
+          <Link to={'/profile/albums'} className="link">
+            <Button variant="light" style={{ width: "100%" }} active>
+              Albums 
+              </Button>
+          </Link>
         </Nav.Item>
 
         {/* Invisible OpenedAlbum tab */}
@@ -203,7 +201,10 @@ function ActiveAlbums(props) {
 // +-------------+----------------------------------------------------------------------
 // | Images View |
 // +-------------+
-/** Displays images if Images is called */
+/** Displays images if Images is called 
+*   Returns a header: "Images" + Create Image Button
+*   and displays the images created by the user in a grid by using displayImages.js
+*/
 function Images() {
   const user = useContext(UserContext);
   return (
@@ -216,7 +217,7 @@ function Images() {
         </Button>
       </Row>
 
-      {/* DisplayImages */}
+      {/* Displays the Images in a grid by calling DisplayImages*/}
       <DisplayImages cards={user.images} cardsLoaded={true} albums={user.albums} />
     </Col>
   )
@@ -225,9 +226,10 @@ function Images() {
 // +----------------+----------------------------------------------------------------------
 // | 3. Albums View |
 // +----------------+
-/** Displays albums view when Albums is called 
- *  props: albums
- */
+/** Displays albums view when Albums is called
+ *  Returns a header: "Albums" + Create Album Button, which calls AddAlbumModal
+ *  It also displays a grid of the Albums and 
+ *  and its information by calling displayAlbums,js*/
 function Albums() {
   const [images, setImages] = useState("");
   const [modalShow, setModalShow] = React.useState(false);
@@ -241,8 +243,7 @@ function Albums() {
           <IoMdAdd /> Create AlbumS
         </Button>
       </Row>
-
-      {/* albums mapped */}
+      {/* displays the albums in a grid by calling displayAlbums*/}
       <DisplayAlbums/>
 
       <AddAlbumModal
@@ -290,13 +291,21 @@ function AddAlbumModal(props) {
             {/* Album name */}
             <Form.Group controlId="name" >
               <Form.Label>Album name</Form.Label>
-              <Form.Control as="textarea" rows="1" placeholder="Enter album name" name='name' />
+              <Form.Control 
+              as="textarea" 
+              rows="1" 
+              placeholder="Enter album name" 
+              name='name' />
             </Form.Group>
 
             {/* Album description */}
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows="3" placeholder="Enter album description" name='caption' />
+              <Form.Control 
+              as="textarea" 
+              rows="3" 
+              placeholder="Enter album description" 
+              name='caption' />
             </Form.Group>
 
             {/* Album privacy */}
@@ -307,11 +316,20 @@ function AddAlbumModal(props) {
 
             {/* Buttons */}
             <Row style={{ justifyContent: "flex-end" }}>
-              <Button onClick={props.onHide} variant="light" style={{ marginRight: "1em", color: "grey" }}>Cancel</Button>
-              <Button type='submit' variant="light" style={{ marginRight: "1em", borderColor: "grey", color: "grey" }}>Submit</Button>
+              <Button
+                onClick={props.onHide}
+                variant="light"
+                style={{ marginRight: "1em", color: "grey" }}>
+                Cancel
+                </Button>
+              <Button
+                type='submit'
+                variant="light"
+                style={{ marginRight: "1em", borderColor: "grey", color: "grey" }}>
+                Submit
+                </Button>
             </Row>
           </Form>
-
         </Container>
       </Modal.Body>
     </Modal>
@@ -354,7 +372,9 @@ function PrivacySettingToggle() {
 // | 4. Opened Album View |
 // +----------------------+
 /** Displays images of an album when album is clicked 
- *   props: albums (array)
+ *   Returns a header: "Back" button, Album title, Delete, Settings, Add Icons
+ *   Grid of the images in the album (calling displayImages)
+ *     props: albums (array)
  * */
 function OpenedAlbum(props) {
   const { id } = useParams();
@@ -362,8 +382,6 @@ function OpenedAlbum(props) {
   let album = user.albums.find(elem => elem._id === id);
   
   // Controls whether the AlbumSettings Modal is Open
-
-
   // This fetch requests removes an image from an album
   const removeImageFromAlbum = async (imageId) => {
     console.log(`imageId: ${imageId}, albumId: ${id}`);
@@ -409,14 +427,10 @@ function OpenedAlbum(props) {
 
           {/* icons: settings, delete, add */}
           <Row>
-            {/* settings */}
             <AlbumSettings album={album} />
-            {/* delete */}
             <DeleteAlbumIcon albumId={id} />
-            {/* add */}
-            <Button variant="light" style={{ marginRight: "1em" }}>
-              <IoMdAdd />
-            </Button>
+            <AddImagesIcon />
+            
           </Row>
         </Row>
 
