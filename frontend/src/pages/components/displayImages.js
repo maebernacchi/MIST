@@ -55,13 +55,14 @@ import {
   AddIcon,
   CommentIcon,
   CodeIcon,
-  FlaggingIcon,
+  MoreIcon,
   StarIcon,
   PrivacyIcon
 } from "./icons.js"
 import "../../design/styleSheets/gallery.css";
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import {UserContext} from './Contexts/UserContext';
 TimeAgo.addLocale(en)
 
 /* Note: We'll eventually need to add BsViewStacked
@@ -169,7 +170,7 @@ function CardHeader(props) {
 
           
           <PrivacyIcon />
-          <FlaggingIcon />
+          <MoreIcon />
         </Row>
 
       </Card.Title>
@@ -211,7 +212,7 @@ function CardImage(props) {
  * Takes in the information of one card.
  */
 function CardBody(props) {
-  let pathname = "/user/" + props.card.userId._id
+  let pathname = "/user/" + props.card.userId._id;
   let card = props.card;
   console.log("props: ", props);
   return (
@@ -222,7 +223,7 @@ function CardBody(props) {
         {/* USERNAME + description*/}
         <Nav style={{ justifyContent: "space-between" }}>
           <Nav.Link variant="light" href={pathname} >
-            {card.userId.username}
+            {card.userId ? card.userId.username : null}
           </Nav.Link>
           <StarIcon card={card}/>
 
@@ -418,11 +419,11 @@ function SideView(props) {
             {card.userId.username}
           </Nav.Link>
 
-          <FlaggingIcon />
+          <MoreIcon />
           </Row>
           {/* image */}
           <Row style={{ justifyContent: "center", marginTop: "1em" }}>
-            <MISTImage code={card.code} resolution="250" />
+            <MISTImage code={card ? card.code : null} resolution="250" />
           </Row>
 
           {/* caption */}
@@ -621,7 +622,7 @@ class Comment extends Component {
           <div style={{ flexGrow: "2", fontSize: "18px" }}>
             {this.props.comment}
           </div>
-          {this.state.isHovering && <FlaggingIcon />}
+          {this.state.isHovering && <MoreIcon />}
           
         </Card.Body>
       </Card>
@@ -667,7 +668,7 @@ export function Comment2(props) {
           <div style={{ flexGrow: "2", fontSize: "18px" }}>
             {props.comment}
           </div>
-          <FlaggingIcon />
+          <MoreIcon />
         </Card.Body>
       </Card>
     </Row>

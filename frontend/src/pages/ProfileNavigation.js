@@ -5,6 +5,7 @@
  * ProfileNavigation.js
  * 
  * This exports the navigation bar on a profile page. It has two tabs: Images and Albums.
+ * It shows the images and albums created by the user
  
  *
  * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
@@ -14,21 +15,49 @@
 // +----------------+-----------------------------------------------------------------------
 // | Design Issues  |
 // +----------------+
-
 /**
- * The page is made up of the following parts:
- *    --First Part
- *        | Profile Image + user information
- *        | IconsBar: # of pictures, likes, badges, challenges
- *    --Profile Nav
- *        | images: calls displayImages.js
- *        | albums: function Albums 
- *            + Carousel
+ * The page is made up of the following parts and functions:
+ *    1. Routers (and contents)
+ *          + ProfileNavigation
+ *              | calls one of the functions in 2. and 
+ *              | either 3., 4., or 5. based on the URL
+ * 
+ *    2. Profile Navigation tabs
+ *          + ActiveImages
+ *              | Returns a Navigation bar where the Images tab is active
+ *          + ActiveAlbums
+ *              | Returns a Navigation bar where the Albums tab is active
+ * 
+ *    3. Images View
+ *          +Images
+ *              | Returns a header: "Images" + Create Image Button
+ *              | and displays the images created by the user in a grid
+ *              | by using displayImages.js
+ * 
+ *    4. Albums View
+ *          + Albums
+ *              | Returns a header: "Albums" + Create Album Button,
+ *              | which calls AddAlbumModal
+ *              | It also displays a grid of the Albums and 
+ *              | and its information by calling displayAlbums,js
+ *          + AddAlbumModal
+ *              | Opens a modal in which user can create new album
+ *          + PrivacySettingToggle
+ *              | Toggle between private and public icon
+ *              | Called bt AddAlbumsModal
+ * 
+ *    5. Opened Album View
+ *          + OpenedAlbum
+ *              | Returns a header: "Back" button, Album title, Delete, Settings, Add Icons
+ *              | Grid of the images in the album (calling displayImages)
+ *          + AlbumSettings
+ *              | modal in which user can change the settings of an album
  */
+
 // +-------------------+----------------------------------------------------------------------
 // | IMPORTS           |
 // +-------------------+
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect, Component, useContext } from "react";
 import DisplayImages from "./components/displayImages";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
@@ -43,36 +72,32 @@ import {
   AiOutlineSetting,
   AiOutlineDelete
 } from "react-icons/ai";
-import { GiAchievement } from "react-icons/gi";
-import { GrAchievement } from "react-icons/gr";
 import { IoIosArrowBack, IoMdAdd, IoIosClose } from "react-icons/io"
-import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag, FiLock, FiUnlock } from "react-icons/fi";
-import {MdPublic} from "react-icons/md";
+import { FiFlag, FiLock, FiUnlock } from "react-icons/fi";
+import { MdPublic } from "react-icons/md";
 import {
   BrowserRouter as Router, Switch, Route, Link,
   useHistory, useLocation, useParams
 } from "react-router-dom";
 import {
   SaveIcon,
-  ShareIcon,
-  AddIcon,
-  CommentIcon,
-  CodeIcon,
-  FlaggingIcon,
+  MoreIcon,
   PrivacyIcon,
   DeleteAlbumIcon
 } from "./components/icons.js"
-
-
+import {UserContext} from './components/Contexts/UserContext';
+import {DisplayAlbums} from './components/displayAlbums';
 // +-------------------+----------------------------------------------------------------------
 // | profile.js        |
 // +-------------------+
 
-/** Returns images, albums, or an opened album view -- also changes the URL */
+// +-------------+----------------------------------------------------------------------
+// | 1. Routes   |
+// +-------------+
+/** Returns images, albums, or an opened album view -- also changes the URL based on the routes */
 
 export default function ProfileNavigation(props) {
   const [activeTab, setActiveTab] = useState(true);
-
   function ActivateImages() {
     setActiveTab(true)
   }
@@ -83,25 +108,34 @@ export default function ProfileNavigation(props) {
     <Container>
       <div className="tabs">
         <Switch>
-          <Route path={'/profile'} exact 
+          {/* URL: /profile  --> default; it shows the images tab*/}
+          <Route path={'/profile'} exact
             component={() => <><ActiveImages onClick={ActivateAlbums} />
-                              <Images images={props.images} albums={props.albums} /></>} />
-          <Route path={'/profile/images'} exact 
-            component={() => <><ActiveImages onClick={ActivateAlbums}/> 
-                              <Images images={props.images} albums={props.albums} /></>} />
-          <Route path={'/profile/albums'} 
-            component={() => <><ActiveAlbums onClick={ActivateAlbums}/> 
-                              <Albums albums={props.albums} /></>} />
-          <Route path={'/profile/:id'} 
-            component={() => <><ActiveAlbums onClick={ActivateAlbums}/>
-                              <OpenedAlbum albums={props.albums} /></>} />
+              <Images /></>} />
+
+          {/* URL: /profile/images --> to view someone's images; shows the images tab*/}
+          <Route path={'/profile/images'} exact
+            component={() => <><ActiveImages onClick={ActivateAlbums} />
+              <Images /></>} />
+
+          {/* URL: /profile/albums --> to view someone's albums; shows the albums tab*/}
+          <Route path={'/profile/albums'}
+            component={() => <><ActiveAlbums onClick={ActivateAlbums} />
+              <Albums /></>} />
+
+          {/* URL: /profile/album.id --> to view a specific album; shows the albums tab, with the album content*/}
+          <Route path={'/profile/:id'}
+            component={() => <><ActiveAlbums onClick={ActivateAlbums} />
+              <OpenedAlbum /></>} />
         </Switch>
       </div>
     </Container>
   );
-
 }
 
+// +----------------------------+----------------------------------------------------------------------
+// | 2. Profile Navigation tabs |
+// +----------------------------+
 /** Navigation Bar looks like this when Images is clicked */
 function ActiveImages(props) {
   return (
@@ -116,7 +150,7 @@ function ActiveImages(props) {
           </Link>
         </Nav.Item>
 
-        {/* Albums Tab */}
+        {/* Inactive Albums Tab */}
         <Nav.Item>
           <Link to={'/profile/albums'} className="link"><Button variant="light" style={{ width: "100%" }}
             onClick={() => {
@@ -139,7 +173,7 @@ function ActiveAlbums(props) {
   return (
     <div className="links">
       <Nav fill variant="tabs" defaultActiveKey="images">
-        {/* Images Tab */}
+        {/* Inactive Images Tab */}
         <Nav.Item>
           <Link to={'/profile/images'} className="link">
             <Button variant="light" style={{ width: "100%" }}
@@ -166,68 +200,50 @@ function ActiveAlbums(props) {
   )
 }
 
+// +-------------+----------------------------------------------------------------------
+// | Images View |
+// +-------------+
 /** Displays images if Images is called */
-function Images(props) {
+function Images() {
+  const user = useContext(UserContext);
   return (
     <Col>
-    {/* Images + Create Image header */}
+      {/* Images + Create Image header */}
       <Row style={{ justifyContent: "space-between", marginTop: "1em" }}>
         <h3> Images</h3>
         <Button variant="light" href="/createWorkspace">
           <IoMdAdd /> Create Image
         </Button>
       </Row>
-    
-    {/* DisplayImages */}
-    <DisplayImages cards={props.images} cardsLoaded={true} albums={props.albums} />
+
+      {/* DisplayImages */}
+      <DisplayImages cards={user.images} cardsLoaded={true} albums={user.albums} />
     </Col>
   )
 }
 
-/** Displays albums view when Albums is called */
-function Albums(props) {
+// +----------------+----------------------------------------------------------------------
+// | 3. Albums View |
+// +----------------+
+/** Displays albums view when Albums is called 
+ *  props: albums
+ */
+function Albums() {
   const [images, setImages] = useState("");
   const [modalShow, setModalShow] = React.useState(false);
+  const user = useContext(UserContext);
   return (
     <Col style={{ marginTop: "1em" }}>
-      {/* Albums + Create Album */}
-      <Row style={{ justifyContent: "space-between", marginTop: "1em" }}>
+      {/* Header: Albums + Create Album */}
+      <Row style={{ justifyContent: "space-between", marginTop: "1eSm" }}>
         <h3> Albums</h3>
         <Button variant="light" onClick={() => setModalShow(true)}>
-          <IoMdAdd /> Create Album
+          <IoMdAdd /> Create AlbumS
         </Button>
       </Row>
 
       {/* albums mapped */}
-      <Row style={{justifyContent: "space-between"}}>
-        {console.log(props.albums)}
-        {props.albums.map((album, index) => (
-          <Card
-            style={{  width: "31%", marginTop: "1em", marginBottom: "1em" }}
-          >
-            <Card.Header>
-              {/* Privacy Icon + Title + MoreIcon */}
-              <Card.Title style={{ margin: "auto" }} className='linkItem'>
-
-                <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
-               <Col><PrivacyIcon/></Col> 
-                  <Col>
-                  <Link to={{ pathname: `/profile/${album._id}` }} className="link" style={{color: "black"}}>{album.name}</Link>
-                  </Col>
-                  <FlaggingIcon />
-                </Row>
-              </Card.Title>
-
-             {/* Carousel + Description + date */}
-              <Card.Body style={{ justifyContent: "space-between" }}>
-                <AlbumCarousel album={album} />
-                <p>{album.caption}</p>
-                <p>{new Date(parseInt(album.updatedAt)).toString()}</p>
-              </Card.Body>
-              </Card.Header>
-          </Card>
-        ))}
-      </Row>
+      <DisplayAlbums/>
 
       <AddAlbumModal
         show={modalShow}
@@ -235,39 +251,6 @@ function Albums(props) {
       />
     </Col>
   )
-}
-
-// carousel used for looking through albums
-function AlbumCarousel(props) {
-  const [index, setIndex] = useState(0);
-  const handleSelect = (selectedIndex, e) => {
-    setIndex(selectedIndex);
-  };
-  return (
-    /* If album is not empty, show a carousel */
-    (props.album.images.length != 0) ?
-    <Carousel activeIndex={index} onSelect={handleSelect}>
-      {props.album.images.map(image => (
-        <Carousel.Item >
-          <Row style={{ justifyContent: "center" }}>
-            <Link to={{ pathname: `/profile/${props.album._id}` }} className="link">
-              <MISTImage
-                code={image.code}
-                resolution="250"
-              />
-            </Link>
-          </Row>
-          <Carousel.Caption>
-          </Carousel.Caption>
-        </Carousel.Item>
-      ))}
-      </Carousel> 
-      :
-      /* Else; if album is empty, show an "add images" button as big as a MIST image */
-      <Button variant="light" style={{minWidth: "100%", height: "250px"}}>
-        Add Images
-      </Button>
-)
 }
 
 /** Create new album modal
@@ -342,13 +325,13 @@ function PrivacySettingToggle() {
   const [radioValue, setRadioValue] = useState('1');
 
   const privacyOptions = [
-    { name: <FiLock/>, value: '1' },
-    { name: <MdPublic/>, value: '2' },
+    { name: <FiLock />, value: '1' },
+    { name: <MdPublic />, value: '2' },
   ];
 
   return (
     <>
-      <ButtonGroup toggle style={{marginLeft: "2em"}}>
+      <ButtonGroup toggle style={{ marginLeft: "2em" }}>
         {privacyOptions.map((icon, idx) => (
           <ToggleButton
             key={idx}
@@ -367,13 +350,17 @@ function PrivacySettingToggle() {
   );
 }
 
-
+// +----------------------+----------------------------------------------------------------------
+// | 4. Opened Album View |
+// +----------------------+
 /** Displays images of an album when album is clicked 
  *   props: albums (array)
  * */
 function OpenedAlbum(props) {
   const { id } = useParams();
-  let album = props.albums.find(elem => elem._id === id);
+  const user = useContext(UserContext);
+  let album = user.albums.find(elem => elem._id === id);
+  
   // Controls whether the AlbumSettings Modal is Open
 
 
@@ -385,7 +372,7 @@ function OpenedAlbum(props) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({action: 'removeImageFromAlbum', albumId: id, imageId: imageId})
+      body: JSON.stringify({ action: 'removeImageFromAlbum', albumId: id, imageId: imageId })
     });
   }
 
@@ -425,7 +412,7 @@ function OpenedAlbum(props) {
             {/* settings */}
             <AlbumSettings album={album} />
             {/* delete */}
-            <DeleteAlbumIcon albumId={id}/>
+            <DeleteAlbumIcon albumId={id} />
             {/* add */}
             <Button variant="light" style={{ marginRight: "1em" }}>
               <IoMdAdd />
@@ -435,15 +422,15 @@ function OpenedAlbum(props) {
 
         {/* album description */}
         <Row>
-        <p>{album.caption}</p>
+          <p>{album.caption}</p>
         </Row>
 
         {/* Display album images */}
         <DisplayImages
           cards={album.images}
-          cardsLoaded={true} 
-          albums={props.albums} 
-          removeImageFromAlbumButtonFactory={removeImageFromAlbumButtonFactory} 
+          cardsLoaded={true}
+          albums={props.albums}
+          removeImageFromAlbumButtonFactory={removeImageFromAlbumButtonFactory}
         />
       </Col>
     </div>
@@ -471,7 +458,7 @@ function AlbumSettings(props) {
       },
       body: JSON.stringify({ action: 'changeAlbumCaption', albumId: album._id, newCaption: newCaption })
     }));
-    
+
   return (
     <>
       <Modal

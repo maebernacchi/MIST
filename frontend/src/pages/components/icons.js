@@ -7,18 +7,18 @@
 * for viewing images. We expect to call use these settings on both the
 * Gallery page and on the Profile/Images page.
 
-*********************************************************************************/
+*********************************************************************************/  
 
 // +---------+----------------------------------------------------------------------
 // | Imports |
 // +---------+
 
 import MISTImage from "./MISTImageGallery"
-import React, { useState, useRef, useEffect, Component } from "react";
+import React, { useState, useRef} from "react";
 import {
-  Card, Button, Pagination, Container, Row,
+  Button, Container, Row,
   Col, Nav, NavDropdown, Popover, Overlay, Form,
-  Modal, OverlayTrigger, Dropdown, FormControl, Navbar
+  Modal, OverlayTrigger
 } from "react-bootstrap";
 import { AiFillStar, AiOutlineStar,  AiOutlineDelete } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
@@ -204,7 +204,7 @@ function DeleteAlbumIcon(props) {
   /* Flagging Icon */
 //... = hide, block, report
 
-function FlaggingIcon() {
+function MoreIcon() {
 
     function hide() {
       alert("You have hidden this content and will no longer see it again.")
@@ -362,7 +362,7 @@ export {
     CodeIcon,
     CommentIcon,
     DeleteAlbumIcon,
-    FlaggingIcon,
+    MoreIcon,
     PrivacyIcon,
     SaveIcon,
     ShareIcon,

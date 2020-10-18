@@ -3,10 +3,10 @@ import React, {useState, createContext, useEffect} from 'react';
 export const UserContext = createContext();
 
 const UserContextProvider = (props) => {
-    const [data, setData] = useState();
+    const [data, setData] = useState({albums: [], images: []});
 
     useEffect(() => {
-        fetch('/api?action=getUser', {
+        fetch('/api?action=getAuthenticatedCompletePersonalProfile', {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ const UserContextProvider = (props) => {
             credentials: 'include'
           }) 
           .then(res => res.json())
-          .then(user => {setData(user);
+          .then(data => {setData(data.user);
           })
     }, []);
 

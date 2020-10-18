@@ -6,7 +6,6 @@
  * 
  * This exports the profile page, which is the user's personal profile page.
  * When a user views another user's profile page, they see user.js not profile.js.
- * 
  *
  * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
  * This work is licenced under a LGLP 3.0 or later .....
@@ -18,7 +17,7 @@
 
 /**
  * The page is made up of the following parts:
- *    --First Part
+ *    --UserInfo
  *        | Profile Image + user information
  *        | IconsBar: # of pictures, likes, badges, challenges
  *    --Profile Nav (ProfileNavigation.js)
@@ -33,7 +32,7 @@ import DisplayImages from "./components/displayImages";
 import ProfileNavigation from "./ProfileNavigation";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
-import { Button, Card, Carousel, Container, Col, Form, Modal, Nav, Row, OverlayTrigger, Popover } from "react-bootstrap";
+import { Button, Container, Col, Form, Nav, Row, OverlayTrigger, Popover } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./components/MISTImageGallery"
 /* icons */
@@ -44,15 +43,11 @@ import {
 } from "react-icons/ai";
 import { GiAchievement } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
-import { IoIosArrowBack, IoMdAdd } from "react-icons/io"
-import {
-  BrowserRouter, Switch, Route, Link,
-  useHistory, useLocation, useParams
-} from "react-router-dom";
 
 // +-------------------+----------------------------------------------------------------------
 // | profile.js        |
 // +-------------------+
+// returns the user info on the profile page
 export default function Profile() {
 
   /**
@@ -107,9 +102,9 @@ export default function Profile() {
         <h1> Profile </h1>
       </Container>
 
-      {/* First Part: Profile Picture + information */}
+      {/* UserInfo: Profile Picture + information */}
       <Container style={{ marginTop: "3vh", marginBottom: "3vh" }}>
-        <FirstPart name={user.forename + " " + user.surname}
+        <UserInfo name={user.forename + " " + user.surname}
           userid={user.id}
           username={user.username}
           date={user.createdAt}
@@ -127,7 +122,7 @@ export default function Profile() {
 }
 
 // user information: profile pic, username, name, email, member since
-function FirstPart(props) {
+function UserInfo(props) {
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
   const [newUsername, setNewUsername] = useState("");
