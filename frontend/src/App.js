@@ -104,7 +104,7 @@ function App() {
     <div id="page-container">
       <BrowserRouter>
       {/* navigation bar based on the user's logged in state */}
-        {data.id ? <UserNavigation /> : <BaseNavigation />}
+        {data ? <UserNavigation /> : <BaseNavigation />}
 
         {/* the container-wrap styling helps with the footer */}
         <Container fluid id="content-wrap">

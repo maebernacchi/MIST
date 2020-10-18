@@ -5,7 +5,7 @@ import React, { useState, useEffect, Component, useContext } from "react";
 import DisplayImages from "./displayImages";
 import "../../design/styleSheets/profile.css";
 import "../../design/styleSheets/generalStyles.css";
-import { Button, ButtonGroup, Card, Carousel, Container, Col, Form, Modal, Nav, Row, Tab, ToggleButton } from "react-bootstrap";
+import { Button, Card, Carousel, Container, Col, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import MISTImage from "./MISTImageGallery"
 import EdiText from 'react-editext'
@@ -16,11 +16,8 @@ import {
   AiOutlineSetting,
   AiOutlineDelete
 } from "react-icons/ai";
-import { IoIosArrowBack, IoMdAdd, IoIosClose } from "react-icons/io"
-import { FiFlag, FiLock, FiUnlock } from "react-icons/fi";
-import { MdPublic } from "react-icons/md";
 import {
-  BrowserRouter as Router, Switch, Route, Link,
+  Link,
   useHistory, useLocation, useParams
 } from "react-router-dom";
 import {UserContext} from './Contexts/UserContext';
