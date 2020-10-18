@@ -3,10 +3,18 @@
 // +-------+
 
 /******************************************************************************
-* displayImages.js provides Gallery, ImageView, and ModalView settings
-* for viewing images. We expect to call use these settings on both the
-* Gallery page and on the Profile/Images page.
-
+ Icons defines icons used in the app:
+    AddImageToAlbumIcon,
+    AddImagesIcon,
+    AnimationIcon,
+    CodeIcon,
+    CommentIcon,
+    DeleteAlbumIcon,
+    MoreIcon,
+    PrivacyIcon,
+    SaveIcon,
+    ShareIcon,
+    StarIcon
 *********************************************************************************/  
 
 // +---------+----------------------------------------------------------------------
