@@ -693,7 +693,7 @@ function ModalIcons(props) {
       <StarIcon card={card} />
       <CodeIcon code={card.code} />
       <SaveIcon code={card.code} />
-      <AddIcon albums={props.albums} />
+      <AddIcon albums={props.albums} img={props.card}/>
       <ShareIcon />
       
     </Row>
