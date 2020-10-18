@@ -38,15 +38,13 @@ function DisplayAlbums() {
                 {/* Privacy Icon + Title + MoreIcon */}
                 <Card.Title style={{ margin: "auto" }} className='linkItem'>
                   <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
-                    <Col>
-                      <PrivacyIcon />
-                    </Col>
+                    <PrivacyIcon />
                     <Col>
                       <Link to={{ pathname: `/profile/${album._id}` }} className="link" style={{ color: "black" }}>
-                        {album.name}
+                        <p>{album.name}</p>
                       </Link>
                     </Col>
-                    <MoreIcon />
+                    <MoreIcon style={{backgroundColor: "red"}}/>
                   </Row>
                 </Card.Title>
   
@@ -63,7 +61,9 @@ function DisplayAlbums() {
     )
   }
   
-  /* returns carousel used for looking through album images, or an add image button if the album is empty
+  /* returns carousel used for looking through album images, 
+   * or an add image button if the album is empty
+   * Called by DisplayAlbums
    * props: album
    */
   function AlbumCarousel(props) {

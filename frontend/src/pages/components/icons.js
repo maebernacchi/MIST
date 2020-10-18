@@ -13,33 +13,33 @@
 // | Imports |
 // +---------+
 
-import MISTImage from "./MISTImageGallery"
-
-import React, { useContext, useState, useRef, useEffect, Component } from "react";
+import React, { useContext, useState, useRef} from "react";
 import {
-  Button, Container, Row,
+  Button, Row,
   Col, Nav, NavDropdown, Popover, Overlay, Form,
   Modal, OverlayTrigger
 } from "react-bootstrap";
+import { UserContext } from './Contexts/UserContext';
+import {Link, useLocation } from "react-router-dom";
+import "../../design/styleSheets/gallery.css";
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+import copy from 'copy-to-clipboard';
+/* icons */
 import { AiFillStar, AiOutlineStar,  AiOutlineDelete } from "react-icons/ai";
-import { BsClock } from "react-icons/bs";
 import { RiFolderAddLine } from "react-icons/ri";
 import {
   FaRegShareSquare, FaRegComments, FaFacebook,
   FaSnapchat
 } from "react-icons/fa";
-import { FiSave, FiCode, FiSend, FiMoreHorizontal, FiFlag, FiLock, FiUnlock } from "react-icons/fi";
+import { 
+  FiSave, FiCode, FiSend, FiMoreHorizontal, 
+  FiFlag, FiLock, FiUnlock, FiClock } 
+from "react-icons/fi";
 import { TiSocialInstagram } from "react-icons/ti";
 import { IoMdAdd } from "react-icons/io"
 import {MdVisibilityOff, MdPublic} from "react-icons/md"
-import { UserContext } from './Contexts/UserContext';
-import {
-  BrowserRouter as Router, Switch, Route, Link,
-  useHistory, useLocation, useParams
-} from "react-router-dom";
-import "../../design/styleSheets/gallery.css";
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
+
 TimeAgo.addLocale(en)
 
 // +-------------+-----------------------------------------------------------
@@ -51,28 +51,38 @@ TimeAgo.addLocale(en)
 // +------------------+
 /** An Add to Album Icon (RiFolderAddLine)
  *  Calls AddImageToAlbumModal
+ *  Called in DisplayImages
+ *  props: img
  */
+
 function AddImageToAlbumIcon(props) {
   const [modalShow, setModalShow] = React.useState(false);
-  const user = useContext(UserContext);
   return (
     <>
       <Nav.Link onClick={() => setModalShow(true)}>
-        <RiFolderAddLine style={{ color: "black" }} />
+        <RiFolderAddLine 
+          style={{ color: "black" }} 
+        />
       </Nav.Link>
       <AddImageToAlbumModal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        albums={user ? user.albums : null}
         img={props.img}
       />
     </>
   );
 }
 
+/**
+ * Displays a modal to choose an album to add the image to
+ * props: show, onHide, img
+ */
 function AddImageToAlbumModal(props) {
   const [chosenAlbum, setChosenAlbum] = React.useState({});
   const notSignedInMessage = 'You have to be logged in to add images to albums.';
+ 
+  const user = useContext(UserContext);
+  const albums = user.albums;
   console.log(props.albums);
 
   function handleAddToAlbum(e) {
@@ -91,7 +101,6 @@ function AddImageToAlbumModal(props) {
   return (
     <Modal
       {...props}
-      size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
@@ -103,10 +112,19 @@ function AddImageToAlbumModal(props) {
 
       <Modal.Body>
         <Row style={{ justifyContent: "space-between", paddingRight: "1em" }}>
-          <Col>
-            {(props.albums === null) ? notSignedInMessage : <></>}
-            {(!props.albums) ? <></> : props.albums.map((obj) => (
-              <Button onClick={() => setChosenAlbum(obj)} variant="light">{obj.name}</Button>
+        <Col xs={4}>Your Albums:</Col>
+          <Col >
+            
+            {(albums === null) ? notSignedInMessage : <></>}
+            {(!albums) ? <></> : albums.map((obj) => (
+              <Row style={{marginBottom: "1em"}}>
+              <Button 
+                onClick={() => setChosenAlbum(obj)} 
+                variant="light"
+              >
+                {obj.name}
+              </Button>
+              </Row>
             ))}
           </Col>
           <Col>
@@ -117,8 +135,20 @@ function AddImageToAlbumModal(props) {
 
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={props.onHide} variant="light">Cancel</Button>
-        <Button onClick={handleAddToAlbum}>Add</Button>
+        {/* Cancel button */}
+        <Button 
+        onClick={props.onHide} 
+        variant="light">
+          Cancel
+          </Button>
+
+        {/* Add button */}
+        <Button 
+        variant="light" 
+        style={{borderColor: "grey"}} 
+        onClick={handleAddToAlbum}>
+          Add
+          </Button>
       </Modal.Footer>
     </Modal>
   );
@@ -127,24 +157,71 @@ function AddImageToAlbumModal(props) {
 // +------------------+-----------------------------------------------------------
 // | AddImagesIcon    |
 // +------------------+
-function AddImagesIcon(props){
+/**
+ * Displays a plus sign (<IoMdAdd />) 
+ * to choose from liked / your images to add to a specific album
+ */
+function AddImagesIcon(){
   return(
   <Button variant="light" style={{ marginRight: "1em" }}>
-              <IoMdAdd />
-            </Button>
+    <IoMdAdd />
+  </Button>
   )
 }
-  /* Code Icon */
+
+// +------------------+-----------------------------------------------------------
+// | AnimationIcon    |
+// +------------------+
+/**
+ * Displays a clock icon (<FiClock/>) to show if the image is animated
+ * props: isAnimated
+ */
+  /* Animation Icon */
+  function AnimationIcon(props){
+    return(
+      <>
+      {props.isAnimated ? 
+      (
+      <Nav.Item>
+        <FiClock size={15}/>
+      </Nav.Item>
+      ) : 
+      ("")
+  }
+      </>
+    )
+  }
+
+// +------------------+-----------------------------------------------------------
+// | Code Icon        |
+// +------------------+
+/**
+ * displays a code icon (<FiCode />)
+ * on click, it shows the code
+ * props: code
+ */
 function CodeIcon(props) {
     const [show, setShow] = useState(false);
     const [target, setTarget] = useState(null);
+    const [copyText, setCopyText] = useState("Copy")
     const ref = useRef(null);
   
+    /* shows or does not show the popover
+     * and if it is not shown after the click, 
+     * the button says "copy" */
     const handleClick = (event) => {
       setShow(!show);
+      !show ? setCopyText("Copy") : setCopyText(copyText) ;
       setTarget(event.target);
+      
     };
-  
+
+    /* copies code and displays "Copied!" instead of "Copy" */
+    const handleCopy = () => {
+      copy(props.code);
+      setCopyText("Copied!");
+    }
+
     return (
       <div ref={ref}>
         <Nav.Item>
@@ -159,12 +236,22 @@ function CodeIcon(props) {
           container={ref.current}
           containerPadding={20}
         >
+          {/* Popover: "Code", code, copy button */}
           <Popover id="popover-contained">
-            <Popover.Title as="h3" title={"<FiCode/>"}></Popover.Title>
+            {/* Title: "Code" */}
+            <Popover.Title as="h3">
+              Code
+              </Popover.Title>
+            {/* Content: code and copy button */}
             <Popover.Content>
-              <Container>{props.code}</Container>
+              <p2>{props.code}</p2>
               <Row style={{ justifyContent: "flex-end" }}>
-                <Button variant="light" style={{ color: "black", marginRight: "1em", marginLeft: "1em" }} > Copy</Button>
+                <Button 
+                variant="light" 
+                style={{ color: "black", marginRight: "1em", marginLeft: "1em" }}
+                onClick={handleCopy}> 
+                {copyText}
+                </Button>
               </Row>
             </Popover.Content>
           </Popover>
@@ -172,37 +259,41 @@ function CodeIcon(props) {
       </div>
     );
   }
-  
-  /* Comment Icon */
+
+
+// +------------------+-----------------------------------------------------------
+// | Comment Icon     |
+// +------------------+
+/**
+ * Displays a comment icon (<FaRegComments/>)
+ * Calls the ImageModal onClick
+ */
   function CommentIcon(props) {
     let location = useLocation();
     return (
       <Nav.Item  >
         <Nav.Link>
-      <Link
-        to={{
-          pathname: `/img/${props.id}`,
-          // This is the trick! This link sets
-          // the `background` in location state.
-          state: { background: location },
-        }}
-       
-      >
-  
-        <FaRegComments
-          style={{ color: "black"}}
-        />
-     
-      </Link>
-      </Nav.Link>
-        </Nav.Item>
+          <Link
+            to={{
+              pathname: `/img/${props.id}`,
+              state: { background: location },
+            }}
+          >
+            <FaRegComments
+              style={{ color: "black" }}
+            />
+          </Link>
+        </Nav.Link>
+      </Nav.Item>
     )
   }
 
 // +------------------+-----------------------------------------------------------
 // | DeleteAlbum      |
 // +------------------+
+// Displays delete (trash) icon (<AiOutlineDelete />)
 // This button deletes the album corresponding to the given albumId from the database
+// props: albumId
 function DeleteAlbumIcon(props) {
   const { albumId } = props;
   function handleDeleteAlbum() {
@@ -217,22 +308,31 @@ function DeleteAlbumIcon(props) {
 
   return (
     <Button variant="light" style={{ marginLeft: "1em", marginRight: "1em" }} onClick={handleDeleteAlbum}>
-      <Link to={'/profile/albums'} className="link" style={{ color: "black", styleDecoration: "none" }}> <AiOutlineDelete /></Link>
+      <Link
+        to={'/profile/albums'}
+        className="link"
+        style={{ color: "black", styleDecoration: "none" }}
+      >
+        <AiOutlineDelete />
+      </Link>
     </Button>
   )
 }
 
 // +------------------+-----------------------------------------------------------
-// | More             |
+// | More Icon        |
 // +------------------+
-/* More Icon */
-//... = hide, block, report
+/* Displays 3 dots icon (more)
+ *  Shows: Report and Hide on click
+ *
+ * TODO: Actually Hide / Report the image or album or comment etc...
+ */
 function MoreIcon() {
-
     function hide() {
       alert("You have hidden this content and will no longer see it again.")
     }
   
+    /* hide popover */
     let hidePopover = (
       <Popover id="popover-basic">
         <Popover.Content>
@@ -241,6 +341,7 @@ function MoreIcon() {
       </Popover>
     );
   
+    /* report popover */
     let reportPopover = (
       <Popover id="popover-basic">
         <Popover.Content>
@@ -250,32 +351,47 @@ function MoreIcon() {
     );
   
     return (
-  
-     
-        <NavDropdown title= {<FiMoreHorizontal  size={15} style={{color: "grey"}}/>} id="nav-dropdown" >
-        <OverlayTrigger trigger="hover" placement="right" overlay={hidePopover}>
+      <NavDropdown
+        title={<FiMoreHorizontal
+          size={15} style={{ color: "grey", marginLeft: "0", paddingLeft: "0" }} />}
+        id="nav-dropdown">
+        {/* Hide */}
+        <OverlayTrigger
+          trigger="hover"
+          placement="right"
+          overlay={hidePopover}>
           <NavDropdown.Item onClick={() => hide()}>
-            <MdVisibilityOff/>  Hide
+            <MdVisibilityOff />  Hide
           </NavDropdown.Item>
-          </OverlayTrigger>
-          <OverlayTrigger trigger="hover" placement="right" overlay={reportPopover}>
+        </OverlayTrigger>
+
+        {/* Report */}
+        <OverlayTrigger
+          trigger="hover"
+          placement="right"
+          overlay={reportPopover}>
           <NavDropdown.Item href="/report">
-          <FiFlag /> Report         
+            <FiFlag /> Report
           </NavDropdown.Item>
-          </OverlayTrigger>
-        </NavDropdown>
-    
+        </OverlayTrigger>
+      </NavDropdown>
     )
-  
   }
   
 // +------------------+-----------------------------------------------------------
 // | Privacy Icon     |
 // +------------------+
+/**
+ * Displays a lock icon or a world icon depending on the state of the privacy
+ * Onclick it changes to the other
+ * props: will need to be the current privacy setting
+ * 
+ * TODO: add the props, and make it that only one can change it if its their own image / album
+ */
   class PrivacyIcon extends React.Component {
     constructor(props) {
-      super(props);
-      this.state = {private: true};
+      super(props);  
+      this.state = {private: true}; //<-- should be props.privacy
       this.handlePrivateClick = this.handlePrivateClick.bind(this);
     }
   
@@ -287,7 +403,6 @@ function MoreIcon() {
   
     render() {
       return (
-   
           <Nav.Link style={{color: "black", marginRight: "0", paddingRight: "0"}} onClick={this.handlePrivateClick}> 
             {this.state.private ? <FiLock size={15}/> : <MdPublic size={15}/>}
           </Nav.Link>
@@ -325,9 +440,14 @@ function SaveIcon(props) {
 }
 
 // +------------------+-----------------------------------------------------------
-// | Share Icon     |
+// | Share Icon       |
 // +------------------+
-/* Share Icon */
+/**
+ * Displays a a share icon (<FaRegShareSquare />)
+ * OnClick it gives options to Facebook, Insta, Snap
+ * 
+ * TODO: Make it work!
+ */
   function ShareIcon() {
     return (
         <NavDropdown title={<FaRegShareSquare />} id="nav-dropdown" >
@@ -352,35 +472,58 @@ function SaveIcon(props) {
     );
   }
 
+// +------------------+-----------------------------------------------------------
+// | Star Icon       |
+// +------------------+
+/**
+ * Displays a a star icon (<AiOutlineStar />) or <AiFillStar/>
+ * depending on if the user had liked the image or not
+ * OnClick it changes to the other and counts up or down on rankings
+ * 
+ * TODO: bring in props (original stat of the star)
+ *     
+ */
 function StarIcon(props){
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(false); //props.like <-- boolean
+
+  //count up if it was liked
   function likeCount(){
     props.card.ratings++;
   }
+
+  //count down if it was disliked
   function dislikeCount(){
     props.card.ratings--;
   }
+
+  //change the icon
   function handleClick(){
     setLiked(!liked);
   }
   return(
     <div>
       {liked ?
-       <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={() => {
-        handleClick();
-        dislikeCount();
-      }}>
-        <AiFillStar size={15} />
-        {props.card.ratings}
-      </Nav.Link>
-      :
-      <Nav.Link style={{ color: "black", display: "inline-block" }} onClick={() => {
-        handleClick();
-        likeCount();
-      }}>
-        <AiOutlineStar size={15} />
-        {props.card.ratings}
-      </Nav.Link>
+        /* If it was previously liked, then onClick dislike it*/
+        <Nav.Link
+          style={{ color: "black", display: "inline-block" }}
+          onClick={() => {
+            handleClick();
+            dislikeCount();
+          }}>
+          <AiFillStar size={15} />
+          {props.card.ratings}
+        </Nav.Link>
+        :
+        /* If it was previously disliked, then onClick like it*/
+        <Nav.Link
+          style={{ color: "black", display: "inline-block" }}
+          onClick={() => {
+            handleClick();
+            likeCount();
+          }}>
+          <AiOutlineStar size={15} />
+          {props.card.ratings}
+        </Nav.Link>
       }
       </div>
     
@@ -389,6 +532,7 @@ function StarIcon(props){
 export {
     AddImageToAlbumIcon,
     AddImagesIcon,
+    AnimationIcon,
     CodeIcon,
     CommentIcon,
     DeleteAlbumIcon,

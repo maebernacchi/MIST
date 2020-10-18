@@ -87,7 +87,7 @@ import {AddImagesIcon} from "./components/icons";
 // +-------------+
 /** Returns images, albums, or an opened album view -- also changes the URL based on the routes */
 
-export default function ProfileNavigation(props) {
+export default function ProfileNavigation() {
   const [activeTab, setActiveTab] = useState(true);
   function ActivateImages() {
     setActiveTab(true)
@@ -128,6 +128,7 @@ export default function ProfileNavigation(props) {
 // | 2. Profile Navigation tabs |
 // +----------------------------+
 /** Navigation Bar looks like this when Images is clicked
+ *  Called by ProfileNavigation
  *   props: onClick
  */
 function ActiveImages(props) {
@@ -162,6 +163,7 @@ function ActiveImages(props) {
 }
 
 /** Navigation Bar looks like this when Albums is clicked 
+ *  Called by ProfileNavigation
  *   props: onClick
  */
 function ActiveAlbums(props) {
@@ -204,6 +206,7 @@ function ActiveAlbums(props) {
 /** Displays images if Images is called 
 *   Returns a header: "Images" + Create Image Button
 *   and displays the images created by the user in a grid by using displayImages.js
+*   Called by ProfileNavigation
 */
 function Images() {
   const user = useContext(UserContext);
@@ -229,7 +232,9 @@ function Images() {
 /** Displays albums view when Albums is called
  *  Returns a header: "Albums" + Create Album Button, which calls AddAlbumModal
  *  It also displays a grid of the Albums and 
- *  and its information by calling displayAlbums,js*/
+ *  and its information by calling displayAlbums,js
+ *  Called by ProfileNavigation
+ * */
 function Albums() {
   const [images, setImages] = useState("");
   const [modalShow, setModalShow] = React.useState(false);
@@ -237,10 +242,10 @@ function Albums() {
   return (
     <Col style={{ marginTop: "1em" }}>
       {/* Header: Albums + Create Album */}
-      <Row style={{ justifyContent: "space-between", marginTop: "1eSm" }}>
+      <Row style={{ justifyContent: "space-between", marginTop: "1em" }}>
         <h3> Albums</h3>
         <Button variant="light" onClick={() => setModalShow(true)}>
-          <IoMdAdd /> Create AlbumS
+          <IoMdAdd /> Create Album
         </Button>
       </Row>
       {/* displays the albums in a grid by calling displayAlbums*/}
@@ -374,9 +379,8 @@ function PrivacySettingToggle() {
 /** Displays images of an album when album is clicked 
  *   Returns a header: "Back" button, Album title, Delete, Settings, Add Icons
  *   Grid of the images in the album (calling displayImages)
- *     props: albums (array)
  * */
-function OpenedAlbum(props) {
+function OpenedAlbum() {
   const { id } = useParams();
   const user = useContext(UserContext);
   let album = user.albums.find(elem => elem._id === id);
@@ -430,7 +434,6 @@ function OpenedAlbum(props) {
             <AlbumSettings album={album} />
             <DeleteAlbumIcon albumId={id} />
             <AddImagesIcon />
-            
           </Row>
         </Row>
 
@@ -443,7 +446,6 @@ function OpenedAlbum(props) {
         <DisplayImages
           cards={album.images}
           cardsLoaded={true}
-          albums={props.albums}
           removeImageFromAlbumButtonFactory={removeImageFromAlbumButtonFactory}
         />
       </Col>
@@ -451,9 +453,12 @@ function OpenedAlbum(props) {
   )
 }
 
-function AlbumSettings(props) {
+function AlbumSettings() {
   const [albumSettingsIsOpen, setAlbumSettingsIsOpen] = useState(false);
-  const album = props.album;
+  const { id } = useParams();
+  const user = useContext(UserContext);
+  let album = user.albums.find(elem => elem._id === id);
+
   // This fetch request renames the album
   const renameAlbum = async (newName) => (
     fetch('/api', {
@@ -463,6 +468,7 @@ function AlbumSettings(props) {
       },
       body: JSON.stringify({ action: 'renameAlbum', albumId: album._id, newName: newName })
     }));
+
   // This fetch request changes the albums caption/description
   const changeAlbumCaption = async (newCaption) => (
     fetch('/api', {
@@ -493,7 +499,7 @@ function AlbumSettings(props) {
             <div style={{ width: "90%" }}>
               <Form>
                 <Form.Group as={Row} controlId="formPlaintextEmail">
-                  {/* name */}
+                  {/* Album name */}
                   <Form.Label column sm="4">
                     Album name
                   </Form.Label>
@@ -509,7 +515,7 @@ function AlbumSettings(props) {
                     />
                   </Col>
 
-                  {/* username */}
+                  {/* Album description */}
                   <Form.Label column sm="4">
                     Album description
                   </Form.Label>
@@ -528,14 +534,9 @@ function AlbumSettings(props) {
                       }}
                     />
                   </Col>
-
-                  {/* member since */}
-                  <Form.Label column sm="4">
-                    Member since
-                  </Form.Label>
-                  <Col sm="6">
-                    <Form.Control plaintext readOnly value={props.date} />
-                  </Col>
+                  {/* Album Privacy setting */}
+                  <Form.Label>Privacy</Form.Label>
+                  <Col><PrivacySettingToggle /></Col>
 
                 </Form.Group>
               </Form>
