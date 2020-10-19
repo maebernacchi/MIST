@@ -113,16 +113,31 @@ module.exports.saveImage = (userId, title, code, res) => {
         .then((writeOpResult) => {
           if (writeOpResult.nModified === 0) {
             console.log("Failed to insert image into user's array");
+            res.json({
+              success: false,
+              message: 'Failed to save image for unknown reason'
+            });
+          } else {
+            res.json({
+              success: true,
+              message: 'Successfully saved image!'
+            });
           }
         })
         .catch((err) => {
           console.error(err);
-          res.end(JSON.stringify(error));
+          res.json({
+            success: false,
+            message: err
+          })
         });
     })
     .catch((err) => {
       console.error(err);
-      res.end(JSON.stringify(error));
+      res.json({
+        success: false,
+        message: err,
+      })
     });
 };
 

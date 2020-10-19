@@ -95,8 +95,8 @@ handlers.imageexists = function (info, req, res) {
   } else {
     database.imageExists(req.user.username, info.title, (err, response) => {
       if (err) fail(res, "Unable to save image");
-      if (response) res.json("image exists");
-      else res.json("image does not exist");
+      if (response) res.json({ success: true, exists: true});
+      else res.json({ success: true, exists: false});
     });
   }
 };
@@ -107,12 +107,14 @@ handlers.imageexists = function (info, req, res) {
  *   info.title: The title of the image
  */
 handlers.saveimage = function (info, req, res) {
-  database.getUserIdByUsername(req.user.username, (err, userId) => {
-    if (err) fail(res, "no user found");
-    else {
-      database.saveImage(userId, req.body.title, req.body.code, res);
-    }
-  });
+  if (!req.isAuthenticated()) {
+    res.json({
+      success: false,
+      message: 'You cannot save this image because you are not logged in!',
+    });
+  } else {
+    database.saveImage(req.user._id, req.body.title, req.body.code, res);
+  }
 };
 
 /**
@@ -177,13 +179,13 @@ handlers.addToAlbum = async function (info, req, res) {
  */
 handlers.wsexists = async function (info, req, workspace) {
   if (!req.isAuthenticated()) {
-    res.json("logged out");
+    res.json({ success: false, message: "logged out" });
   } else {
     try {
       const exists = await database.wsexists(req.user._id, info.name);
-      res.json({ exists: exists, success: true });
+      res.json({ success: true, exists: exists });
     } catch (error) {
-      res.json("Database query failed for unknown reason");
+      res.json({ success: false, message: error });
     }
   } // else
 };
@@ -216,9 +218,7 @@ handlers.getws = async function (info, req, res) {
 /**
  * Save a workspace.
  *   action: savews
- *   name: the name of the workspace
- *   data: The information about the workspace
- *   replace: true or false [optional]
+ *   workspace: { name: String, data: Object }
  * Precondition:
  * The user does not already own a workspace by the same name.
  */
