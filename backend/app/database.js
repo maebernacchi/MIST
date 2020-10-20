@@ -91,9 +91,9 @@ module.exports.imageExists = (username, title, callback) => {
  * @param userId the user._id of the user
  * @param title title of the image
  * @param code code for the image
- * @param res the response
+ * @returns {object} a MongoDB writeOpResult that shows if the image has been linked to the user
  */
-module.exports.saveImage = (userId, title, code, res) => {
+module.exports.saveImage = async (userId, title, code) => {
   //build image
   let image = Image({
     userId: sanitize(userId),
@@ -102,43 +102,25 @@ module.exports.saveImage = (userId, title, code, res) => {
     public: true,
     caption: "",
   });
-
   //save image
-  image
-    .save()
-    .then((image) => {
-      //push image to user's image array
-      User.updateOne({ _id: userId }, { $push: { images: image._id } })
-        .exec()
-        .then((writeOpResult) => {
-          if (writeOpResult.nModified === 0) {
-            console.log("Failed to insert image into user's array");
-            res.json({
-              success: false,
-              message: 'Failed to save image for unknown reason'
-            });
-          } else {
-            res.json({
-              success: true,
-              message: 'Successfully saved image!'
-            });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          res.json({
-            success: false,
-            message: err
-          })
-        });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.json({
-        success: false,
-        message: err,
-      })
-    });
+  const imageDocument = await image.save();
+  if (!imageDocument) {
+    throw Error('Unknown reason.')
+  }
+  const writeOpResult = await User.updateOne({ _id: userId }, { $push: { images: image._id } }).exec();
+  // We need to verify that the image has been linked to the user
+  if (writeOpResult.nMatched === 0) {
+    // We do not expect to be in this case as there must be at least one match because the user must
+    // be authorized in order to make this query. Hence there should be a matching user document.
+    throw Error("Linking image to user failed because we could not locate the user's document.");
+  }
+  if (writeOpResult.nModified === 0) {
+    // We do not expect to be in this case as there the query is done by the push operator
+    // on an existing user document. As the user document should exist with an array as the value 
+    // corresponding to its "images" field, this should succeed. We will default to say that it 
+    // is because the user's document is exceed the default maximum capacity of 16MB.
+    throw Error("Linking image to user failed because there is not enough space.")
+  }
 };
 
 /**
@@ -926,8 +908,8 @@ module.exports.getUserExpertWS = (userId, res) => {
 // +-----------+-------------------------------------------------
 // | Workspace |
 // +-----------+
-module.exports.savews = (userId, workspace) =>
-  User.bulkWrite(
+module.exports.saveWorkspace = async (userId, workspace) => {
+  const bulkWriteOpResult = await User.bulkWrite(
     [
       {
         updateOne: {
@@ -950,12 +932,19 @@ module.exports.savews = (userId, workspace) =>
     ],
     { ordered: true }
   );
+  if (bulkWriteOpResult.nMatched === 0) {
+    throw "Error Unknown";
+  }
+  if (bulkWriteOpResult.nModified === 0) {
+    throw "Error Unknown";
+  } 
+}
 
 /**
  * Retrieves the workspaces corresponding to userid
  * We assume that userid corresponds to a user existing in the database
  */
-module.exports.getws = async (userid) =>
+module.exports.getWorkspaces = async (userid) =>
   User.findById(userid).select("workspaces.data workspaces.name").exec();
 
 /**
@@ -964,15 +953,16 @@ module.exports.getws = async (userid) =>
  * user in the database
  *
  */
-module.exports.wsexists = async (userid, wsname) =>
+module.exports.workspaceExists = async (userid, wsname) => (
   User.findOne({
     _id: mongoose.Types.ObjectId(userid),
     "workspaces.name": wsname,
   })
     .countDocuments()
-    .exec();
+    .exec()
+)
 
-module.exports.deletews = async (userId, workspace_name) => (
+module.exports.deleteWorkspace = async (userId, workspace_name) => (
   User.findOne({ _id: mongoose.Types.ObjectId(userId) })
     .updateOne({
       $pull: { workspaces: { name: workspace_name } },

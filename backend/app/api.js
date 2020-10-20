@@ -67,6 +67,55 @@ fail = function (res, message) {
   res.status(400).send(message); // "Bad request"
 }; // fail
 
+// https://stackoverflow.com/questions/38820251/how-is-req-isauthenticated-in-passport-js-implemented
+function checkAuthentication(request, response, next) {
+  if (request.isAuthenticated()) {
+    //req.isAuthenticated() will return true if user is logged in
+    next();
+  } else {
+    // This is the jsend response status for rejected API call
+    const responseStatus = "fail";
+    // This is the unauthorized/unauthenticated HTTP response status code
+    const responseStatusCode = 401;
+    const data = { "Authentication": "You need to be logged in!" };
+    dispatchResponse(response, responseStatus, responseStatusCode, data);
+  };
+};
+
+// This implements response in jsend standard https://github.com/omniti-labs/jsend
+function dispatchResponse(response, status, statusCode, data, message){
+  switch(status){
+    case "success":
+      response.json({
+        "status": "success",
+        "data": data
+      });
+      break;
+    case "fail":
+      // statusCode should be in the 400s
+      response.status(statusCode).json({
+        "status": "fail",
+        "data": data
+      })
+      break;
+    case "error":
+      // statusCode should be in the 500s
+      response.status(statusCode).json({
+        "status": "error",
+        "message": message,
+      })
+      break;
+    default:
+      // We do not expect to be here
+      throw Error(`Unknown Status: ${status}`);
+  }
+}
+
+function dispatchError(response, error){
+  response.status(500).json({ "status": "error", "message": `Server Error: ${error}`});
+}
+
+
 // +----------+--------------------------------------------------------
 // | Handlers |
 // +----------+
@@ -89,16 +138,18 @@ var handlers = {};
  *   info.action: imageexists
  *   info.title: The title of the image
  */
-handlers.imageexists = function (info, req, res) {
-  if (!req.isAuthenticated()) {
-    res.json("logged out");
-  } else {
+handlers.imageExists = function (info, req, res) {
+  const next = () => {
     database.imageExists(req.user.username, info.title, (err, response) => {
-      if (err) fail(res, "Unable to save image");
-      if (response) res.json({ success: true, exists: true});
-      else res.json({ success: true, exists: false});
+      if (err) {
+        const errorMessage = `Unable to save image due to server error: ${err}`;
+        dispatchResponse(res, "error", 500, undefined, errorMessage);
+      } else {
+        dispatchResponse(res, "success", undefined, { exists: (Boolean)(response) })
+      };
     });
-  }
+  };
+  checkAuthentication(req, res, next);
 };
 
 /**
@@ -106,15 +157,15 @@ handlers.imageexists = function (info, req, res) {
  *   info.action: saveimage
  *   info.title: The title of the image
  */
-handlers.saveimage = function (info, req, res) {
-  if (!req.isAuthenticated()) {
-    res.json({
-      success: false,
-      message: 'You cannot save this image because you are not logged in!',
-    });
-  } else {
-    database.saveImage(req.user._id, req.body.title, req.body.code, res);
-  }
+handlers.saveImage = function (info, req, res) {
+  const next = () => {
+    const { title, code } = info;
+    database.saveImage(req.user._id, title, code)
+      .then(() => dispatchResponse(res, "success", undefined, null))
+      .catch(error => dispatchResponse(res, "error", 500, undefined, `Error: ${error}`));
+  };
+  // The user must be authenticated in order to save an image
+  checkAuthentication(req, res, next);
 };
 
 /**
@@ -177,17 +228,13 @@ handlers.addToAlbum = async function (info, req, res) {
  *   info.action: wsexists
  *   info.title: The title of the image
  */
-handlers.wsexists = async function (info, req, workspace) {
-  if (!req.isAuthenticated()) {
-    res.json({ success: false, message: "logged out" });
-  } else {
-    try {
-      const exists = await database.wsexists(req.user._id, info.name);
-      res.json({ success: true, exists: exists });
-    } catch (error) {
-      res.json({ success: false, message: error });
-    }
-  } // else
+handlers.workspaceExists = function (info, request, response) {
+  const next = () => {
+    database.workspaceExists(request.user._id, info.name)
+    .then(exists => dispatchResponse(response, 'success', undefined, { exists: exists}))
+    .catch(err => dispatchResponse(response, 'error', 500, undefined, `Server Error: ${err}`))
+  }
+  checkAuthentication(request, response, next);
 };
 
 /**
@@ -195,24 +242,13 @@ handlers.wsexists = async function (info, req, workspace) {
  *  info.action: getws
  *  info.
  */
-handlers.getws = async function (info, req, res) {
-  try {
-    // check if user is authenticated
-    if (!req.isAuthenticated()) throw "You have to be logged in!";
-
-    // retrieve the workspaces corresponding to a user
-    const { workspaces } = await database.getws(req.user._id);
-    // send the response containing the workspaces
-    res.json({
-      success: true,
-      workspaces: workspaces,
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error,
-    });
-  }
+handlers.getWorkspaces = function (info, req, res) {
+  const next = () => {
+    database.getWorkspaces(req.user._id)
+      .then(({ workspaces }) => dispatchResponse(res, "success", undefined, { workspaces: workspaces }))
+      .catch(err => dispatchResponse(res, "error", 500, undefined, `Server Error: ${err}`))
+  };
+  checkAuthentication(req, res, next);
 };
 
 /**
@@ -222,41 +258,23 @@ handlers.getws = async function (info, req, res) {
  * Precondition:
  * The user does not already own a workspace by the same name.
  */
-handlers.savews = async function (info, req, res) {
-  if (!req.isAuthenticated()) {
-    fail(res, "Could not save workspace because you're not logged in");
-  } else if (!info.workspace.name) {
-    fail(res, "Could not save workspace because you didn't title it");
-  } else {
-    try {
+handlers.saveWorkspace = async function (info, req, res) {
+  const next = () => {
       const workspace = info.workspace;
-      const bulkWriteOpResult = await database.savews(req.user._id, workspace);
-      if (bulkWriteOpResult.nMatched === 0) {
-        throw "Error Unknown";
-      } else res.json({ success: true });
-    } catch (error) {
-      res.json({ success: false, message: error });
-    }
+      database.saveWorkspace(req.user._id, workspace)
+      .then(()=> dispatchResponse(res, "success", undefined, null))
+      .catch(err => dispatchResponse(res, "error", 500, undefined, `Server Error: ${err}`))
   }
-}; // handlers.savews
+  checkAuthentication(req, res, next);
+}; // handlers.saveWorkspace
 
-handlers.deletews = async function (info, req, res) {
-  if (!req.isAuthenticated()) {
-    fail(res, "Could not save workspace because you're not logged in");
-  } else if (!info.name) {
-    fail(res, "Could not save workspace because you didn't title it");
-  } else {
-    try {
-      const result = await database.deletews(req.user._id, info.name);
-      console.log(result);
-      if (result.nModified) res.json({ success: true });
-      else {
-        res.json({ success: false, message: "Failed due to unknown error" });
-      }
-    } catch (error) {
-      res.json({ success: false, message: error });
-    }
+handlers.deleteWorkspace = async function (info, req, res) {
+  const next = () => {
+      database.deleteWorkspace(req.user._id, info.name)
+      .then(()=> dispatchResponse(res, "success", undefined, null))
+      .catch(err => dispatchResponse(res, "error", 500, undefined, `Server Error: ${err}`))
   }
+  checkAuthentication(req, res, next);
 };
 
 // +----------------+--------------------------------------------------
