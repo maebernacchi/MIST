@@ -172,12 +172,20 @@ function Menu2(props) {
   }
 
   function SavedItems(props) {
-    async function getWorkspaces() {
-      const workspaces = await getWorkspaces();
-      return workspaces;
+
+    const [workspaces, setWorkspaces] = useState([]);
+
+    async function getws() {
+      return await getWorkspaces();
     }
 
-    return getWorkspaces().map((u, i) => {
+    useEffect(() => {
+      const workspaces = getws();
+      //alert("workspaces: "+workspaces);
+      //setWorkspaces(workspaces);
+    })
+
+    return workspaces.map((u, i) => {
       return (
         <SavedItem
           x={
@@ -196,6 +204,7 @@ function Menu2(props) {
   }
 
   function Settings(props) {
+    
     async function save() {
       const name = "workspace1";
       const exists = await workspaceExists(name);
