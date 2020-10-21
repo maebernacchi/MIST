@@ -537,9 +537,9 @@ function MakeComment(props) {
       />
 
       {/* Send message button */}
-      <Nav.Link variant="light" type="submit" style={{ paddingRight: "0" }}>
+      <Button variant="light" type="submit" style={{ paddingRight: "0" }}>
         <FiSend style={{ color: "black" }} />
-      </Nav.Link>
+      </Button>
     </Form>
   );
 }
