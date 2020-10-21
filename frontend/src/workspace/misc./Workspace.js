@@ -59,7 +59,7 @@
 import FunBar from "./FunBar";
 import FunNode from "./FunNode";
 import colors from "./globals-themes";
-import DrawArrow from "./line";
+import Edge from "./line";
 import Menu from "./Menu";
 import gui from "./mistgui-globals";
 import {
@@ -854,7 +854,7 @@ export default function Workspace(props) {
             fill={colors.workspaceBackground[theme]}
           />
           {tempLine && (
-            <DrawArrow
+            <Edge
               sourceX={tempLine.sourceX + functionWidth / 2}
               sourceY={tempLine.sourceY + functionWidth / 2}
               sinkX={mousePosition.x}
@@ -868,7 +868,7 @@ export default function Workspace(props) {
             lines.map(
               (line, index) =>
                 line && (
-                  <DrawArrow
+                  <Edge
                     index={index}
                     sourceX={line.headPosition.x}
                     sourceY={line.headPosition.y}

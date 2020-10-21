@@ -263,10 +263,7 @@ function Tutorials() {
                           <SubsectionButton id={subsection.id} type="text" />
                           <SubsectionButton id={subsection.id} type="video" />
                           <SubsectionButton id={subsection.id} type="final" />
-                          <SubsectionButton
-                            id={subsection.id}
-                            type="challenges"
-                          />
+                          <SubsectionButton id={subsection.id} type="challenges" />
                         </Row>
                       </Col>
 

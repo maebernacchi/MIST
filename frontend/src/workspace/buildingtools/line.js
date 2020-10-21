@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { Line, Group, Text, Image } from "react-konva";
+import { Line, Group, Image } from "react-konva";
 import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions";
 
-function DrawArrow(props) {
+export default function Edge(props) {
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
   const [image] = useImage(require("./trash.png"));
@@ -64,4 +64,3 @@ function DrawArrow(props) {
     </Group>
   );
 }
-export default DrawArrow;

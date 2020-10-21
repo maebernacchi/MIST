@@ -60,7 +60,7 @@ import FunBar from "./funbar/FunBar";
 import FunNode from "./buildingtools/FunNode";
 import colors from "./globals/globals-themes";
 import { Container } from "react-bootstrap";
-import DrawArrow from "./buildingtools/line";
+import Edge from "./buildingtools/line";
 import { ContextProvider } from "./globals/ContextProvider";
 import Menu1 from "./menu/Menu1";
 import Menu2 from "./menu/Menu2";
@@ -1058,7 +1058,7 @@ class WorkspaceComponent extends Component {
                   functionWidth={this.functionWidth}
                   valueWidth={this.valueWidth}
                 >
-                  <DrawArrow
+                  <Edge
                     sourceX={
                       this.state.tempLine.sourceX + this.functionWidth / 2
                     }
@@ -1087,7 +1087,7 @@ class WorkspaceComponent extends Component {
                         functionWidth={this.functionWidth}
                         valueWidth={this.valueWidth}
                       >
-                        <DrawArrow
+                        <Edge
                           index={index}
                           key={index}
                           sourceX={line.headPosition.x}
@@ -1314,8 +1314,12 @@ class WorkspaceComponent extends Component {
               top={0}
               left={0}
               show={this.state.isPopupCanvasOpen}
-              renderFunction={{ renderFunction: "sqr(x)", isRenderable: true }}
-              closePortal={() => {
+              renderFunction={
+                this.state.currentNode !== null &&
+                this.state.nodes[this.state.currentNode]
+                  ? this.state.nodes[this.state.currentNode].renderFunction
+                  : { renderFunction: "", isRenderable: false }
+              }closePortal={() => {
                 this.setState({ isPopupCanvasOpen: false });
               }}
               setImageName={(name) => {

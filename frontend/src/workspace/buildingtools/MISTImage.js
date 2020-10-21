@@ -54,7 +54,6 @@ export default function MISTImage(props) {
         left: props.x,
         width: props.width,
         height: props.height,
-        backgroundColor: 'red'
       }}
       onMouseOut={() => {
         if (!props.automated) {

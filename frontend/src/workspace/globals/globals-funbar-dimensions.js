@@ -18,8 +18,6 @@ export function FunBarDimensions(props) {
   const imageButtonWidth = functionButtonWidth;
   const imageButtonHeight = props.funBarHeight * 0.5;
 
-  // width = margin + rfTextAreaWidth + margin + functionButtonWidth + margin + imageButtonWidth + margin
-
   return(
       <funBarContext.Provider
         value={{

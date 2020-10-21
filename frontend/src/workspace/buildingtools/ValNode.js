@@ -54,12 +54,11 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Rect, Group, Text, Image } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
 import gui from "../globals/mistgui-globals.js";
-import MISTImage from "./MISTImage";
 import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions.js";
 import { globalContext } from "../globals/global-context";
@@ -81,7 +80,6 @@ function ValNode(props) {
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
   const [formValue, setFormValue] = useState("");
-  const [submitted, setSubmitted] = useState(false);
   const nodeDimensions = useContext(nodeContext);
   const width = useContext(globalContext).width;
   const height = useContext(globalContext).height;

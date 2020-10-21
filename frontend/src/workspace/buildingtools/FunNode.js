@@ -56,23 +56,20 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Rect, Group, Text, Shape, Image } from "react-konva";
 import Konva from "konva";
-import Portal from "./Portal";
 import gui from "../globals/mistgui-globals.js";
-import MISTImage from "./MISTImage";
 import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions.js";
 import { globalContext } from "../globals/global-context";
-import globals from "../globals/globals.js";
 import { fontContext } from "../globals/globals-fonts";
 
 // +----------------------------+
 // | All dependent files        |
 // +----------------------------+------------------------------------
 
-function FunNode(props) {
+export default function FunNode(props) {
   const name = props.name;
   const index = props.index;
   const x = props.x;
@@ -402,4 +399,3 @@ function FunNode(props) {
   // | Entire Function Group                  |
   // +----------------------------------------+----------------------
 }
-export default FunNode;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Line, Group, Image } from "react-konva";
 import useImage from 'use-image';
  
-function DrawArrow(props) {
+function Edge(props) {
  
  const [hovered, setHovered] = useState(false);
  const [trashHovered, setTrashHovered] = useState(false);
@@ -56,4 +56,4 @@ function DrawArrow(props) {
         </Group>
         )
     }
-    export default DrawArrow
+    export default Edge

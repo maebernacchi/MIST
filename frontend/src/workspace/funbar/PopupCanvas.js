@@ -125,9 +125,6 @@ function PopupCanvas(props) {
     const [imageExists, setImageExists] = useState("initial");
 
     function SaveImage() {
-      //var newName = props.imageName;
-      //newName = removeOuterWhiteSpace(newName);
-      //var response = getImageExists(newName);
       console.log("response = " + imageExists);
     }
 
