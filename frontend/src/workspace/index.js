@@ -1254,6 +1254,13 @@ class WorkspaceComponent extends Component {
                   getWorkspaces={this.getWorkspaces.bind(this)}
                   loadWorkspace={this.loadWorkspace.bind(this)}
                   saveWorkspace={this._saveWorkspace.bind(this)}
+                  openWS={(newNodes, newLines) => {
+                    alert("attempting to open a workspace");
+                    this.setState({
+                      nodes: newNodes,
+                      lines: newLines,
+                    })
+                  }}
                 />
               </ContextProvider>
             </Layer>

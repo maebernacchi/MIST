@@ -7,6 +7,8 @@ import { popupContext } from "../globals/globals-popup_canvas-dimensions";
 import MISTImage from "../buildingtools/MISTImage";
 import "../../design/styleSheets/FunBar.css";
 import { Modal } from "react-bootstrap";
+import { imageExists, saveImage } from '../http.workspace';
+  
 
 function PopupCanvas(props) {
   const width = useContext(globalContext).width;
@@ -17,7 +19,7 @@ function PopupCanvas(props) {
   return (
     <Modal show={props.show}>
         <Background {...props} />
-        <PortalTextBox {...props} setImageName={setImageName} />
+        <PortalTextBox {...props} />
         <PortalImage {...props} />
         <PortalFunction {...props} />
         <Buttons {...props}/>
@@ -65,7 +67,7 @@ function PopupCanvas(props) {
             border: "2px solid #008CBA",
             textAlign: "center",
           }}
-          onChange={(e) => props.setImageName(e.target.value)}
+          onBlur={(e) => setImageName(e.target.value)}
         />
       </div>
     );
@@ -122,10 +124,18 @@ function PopupCanvas(props) {
   }
 
   function Buttons(props) {
-    const [imageExists, setImageExists] = useState("initial");
-
-    function SaveImage() {
-      console.log("response = " + imageExists);
+    
+    async function SaveImage() {
+      const exists = await imageExists(imageName); 
+      if(imageName === "") {
+        alert('Please enter a title for your image.');
+      }
+      else if(exists) {
+        alert('This image name already exists.');
+      }
+      else {
+        saveImage(imageName, props.renderFunction.renderFunction);
+      }
     }
 
     return (

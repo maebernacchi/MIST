@@ -110,36 +110,6 @@ function App() {
       <BrowserRouter>
         {/* navigation bar based on the user's logged in state */}
         {data ? <UserNavigation /> : <BaseNavigation sendHeight={foo} />}
-        <button onClick={async () => {
-          const name = 'newname';
-          const exists = await imageExists(name); 
-          if(exists){
-            alert('cannot save by this name');
-          }else {
-            saveImage(name, 'sin(cos(x))');
-          }
-        }}>
-          Save Image
-        </button>
-        <button onClick={async () => {
-          const name = 'newworkspace1';
-          const exists = await workspaceExists(name);
-          const workspaceState = {lines: 'irrelevant'}
-          const workspace = { ...workspaceState};
-          if(exists){
-            alert('cannot save by this name');
-          }else{
-            saveWorkspace(name, workspace );
-          }
-        }}>
-          Save Workspace
-        </button>
-        <button onClick={async () => {
-          const workspaces = await getWorkspaces();
-          console.log(workspaces);
-        }}>
-          Get Workspaces
-        </button>
         {/* the container-wrap styling helps with the footer */}
         <Container fluid id="content-wrap">
           <Switch>

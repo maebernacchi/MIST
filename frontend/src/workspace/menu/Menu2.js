@@ -25,9 +25,17 @@ import gui from "../globals/mistgui-globals";
 import FuncGroup from "./MakeFunction2";
 import ValGroup from "./MakeValue2";
 import SettingsItem from "./SettingsItem";
+import SavedItem from "./SavedItem";
 import { globalContext } from "../globals/global-context.js";
 import { menuContext } from "../globals/globals-menu-dimensions";
 import { fontContext } from "../globals/globals-fonts";
+import {
+  imageExists,
+  saveImage,
+  workspaceExists,
+  saveWorkspace,
+  getWorkspaces,
+} from "../http.workspace";
 
 // +----------------------------+
 // | All dependent files        |
@@ -82,6 +90,7 @@ function Menu2(props) {
       <Tabs {...props} />
       <Values {...props} />
       <Functions {...props} />
+      <SavedItems {...props} />
       <Settings {...props} />
     </Group>
   );
@@ -162,16 +171,50 @@ function Menu2(props) {
     ));
   }
 
+  function SavedItems(props) {
+    async function getWorkspaces() {
+      const workspaces = await getWorkspaces();
+      return workspaces;
+    }
+
+    return getWorkspaces().map((u, i) => {
+      return (
+        <SavedItem
+          x={
+            menuDimensions.settingsMargin +
+            i * (menuDimensions.settingsMargin + menuDimensions.settingsWidth)
+          }
+          y={
+            menuDimensions.menuTabHeight +
+            (menuDimensions.mainMenuHeight - global.functionWidth) / 2
+          }
+          name={"wsname"}
+          openWS={props.openWS(u.data.nodes, u.data.lines)}
+        />
+      );
+    });
+  }
+
   function Settings(props) {
+    async function save() {
+      const name = "workspace1";
+      const exists = await workspaceExists(name);
+      const workspaceState = { lines: "irrelevant" };
+      const workspace = { ...workspaceState };
+      if (exists) {
+        alert("cannot save by this name");
+      } else {
+        saveWorkspace(name, workspace);
+      }
+    }
+
     return [props.theme, "save", "delete"].map((u, i) => {
       return (
         <SettingsItem
           name={u}
           x={
             menuDimensions.settingsMargin +
-            i *
-              (menuDimensions.settingsMargin +
-                menuDimensions.settingsWidth)
+            i * (menuDimensions.settingsMargin + menuDimensions.settingsWidth)
           }
           y={
             menuDimensions.menuTabHeight +
@@ -182,7 +225,7 @@ function Menu2(props) {
           tabs={{ settingsOpen: settingsOpen }}
           handler={
             u === "save"
-              ? props.saveWorkspace
+              ? save
               : u === "delete"
               ? props.deleteWorkspace
               : props.toggleTheme
