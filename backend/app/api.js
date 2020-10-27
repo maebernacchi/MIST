@@ -415,13 +415,13 @@ handlers.signUp = async function (info, req, res) {
     },
   });
 
+  const PUBLIC_IP = process.env.PUBLIC_IP || 'http://localhost:3000';
   let mail = {
     from: process.env.GMAILID,
     to: req.body.email,
     subject: "Email Verification",
     text:
-      "Greetings from MIST!"+ '\n\n' +"Please use the following link to verify your account:" + '\n\n' + "http://localhost:3000/emailVerification/" +
-      req.body.token,
+      "Greetings from MIST!" + '\n\n' + "Please use the following link to verify your account:" + '\n\n' + `${PUBLIC_IP}/emailVerification/${req.body.token}`
   };
 
   database.createUser(req, (message) => {
@@ -632,13 +632,13 @@ handlers.deleteAlbum = async function (info, req, res) {
       const success = await database.deleteAlbum(albumId);
       const response = success
         ? {
-            message: "Succesfully deleted album ",
-            success: true,
-          }
+          message: "Succesfully deleted album ",
+          success: true,
+        }
         : {
-            message: "Failed to delete album for unknow reason",
-            success: false,
-          };
+          message: "Failed to delete album for unknow reason",
+          success: false,
+        };
       res.json(response);
     } catch (error) {
       res.json({
@@ -887,7 +887,7 @@ handlers.updateAuthorizationCheck = async function (info, req, res) {
   }
 };
 
-handlers.addImageToAlbum = async function(info, req, res) {
+handlers.addImageToAlbum = async function (info, req, res) {
   try {
     database.addToAlbum(req.body.album._id, req.body.imgID)
   } catch (error) {
