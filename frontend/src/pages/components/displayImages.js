@@ -289,7 +289,7 @@ function ImageView(props) {
   let { id } = useParams();
   let card = props.cards.find(elem => elem._id === id);
   if (!card) return <div>Image not found</div>;
-  let pathname = "/user/" + props.card.userId._id
+  let pathname = "/user/" + card.userId._id
 
   return (
     <Container style={{ width: "65%", justifyContent: "center", marginTop: "1em" }}>
