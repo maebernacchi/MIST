@@ -9,7 +9,7 @@
  
  *
  * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
- * This work is licenced under a LGLP 3.0 or later .....
+ * This work is licensed under a LGLP 3.0 or later .....
  */
 
 // +----------------+-----------------------------------------------------------------------
@@ -57,9 +57,9 @@
 // +-------------------+----------------------------------------------------------------------
 // | IMPORTS           |
 // +-------------------+
-import React, { useState, useEffect, Component, useContext } from "react";
-import {BrowserRouter as Router, Switch, Route, Link, useParams } from "react-router-dom";
-import { Button, ButtonGroup,Container, Col, Form, Modal, Nav, Row, Tab, ToggleButton } from "react-bootstrap";
+import React, { useState, useContext } from "react";
+import { BrowserRouter as Switch, Route, Link, useParams } from "react-router-dom";
+import { Button, ButtonGroup,Container, Col, Form, Modal, Nav, Row, ToggleButton } from "react-bootstrap";
 
 import EdiText from 'react-editext'
 import {UserContext} from './components/Contexts/UserContext';
@@ -75,7 +75,7 @@ import { DeleteAlbumIcon } from "./components/icons.js"
 import { IoIosArrowBack, IoMdAdd } from "react-icons/io"
 import { FiLock } from "react-icons/fi";
 import { MdPublic } from "react-icons/md";
-import {AddImagesIcon} from "./components/icons";
+import { AddImagesIcon } from "./components/icons";
 
 
 // +-------------------+----------------------------------------------------------------------
