@@ -27,7 +27,7 @@
 // +-------------------+----------------------------------------------------------------------
 // | IMPORTS           |
 // +-------------------+
-import React, { useState, useEffect, Component} from "react";
+import React, { useState, useEffect } from "react";
 import ProfileNavigation from "./ProfileNavigation";
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
