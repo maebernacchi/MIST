@@ -42,7 +42,7 @@
 // | Imports |
 // +---------+
 import React, { useState, useEffect } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 /* Imports for stylesheet & logo */
 import MistLogo from "../../../design/Logos/logoFinal.png";

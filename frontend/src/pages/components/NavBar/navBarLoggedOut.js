@@ -57,6 +57,7 @@ import {
   Navbar, Nav, NavDropdown, Form, Image, InputGroup,
   FormControl, Button
 } from "react-bootstrap";
+import { LinkContainer } from 'react-router-bootstrap';
 import "../../../design/styleSheets/navBar.css";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -157,17 +158,33 @@ function DefaultCenter() {
   return (
     <Nav>
       <NavDropdown title="Create" id="basic-nav-dropdown">
-        <NavDropdown.Item href="/createWorkspace">GUI Workspace</NavDropdown.Item>
-        <NavDropdown.Item href="/expert">Expert UI</NavDropdown.Item>
+       <LinkContainer to="/createWorkspace"> 
+           <NavDropdown.Item>GUI Workspace</NavDropdown.Item>
+	  </LinkContainer>
+	  <LinkContainer to="/expert">
+           <NavDropdown.Item>Expert UI</NavDropdown.Item>
+	  </LinkContainer>
       </NavDropdown>
-      <Nav.Link href="/challenges">Challenges</Nav.Link>
-      <Nav.Link href="/tutorial">Tutorial</Nav.Link>
+      <LinkContainer to="/challenges">
+       <Nav.Link>Challenges</Nav.Link>
+      </LinkContainer>
+      <LinkContainer to="/tutorial">
+       <Nav.Link>Tutorial</Nav.Link>
+      </LinkContainer>
       <Nav.Link href="/gallery">Gallery</Nav.Link>
       <NavDropdown title="About" id="basic-nav-dropdown">
-        <NavDropdown.Item href="/about">About MIST</NavDropdown.Item>
-        <NavDropdown.Item href="/development">Development</NavDropdown.Item>
-        <NavDropdown.Item href="/community">Community Guidelines</NavDropdown.Item>
-        <NavDropdown.Item href="/faq">FAQ</NavDropdown.Item>
+	<LinkContainer to="/about">
+         <NavDropdown.Item>About MIST</NavDropdown.Item>
+	</LinkContainer>
+	<LinkContainer to="/development">
+         <NavDropdown.Item>Development</NavDropdown.Item>
+	</LinkContainer>
+	<LinkContainer to="/community">
+         <NavDropdown.Item>Community Guidelines</NavDropdown.Item>
+	</LinkContainer>
+	<LinkContainer to="/faq">
+         <NavDropdown.Item href="/faq">FAQ</NavDropdown.Item>
+	</LinkContainer>
       </NavDropdown>
     </Nav>
   );
