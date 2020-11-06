@@ -97,7 +97,7 @@ import Footer from "./pages/components/footer";
 function App() {
 
   const data = useContext(UserContext);
-  console.log(`data: ${data}`);
+  console.log('data: ', data);
 
   return (
     /* the page-container styling helps with the footer */
