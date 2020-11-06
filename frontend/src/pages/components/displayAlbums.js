@@ -1,7 +1,7 @@
 // +-------------------+----------------------------------------------------------------------
 // | IMPORTS           |
 // +-------------------+
-import React, { useState, useEffect, Component, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Carousel, Col, Row } from "react-bootstrap";
 import MISTImage from "./MISTImageGallery"
@@ -22,8 +22,6 @@ import {
 /** Displays albums view when Albums is called
  */
 function DisplayAlbums() {
-    const [images, setImages] = useState("");
-    const [modalShow, setModalShow] = React.useState(false);
     const user = useContext(UserContext);
     return (
         <Row style={{ justifyContent: "space-between" }}>
@@ -71,7 +69,7 @@ function DisplayAlbums() {
     };
     return (
       /* If album is NOT empty, show a carousel */
-      (props.album.images.length != 0) ?
+      (props.album.images.length !== 0) ?
         <Carousel activeIndex={index} onSelect={handleSelect}>
           {props.album.images.map(image => (
             <Carousel.Item >
