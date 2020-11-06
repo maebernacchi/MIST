@@ -679,7 +679,7 @@ handlers.renameAlbum = async function (info, req, res) {
     }
   };
 };
-// changes the ablums caption
+// changes the albums caption
 handlers.changeAlbumCaption = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     res.json({
@@ -714,7 +714,7 @@ handlers.removeImageFromAlbum = async function (info, req, res) {
   if (!req.isAuthenticated()) {
     res.json({
       success: false,
-      message: "You need to be logged in to modify an album's caption",
+      message: "You need to be logged in to remove an image from an album"
     });
   } else {
     try {
