@@ -100,10 +100,10 @@ function AddImageToAlbumModal(props) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
-    }).then(res => res.json()).
-      then(data => alert(data.message)).
-      then(() => window.location.reload()).
-      catch(console.log)
+    }).then(res => res.json())
+      .then(data => alert(data.message))
+      .then(() => window.location.reload())
+      .catch(console.log)
   }
 
   return (
