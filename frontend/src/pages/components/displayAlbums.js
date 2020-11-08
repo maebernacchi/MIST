@@ -22,7 +22,7 @@ import {
 /** Displays albums view when Albums is called
  */
 function DisplayAlbums() {
-    const user = useContext(UserContext);
+    const { user } = useContext(UserContext);
     return (
         <Row style={{ justifyContent: "space-between" }}>
           {console.log(user)}

@@ -89,7 +89,7 @@ function AddImageToAlbumModal(props) {
   const [chosenAlbum, setChosenAlbum] = React.useState({});
   const notSignedInMessage = 'You have to be logged in to add images to albums.';
  
-  const user = useContext(UserContext);
+  const { user, updateAuthenticatedUser } = useContext(UserContext);
   const albums = user.albums;
   console.log(props.albums);
 
@@ -102,7 +102,7 @@ function AddImageToAlbumModal(props) {
       body: JSON.stringify({ action: 'addImageToAlbum', album: chosenAlbum, imgID: props.img._id })
     }).then(res => res.json())
       .then(data => alert(data.message))
-      .then(() => window.location.reload())
+      .then(() => updateAuthenticatedUser())
       .catch(console.log)
   }
 
@@ -302,7 +302,12 @@ function CodeIcon(props) {
 // This button deletes the album corresponding to the given albumId from the database
 // props: albumId
 function DeleteAlbumIcon(props) {
+  const { updateAuthenticatedUser } = useContext(UserContext);
   const { albumId } = props;
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   function handleDeleteAlbum() {
     fetch('/api', {
       method: 'POST',
@@ -310,19 +315,35 @@ function DeleteAlbumIcon(props) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ action: 'deleteAlbum', albumID: albumId })
-    }).then(res => res.json()).then(data => alert(data.message)).then(() => window.location.reload())
+    }).then(res => res.json()).then(data => alert(data.message)).then(() => updateAuthenticatedUser())
   }
 
   return (
-    <Button variant="light" style={{ marginLeft: "1em", marginRight: "1em" }} onClick={handleDeleteAlbum}>
-      <Link
-        to={'/profile/albums'}
-        className="link"
-        style={{ color: "black", styleDecoration: "none" }}
-      >
+    <>
+      <Modal show={show} onClick={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Album</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Click Delete to confirm.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Link
+            to={'/profile/albums'}
+            className="link"
+            style={{ color: "black", styleDecoration: "none" }}
+          >
+            <Button variant="danger" onClick={handleDeleteAlbum}>
+              Delete
+          </Button>
+          </Link>
+        </Modal.Footer>
+      </Modal>
+      <Button variant="light" style={{ marginLeft: "1em", marginRight: "1em" }} onClick={handleShow}>
         <AiOutlineDelete />
-      </Link>
-    </Button>
+      </Button>
+    </>
   )
 }
 

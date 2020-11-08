@@ -59,12 +59,12 @@
 // +-------------------+
 import React, { useState, useContext } from "react";
 import { BrowserRouter as Switch, Route, Link, useParams } from "react-router-dom";
-import { Button, ButtonGroup,Container, Col, Form, Modal, Nav, Row, ToggleButton } from "react-bootstrap";
+import { Button, ButtonGroup, Container, Col, Form, Modal, Nav, Row, ToggleButton } from "react-bootstrap";
 
 import EdiText from 'react-editext'
-import {UserContext} from './components/Contexts/UserContext';
+import { UserContext } from './components/Contexts/UserContext';
 import DisplayImages from "./components/displayImages";
-import {DisplayAlbums} from './components/displayAlbums';
+import { DisplayAlbums } from './components/displayAlbums';
 
 import "./../design/styleSheets/profile.css";
 import "./../design/styleSheets/generalStyles.css";
@@ -186,8 +186,8 @@ function ActiveAlbums(props) {
         <Nav.Item>
           <Link to={'/profile/albums'} className="link">
             <Button variant="light" style={{ width: "100%" }} active>
-              Albums 
-              </Button>
+              Albums
+            </Button>
           </Link>
         </Nav.Item>
 
@@ -209,7 +209,7 @@ function ActiveAlbums(props) {
 *   Called by ProfileNavigation
 */
 function Images() {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   return (
     <Col>
       {/* Images + Create Image header */}
@@ -237,8 +237,8 @@ function Images() {
  * */
 function Albums() {
   const [images, setImages] = useState("");
-  const [modalShow, setModalShow] = React.useState(false);
-  const user = useContext(UserContext);
+  const [modalShow, setModalShow] = useState(false);
+  const { user } = useContext(UserContext);
   return (
     <Col style={{ marginTop: "1em" }}>
       {/* Header: Albums + Create Album */}
@@ -249,7 +249,7 @@ function Albums() {
         </Button>
       </Row>
       {/* displays the albums in a grid by calling displayAlbums*/}
-      <DisplayAlbums/>
+      <DisplayAlbums />
 
       <AddAlbumModal
         show={modalShow}
@@ -263,6 +263,7 @@ function Albums() {
  *   props: show, onHide
  */
 function AddAlbumModal(props) {
+  const { updateAuthenticatedUser } = useContext(UserContext);
   return (
     <Modal
       {...props}
@@ -290,27 +291,27 @@ function AddAlbumModal(props) {
               body: JSON.stringify({ action: 'createAlbum', ...formDataObj })
             })
               .then(res => res.json())
-              .then(data => window.location.reload())
+              .then(data => updateAuthenticatedUser())
               .catch(console.log)
           }} >
             {/* Album name */}
             <Form.Group controlId="name" >
               <Form.Label>Album name</Form.Label>
-              <Form.Control 
-              as="textarea" 
-              rows="1" 
-              placeholder="Enter album name" 
-              name='name' />
+              <Form.Control
+                as="textarea"
+                rows="1"
+                placeholder="Enter album name"
+                name='name' />
             </Form.Group>
 
             {/* Album description */}
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
-              <Form.Control 
-              as="textarea" 
-              rows="3" 
-              placeholder="Enter album description" 
-              name='caption' />
+              <Form.Control
+                as="textarea"
+                rows="3"
+                placeholder="Enter album description"
+                name='caption' />
             </Form.Group>
 
             {/* Album privacy */}
@@ -382,9 +383,9 @@ function PrivacySettingToggle() {
  * */
 function OpenedAlbum() {
   const { id } = useParams();
-  const user = useContext(UserContext);
+  const { user, updateAuthenticatedUser } = useContext(UserContext);
   let album = user.albums.find(elem => elem._id === id);
-  
+
   // Controls whether the AlbumSettings Modal is Open
   // This fetch requests removes an image from an album
   const removeImageFromAlbum = async (imageId) => {
@@ -405,7 +406,8 @@ function OpenedAlbum() {
         const res = await removeImageFromAlbum(imageId);
         const data = await res.json();
         if (data.success) {
-          alert(`${data.message}`)
+          alert(`${data.message}`);
+          updateAuthenticatedUser();
         } else {
           alert(`Failed because: ${data.message}`)
         }
@@ -456,7 +458,7 @@ function OpenedAlbum() {
 function AlbumSettings() {
   const [albumSettingsIsOpen, setAlbumSettingsIsOpen] = useState(false);
   const { id } = useParams();
-  const user = useContext(UserContext);
+  const { user, updateAuthenticatedUser } = useContext(UserContext);
   let album = user.albums.find(elem => elem._id === id);
 
   // This fetch request renames the album
@@ -491,7 +493,7 @@ function AlbumSettings() {
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Album Settings
-        </Modal.Title>
+		      </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container>
@@ -511,6 +513,9 @@ function AlbumSettings() {
                         const res = await renameAlbum(val);
                         const data = await res.json();
                         alert(data.success ? 'success' : 'fail');
+                        if (data.success) {
+                          updateAuthenticatedUser();
+                        }
                       }}
                     />
                   </Col>
@@ -528,6 +533,9 @@ function AlbumSettings() {
                           const res = await changeAlbumCaption(val);
                           const data = await res.json();
                           alert(data.success ? 'success' : 'fail');
+                          if (data.success) {
+                            updateAuthenticatedUser();
+                          }
                         } catch (error) {
                           console.log(error);
                         }
@@ -535,7 +543,7 @@ function AlbumSettings() {
                     />
                   </Col>
                   {/* Album Privacy setting */}
-                  <Form.Label>Privacy</Form.Label>
+                  <Form.Label column sm="4">Privacy</Form.Label>
                   <Col><PrivacySettingToggle /></Col>
 
                 </Form.Group>

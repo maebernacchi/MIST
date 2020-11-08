@@ -23,7 +23,7 @@
  * This file is in charge of rendering the different pages
  *
  * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
- * This work is licenced under a LGLP 3.0 or later .....
+ * This work is licensed under a LGLP 3.0 or later .....
  *
  */
 
@@ -88,7 +88,6 @@ import WorkspaceComponent from './workspace';
 
 /* imports the footer */
 import Footer from "./pages/components/footer";
-;
 
 // +-------------+----------------------------------------------------------------------
 // | App         |
@@ -96,15 +95,14 @@ import Footer from "./pages/components/footer";
 
 function App() {
 
-  const data = useContext(UserContext);
-  console.log('data: ', data);
+  const { user } = useContext(UserContext);
 
   return (
     /* the page-container styling helps with the footer */
     <div id="page-container">
       <BrowserRouter>
       {/* navigation bar based on the user's logged in state */}
-        {data._id ? <UserNavigation /> : <BaseNavigation />}
+        {user._id ? <UserNavigation /> : <BaseNavigation />}
 
         {/* the container-wrap styling helps with the footer */}
         <Container fluid id="content-wrap">
