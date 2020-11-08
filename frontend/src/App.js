@@ -23,7 +23,7 @@
  * This file is in charge of rendering the different pages
  *
  * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
- * This work is licenced under a LGLP 3.0 or later .....
+ * This work is licensed under a LGLP 3.0 or later .....
  *
  */
 
@@ -60,8 +60,7 @@ import "./design/styleSheets/generalStyles.css";
 import { UserContext } from './pages/components/Contexts/UserContext';
 
 /* Imports the 2 types of navigation bar */
-import BaseNavigation from "./pages/components/NavBar/navBarLoggedOut";
-import UserNavigation from "./pages/components/NavBar/navBarLoggedIn";
+import NavBar from "./pages/components/Navbar";
 
 /* Imports for the actual page contents */
 import About from "./pages/about";
@@ -96,16 +95,14 @@ import Footer from "./pages/components/footer";
 
 function App() {
 
-  const data = useContext(UserContext);
+  const { data } = useContext(UserContext);
   console.log(data);
 
   return (
     /* the page-container styling helps with the footer */
     <div id="page-container">
       <BrowserRouter>
-      {/* navigation bar based on the user's logged in state */}
-        {data ? <UserNavigation /> : <BaseNavigation />}
-
+		<NavBar />
         {/* the container-wrap styling helps with the footer */}
         <Container fluid id="content-wrap">
           <Switch>
