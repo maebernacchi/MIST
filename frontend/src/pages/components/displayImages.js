@@ -1,4 +1,4 @@
-+------- +------------------------------------------------------------------------
+// +-------+------------------------------------------------------------------------
 // | Notes |
 // +-------+
 
@@ -25,7 +25,7 @@
 // | Imports |
 // +---------+
 
-import MISTImage from "./MISTImageGallery"
+import MISTImage from "./MISTImageGallery";
 import React, { useState, useEffect, Component } from "react";
 import {
   Card, Button, Pagination, Container, Row,
