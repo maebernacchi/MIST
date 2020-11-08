@@ -49,8 +49,8 @@
 // +-------------+----------------------------------------------------------------------
 // | Imports     |
 // +-------------+
- 
- /* imports from react libraries */
+
+/* imports from react libraries */
 import React, { useContext } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Container } from "react-bootstrap";
@@ -101,7 +101,7 @@ function App() {
     /* the page-container styling helps with the footer */
     <div id="page-container">
       <BrowserRouter>
-      {/* navigation bar based on the user's logged in state */}
+        {/* navigation bar based on the user's logged in state */}
         {user._id ? <UserNavigation /> : <BaseNavigation />}
 
         {/* the container-wrap styling helps with the footer */}
@@ -130,9 +130,9 @@ function App() {
             {/* workspace */}
             <Route path="/createWorkspace" children={<WorkspaceComponent />} />
             <Route path="/expert" render={(props) => <Expert {...props} />} />
-            
+
             {/* overlay modal when opening an image */}
-            <Route path="/img/:url" children={<Gallery />} />           
+            <Route path="/img/:url" children={<Gallery />} />
           </Switch>
         </Container>
 

@@ -30,9 +30,9 @@ const User = require('../Models/User');
 // Export models
 module.exports.User = User;
 
-// +------------+-------------------------------------------------
-// | Utitilites |
-// +------------+
+// +-----------+-------------------------------------------------
+// | Utilities |
+// +-----------+
 
 const Models = {
   Image: Image,
@@ -145,7 +145,7 @@ module.exports.changeAlbumCaption = async (albumId, newCaption) => {
   // Sanitize inputs.  Yay!
   albumId = sanitize(albumId);
   newCaption = sanitize(newCaption);
-  
+
   return await Album.updateOne({ _id: albumId }, { caption: newCaption, updatedAt: Date.now() }).exec()
     .then(writeOpResult => writeOpResult.nModified)
     .catch(error => { throw error })
@@ -179,7 +179,7 @@ module.exports.getRandomImagesLoggedOut = (count, callback) => {
  * grab recent images for logged out user
  * @param count: the max amount of images returned for the page
  * @param page: the current page
- *  Note: page was an orginial mist team parameter, which was used to support multiple gallery pages.
+ *  Note: page was an original mist team parameter, which was used to support multiple gallery pages.
  *        This has not been implemented on the front-end yet, but it is left here for future use
  * @param callback: returns either the images, page(boolean), and the error
  */
@@ -414,10 +414,10 @@ passwordSecurity = (pass) => {
   }
 };
 /**
+ * Changes the password of the user
  * 
  * @param {*} req 
  * @param {*} callback 
- * Changes the password of the user
  */
 module.exports.changePassword = async (req, callback) => {
   let dbPassword = "";
@@ -457,11 +457,11 @@ module.exports.changePassword = async (req, callback) => {
 };
 
 /**
+ * Changes the email of the user in the database
  *
  * @param {*} req
  * @param {*} callback
- * Chnages the email of the user in the database
- * Returns a message if the email was succesfully updated or an error occured
+ * @returns a message if the email was successfully updated or an error occurred
  */
 module.exports.changeEmail = (req, callback) => {
   User.updateOne(
@@ -479,11 +479,11 @@ module.exports.changeEmail = (req, callback) => {
 };
 
 /**
+ * Changes the username of the user in the database 
  *
  * @param {*} req
  * @param {*} callback
- * Changes the username of the user in the database 
- * Returns a message if the username is taken, was succesfully updated, or an error occured
+ * @returns a message if the username is taken, was successfully updated, or an error occurred
  */
 module.exports.changeUsername = (req, callback) => {
 
@@ -512,11 +512,11 @@ module.exports.changeUsername = (req, callback) => {
 };
 
 /**
+ * Changes the name of the user in the database
  *
  * @param {*} req
  * @param {*} callback
- * Changes the name of the user in the database
- * Returns a message if the name was succesfully updated or an error occured
+ * @returns a message if the name was successfully updated or an error occurred
  */
 module.exports.changeName = (req, callback) => {
   User.updateOne(
@@ -539,11 +539,11 @@ module.exports.changeName = (req, callback) => {
 };
 
 /**
+ * Changes the bio of the user in the database
  *
  * @param {*} req
  * @param {*} callback
- * Changes the bio of the user in the database
- * Returns a message if the bio was succesfully updated or an error occured
+ * @returns a message if the bio was successfully updated or an error occurred
  */
 module.exports.changeBio = (req, callback) => {
   User.updateOne(
@@ -732,17 +732,17 @@ module.exports.getCompleteUserProfile = async (userid) => {
  * Check if the user corresponding to userId has an expertWorkspace with the
  * name of expertWorkspaceName.
  *
- * If user is sucessfully identified returns
+ * If user is successfully identified returns
  * {
  *  success: true,
  *  hasWorkspace: ...,
  * }
- * where hasWorkspace is true if the user has an expertWorksapce with the name
+ * where hasWorkspace is true if the user has an expertWorkspace with the name
  * expertWorkspaceName otherwise false.
  *
  * If user is not successfully identified, returns
  * {
- *  sucess: false,
+ *  success: false,
  *  message: ...,
  * }
  * where message is the message is our error message.
@@ -768,7 +768,7 @@ module.exports.userHasWorkspace = (userId, expertWorkspaceName, res) => {
             return;
           }
         });
-        // if no workpace is matched
+        // if no workspace is matched
         res.send({
           success: true,
           hasWorkspace: match,
@@ -1005,7 +1005,7 @@ module.exports.createAlbum = async (userid, name, caption) => {
           .catch(error => { throw error })
       );
     } else {
-      throw 'Failed to safe for Unkown reason'
+      throw 'Failed to safe for Unknown reason'
     }
   } catch (error) {
     throw error;
@@ -1037,24 +1037,24 @@ module.exports.removeImageFromAlbum = async (imageId, albumId) => {
  * hide content from a user
  * @param userid: the objectId of the user wanting to hide something
  * @param type: the type of content being hidden: "comment", "image", or "album" 
- * @param contentid: the objectId of the content being hidden 
- * return true if successfull, false elsewise 
+ * @param contentId: the objectId of the content being hidden 
+ * @return true if successful, false otherwise 
  */
-module.exports.hideContent = async (userid, type, contentid) => {
+module.exports.hideContent = async (userid, type, contentId) => {
   userid = sanitize(userid);
   type = sanitize(type);
-  contentid = sanitize(contentid);
+  contentId = sanitize(contentId);
   try {
     let update;
     switch (type) {
       case "comment":
-        update = { $push: { "hidden.commentIds": contentid } }
+        update = { $push: { "hidden.commentIds": contentId } }
         break;
       case "album":
-        update = { $push: { "hidden.albumIds": contentid } }
+        update = { $push: { "hidden.albumIds": contentId } }
         break;
       case "image":
-        update = { $push: { "hidden.imageIds": contentid } }
+        update = { $push: { "hidden.imageIds": contentId } }
         break;
       default:
         throw "invalid type";
@@ -1071,7 +1071,7 @@ module.exports.hideContent = async (userid, type, contentid) => {
  * @param userid: the objectId of the user wanting to unhide something
  * @param type: the type of content being hidden: "comment", "image", or "album" 
  * @param contentid: the objectId of the content being unhidden 
- * return true if successfull, false elsewise 
+ * @returns true if successful, false otherwise 
  */
 module.exports.unhideContent = async (userid, type, contentid) => {
   try {
@@ -1100,7 +1100,7 @@ module.exports.unhideContent = async (userid, type, contentid) => {
  * blocks a user
  * @param userid: the objectId of the user who wants to block a user 
  * @param contentid: the objectId of the user to be blocked 
- * returns true if successfull, false otherwise
+ * @returns true if successful, false otherwise
  */
 module.exports.blockUser = async (userid, contentid) => {
   return await User.updateOne({ _id: userid }, { $push: { blockedUsers: contentid } }).exec()
@@ -1112,7 +1112,7 @@ module.exports.blockUser = async (userid, contentid) => {
  * unblocks a user
  * @param userid: the objectId of the user who wants to block a user 
  * @param contentid: the objectId of the user to be blocked 
- * returns true if successfull, false otherwise
+ * @returns true if successful, false otherwise
  */
 module.exports.unblockUser = async (userid, contentid) => {
   return await User.updateOne({ _id: userid }, { $pull: { blockedUsers: contentid } }).exec()

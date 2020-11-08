@@ -958,7 +958,7 @@ handlers.addImageToAlbum = async function (info, req, res) {
     const writeOpResult = await database.addToAlbum(req.body.album._id, req.body.imgID);
     res.json({
       success: writeOpResult,
-      message: writeOpResult ? 'Successfully added image!': 'Failed to add image for unknown reason.'
+      message: writeOpResult ? 'Successfully added image!' : 'Failed to add image for unknown reason.'
     });
   } catch (error) {
     res.json({

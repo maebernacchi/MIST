@@ -1,4 +1,4 @@
-// +-------+------------------------------------------------------------------------
++------- +------------------------------------------------------------------------
 // | Notes |
 // +-------+
 
@@ -29,10 +29,10 @@ import MISTImage from "./MISTImageGallery"
 import React, { useState, useEffect, Component } from "react";
 import {
   Card, Button, Pagination, Container, Row,
-  Col, Nav,  Form,
+  Col, Nav, Form,
   Modal, Navbar
 } from "react-bootstrap";
-import {FiSend} from "react-icons/fi";
+import { FiSend } from "react-icons/fi";
 
 import {
   BrowserRouter as Router, Switch, Route, Link,
@@ -71,7 +71,7 @@ allow users to change views on the overlay modal. */
 export default function DisplayImages(props) {
   return (
     <Router>
-      <ModalSwitch cards={props.cards} {...props}/>
+      <ModalSwitch cards={props.cards} {...props} />
     </Router>
   );
 }
@@ -97,13 +97,13 @@ function ModalSwitch(props) {
         <Route path="/gallery/featured" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/top-rated" children={<Gallery cards={props.cards} />} />
         <Route path="/gallery/recent" children={<Gallery cards={props.cards} />} />
-        <Route path="/profile" children={<Gallery cards={props.cards}removeImageFromAlbumButtonFactory={props.removeImageFromAlbumButtonFactory}/>} />
+        <Route path="/profile" children={<Gallery cards={props.cards} removeImageFromAlbumButtonFactory={props.removeImageFromAlbumButtonFactory} />} />
         <Route path="/user" children={<Gallery cards={props.cards} />} />
         <Route path="/img/:id" children={<ImageView cards={props.cards} />} />
       </Switch>
 
       {/* Show the modal when a background page is set. */}
-      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards}  />} />}
+      {background && <Route path="/img/:id" children={<ImageModal cards={props.cards} />} />}
     </div>
   );
 }
@@ -123,22 +123,22 @@ function Gallery(props) {
   let cards = props.cards;
   return (
     /* styling helps with footer */
-      <Row style={{ justifyContent: "space-between" }}>
-        {/* maps each array in the cards array */}
-        {cards.map((card, idx) => (
-          <Card key={idx}  style={{width: "31%", marginTop: "1em", marginBottom: "1em" }}>
-            {props.removeImageFromAlbumButtonFactory ?
-              props.removeImageFromAlbumButtonFactory(card._id)
-              :
-              console.log('failed')}
-            <CardHeader card={card} />
-            <CardImage card={card} />
-            <CardBody card={card} />
-          </Card>
-        ))}
-        {/* pagination */}
-        
-      </Row>
+    <Row style={{ justifyContent: "space-between" }}>
+      {/* maps each array in the cards array */}
+      {cards.map((card, idx) => (
+        <Card key={idx} style={{ width: "31%", marginTop: "1em", marginBottom: "1em" }}>
+          {props.removeImageFromAlbumButtonFactory ?
+            props.removeImageFromAlbumButtonFactory(card._id)
+            :
+            console.log('failed')}
+          <CardHeader card={card} />
+          <CardImage card={card} />
+          <CardBody card={card} />
+        </Card>
+      ))}
+      {/* pagination */}
+
+    </Row>
   );
 }
 
@@ -157,11 +157,11 @@ function CardHeader(props) {
       <Card.Title style={{ margin: "auto" }}>
         <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
           {/* Title + Clock sign */}
-            <Col style={{marginLeft: "1em"}}>
-              {props.card.title}
-            </Col>
+          <Col style={{ marginLeft: "1em" }}>
+            {props.card.title}
+          </Col>
 
-          <AnimationIcon isAnimated={props.card.isAnimated}/>
+          <AnimationIcon isAnimated={props.card.isAnimated} />
           <PrivacyIcon />
           <MoreIcon />
         </Row>
@@ -210,26 +210,24 @@ function CardBody(props) {
   console.log("props: ", props);
   return (
     <Card.Body style={{ justifyContent: "space-between" }}>
-      
+      {/* Row 1: Username */}
+      <Nav style={{ justifyContent: "space-between" }}>
+        <Nav.Link variant="light" href={pathname} >
+          {card.userId ? card.userId.username : null}
+        </Nav.Link>
+        <StarIcon card={card} />
+      </Nav>
 
-        {/* Row 1: Username */}
-        <Nav style={{ justifyContent: "space-between" }}>
-          <Nav.Link variant="light" href={pathname} >
-            {card.userId ? card.userId.username : null}
-          </Nav.Link>
-          <StarIcon card={card}/>
-        </Nav>
+      {/* Row 2: Icons */}
+      <Row style={{ margin: "0", justifyContent: "space-between" }}>
+        <CodeIcon code={card.code} />
+        <SaveIcon code={card.code} />
+        <CommentIcon id={card._id} />
+        <AddImageToAlbumIcon img={card} />
+        <ShareIcon />
+      </Row>
 
-        {/* Row 2: Icons */}
-        <Row style={{margin: "0", justifyContent: "space-between"}}>
-          <CodeIcon code={card.code} />
-          <SaveIcon code={card.code} />
-          <CommentIcon id={card._id} />
-          <AddImageToAlbumIcon img={card} />
-          <ShareIcon />
-        </Row>
-
-        {/* Row 3: Comment Box */}
+      {/* Row 3: Comment Box */}
       <Navbar>
         <MakeComment imageId={card._id} />
       </Navbar>
@@ -305,7 +303,7 @@ function ImageView(props) {
           </Col>
           {/* Comments */}
           <Col xs="8">
-            <ModalComments card={card}  />
+            <ModalComments card={card} />
           </Col>
         </Row>
       </Col>
@@ -362,7 +360,7 @@ function MyVerticallyCenteredModal(props) {
         <Container>
           <Modal.Title>{card.title}</Modal.Title>
         </Container>
-        
+
         <Link to={{ pathname: "/gallery" }}>Close</Link>
       </Modal.Header>
 
@@ -391,15 +389,15 @@ function SideView(props) {
   return (
     <Modal.Body>
       <Row >
-        {/* Col 1: usernamame, image, caption, range*/}
+        {/* Col 1: username, image, caption, range*/}
         <Col>
-        <Row style={{justifyContent: "space-between"}}>
-          {/* username */}
-          <Nav.Link variant="light" href={pathname}>
-            {card.userId.username}
-          </Nav.Link>
+          <Row style={{ justifyContent: "space-between" }}>
+            {/* username */}
+            <Nav.Link variant="light" href={pathname}>
+              {card.userId.username}
+            </Nav.Link>
 
-          <MoreIcon />
+            <MoreIcon />
           </Row>
           {/* image */}
           <Row style={{ justifyContent: "center", marginTop: "1em" }}>
@@ -435,9 +433,7 @@ function SideView(props) {
 /* Displays the comments in the modal
  * props:  card */
 function ModalComments(props) {
-
   const [comments, setComments] = useState([])
-
   // fetch the comments for this image 
   useEffect(() => {
     fetch('/api?action=getImageComments&id=' + props.card._id)
@@ -449,22 +445,23 @@ function ModalComments(props) {
       <Form.Group >
         {/* All existing comments */}
         <Container style={{ overflowY: "scroll", height: "40vh" }}>
-          {comments.map((comment) => {
-            return (
-              <Comment id={comment.userId._id} username={comment.userId.username} comment={comment.body} date={comment.createdAt} />
-            )
-          })}
+          {comments.map((comment) =>
+            (<Comment
+              id={comment.userId._id}
+              username={comment.userId.username}
+              comment={comment.body}
+              date={comment.createdAt} />
+            ))}
         </Container>
 
         {/* Horizontal Line */}
         <hr />
         {/* Icons and to make a comment field */}
-        <ModalIcons card={props.card}  />
+        <ModalIcons card={props.card} />
         <MakeComment imageId={props.card._id} />
 
       </Form.Group>
     </Col>
-
   );
 }
 
@@ -500,7 +497,7 @@ function MakeComment(props) {
 
           console.log("user: ", user);
           // build full comment
-          let fullcomment = {
+          let fullComment = {
             "active": true,
             "flags": [],
             "userId": user._id,
@@ -514,7 +511,7 @@ function MakeComment(props) {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ action: 'postComment', ...fullcomment })
+            body: JSON.stringify({ action: 'postComment', ...fullComment })
           })
             //reset comment state
             .then(setComment(""))
@@ -559,7 +556,7 @@ class Comment extends Component {
     this.convertTime = this.convertTime.bind(this);
   }
 
-   convertTime(date) {
+  convertTime(date) {
     const timeAgo = new TimeAgo('en-US')
     if (typeof date === 'string')
       date = parseInt(date);
@@ -578,36 +575,36 @@ class Comment extends Component {
   render() {
     return (
       <Row>
-      <Card style={{ width: "100%", margin: "0.5em" }} 
-       onMouseEnter={this.handleMouseHover}
+        <Card style={{ width: "100%", margin: "0.5em" }}
+          onMouseEnter={this.handleMouseHover}
           onMouseLeave={this.handleMouseHover}>
-        <Card.Body style={{
-          display: "flex",
-          flexFlow: "row nowrap",
-          justifyContent: "space-around",
-          alignItems: "center",
-          padding: "0.5em"
-        }}>
-          <div style={{
+          <Card.Body style={{
             display: "flex",
-            flexFlow: "column nowrap",
-            justifyContent: "flex-start"
+            flexFlow: "row nowrap",
+            justifyContent: "space-around",
+            alignItems: "center",
+            padding: "0.5em"
           }}>
-            <Nav.Link size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start", paddingLeft: "0" }}>
-              {this.props.username}
-            </Nav.Link>
-            <div style={{ fontSize: "15px" }}>
-              {this.convertTime(this.props.date)}
+            <div style={{
+              display: "flex",
+              flexFlow: "column nowrap",
+              justifyContent: "flex-start"
+            }}>
+              <Nav.Link size="sm" variant="light" href="/user" style={{ alignSelf: "flex-start", paddingLeft: "0" }}>
+                {this.props.username}
+              </Nav.Link>
+              <div style={{ fontSize: "15px" }}>
+                {this.convertTime(this.props.date)}
+              </div>
             </div>
-          </div>
-          <div style={{ flexGrow: "2", fontSize: "18px" }}>
-            {this.props.comment}
-          </div>
-          {this.state.isHovering && <MoreIcon />}
-          
-        </Card.Body>
-      </Card>
-    </Row>
+            <div style={{ flexGrow: "2", fontSize: "18px" }}>
+              {this.props.comment}
+            </div>
+            {this.state.isHovering && <MoreIcon />}
+
+          </Card.Body>
+        </Card>
+      </Row>
     );
   }
 }
@@ -630,9 +627,9 @@ function ModalIcons(props) {
       <StarIcon card={card} />
       <CodeIcon code={card.code} />
       <SaveIcon code={card.code} />
-      <AddImageToAlbumIcon img={props.card}/>
+      <AddImageToAlbumIcon img={props.card} />
       <ShareIcon />
-      
+
     </Row>
   );
 }

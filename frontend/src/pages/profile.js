@@ -115,7 +115,7 @@ export default function Profile() {
       </Container>
 
       {/* Tabs for images, albums */}
-      <ProfileNavigation images={userImages} albums={userAlbums}/>
+      <ProfileNavigation images={userImages} albums={userAlbums} />
     </Container>
   );
 }
