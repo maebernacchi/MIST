@@ -88,10 +88,6 @@ function ModalSwitch(props) {
     <div>
       <Switch location={background || location}>
         <Route path="/gallery" children={<Gallery cards={props.cards} albums={props.albums} />} />
-        <Route path="/gallery/random" children={<Gallery cards={props.cards} />} />
-        <Route path="/gallery/featured" children={<Gallery cards={props.cards} />} />
-        <Route path="/gallery/top-rated" children={<Gallery cards={props.cards} />} />
-        <Route path="/gallery/recent" children={<Gallery cards={props.cards} />} />
         <Route path="/profile" children={<Gallery cards={props.cards} albums={props.albums} />} />
         <Route path="/user" children={<Gallery cards={props.cards} albums={props.albums} />} />
         <Route path="/img/:id" children={<ImageView cards={props.cards} />} />

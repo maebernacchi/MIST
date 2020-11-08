@@ -1,6 +1,6 @@
 /**
  * MIST is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+* it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -115,6 +115,7 @@ function App() {
             <Route path="/development" component={Development} />
             <Route path="/expert" children={<Expert />} />
             <Route path="/faq" component={Faq} />
+            <Route path="/gallery/:category" component={Gallery} />
             <Route path="/gallery" component={Gallery} />
             <Route path="/license" component={License} />
             <Route path="/privacy" component={Privacy} />
