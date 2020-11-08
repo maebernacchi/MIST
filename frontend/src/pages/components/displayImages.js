@@ -119,7 +119,7 @@ function Gallery(props) {
       <Row style={{ justifyContent: "space-between" }}>
         {/* maps each array in the cards array */}
         {cards.map((card) => (
-          <Card style={{ padding: "1em", width: "30%", margin: "1em" }}>
+          <Card key={card._id} style={{ padding: "1em", width: "30%", margin: "1em" }}>
             <CardHeader card={card} />
             <CardImage card={card} />
             <CardBody card={card} albums={props.albums} />

@@ -47,8 +47,11 @@ export default function Gallery() {
 			<p>Get Inspired by others!</p>
 			<div style={{ display: "flex", justifyContent: "center" }}>
 				{GalleryPages.map(page => (
-					<Link to={page.route} style={{ padding: '5px' }}>
-						<Button variant='outline-dark' > {page.buttonName} </Button>
+					<Link key={page.buttonName}
+						to={page.route} style={{ padding: '5px' }}>
+						<Button variant='outline-dark' >
+							{page.buttonName}
+						</Button>
 					</Link>))}
 			</div>
 			<DisplayImages cards={cards} cardsLoaded={cardsLoaded} />
