@@ -30,37 +30,26 @@ export default function Gallery() {
 
 	// fetch the images, depending on what category is selected
 	useEffect(() => {
-		console.log('using effect');
 		GalleryImagesFetch(category)
 			.then(res => res.json())
 			.then(cards => { setCards(cards); setCardsLoaded(true) });
 	}, [category]);
 
+	const GalleryPages =
+		[{ route: '/gallery/recent', buttonName: 'Recent' },
+		{ route: '/gallery/featured', buttonName: 'Featured' },
+		{ route: '/gallery/top-rated', buttonName: 'Top Rated' },
+		{ route: '/gallery/random', buttonName: 'Random' }];
+
 	return (
 		<div style={{ marginTop: "2vh", marginBottom: "0", paddingBottom: "7.5rem" }}>
 			<h1>Gallery</h1>
 			<p>Get Inspired by others!</p>
-			<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-				<Link to='/gallery/recent'>
-					<Button variant="outline-dark" >
-						Recent
-					</Button> &nbsp;&nbsp;&nbsp;
-				</Link>
-				<Link to='/gallery/featured'>
-					<Button variant="outline-dark" >
-						Featured
-					</Button> &nbsp;&nbsp;&nbsp;
-				</Link>
-				<Link to='/gallery/top-rated' >
-					<Button variant="outline-dark" >
-						Top Rated
-					</Button> &nbsp;&nbsp;&nbsp;
-				</Link>
-				<Link to='/gallery/random'>
-					<Button variant="outline-dark" href="/gallery/random">
-						Random
-			        </Button>
-				</Link>
+			<div style={{ display: "flex", justifyContent: "center" }}>
+				{GalleryPages.map(page => (
+					<Link to={page.route} style={{ padding: '5px' }}>
+						<Button variant='outline-dark' > {page.buttonName} </Button>
+					</Link>))}
 			</div>
 			<DisplayImages cards={cards} cardsLoaded={cardsLoaded} />
 		</div>
@@ -70,16 +59,16 @@ function _getAPIRoute(str) {
 	return `/api?action=${str}`;
 }
 function GalleryImagesFetch(category) {
-	const route = function(){
-		switch(category){
+	const route = function () {
+		switch (category) {
 			case 'recent': return _getAPIRoute('getRecentImages');
 			case 'featured': return _getAPIRoute('getFeaturedImages');
 			case 'top-rated': return _getAPIRoute('getTopImages');
 			case 'random': return _getAPIRoute('getRandomImages');
-			default: 
+			default:
 				console.log('Default, perhaps unknown category');
 				return _getAPIRoute('getRecentImages');
-				}
-			}();
+		}
+	}();
 	return fetch(route);
 }
