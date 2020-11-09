@@ -54,7 +54,9 @@ export default function Gallery() {
 						</Button>
 					</Link>))}
 			</div>
-			<DisplayImages cards={cards} cardsLoaded={cardsLoaded} />
+			<Container>
+				<DisplayImages cards={cards} cardsLoaded={cardsLoaded} />
+			</Container>
 		</div>
 	);
 }
