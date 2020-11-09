@@ -129,22 +129,22 @@ function NavBarCenter() {
   function handleSignInClick() { setMode("signIn") };
   function handleCancelClick() { setMode("default") };
 
-  const { data } = useContext(UserContext);
-  function isUserAuthenticated(data) {
-    if (data && data._id) {
+  const { user } = useContext(UserContext);
+  function isUserAuthenticated(user) {
+    if (user && user._id) {
       return true;
     } else {
       return false;
     }
   };
-  const isAuthenticated = isUserAuthenticated(data);
+  const isAuthenticated = isUserAuthenticated(user);
   if (mode === "default") {
     return (
       /* default mode*/
       <Nav className="mr-auto">
         <DefaultCenter />
         { isAuthenticated ?
-          <UserDropdown username={data.username} /> :
+          <UserDropdown username={user.username} /> :
           <SignInUpButton onClick={handleSignInClick} />}
       </Nav>
     );
