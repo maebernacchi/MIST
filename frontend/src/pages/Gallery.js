@@ -19,7 +19,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import DisplayImages from "./components/displayImages";
-import { Button } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 
 
 export default function Gallery() {

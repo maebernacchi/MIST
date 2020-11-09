@@ -49,8 +49,8 @@
 // +-------------+----------------------------------------------------------------------
 // | Imports     |
 // +-------------+
- 
- /* imports from react libraries */
+
+/* imports from react libraries */
 import React, { useContext } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Container } from "react-bootstrap";
@@ -87,7 +87,6 @@ import WorkspaceComponent from './workspace';
 
 /* imports the footer */
 import Footer from "./pages/components/footer";
-;
 
 // +-------------+----------------------------------------------------------------------
 // | App         |
@@ -95,8 +94,7 @@ import Footer from "./pages/components/footer";
 
 function App() {
 
-  const { data } = useContext(UserContext);
-  console.log(data);
+  const { user } = useContext(UserContext);
 
   return (
     /* the page-container styling helps with the footer */
@@ -130,9 +128,9 @@ function App() {
             {/* workspace */}
             <Route path="/createWorkspace" children={<WorkspaceComponent />} />
             <Route path="/expert" render={(props) => <Expert {...props} />} />
-            
+
             {/* overlay modal when opening an image */}
-            <Route path="/img/:url" children={<Gallery />} />           
+            <Route path="/img/:url" children={<Gallery />} />
           </Switch>
         </Container>
 
@@ -142,6 +140,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;

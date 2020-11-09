@@ -60,7 +60,7 @@ export default function User() {
 
     // grab user's information, images, and albums
     useEffect(() => {
-        fetch('/api/?action=getAuthenticatedCompleteUserProfile&userid=' + id)
+        fetch('/api/?action=getCompleteUserProfile&userid=' + id)
             .then(async function (res) {
                 if (!res.ok) throw await res.text();
                 else return await res.json();
