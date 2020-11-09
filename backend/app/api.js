@@ -433,24 +433,30 @@ handlers.signUp = async function (info, req, res) {
     },
   });
 
+  const PUBLIC_IP = process.env.PUBLIC_IP || 'http://localhost:3000';
   let mail = {
     from: process.env.GMAILID,
     to: req.body.email,
     subject: "Email Verification",
     text:
-      "Greetings from MIST!"+ '\n\n' +"Please use the following link to verify your account:" + '\n\n' + "http://localhost:3000/emailVerification/" +
-      req.body.token,
+      "Greetings from MIST!" + '\n\n' + "Please use the following link to verify your account:" + '\n\n' + `${PUBLIC_IP}/emailVerification/${req.body.token}`
   };
 
-  transporter.sendMail(mail, (err, data) => {
-    if (err) {
-      console.log(err);
+  database.createUser(req, (message) => {
+    if (message === 'User Created') {
+      transporter.sendMail(mail, (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json(err);
+        } else {
+          console.log("Sent!");
+          res.json(message);
+        }
+      });
     } else {
-      console.log("Sent!");
-    }
+      res.json(message);
+    };
   });
-
-  database.createUser(req, (message) => res.json(message));
 };
 
 /*
@@ -523,7 +529,7 @@ handlers.getAuthenticatedCompletePersonalProfile = async function (info, req, re
   try {
     if (!req.isAuthenticated()) throw "You need to login to view your profile!";
     const userid = req.user._id;
-    const complete_user = await database.getCompleteUserProfile(userid);
+    const complete_user = await database.getCompletePersonalProfile(userid);
     res.json({
       user: complete_user,
     });
@@ -536,7 +542,7 @@ handlers.getAuthenticatedCompletePersonalProfile = async function (info, req, re
 handlers.getCompleteUserProfile = async function (info, req, res) {
   try {
     const { userid } = info;
-    const complete_user = await database.getCompletePersonalProfile(userid);
+    const complete_user = await database.getCompleteUserProfile(userid);
     console.log(complete_user);
     res.json({
       user: complete_user,
@@ -605,8 +611,8 @@ handlers.createAlbum = async function (info, req, res) {
   else {
     try {
       const userId = req.user._id;
-      const { name } = info;
-      const success = await database.createAlbum(userId, name);
+      const { name, caption } = info;
+      const success = await database.createAlbum(userId, name, caption);
       if (success) {
         res.json({
           success: true,
@@ -641,16 +647,16 @@ handlers.deleteAlbum = async function (info, req, res) {
   } else {
     try {
       const { albumId } = info;
-      const success = await database.deleteAlbum(albumId);
+      const success = await database.deleteAlbum(req.body.albumID);
       const response = success
         ? {
-            message: "Succesfully deleted album ",
-            success: true,
-          }
+          message: "Succesfully deleted album ",
+          success: true,
+        }
         : {
-            message: "Failed to delete album for unknow reason",
-            success: false,
-          };
+          message: "Failed to delete album for unknow reason",
+          success: false,
+        };
       res.json(response);
     } catch (error) {
       res.json({
@@ -669,33 +675,99 @@ handlers.deleteAlbum = async function (info, req, res) {
  * }
  */
 handlers.renameAlbum = async function (info, req, res) {
-  if (false && !req.isAuthenticated()) {
+  if (!req.isAuthenticated()) {
     res.json({
       success: false,
       message: "You need to be logged in to rename an album",
     });
-  }
-  try {
-    const { albumId, newName } = info;
-    const success = await database.renameAlbum(albumId, newName);
-    if (success) {
-      res.json({
-        success: true,
-        message: "Successfully renamed album",
-      });
-    } else {
+  } else {
+    try {
+      const { albumId, newName } = info;
+      const success = await database.renameAlbum(albumId, newName);
+      if (success) {
+        res.json({
+          success: true,
+          message: "Successfully renamed album",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: "Failed to rename album due to unknown reason",
+        });
+      };
+    } catch (error) {
       res.json({
         success: false,
-        message: "Failed to rename album due to unknown reason",
+        message: error,
       });
     }
-  } catch (error) {
+  };
+};
+// changes the albums caption
+handlers.changeAlbumCaption = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
     res.json({
       success: false,
-      message: error,
+      message: "You need to be logged in to modify an album's caption",
     });
-  }
+  } else {
+    try {
+      const { albumId, newCaption } = info;
+      const success = await database.changeAlbumCaption(albumId, newCaption);
+      if (success) {
+        res.json({
+          success: true,
+          message: "Successfully modified album's caption",
+        });
+      } else {
+        res.json({
+          success: false,
+          message: "Failed to modify album due to unknown reason",
+        });
+      };
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error,
+      });
+    }
+  };
 };
+
+handlers.removeImageFromAlbum = async function (info, req, res) {
+  if (!req.isAuthenticated()) {
+    res.json({
+      success: false,
+      message: "You need to be logged in to remove an image from an album"
+    });
+  } else {
+    try {
+      const { albumId, imageId } = info;
+      const writeOpResult = await database.removeImageFromAlbum(imageId, albumId);
+      if (writeOpResult.nMatched === 0) {
+        // strange no documents were match
+        res.json({
+          success: false,
+          message: "Could not find your chosen album."
+        })
+      } else if (writeOpResult.nModified === 0) {
+        // strange no documents were modified
+        res.json({
+          success: false,
+          message: "Image not found in album."
+        })
+      } else {
+        // yay some document was matched
+        res.json({
+          success: true,
+          message: 'Successfully removed image'
+        })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
 
 // +----------+----------------------------------------------------------
 // | Reporting/Hiding/Blocking |
@@ -899,9 +971,13 @@ handlers.updateAuthorizationCheck = async function (info, req, res) {
   }
 };
 
-handlers.addImageToAlbum = async function(info, req, res) {
+handlers.addImageToAlbum = async function (info, req, res) {
   try {
-    database.addToAlbum(req.body.album._id, req.body.imgID)
+    const writeOpResult = await database.addToAlbum(req.body.album._id, req.body.imgID);
+    res.json({
+      success: writeOpResult,
+      message: writeOpResult ? 'Successfully added image!' : 'Failed to add image for unknown reason.'
+    });
   } catch (error) {
     res.json({
       message: error

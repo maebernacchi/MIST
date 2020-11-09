@@ -22,7 +22,7 @@
  * This file is in charge of rendering the different pages
  *
  * Copyright (c) 2020 Samuel A. Rebelsky and the people who did the work.
- * This work is licenced under a LGLP 3.0 or later .....
+ * This work is licensed under a LGLP 3.0 or later .....
  *
  */
 
@@ -50,7 +50,7 @@
 // +-------------+
 
 /* imports from react libraries */
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
@@ -95,9 +95,7 @@ workspaceExists, saveWorkspace, getWorkspaces } from './http.workspace';
 // +-------------+
 
 function App() {
-  const [navBarHeight, setNavBarHeight] = useState(null);
-  const data = useContext(UserContext);
-  console.log(data);
+  const { user } = useContext(UserContext);
 
   function foo(height) {
     setNavBarHeight(height);
@@ -109,7 +107,8 @@ function App() {
     <div id="page-container">
       <BrowserRouter>
         {/* navigation bar based on the user's logged in state */}
-        {data ? <UserNavigation /> : <BaseNavigation sendHeight={foo} />}
+        {user._id ? <UserNavigation /> : <BaseNavigation />}
+
         {/* the container-wrap styling helps with the footer */}
         <Container fluid id="content-wrap">
           <Switch>

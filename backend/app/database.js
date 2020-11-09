@@ -42,9 +42,9 @@ const User = require('../Models/User');
 // Export models
 module.exports.User = User;
 
-// +------------+-------------------------------------------------
-// | Utitilites |
-// +------------+
+// +-----------+-------------------------------------------------
+// | Utilities |
+// +-----------+
 
 const Models = {
   Image: Image,
@@ -132,7 +132,7 @@ module.exports.addToAlbum = async (albumId, imageId) => {
   // Sanitize inputs.  Yay!
   albumId = sanitize(albumId);
   imageId = sanitize(imageId);
-  return await Album.updateOne({ _id: albumId }, { $addToSet: { images: imageId } }).exec()
+  return await Album.updateOne({ _id: albumId }, { $addToSet: { images: imageId }, updatedAt: Date.now() }).exec()
     .then(writeOpResult => (Boolean)(writeOpResult.nModified))
     .catch(error => { throw error })
 };
@@ -143,11 +143,22 @@ module.exports.renameAlbum = async (albumId, newName) => {
   albumId = sanitize(albumId);
   newName = sanitize(newName);
 
-  return await Album.updateOne({ _id: albumId }, { name: newName }).exec()
+  return await Album.updateOne({ _id: albumId }, { name: newName, updatedAt: Date.now() }).exec()
     .then(writeOpResult => writeOpResult.nModified)
     .catch(error => { throw error })
 
-}
+};
+
+// change an album's caption
+module.exports.changeAlbumCaption = async (albumId, newCaption) => {
+  // Sanitize inputs.  Yay!
+  albumId = sanitize(albumId);
+  newCaption = sanitize(newCaption);
+
+  return await Album.updateOne({ _id: albumId }, { caption: newCaption, updatedAt: Date.now() }).exec()
+    .then(writeOpResult => writeOpResult.nModified)
+    .catch(error => { throw error })
+};
 
 // +------------+-------------------------------------------------
 // |   Gallery  |
@@ -177,7 +188,7 @@ module.exports.getRandomImagesLoggedOut = (count, callback) => {
  * grab recent images for logged out user
  * @param count: the max amount of images returned for the page
  * @param page: the current page
- *  Note: page was an orginial mist team parameter, which was used to support multiple gallery pages.
+ *  Note: page was an original mist team parameter, which was used to support multiple gallery pages.
  *        This has not been implemented on the front-end yet, but it is left here for future use
  * @param callback: returns either the images, page(boolean), and the error
  */
@@ -412,10 +423,10 @@ passwordSecurity = (pass) => {
   }
 };
 /**
+ * Changes the password of the user
  * 
  * @param {*} req 
  * @param {*} callback 
- * Changes the password of the user
  */
 module.exports.changePassword = async (req, callback) => {
   let dbPassword = "";
@@ -455,15 +466,16 @@ module.exports.changePassword = async (req, callback) => {
 };
 
 /**
+ * Changes the email of the user in the database
  *
  * @param {*} req
  * @param {*} callback
- * Chnages the email of the user in the database
+ * @returns a message if the email was successfully updated or an error occurred
  */
 module.exports.changeEmail = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body._id },
-    { $set: { email: req.body.newEmail } },
+  User.updateOne(
+    { _id: req.user._id },
+    { $set: { email: sanitize(req.body.newEmail) } },
     { new: true },
     (err, doc) => {
       if (err) {
@@ -476,43 +488,52 @@ module.exports.changeEmail = (req, callback) => {
 };
 
 /**
+ * Changes the username of the user in the database 
  *
  * @param {*} req
  * @param {*} callback
- * Changes the username of the user in the database
+ * @returns a message if the username is taken, was successfully updated, or an error occurred
  */
 module.exports.changeUsername = (req, callback) => {
 
-  User.findOneAndUpdate(
-    // this allows for both uses of changeUsername to work
-    // the first use is in settings which passes the entire user
-    // the second use is in profile which passes only the user id 
-    { _id: req.body._id ? req.body._id : req.body.id},
-    { $set: { username: req.body.newUsername } },
-    { new: true },
-    (err, doc) => {
-      if (err) {
-        callback(err);
+  if (req.body.newUsername === "")
+    callback("Username cannot be blank")
+  else {
+    User.find({ username: req.body.newUsername }, (err, docs) => {
+      if (docs.length) {
+        callback("Username already in use, try something else")
       } else {
-        callback("Successfully Updated Username");
+        User.updateOne(
+          { _id: req.user._id },
+          { $set: { username: sanitize(req.body.newUsername) } },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback("Successfully Updated Username");
+            }
+          }
+        );
       }
-    }
-  );
+    })
+  }
 };
 
 /**
+ * Changes the name of the user in the database
  *
  * @param {*} req
  * @param {*} callback
- * Changes the name of the user in the database
+ * @returns a message if the name was successfully updated or an error occurred
  */
 module.exports.changeName = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body.id },
+  User.updateOne(
+    { _id: req.user._id },
     {
       $set: {
-        forename: req.body.newFirstName,
-        surname: req.body.newLastName
+        forename: sanitize(req.body.newFirstName),
+        surname: sanitize(req.body.newLastName)
       }
     },
     { new: true },
@@ -527,17 +548,18 @@ module.exports.changeName = (req, callback) => {
 };
 
 /**
+ * Changes the bio of the user in the database
  *
  * @param {*} req
  * @param {*} callback
- * Changes the bio of the user in the database
+ * @returns a message if the bio was successfully updated or an error occurred
  */
 module.exports.changeBio = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body.id },
+  User.updateOne(
+    { _id: req.user._id },
     {
       $set: {
-        about: req.body.newBio
+        about: sanitize(req.body.newBio)
       }
     },
     { new: true },
@@ -557,13 +579,14 @@ module.exports.changeBio = (req, callback) => {
  * @param {*} req
  * @param {*} callback
  * Changes the profile picture of the user in the database
+ * Returns a message if the profile picture was succesfully updated or an error occured
  */
 module.exports.changeProfilePic = (req, callback) => {
-  User.findOneAndUpdate(
-    { _id: req.body.id },
+  User.updateOne(
+    { _id: req.user._id },
     {
       $set: {
-        profilepic: req.body.newProfilePic
+        profilepic: sanitize(req.body.newProfilePic)
       }
     },
     { new: true },
@@ -718,17 +741,17 @@ module.exports.getCompleteUserProfile = async (userid) => {
  * Check if the user corresponding to userId has an expertWorkspace with the
  * name of expertWorkspaceName.
  *
- * If user is sucessfully identified returns
+ * If user is successfully identified returns
  * {
  *  success: true,
  *  hasWorkspace: ...,
  * }
- * where hasWorkspace is true if the user has an expertWorksapce with the name
+ * where hasWorkspace is true if the user has an expertWorkspace with the name
  * expertWorkspaceName otherwise false.
  *
  * If user is not successfully identified, returns
  * {
- *  sucess: false,
+ *  success: false,
  *  message: ...,
  * }
  * where message is the message is our error message.
@@ -754,7 +777,7 @@ module.exports.userHasWorkspace = (userId, expertWorkspaceName, res) => {
             return;
           }
         });
-        // if no workpace is matched
+        // if no workspace is matched
         res.send({
           success: true,
           hasWorkspace: match,
@@ -975,16 +998,17 @@ module.exports.deleteWorkspace = async (userId, workspace_name) => (
 // +--------+
 
 // create Album
-module.exports.createAlbum = async (userid, name) => {
+module.exports.createAlbum = async (userid, name, caption) => {
   userid = sanitize(userid);
   name = sanitize(name);
+  caption = sanitize(caption)
   let album = new Album({
     name: name,
     userId: userid,
     public: false,
     active: true,
     flag: false,
-    caption: '',
+    caption: caption,
   }) // create album document object 
   try {
     //save the album object
@@ -998,7 +1022,7 @@ module.exports.createAlbum = async (userid, name) => {
           .catch(error => { throw error })
       );
     } else {
-      throw 'Failed to safe for Unkown reason'
+      throw 'Failed to safe for Unknown reason'
     }
   } catch (error) {
     throw error;
@@ -1013,12 +1037,15 @@ module.exports.createAlbum = async (userid, name) => {
 */
 module.exports.deleteAlbum = async (albumId) => {
   // sanitize ID's
-  albumId = sanitize(albumId);
-  return await Album.updateOne({ _id: albumId }, { active: false, updatedAt: Date.now }).exec()
-    .then(writeOpResult => writeOpResult.nModified)
+  //albumId = sanitize(albumId);
+  return await Album.deleteOne({ _id: albumId })
     .catch(error => { throw error })
 }
 
+// remove image from album
+module.exports.removeImageFromAlbum = async (imageId, albumId) => {
+  return Album.updateOne({ _id: sanitize(albumId) }, { $pull: { "images": sanitize(imageId) }, updatedAt: Date.now() }).exec();
+}
 // +----------+----------------------------------------------------------
 // | Reporting/Hiding/Blocking |
 // +---------------------------+
@@ -1027,24 +1054,24 @@ module.exports.deleteAlbum = async (albumId) => {
  * hide content from a user
  * @param userid: the objectId of the user wanting to hide something
  * @param type: the type of content being hidden: "comment", "image", or "album" 
- * @param contentid: the objectId of the content being hidden 
- * return true if successfull, false elsewise 
+ * @param contentId: the objectId of the content being hidden 
+ * @return true if successful, false otherwise 
  */
-module.exports.hideContent = async (userid, type, contentid) => {
+module.exports.hideContent = async (userid, type, contentId) => {
   userid = sanitize(userid);
   type = sanitize(type);
-  contentid = sanitize(contentid);
+  contentId = sanitize(contentId);
   try {
     let update;
     switch (type) {
       case "comment":
-        update = { $push: { "hidden.commentIds": contentid } }
+        update = { $push: { "hidden.commentIds": contentId } }
         break;
       case "album":
-        update = { $push: { "hidden.albumIds": contentid } }
+        update = { $push: { "hidden.albumIds": contentId } }
         break;
       case "image":
-        update = { $push: { "hidden.imageIds": contentid } }
+        update = { $push: { "hidden.imageIds": contentId } }
         break;
       default:
         throw "invalid type";
@@ -1061,7 +1088,7 @@ module.exports.hideContent = async (userid, type, contentid) => {
  * @param userid: the objectId of the user wanting to unhide something
  * @param type: the type of content being hidden: "comment", "image", or "album" 
  * @param contentid: the objectId of the content being unhidden 
- * return true if successfull, false elsewise 
+ * @returns true if successful, false otherwise 
  */
 module.exports.unhideContent = async (userid, type, contentid) => {
   try {
@@ -1090,7 +1117,7 @@ module.exports.unhideContent = async (userid, type, contentid) => {
  * blocks a user
  * @param userid: the objectId of the user who wants to block a user 
  * @param contentid: the objectId of the user to be blocked 
- * returns true if successfull, false otherwise
+ * @returns true if successful, false otherwise
  */
 module.exports.blockUser = async (userid, contentid) => {
   return await User.updateOne({ _id: userid }, { $push: { blockedUsers: contentid } }).exec()
@@ -1102,7 +1129,7 @@ module.exports.blockUser = async (userid, contentid) => {
  * unblocks a user
  * @param userid: the objectId of the user who wants to block a user 
  * @param contentid: the objectId of the user to be blocked 
- * returns true if successfull, false otherwise
+ * @returns true if successful, false otherwise
  */
 module.exports.unblockUser = async (userid, contentid) => {
   return await User.updateOne({ _id: userid }, { $pull: { blockedUsers: contentid } }).exec()
