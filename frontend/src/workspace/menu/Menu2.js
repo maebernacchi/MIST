@@ -29,6 +29,7 @@ import SavedItem from "./SavedItem";
 import { globalContext } from "../globals/global-context.js";
 import { menuContext } from "../globals/globals-menu-dimensions";
 import { fontContext } from "../globals/globals-fonts";
+import { UserContext } from "../../pages/components/Contexts/UserContext";
 import {
   imageExists,
   saveImage,
@@ -173,17 +174,11 @@ function Menu2(props) {
 
   function SavedItems(props) {
 
-    const [workspaces, setWorkspaces] = useState([]);
-
-    async function getws() {
-      return await getWorkspaces();
-    }
-
-    useEffect(() => {
-      const workspaces = getws();
-      //alert("workspaces: "+workspaces);
-      //setWorkspaces(workspaces);
-    })
+	const { user, updateAuthenticatedUser } = useContext(UserContext);
+	let workspaces = [];
+	if (user && user._id){
+		workspaces = user.workspaces
+	}
 
     return workspaces.map((u, i) => {
       return (
@@ -197,7 +192,7 @@ function Menu2(props) {
             (menuDimensions.mainMenuHeight - global.functionWidth) / 2
           }
           name={"wsname"}
-          openWS={props.openWS(u.data.nodes, u.data.lines)}
+          openWS={() => props.openWS(u.data.nodes, u.data.lines)}
         />
       );
     });

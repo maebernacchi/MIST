@@ -7,7 +7,7 @@ import {PopupContextProvider} from './globals-popup_canvas-dimensions';
 import {MenuContextProvider} from './globals-menu-dimensions';
 import {NodeContextProvider} from './globals-nodes-dimensions';
 import {MenuContextProvider1} from './globals-menu-dimensions1';
-
+import UserContextProvider from '../../pages/components/Contexts/UserContext';
 function ProviderComposer({ contexts, children }) {
   return contexts.reduceRight(
     (kids, parent) =>
@@ -22,6 +22,10 @@ function ContextProvider(props) {
   return (
     <ProviderComposer
       contexts={[
+	  /* I do not know why but adding UserContextProvider here for 
+	  the second time (the first time being in the index.js
+	  allows the children components to use the UserContext*/
+	  <UserContextProvider />,
       <GlobalContextProvider key={0} {...props}/>,
       <FontGlobals key={1} {...props}/>,
       <FunBarDimensions key={2} {...props}/>,
