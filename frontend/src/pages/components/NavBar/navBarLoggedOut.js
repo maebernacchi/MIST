@@ -67,12 +67,6 @@ import "bootstrap/dist/css/bootstrap.css";
 /** Returns the whole header for logged out users */
 function Header(props) {
 
-
-  useEffect(() => {
-    props.sendHeight(document.getElementById('basenav').offsetHeight);
-  })
-
-
   return (
     <div id={'basenav'}>
       <Navbar variant="dark" expand="lg" className="navigationBar">

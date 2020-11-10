@@ -97,11 +97,6 @@ workspaceExists, saveWorkspace, getWorkspaces } from './http.workspace';
 function App() {
   const { user } = useContext(UserContext);
 
-  function foo(height) {
-    setNavBarHeight(height);
-    console.log("updated navBarHeight: " + navBarHeight);
-  }
-
   return (
     /* the page-container styling helps with the footer */
     <div id="page-container">
