@@ -1250,7 +1250,9 @@ class WorkspaceComponent extends Component {
                   }
                   }
                   checkIfWorkspaceExists={this.checkIfWorkspaceExists.bind(this)}
-                  deleteWorkspace={this.deleteWorkspace.bind(this)}
+                  deleteWorkspace={()=>{ alert('Not yet implemented'); 
+				  //this.deleteWorkspace.bind(this)
+				  }}
                   getWorkspaces={this.getWorkspaces.bind(this)}
                   loadWorkspace={this.loadWorkspace.bind(this)}
                   saveWorkspace={this._saveWorkspace.bind(this)}

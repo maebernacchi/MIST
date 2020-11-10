@@ -201,14 +201,18 @@ function Menu2(props) {
   function Settings(props) {
     
     async function save() {
+	  alert('Not yet implemented');
       const name = "workspace1";
-      const exists = await workspaceExists(name);
+      //const exists = await workspaceExists(name);
       const workspaceState = { lines: "irrelevant" };
       const workspace = { ...workspaceState };
-      if (exists) {
+	  // if(exists){
+	  // STUB for future reimplementation
+	  // need to refactor saveWorkspace
+      if (false) {
         alert("cannot save by this name");
       } else {
-        saveWorkspace(name, workspace);
+        //saveWorkspace(name, workspace);
       }
     }
 
