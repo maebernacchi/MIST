@@ -203,6 +203,18 @@ export default function FunNode(props) {
         // Generates the temporary line when double clicked
         props.dblClickHandler(index);
       }}
+
+      onTouchEnd={(e) => {
+        if (e.target.attrs.name) {
+          alert('');
+          props.outletClicked(
+            index,
+            parseInt(e.target.attrs.name.substring(6)) - 1
+          );
+        } else {
+          props.funClicked(index);
+        }
+      }}
     >
       <Group
         onMouseEnter={(e) => {
@@ -387,6 +399,16 @@ export default function FunNode(props) {
                   easing: Konva.Easings.ElasticEaseOut,
                   scaleX: 1,
                   scaleY: 1,
+                  shadowOffsetX: 5,
+                  shadowOffsetY: 5,
+                });
+              }}
+              onTouchMove={(e) => {
+                e.target.to({
+                  duration: 0.3,
+                  easing: Konva.Easings.ElasticEaseOut,
+                  scaleX: 1.2,
+                  scaleY: 1.2,
                   shadowOffsetX: 5,
                   shadowOffsetY: 5,
                 });
