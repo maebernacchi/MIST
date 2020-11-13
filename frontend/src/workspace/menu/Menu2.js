@@ -300,6 +300,36 @@ function Menu2(props) {
             fontSize={fonts.menuTabFontSize}
             align={"center"}
             verticalAlign={"middle"}
+            onTap={() => {
+              const temp = [
+                u.text === "Values",
+                u.text === "Functions",
+                u.text === "Custom",
+                u.text === "Saved",
+                u.text === "Settings",
+              ];
+              const states = [
+                valuesOpen,
+                functionsOpen,
+                customOpen,
+                savedOpen,
+                settingsOpen,
+              ];
+              if (!states.every((u, i) => u === temp[i])) {
+                const funs = [
+                  setValuesOpen,
+                  setFunctionsOpen,
+                  setCustomOpen,
+                  setSavedOpen,
+                  setSettingsOpen,
+                ];
+                temp.map((u, i) => {
+                  funs[i](u);
+                });
+                props.setMenuTabs(...temp);
+                console.log("setting menu tabs");
+              }
+            }}
             onMouseEnter={() => {
               const temp = [
                 u.text === "Values",
