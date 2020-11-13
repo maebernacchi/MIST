@@ -1165,6 +1165,8 @@ class WorkspaceComponent extends Component {
                       valueWidth={this.valueWidth}
                     >
                       <FunNode
+                        draggable={node.draggable}
+                        toggleDraggable={this.toggleDraggable.bind(this)}
                         name={node.name}
                         key={index} // just to silence a warning message
                         index={index}

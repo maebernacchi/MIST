@@ -130,7 +130,7 @@ export default function FunNode(props) {
       ref={groupRef}
       x={x}
       y={y}
-      draggable
+      draggable={props.draggable}
       // helps keep the function nodes in the designated workspace area
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
@@ -204,9 +204,14 @@ export default function FunNode(props) {
         props.dblClickHandler(index);
       }}
 
+      onTap={() => props.toggleDraggable(index)}
+      onTouchMove={() => {
+        if (!props.draggable) {
+          props.dblClickHandler(index)
+        }
+      }}
       onTouchEnd={(e) => {
         if (e.target.attrs.name) {
-          alert('');
           props.outletClicked(
             index,
             parseInt(e.target.attrs.name.substring(6)) - 1
@@ -260,6 +265,8 @@ export default function FunNode(props) {
           shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
           shadowBlur={3}
           _useStrictMode
+          strokeWidth={props.draggable ? 0 : 1} // border width
+          stroke="black" // border color
         />
         <Text
           text={rep}
