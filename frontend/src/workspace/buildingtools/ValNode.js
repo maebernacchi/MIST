@@ -128,7 +128,7 @@ function ValNode(props) {
       x={x}
       y={y}
       ref={groupRef}
-      draggable
+      draggable={props.draggable}
       // helps keep the function nodes in the designated workspace area
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
@@ -219,6 +219,12 @@ function ValNode(props) {
             return 0;
           });
         }}
+        onTap={()=>props.toggleDraggable(index)}
+        onTouchMove={() => {
+          if(!props.draggable){
+            props.dblClickHandler(index)  
+          }
+        }}
       >
         <Rect
           x={nodeDimensions.valueOffset}
@@ -236,6 +242,8 @@ function ValNode(props) {
           shadowOffsetX={1}
           shadowOffsetY={1}
           _useStrictMode
+          strokeWidth={props.draggable ? 0 : 1} // border width
+          stroke="red" // border color
         />
         {rep === "#" ?  (
           <Portal>

@@ -73,6 +73,7 @@ import PopupCanvas from "./funbar/PopupCanvas";
 import { animated, useSpring } from "react-spring";
 import Custom from "./menu/Custom";
 import RenderBox from "./buildingtools/RenderBox";
+import _ from "lodash";
 
 // +----------------------------+
 // | All dependent files        |
@@ -389,6 +390,7 @@ class WorkspaceComponent extends Component {
           : null,
       parentNodes: [],
       imageShowing: false,
+      draggable: true,
     };
     this.setState((state, props) => {
       return {
@@ -994,6 +996,25 @@ class WorkspaceComponent extends Component {
   // | Mouse Event Handlers |
   // +----------------------+------------------------------------------
 
+  // +----------------------+
+  // | Touch Event Handlers |
+  // +----------------------+------------------------------------------
+
+  /**
+   * 
+   */
+  toggleDraggable = (index) => {
+    this.setState(prevState => {
+      const newNodes = _.cloneDeep(prevState.nodes);
+      newNodes[index].draggable = !newNodes[index].draggable;
+      return { nodes: newNodes };
+    })
+  }
+  
+  // +----------------------+
+  // | Touch Event Handlers |
+  // +----------------------+------------------------------------------
+
   // +--------+--------------------------------------------------------
   // | RENDER |
   // +--------+
@@ -1043,10 +1064,35 @@ class WorkspaceComponent extends Component {
                 this.updateMousePosition(
                   this.stageRef.getStage().getPointerPosition().x,
                   this.stageRef.getStage().getPointerPosition().y
-                );
-              }
-            }}
-          >
+              );
+            }
+          }}
+          onTouchMove={() => {
+            if (this.state.mouseListenerOn) {
+              this.updateMousePosition(
+                this.stageRef.getStage().getPointerPosition().x,
+                this.stageRef.getStage().getPointerPosition().y
+              );
+            }
+          }}
+          onTouchEnd={() => {
+            if (this.state.mouseListenerOn && this.state.tempLine) {
+              this.setState(prevState => {
+                const newNodes = _.cloneDeep(prevState.nodes);
+                if (prevState.newSource !== null) {
+                  newNodes[prevState.newSource].draggable = true;
+                }
+                const newState = {
+                  newSource: null,
+                  tempLine: null,
+                  mouseListenerOn: false,
+                  nodes: newNodes
+                };
+                return newState;
+              })
+            }
+          }}
+        >
 
             <Layer>
               {this.state.tempLine && (
@@ -1163,6 +1209,8 @@ class WorkspaceComponent extends Component {
                       valueWidth={this.valueWidth}
                     >
                       <ValNode
+                        draggable={node.draggable}
+                        toggleDraggable={this.toggleDraggable.bind(this)}
                         name={node.name}
                         key={index}
                         index={index}
