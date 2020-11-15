@@ -219,12 +219,7 @@ function ValNode(props) {
             return 0;
           });
         }}
-        onTap={()=>props.toggleDraggable(index)}
-        onTouchMove={() => {
-          if(!props.draggable){
-            props.dblClickHandler(index)  
-          }
-        }}
+        onTap={() => { props.tapHandler(index) }}
       >
         <Rect
           x={nodeDimensions.valueOffset}
@@ -304,6 +299,11 @@ function ValNode(props) {
         <Trashcan />
       </Group>
       <Rect
+        onTap={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
         onClick={() => {
           if (props.renderFunction) {
             props.toggleBox();

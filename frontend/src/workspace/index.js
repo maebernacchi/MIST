@@ -942,6 +942,28 @@ class WorkspaceComponent extends Component {
     });
   };
 
+  nodeTapped = (index) => {
+    if (typeof index === 'number') {
+      this.setState(prevState => {
+        const newNodes = _.cloneDeep(prevState.nodes).map((node, i) => ({...node, draggable: i !== index}));
+        return {
+          currentNode: index,
+          newSource: index,
+          mouseListenerOn: true,
+          mousePosition: {
+            x: this.state.nodes[index].x + gui.functionRectSideLength / 2,
+            y: this.state.nodes[index].y + gui.functionRectSideLength / 2,
+          },
+          tempLine: {
+            sourceX: this.state.nodes[index].x,
+            sourceY: this.state.nodes[index].y,
+          },
+          nodes: newNodes
+        }
+      })
+    };
+  }
+
   /**
    * If the connection is valid, clicking the outlet pushes a new line
    * @param {*} sinkIndex
@@ -1041,39 +1063,57 @@ class WorkspaceComponent extends Component {
           }}
         >
           {/* <div onClick={()=>this.deleteWorkspaces('a').then(alert).catch(alert)}>Delete ws</div> */}
-          <Stage
-            ref={(ref) => {
-              this.stageRef = ref;
-            }}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-            }}
-            width={this.width}
-            height={this.height}
-            onClick={() => {
-              this.setState({
-                newSource: null,
-                tempLine: null,
-                mouseListenerOn: false,
-              });
-            }}
-            onMouseMove={(e) => {
-              if (this.state.mouseListenerOn) {
-                this.updateMousePosition(
-                  this.stageRef.getStage().getPointerPosition().x,
-                  this.stageRef.getStage().getPointerPosition().y
-              );
-            }
+        <Stage
+          ref={(ref) => {
+            this.stageRef = ref;
           }}
-          onTouchMove={() => {
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+          width={this.width}
+          height={this.height}
+          onClick={() => {
+            this.setState({
+              newSource: null,
+              tempLine: null,
+              mouseListenerOn: false,
+            });
+          }}
+          onMouseMove={(e) => {
             if (this.state.mouseListenerOn) {
               this.updateMousePosition(
                 this.stageRef.getStage().getPointerPosition().x,
                 this.stageRef.getStage().getPointerPosition().y
               );
             }
+          }}
+          onTouchMove={() => {
+            this.setState(currentState => {
+              const index = currentState.currentNode;
+              if (index !== null && currentState.newSource && !currentState.tempLine && currentState.nodes[index].name !== 'rgb') {
+                return ({
+                  newSource: index,
+                  mouseListenerOn: true,
+                  mousePosition: {
+                    x: currentState.nodes[index].x + gui.functionRectSideLength / 2,
+                    y: currentState.nodes[index].y + gui.functionRectSideLength / 2,
+                  },
+                  tempLine: {
+                    sourceX: currentState.nodes[index].x,
+                    sourceY: currentState.nodes[index].y,
+                  },
+                })
+              } else if (index !== null && currentState.tempLine && currentState.nodes[index].name !== 'rgb') {
+                this.updateMousePosition(
+                  this.stageRef.getStage().getPointerPosition().x,
+                  this.stageRef.getStage().getPointerPosition().y
+                )
+              } else {
+              }
+
+            })
           }}
           onTouchEnd={() => {
             if (this.state.mouseListenerOn && this.state.tempLine) {
@@ -1083,6 +1123,7 @@ class WorkspaceComponent extends Component {
                   newNodes[prevState.newSource].draggable = true;
                 }
                 const newState = {
+                  currentNode: null,
                   newSource: null,
                   tempLine: null,
                   mouseListenerOn: false,
@@ -1184,6 +1225,7 @@ class WorkspaceComponent extends Component {
                         updateNodePosition={this.updateNodePosition.bind(this)}
                         updateLinePosition={this.updateLinePosition.bind(this)}
                         funClicked={this.funClicked.bind(this)}
+                        tapHandler={this.nodeTapped.bind(this)}
                         outletClicked={this.outletClicked.bind(this)}
                         dblClickHandler={this.dblClicked.bind(this)}
                         removeNode={this.removeNode.bind(this)}
@@ -1227,6 +1269,9 @@ class WorkspaceComponent extends Component {
                         }
                         updateNodePosition={this.updateNodePosition.bind(this)}
                         updateLinePosition={this.updateLinePosition.bind(this)}
+
+
+                        tapHandler={this.nodeTapped.bind(this)}
                         clickHandler={this.valClicked.bind(this)}
                         dblClickHandler={this.dblClicked.bind(this)}
                         removeNode={this.removeNode.bind(this)}

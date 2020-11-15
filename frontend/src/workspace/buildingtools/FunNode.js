@@ -204,12 +204,7 @@ export default function FunNode(props) {
         props.dblClickHandler(index);
       }}
 
-      onTap={() => props.toggleDraggable(index)}
-      onTouchMove={() => {
-        if (!props.draggable) {
-          props.dblClickHandler(index)
-        }
-      }}
+      onTap={() => props.tapHandler(index)}
       onTouchEnd={(e) => {
         if (e.target.attrs.name) {
           props.outletClicked(
@@ -289,6 +284,11 @@ export default function FunNode(props) {
         <Trashcan />
       </Group>
       <Rect
+        onTap={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
         onClick={() => {
           if (props.renderFunction) {
             props.toggleBox();
