@@ -201,8 +201,6 @@ function Menu2(props) {
   function Settings(props) {
 	const {updateAuthenticatedUser} = useContext(UserContext);  
     function save() {
-	  alert('Not yet implemented');
-	  console.log(props.workspaceData);
 	  const workspaceName = 'workspace1';
 	  function resolve(exists){
 		if(exists){

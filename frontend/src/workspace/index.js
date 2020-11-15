@@ -62,7 +62,6 @@ import colors from "./globals/globals-themes";
 import { Container } from "react-bootstrap";
 import Edge from "./buildingtools/line";
 import { ContextProvider } from "./globals/ContextProvider";
-import Menu1 from "./menu/Menu1";
 import Menu2 from "./menu/Menu2";
 import gui from "./globals/mistgui-globals";
 import { MIST } from "./mist/mist.js";
@@ -74,6 +73,7 @@ import { animated, useSpring } from "react-spring";
 import Custom from "./menu/Custom";
 import RenderBox from "./buildingtools/RenderBox";
 import _ from "lodash";
+import { UserContext } from "../pages/components/Contexts/UserContext";
 
 // +----------------------------+
 // | All dependent files        |
@@ -127,7 +127,7 @@ class WorkspaceComponent extends Component {
     // +--------+--------------------------------------------------------
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.nodes !== this.state.nodes) {
@@ -193,7 +193,7 @@ class WorkspaceComponent extends Component {
         y:
           this.menuHeight +
           Math.random() *
-            (this.height - this.menuHeight - 2 * this.funBarHeight),
+          (this.height - this.menuHeight - 2 * this.funBarHeight),
         renderFunction: { renderFunction: expression.code, isRenderable: true },
         lineOut: [],
         numInputs: null,
@@ -243,7 +243,7 @@ class WorkspaceComponent extends Component {
           const pY =
             this.menuHeight +
             Math.random() *
-              (this.height - this.menuHeight - 2 * this.funBarHeight);
+            (this.height - this.menuHeight - 2 * this.funBarHeight);
           const sourceNode = {
             // Creating a new node
             name: gui.repToFun[operands[i].operation],
@@ -300,7 +300,7 @@ class WorkspaceComponent extends Component {
             y:
               this.menuHeight +
               Math.random() *
-                (this.height - this.menuHeight - 2 * this.funBarHeight),
+              (this.height - this.menuHeight - 2 * this.funBarHeight),
             renderFunction: {
               renderFunction: operands[i].code,
               isRenderable: true,
@@ -875,9 +875,9 @@ class WorkspaceComponent extends Component {
       },
       body: JSON.stringify({ action: 'deletews', name: name })
     });
-    if(!res.ok)
+    if (!res.ok)
       throw new Error(`HTTP error! status: ${res.status}`);
-    else{
+    else {
       return await res.json()
         .then(data => {
           if (data === 'logged out')
@@ -947,7 +947,7 @@ class WorkspaceComponent extends Component {
   nodeTapped = (index) => {
     if (typeof index === 'number') {
       this.setState(prevState => {
-        const newNodes = _.cloneDeep(prevState.nodes).map((node, i) => ({...node, draggable: i !== index}));
+        const newNodes = _.cloneDeep(prevState.nodes).map((node, i) => ({ ...node, draggable: i !== index }));
         return {
           currentNode: index,
           newSource: index,
@@ -1034,7 +1034,7 @@ class WorkspaceComponent extends Component {
       return { nodes: newNodes };
     })
   }
-  
+
   // +----------------------+
   // | Touch Event Handlers |
   // +----------------------+------------------------------------------
@@ -1053,152 +1053,98 @@ class WorkspaceComponent extends Component {
           paddingBottom: "7.5rem",
         }}
       > */
-        <div
-          id="workspace"
-          style={{
-            position: "relative",
-            width: this.width,
-            height: this.height,
-            margin: 'auto',
-            backgroundColor: colors.workspaceBackground[this.state.theme],
-            overflow: 'hidden',
-          }}
-        >
-          {/* <div onClick={()=>this.deleteWorkspaces('a').then(alert).catch(alert)}>Delete ws</div> */}
-        <Stage
-          ref={(ref) => {
-            this.stageRef = ref;
-          }}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-          }}
-          width={this.width}
-          height={this.height}
-          onClick={() => {
-            this.setState({
-              newSource: null,
-              tempLine: null,
-              mouseListenerOn: false,
-            });
-          }}
-          onMouseMove={(e) => {
-            if (this.state.mouseListenerOn) {
-              this.updateMousePosition(
-                this.stageRef.getStage().getPointerPosition().x,
-                this.stageRef.getStage().getPointerPosition().y
-              );
-            }
-          }}
-          onTouchMove={() => {
-            this.setState(currentState => {
-              const index = currentState.currentNode;
-              if (index !== null && currentState.newSource && !currentState.tempLine && currentState.nodes[index].name !== 'rgb') {
-                return ({
-                  newSource: index,
-                  mouseListenerOn: true,
-                  mousePosition: {
-                    x: currentState.nodes[index].x + gui.functionRectSideLength / 2,
-                    y: currentState.nodes[index].y + gui.functionRectSideLength / 2,
-                  },
-                  tempLine: {
-                    sourceX: currentState.nodes[index].x,
-                    sourceY: currentState.nodes[index].y,
-                  },
-                })
-              } else if (index !== null && currentState.tempLine && currentState.nodes[index].name !== 'rgb') {
-                this.updateMousePosition(
-                  this.stageRef.getStage().getPointerPosition().x,
-                  this.stageRef.getStage().getPointerPosition().y
-                )
-              } else {
-              }
-
-            })
-          }}
-          onTouchEnd={() => {
-            if (this.state.mouseListenerOn && this.state.tempLine) {
-              this.setState(prevState => {
-                const newNodes = _.cloneDeep(prevState.nodes);
-                if (prevState.newSource !== null) {
-                  newNodes[prevState.newSource].draggable = true;
-                }
-                const newState = {
-                  currentNode: null,
+      <div
+        id="workspace"
+        style={{
+          position: "relative",
+          width: this.width,
+          height: this.height,
+          margin: 'auto',
+          backgroundColor: colors.workspaceBackground[this.state.theme],
+          overflow: 'hidden',
+        }}
+      >
+        {/* <div onClick={()=>this.deleteWorkspaces('a').then(alert).catch(alert)}>Delete ws</div> */}
+        {/* Bridging the UserContext into react-konva according to 
+	  https://github.com/konvajs/react-konva/issues/188#issuecomment-478302062
+      */}
+        <UserContext.Consumer>
+          {value => (
+            <Stage
+              ref={(ref) => {
+                this.stageRef = ref;
+              }}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+              }}
+              width={this.width}
+              height={this.height}
+              onClick={() => {
+                this.setState({
                   newSource: null,
                   tempLine: null,
                   mouseListenerOn: false,
-                  nodes: newNodes
-                };
-                return newState;
-              })
-            }
-          }}
-        >
-
-            <Layer>
-              {this.state.tempLine && (
-                <ContextProvider
-                  width={this.width}
-                  height={this.height}
-                  menuHeight={this.menuHeight}
-                  funBarHeight={this.funBarHeight}
-                  functionWidth={this.functionWidth}
-                  valueWidth={this.valueWidth}
-                >
-                  <Edge
-                    sourceX={
-                      this.state.tempLine.sourceX + this.functionWidth / 2
-                    }
-                    sourceY={
-                      this.state.tempLine.sourceY + this.functionWidth / 2
-                    }
-                    sinkX={this.state.mousePosition.x}
-                    sinkY={this.state.mousePosition.y}
-                    fill={colors.lineFill[this.state.theme]}
-                    outletIndex={null}
-                  />
-                </ContextProvider>
-              )}
-            </Layer>
-
-            <Layer>
-              {this.state.nodes.length !== 0 &&
-                this.state.lines.map(
-                  (line, index) =>
-                    line && (
-                      <ContextProvider
-                        width={this.width}
-                        height={this.height}
-                        menuHeight={this.menuHeight}
-                        funBarHeight={this.funBarHeight}
-                        functionWidth={this.functionWidth}
-                        valueWidth={this.valueWidth}
-                      >
-                        <Edge
-                          index={index}
-                          key={index}
-                          sourceX={line.headPosition.x}
-                          sourceY={line.headPosition.y}
-                          sinkX={line.tailPosition.x}
-                          sinkY={line.tailPosition.y}
-                          removeLine={this.removeLine.bind(this)}
-                          fill={colors.lineFill[this.state.theme]}
-                          hoverShadowColor={
-                            colors.nodeHoverShadow[this.state.theme]
-                          }
-                          outletIndex={line.outletIndex}
-                        />
-                      </ContextProvider>
+                });
+              }}
+              onMouseMove={(e) => {
+                if (this.state.mouseListenerOn) {
+                  this.updateMousePosition(
+                    this.stageRef.getStage().getPointerPosition().x,
+                    this.stageRef.getStage().getPointerPosition().y
+                  );
+                }
+              }}
+              onTouchMove={() => {
+                this.setState(currentState => {
+                  const index = currentState.currentNode;
+                  if (index !== null && currentState.newSource && !currentState.tempLine && currentState.nodes[index].name !== 'rgb') {
+                    return ({
+                      newSource: index,
+                      mouseListenerOn: true,
+                      mousePosition: {
+                        x: currentState.nodes[index].x + gui.functionRectSideLength / 2,
+                        y: currentState.nodes[index].y + gui.functionRectSideLength / 2,
+                      },
+                      tempLine: {
+                        sourceX: currentState.nodes[index].x,
+                        sourceY: currentState.nodes[index].y,
+                      },
+                    })
+                  } else if (index !== null && currentState.tempLine && currentState.nodes[index].name !== 'rgb') {
+                    this.updateMousePosition(
+                      this.stageRef.getStage().getPointerPosition().x,
+                      this.stageRef.getStage().getPointerPosition().y
                     )
-                )}
-            </Layer>
+                  } else {
+                  }
 
-            <Layer>
-              {this.state.nodes.map(
-                (node, index) =>
-                  (node && node.type === "fun" && (
+                })
+              }}
+              onTouchEnd={() => {
+                if (this.state.mouseListenerOn && this.state.tempLine) {
+                  this.setState(prevState => {
+                    const newNodes = _.cloneDeep(prevState.nodes);
+                    if (prevState.newSource !== null) {
+                      newNodes[prevState.newSource].draggable = true;
+                    }
+                    const newState = {
+                      currentNode: null,
+                      newSource: null,
+                      tempLine: null,
+                      mouseListenerOn: false,
+                      nodes: newNodes
+                    };
+                    return newState;
+                  })
+                }
+              }}
+            >
+
+              <UserContext.Provider value={value}>
+                <Layer>
+                  {this.state.tempLine && (
                     <ContextProvider
                       width={this.width}
                       height={this.height}
@@ -1207,92 +1153,312 @@ class WorkspaceComponent extends Component {
                       functionWidth={this.functionWidth}
                       valueWidth={this.valueWidth}
                     >
-                      <FunNode
-                        draggable={node.draggable}
-                        toggleDraggable={this.toggleDraggable.bind(this)}
-                        name={node.name}
-                        key={index} // just to silence a warning message
-                        index={index}
-                        x={node.x}
-                        y={node.y}
-                        offsetX={this.state.offsetX}
-                        offsetY={this.state.offsetY}
-                        numInputs={node.numInputs}
-                        numOutlets={node.numOutlets}
-                        renderFunction={
-                          node.renderFunction.isRenderable
-                            ? node.renderFunction.renderFunction
-                            : false
+                      <Edge
+                        sourceX={
+                          this.state.tempLine.sourceX + this.functionWidth / 2
                         }
-                        updateNodePosition={this.updateNodePosition.bind(this)}
-                        updateLinePosition={this.updateLinePosition.bind(this)}
-                        funClicked={this.funClicked.bind(this)}
-                        tapHandler={this.nodeTapped.bind(this)}
-                        outletClicked={this.outletClicked.bind(this)}
-                        dblClickHandler={this.dblClicked.bind(this)}
-                        removeNode={this.removeNode.bind(this)}
-                        hoverShadowColor={
-                          colors.nodeHoverShadow[this.state.theme]
+                        sourceY={
+                          this.state.tempLine.sourceY + this.functionWidth / 2
                         }
-                        imageShowing={node.imageShowing}
-                        toggleBox={() => {
-                          const newNodes = this.state.nodes;
-                          newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
-                          this.setState({
-                            nodes: newNodes,
-                          });
-                        }}
+                        sinkX={this.state.mousePosition.x}
+                        sinkY={this.state.mousePosition.y}
+                        fill={colors.lineFill[this.state.theme]}
+                        outletIndex={null}
                       />
                     </ContextProvider>
-                  )) ||
-                  (node && node.type === "val" && (
-                    <ContextProvider
-                      width={this.width}
-                      height={this.height}
-                      menuHeight={this.menuHeight}
-                      funBarHeight={this.funBarHeight}
-                      functionWidth={this.functionWidth}
-                      valueWidth={this.valueWidth}
-                    >
-                      <ValNode
-                        draggable={node.draggable}
-                        toggleDraggable={this.toggleDraggable.bind(this)}
-                        name={node.name}
-                        key={index}
-                        index={index}
-                        x={node.x}
-                        y={node.y}
-                        offsetX={this.state.offsetX}
-                        offsetY={this.state.offsetY}
-                        renderFunction={
-                          node.renderFunction.isRenderable
-                            ? node.renderFunction.renderFunction
-                            : false
-                        }
-                        updateNodePosition={this.updateNodePosition.bind(this)}
-                        updateLinePosition={this.updateLinePosition.bind(this)}
+                  )}
+                </Layer>
+
+                <Layer>
+                  {this.state.nodes.length !== 0 &&
+                    this.state.lines.map(
+                      (line, index) =>
+                        line && (
+                          <ContextProvider
+                            width={this.width}
+                            height={this.height}
+                            menuHeight={this.menuHeight}
+                            funBarHeight={this.funBarHeight}
+                            functionWidth={this.functionWidth}
+                            valueWidth={this.valueWidth}
+                          >
+                            <Edge
+                              index={index}
+                              key={index}
+                              sourceX={line.headPosition.x}
+                              sourceY={line.headPosition.y}
+                              sinkX={line.tailPosition.x}
+                              sinkY={line.tailPosition.y}
+                              removeLine={this.removeLine.bind(this)}
+                              fill={colors.lineFill[this.state.theme]}
+                              hoverShadowColor={
+                                colors.nodeHoverShadow[this.state.theme]
+                              }
+                              outletIndex={line.outletIndex}
+                            />
+                          </ContextProvider>
+                        )
+                    )}
+                </Layer>
+
+                <Layer>
+                  {this.state.nodes.map(
+                    (node, index) =>
+                      (node && node.type === "fun" && (
+                        <ContextProvider
+                          width={this.width}
+                          height={this.height}
+                          menuHeight={this.menuHeight}
+                          funBarHeight={this.funBarHeight}
+                          functionWidth={this.functionWidth}
+                          valueWidth={this.valueWidth}
+                        >
+                          <FunNode
+                            draggable={node.draggable}
+                            toggleDraggable={this.toggleDraggable.bind(this)}
+                            name={node.name}
+                            key={index} // just to silence a warning message
+                            index={index}
+                            x={node.x}
+                            y={node.y}
+                            offsetX={this.state.offsetX}
+                            offsetY={this.state.offsetY}
+                            numInputs={node.numInputs}
+                            numOutlets={node.numOutlets}
+                            renderFunction={
+                              node.renderFunction.isRenderable
+                                ? node.renderFunction.renderFunction
+                                : false
+                            }
+                            updateNodePosition={this.updateNodePosition.bind(this)}
+                            updateLinePosition={this.updateLinePosition.bind(this)}
+                            funClicked={this.funClicked.bind(this)}
+                            tapHandler={this.nodeTapped.bind(this)}
+                            outletClicked={this.outletClicked.bind(this)}
+                            dblClickHandler={this.dblClicked.bind(this)}
+                            removeNode={this.removeNode.bind(this)}
+                            hoverShadowColor={
+                              colors.nodeHoverShadow[this.state.theme]
+                            }
+                            imageShowing={node.imageShowing}
+                            toggleBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                          />
+                        </ContextProvider>
+                      )) ||
+                      (node && node.type === "val" && (
+                        <ContextProvider
+                          width={this.width}
+                          height={this.height}
+                          menuHeight={this.menuHeight}
+                          funBarHeight={this.funBarHeight}
+                          functionWidth={this.functionWidth}
+                          valueWidth={this.valueWidth}
+                        >
+                          <ValNode
+                            draggable={node.draggable}
+                            toggleDraggable={this.toggleDraggable.bind(this)}
+                            name={node.name}
+                            key={index}
+                            index={index}
+                            x={node.x}
+                            y={node.y}
+                            offsetX={this.state.offsetX}
+                            offsetY={this.state.offsetY}
+                            renderFunction={
+                              node.renderFunction.isRenderable
+                                ? node.renderFunction.renderFunction
+                                : false
+                            }
+                            updateNodePosition={this.updateNodePosition.bind(this)}
+                            updateLinePosition={this.updateLinePosition.bind(this)}
 
 
-                        tapHandler={this.nodeTapped.bind(this)}
-                        clickHandler={this.valClicked.bind(this)}
-                        dblClickHandler={this.dblClicked.bind(this)}
-                        removeNode={this.removeNode.bind(this)}
-                        updateHashValue={this.updateHashValue.bind(this)}
-                        imageShowing={node.imageShowing}
-                        toggleBox={() => {
-                          const newNodes = this.state.nodes;
-                          newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
-                          this.setState({
-                            nodes: newNodes,
-                          });
-                        }}
-                      />
-                    </ContextProvider>
-                  ))
-              )}
-            </Layer>
+                            tapHandler={this.nodeTapped.bind(this)}
+                            clickHandler={this.valClicked.bind(this)}
+                            dblClickHandler={this.dblClicked.bind(this)}
+                            removeNode={this.removeNode.bind(this)}
+                            updateHashValue={this.updateHashValue.bind(this)}
+                            imageShowing={node.imageShowing}
+                            toggleBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                          />
+                        </ContextProvider>
+                      ))
+                  )}
+                </Layer>
 
-            <Layer>
+                <Layer>
+                  <ContextProvider
+                    width={this.width}
+                    height={this.height}
+                    menuHeight={this.menuHeight}
+                    funBarHeight={this.funBarHeight}
+                    functionWidth={this.functionWidth}
+                    valueWidth={this.valueWidth}
+                  >
+                    <Menu2
+                      addNode={this.pushNode.bind(this)}
+                      addLine={this.pushLine.bind(this)}
+                      clearWorkspace={this.clearWorkspace.bind(this)}
+                      createLayout={this.createLayout.bind(this)}
+                      bgColor={colors.menuBackground[this.state.theme]}
+                      wsButtonColor={colors.workspaceButton[this.state.theme]}
+                      valueMenuColor={
+                        (this.state.theme === "classic" &&
+                          colors.valueMenuColor1) ||
+                        (this.state.theme === "dusk" && colors.valueMenuColor2) ||
+                        (this.state.theme === "dark" && colors.valueMenuColor3)
+                      }
+                      funTabColor={colors.menuFunTab[this.state.theme]}
+                      valTabColor={colors.menuValTab[this.state.theme]}
+                      customTabColor={colors.menuCustomTab[this.state.theme]}
+                      savedTabColor={colors.menuSavedTab[this.state.theme]}
+                      settingsTabColor={colors.menuSettingsTab[this.state.theme]}
+                      theme={this.state.theme}
+                      setMenuTabs={(
+                        valuesOpen,
+                        functionsOpen,
+                        customOpen,
+                        savedOpen,
+                        settingsOpen
+                      ) => {
+                        this.setState({
+                          menuTabs: {
+                            valuesOpen: valuesOpen,
+                            functionsOpen: functionsOpen,
+                            customOpen: customOpen,
+                            savedOpen: savedOpen,
+                            settingsOpen: settingsOpen,
+                          },
+                        });
+
+                      }}
+                      toggleTheme={() => {
+                        let i = (this.state.themeIndex + 1) % this.themes.length;
+                        this.setState({
+                          themeIndex: i,
+                          theme: this.themes[i],
+                        });
+                      }
+                      }
+                      checkIfWorkspaceExists={this.checkIfWorkspaceExists.bind(this)}
+                      deleteWorkspace={() => {
+                        alert('Not yet implemented');
+                        //this.deleteWorkspace.bind(this)
+                      }}
+                      getWorkspaces={this.getWorkspaces.bind(this)}
+                      loadWorkspace={this.loadWorkspace.bind(this)}
+                      workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
+                      openWS={(newNodes, newLines) => {
+                        alert("attempting to open a workspace");
+                        this.setState({
+                          nodes: newNodes,
+                          lines: newLines,
+                        })
+                      }}
+                    />
+                  </ContextProvider>
+                </Layer>
+
+                <Layer>
+                  <ContextProvider
+                    width={this.width}
+                    height={this.height}
+                    menuHeight={this.menuHeight}
+                    funBarHeight={this.funBarHeight}
+                    functionWidth={this.functionWidth}
+                    valueWidth={this.valueWidth}
+                  >
+                    <FunBar
+                      renderFunction={
+                        this.state.currentNode !== null &&
+                          this.state.nodes[this.state.currentNode]
+                          ? this.state.nodes[this.state.currentNode].renderFunction
+                          : { renderFunction: "", isRenderable: false }
+                      }
+                      bg={colors.funBarBackground[this.state.theme]}
+                      onClick={() => {
+                        let i = (this.state.themeIndex + 1) % this.themes.length;
+                        this.setState({
+                          themeIndex: i,
+                          theme: this.themes[i],
+                        });
+                      }}
+                      functionBoxBg={
+                        this.state.theme === "dark" ? "darkgray" : "white"
+                      }
+                      functionTextColor={
+                        this.state.theme === "dark" ? "black" : "black"
+                      }
+                      openPopupCanvas={() => {
+                        this.setState({
+                          isPopupCanvasOpen: true,
+                        });
+                        console.log("opened popup canvas");
+                      }}
+                    />
+                  </ContextProvider>
+                </Layer>
+              </UserContext.Provider>
+            </Stage>)
+          }
+        </UserContext.Consumer>
+
+        <ContextProvider
+          width={this.width}
+          height={this.height}
+          menuHeight={this.menuHeight}
+          funBarHeight={this.funBarHeight}
+          functionWidth={this.functionWidth}
+          valueWidth={this.valueWidth}
+        >
+          <PopupCanvas
+            x={0}
+            y={0}
+            top={0}
+            left={0}
+            show={this.state.isPopupCanvasOpen}
+            renderFunction={
+              this.state.currentNode !== null &&
+                this.state.nodes[this.state.currentNode]
+                ? this.state.nodes[this.state.currentNode].renderFunction
+                : { renderFunction: "", isRenderable: false }
+            } closePortal={() => {
+              this.setState({ isPopupCanvasOpen: false });
+            }}
+            setImageName={(name) => {
+              // not implemented
+            }}
+          />
+        </ContextProvider>
+
+        <ContextProvider
+          width={this.width}
+          height={this.height}
+          menuHeight={this.menuHeight}
+          funBarHeight={this.funBarHeight}
+          functionWidth={this.functionWidth}
+          valueWidth={this.valueWidth}
+        >
+          <Custom menuTabs={this.state.menuTabs} />
+        </ContextProvider>
+
+        {this.state.nodes.map(
+          (node, index) =>
+            node &&
+            node.renderFunction.isRenderable &&
+            node.imageShowing && (
               <ContextProvider
                 width={this.width}
                 height={this.height}
@@ -1301,180 +1467,23 @@ class WorkspaceComponent extends Component {
                 functionWidth={this.functionWidth}
                 valueWidth={this.valueWidth}
               >
-                <Menu2
-                  addNode={this.pushNode.bind(this)}
-                  addLine={this.pushLine.bind(this)}
-                  clearWorkspace={this.clearWorkspace.bind(this)}
-                  createLayout={this.createLayout.bind(this)}
-                  bgColor={colors.menuBackground[this.state.theme]}
-                  wsButtonColor={colors.workspaceButton[this.state.theme]}
-                  valueMenuColor={
-                    (this.state.theme === "classic" &&
-                      colors.valueMenuColor1) ||
-                    (this.state.theme === "dusk" && colors.valueMenuColor2) ||
-                    (this.state.theme === "dark" && colors.valueMenuColor3)
-                  }
-                  funTabColor={colors.menuFunTab[this.state.theme]}
-                  valTabColor={colors.menuValTab[this.state.theme]}
-                  customTabColor={colors.menuCustomTab[this.state.theme]}
-                  savedTabColor={colors.menuSavedTab[this.state.theme]}
-                  settingsTabColor={colors.menuSettingsTab[this.state.theme]}
-                  theme={this.state.theme}
-                  setMenuTabs={(
-                    valuesOpen,
-                    functionsOpen,
-                    customOpen,
-                    savedOpen,
-                    settingsOpen
-                  ) => {
-                    this.setState({
-                      menuTabs: {
-                        valuesOpen: valuesOpen,
-                        functionsOpen: functionsOpen,
-                        customOpen: customOpen,
-                        savedOpen: savedOpen,
-                        settingsOpen: settingsOpen,
-                      },
-                    });
-                    
-                  }}
-                  toggleTheme={() => {
-                    let i = (this.state.themeIndex + 1) % this.themes.length;
-                    this.setState({
-                      themeIndex: i,
-                      theme: this.themes[i],
-                    });
-                  }
-                  }
-                  checkIfWorkspaceExists={this.checkIfWorkspaceExists.bind(this)}
-                  deleteWorkspace={()=>{ alert('Not yet implemented'); 
-				  //this.deleteWorkspace.bind(this)
-				  }}
-                  getWorkspaces={this.getWorkspaces.bind(this)}
-                  loadWorkspace={this.loadWorkspace.bind(this)}
-				  workspaceData={{ nodes: this.state.nodes, lines: this.state.lines}} 
-                  openWS={(newNodes, newLines) => {
-                    alert("attempting to open a workspace");
+                <RenderBox
+                  x={node.x}
+                  y={node.y}
+                  type={node.type}
+                  renderFunction={node.renderFunction.renderFunction}
+                  toggleBox={() => {
+                    const newNodes = this.state.nodes;
+                    newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
                     this.setState({
                       nodes: newNodes,
-                      lines: newLines,
-                    })
+                    });
                   }}
                 />
               </ContextProvider>
-            </Layer>
-
-            <Layer>
-              <ContextProvider
-                width={this.width}
-                height={this.height}
-                menuHeight={this.menuHeight}
-                funBarHeight={this.funBarHeight}
-                functionWidth={this.functionWidth}
-                valueWidth={this.valueWidth}
-              >
-                <FunBar
-                  renderFunction={
-                    this.state.currentNode !== null &&
-                    this.state.nodes[this.state.currentNode]
-                      ? this.state.nodes[this.state.currentNode].renderFunction
-                      : { renderFunction: "", isRenderable: false }
-                  }
-                  bg={colors.funBarBackground[this.state.theme]}
-                  onClick={() => {
-                    let i = (this.state.themeIndex + 1) % this.themes.length;
-                    this.setState({
-                      themeIndex: i,
-                      theme: this.themes[i],
-                    });
-                  }}
-                  functionBoxBg={
-                    this.state.theme === "dark" ? "darkgray" : "white"
-                  }
-                  functionTextColor={
-                    this.state.theme === "dark" ? "black" : "black"
-                  }
-                  openPopupCanvas={() => {
-                    this.setState({
-                      isPopupCanvasOpen: true,
-                    });
-                    console.log("opened popup canvas");
-                  }}
-                />
-              </ContextProvider>
-            </Layer>
-
-          </Stage>
-
-          <ContextProvider
-            width={this.width}
-            height={this.height}
-            menuHeight={this.menuHeight}
-            funBarHeight={this.funBarHeight}
-            functionWidth={this.functionWidth}
-            valueWidth={this.valueWidth}
-          >
-            <PopupCanvas
-              x={0}
-              y={0}
-              top={0}
-              left={0}
-              show={this.state.isPopupCanvasOpen}
-              renderFunction={
-                this.state.currentNode !== null &&
-                this.state.nodes[this.state.currentNode]
-                  ? this.state.nodes[this.state.currentNode].renderFunction
-                  : { renderFunction: "", isRenderable: false }
-              }closePortal={() => {
-                this.setState({ isPopupCanvasOpen: false });
-              }}
-              setImageName={(name) => {
-                // not implemented
-              }}
-            />
-          </ContextProvider>
-
-          <ContextProvider
-            width={this.width}
-            height={this.height}
-            menuHeight={this.menuHeight}
-            funBarHeight={this.funBarHeight}
-            functionWidth={this.functionWidth}
-            valueWidth={this.valueWidth}
-          >
-            <Custom menuTabs={this.state.menuTabs} />
-          </ContextProvider>
-
-          {this.state.nodes.map(
-            (node, index) =>
-              node &&
-              node.renderFunction.isRenderable &&
-              node.imageShowing && (
-                <ContextProvider
-                  width={this.width}
-                  height={this.height}
-                  menuHeight={this.menuHeight}
-                  funBarHeight={this.funBarHeight}
-                  functionWidth={this.functionWidth}
-                  valueWidth={this.valueWidth}
-                >
-                  <RenderBox 
-                    x={node.x}
-                    y={node.y}
-                    type={node.type}
-                    renderFunction={node.renderFunction.renderFunction}
-                    toggleBox={() => {
-                      const newNodes = this.state.nodes;
-                      newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
-                      this.setState({
-                        nodes: newNodes,
-                      });
-                    }}
-                  />
-                </ContextProvider>
-              )
-          )}
-        </div>
+            )
+        )}
+      </div>
       /* </Container> */
     );
   }
