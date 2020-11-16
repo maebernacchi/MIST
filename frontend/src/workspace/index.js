@@ -69,6 +69,7 @@ import React, { Component } from "react";
 import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
 import ValNode from "./buildingtools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
+import WorkspacePopupCanvas from "./menu/PopupCanvas";
 import { animated, useSpring } from "react-spring";
 import Custom from "./menu/Custom";
 import RenderBox from "./buildingtools/RenderBox";
@@ -114,6 +115,7 @@ class WorkspaceComponent extends Component {
       offsetX: 0,
       offsetY: props.offset,
       isPopupCanvasOpen: false,
+      isWorkspacePopupCanvasOpen: false,
       menuTabs: {
         valuesOpen: false,
         functionsOpen: true,
@@ -1367,6 +1369,7 @@ class WorkspaceComponent extends Component {
                           lines: newLines,
                         })
                       }}
+                      openWorkspacePopupCanvas={() => this.setState({ isWorkspacePopupCanvasOpen: true })}
                     />
                   </ContextProvider>
                 </Layer>
@@ -1440,6 +1443,17 @@ class WorkspaceComponent extends Component {
             setImageName={(name) => {
               // not implemented
             }}
+          />
+          <WorkspacePopupCanvas
+            x={0}
+            y={0}
+            top={0}
+            left={0}
+            show={this.state.isWorkspacePopupCanvasOpen}
+            closePortal={() => {
+              this.setState({ isWorkspacePopupCanvasOpen: false });
+            }}
+            workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
           />
         </ContextProvider>
 

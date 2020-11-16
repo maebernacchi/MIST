@@ -199,23 +199,6 @@ function Menu2(props) {
   }
 
   function Settings(props) {
-	const {updateAuthenticatedUser} = useContext(UserContext);  
-    function save() {
-	  const workspaceName = 'workspace1';
-	  function resolve(exists){
-		if(exists){
-			alert(`Cannot save a workspace with the name ${workspaceName} as it already exists`);
-		} else{
-			function resolveSave(){
-				alert(`Successfully saved workspace with name ${workspaceName}`);
-				updateAuthenticatedUser();
-			}
-			saveWorkspace(workspaceName, props.workspaceData, resolveSave);
-		}
-	  };
-		workspaceExists(workspaceName, resolve);
-
-    }
 
     return [props.theme, "save", "delete"].map((u, i) => {
       return (
@@ -234,7 +217,7 @@ function Menu2(props) {
           tabs={{ settingsOpen: settingsOpen }}
           handler={
             u === "save"
-              ? save
+              ? props.openWorkspacePopupCanvas 
               : u === "delete"
               ? props.deleteWorkspace
               : props.toggleTheme
