@@ -109,12 +109,12 @@ function Menu2(props) {
           valuesOpen
             ? props.valTabColor
             : functionsOpen
-            ? props.funTabColor
-            : customOpen
-            ? props.customTabColor
-            : savedOpen
-            ? props.savedTabColor
-            : props.settingsTabColor
+              ? props.funTabColor
+              : customOpen
+                ? props.customTabColor
+                : savedOpen
+                  ? props.savedTabColor
+                  : props.settingsTabColor
         }
         strokeWidth={3}
         shadowBlur={2}
@@ -173,16 +173,16 @@ function Menu2(props) {
   }
 
   function SavedItems(props) {
-
-	const { user } = useContext(UserContext);
-	let workspaces = [];
-	if (user && user._id){
-		workspaces = user.workspaces
-	}
+    const { user } = useContext(UserContext);
+    let workspaces = [];
+    if (user && user._id) {
+      workspaces = user.workspaces
+    }
 
     return workspaces.map((u, i) => {
       return (
         <SavedItem
+          color={props.savedTabColor}
           x={
             menuDimensions.settingsMargin +
             i * (menuDimensions.settingsMargin + menuDimensions.settingsWidth)
@@ -191,6 +191,7 @@ function Menu2(props) {
             menuDimensions.menuTabHeight +
             (menuDimensions.mainMenuHeight - global.functionWidth) / 2
           }
+          tabs={{ savedOpen: savedOpen }}
           name={u.name}
           openWS={() => props.openWS(u.data.nodes, u.data.lines)}
         />
@@ -217,10 +218,10 @@ function Menu2(props) {
           tabs={{ settingsOpen: settingsOpen }}
           handler={
             u === "save"
-              ? props.openWorkspacePopupCanvas 
+              ? props.openWorkspacePopupCanvas
               : u === "delete"
-              ? props.deleteWorkspace
-              : props.toggleTheme
+                ? props.deleteWorkspace
+                : props.toggleTheme
           }
           theme={props.theme}
         />
@@ -256,13 +257,13 @@ function Menu2(props) {
             shadowOpacity={0.3}
             shadowOffsetY={-1.5}
             shadowEnabled={u.open}
-            /* onMouseEnter={() => {
-              setValuesOpen(u.text === "Values");
-              setFunctionsOpen(u.text === "Functions");
-              setCustomOpen(u.text === "Custom");
-              setSavedOpen(u.text === "Saved");
-              setSettingsOpen(u.text === "Settings");
-            }} */
+          /* onMouseEnter={() => {
+            setValuesOpen(u.text === "Values");
+            setFunctionsOpen(u.text === "Functions");
+            setCustomOpen(u.text === "Custom");
+            setSavedOpen(u.text === "Saved");
+            setSettingsOpen(u.text === "Settings");
+          }} */
           />
           <Text
             width={global.width / 5}
@@ -272,11 +273,11 @@ function Menu2(props) {
               (u.text === "Functions" ||
                 u.text === "Custom" ||
                 u.text === "Settings") &&
-              u.open
+                u.open
                 ? "white"
                 : props.theme === "dark"
-                ? "white"
-                : "black"
+                  ? "white"
+                  : "black"
             }
             fontFamily={fonts.menuFont}
             fontStyle={"italic"}
