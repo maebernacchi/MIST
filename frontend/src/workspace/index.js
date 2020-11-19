@@ -788,83 +788,6 @@ class WorkspaceComponent extends Component {
   // +-----------+
 
   /**
-   * Save your workspace to the server
-   * Pre: User is authenticated and user does not already have a workspace by the given name
-   */
-  _saveWorkspace = (name) => {
-    // build workspace
-    const workspace = {
-      name: name,
-      data: {
-        ...this.state
-      },
-    }
-    // async POST fetch request
-    fetch('api/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ action: 'savews', workspace: (workspace) })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success)
-          alert('Succesfully saved workspace ' + name);
-        else
-          throw (data.message);
-      })
-      .catch(error => { alert(error) })
-  }
-
-  /**
-   * Checks if the workspace exists in the server by the same name
-   * @param {String} name 
-   */
-  checkIfWorkspaceExists = async (name) => {
-    const res = await fetch('api/?action=wsexists&name=' + name);
-    if (!res.ok)
-      throw new Error(`HTTP error! status: ${res.status}`);
-    else {
-      return await res.json()
-        .then(data => {
-          if (data === 'logged out')
-            throw new Error('You needed to be logged in!')
-          if (data.success) {
-            return data.exists;
-          }
-          else {
-            throw new Error(data.message);
-          }
-        });
-    }
-  }
-
-  // save workspace
-
-  /**
-   * Retrieve a user's workspaces from the server
-   */
-  getWorkspaces = async () => {
-    const res = await fetch('api/?action=getws');
-    if (!res.ok)
-      throw new Error(`HTTP error! status: ${res.status}`);
-    else {
-      return await res.json()
-        .then(data => {
-          if (data === 'logged out')
-            throw new Error('You needed to be logged in!')
-          if (data.success) {
-            return data.workspaces;
-          }
-          else {
-            throw new Error(data.message);
-          }
-        });
-    }
-  }
-
-  /**
    * Delete a workspace of a name
    * @param {String} name 
    */
@@ -894,14 +817,6 @@ class WorkspaceComponent extends Component {
     }
   }
 
-  /**
-   * Load a workspace onto the state
-   */
-  loadWorkspace = (workspaceToLoad) => {
-    this.setState({
-      ...workspaceToLoad
-    })
-  }
 
   // +------------------------+
   // | Updating the Workspace |
@@ -1354,13 +1269,10 @@ class WorkspaceComponent extends Component {
                         });
                       }
                       }
-                      checkIfWorkspaceExists={this.checkIfWorkspaceExists.bind(this)}
                       deleteWorkspace={() => {
                         alert('Not yet implemented');
                         //this.deleteWorkspace.bind(this)
                       }}
-                      getWorkspaces={this.getWorkspaces.bind(this)}
-                      loadWorkspace={this.loadWorkspace.bind(this)}
                       workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
                       openWS={(newNodes, newLines) => {
                         alert("attempting to open a workspace");
