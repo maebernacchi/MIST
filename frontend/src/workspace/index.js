@@ -70,6 +70,7 @@ import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
 import ValNode from "./buildingtools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
 import WorkspacePopupCanvas from "./menu/PopupCanvas";
+import ConfirmationPopup from "./menu/ConfirmationPopup";
 import DeleteWorkspacePopup from "./menu/DeleteWorkspacePopup";
 import { animated, useSpring } from "react-spring";
 import Custom from "./menu/Custom";
@@ -117,6 +118,9 @@ class WorkspaceComponent extends Component {
       offsetY: props.offset,
       isPopupCanvasOpen: false,
       isWorkspacePopupCanvasOpen: false,
+      isConfirmationPopupOpen: false,
+      confirmationPopupWarningMessage: "",
+      confirmationPopupConfirmOnClick: () => {console.log('STUB Confirmation');},
       isDeleteWorkspacePopupCanvasOpen: false,
       menuTabs: {
         valuesOpen: false,
@@ -1359,6 +1363,12 @@ class WorkspaceComponent extends Component {
               // not implemented
             }}
           />
+          <ConfirmationPopup 
+           show={this.state.isConfirmationPopupOpen}
+           confirmOnClick={this.state.confirmationPopupConfirmOnClick}
+           warningMessage={this.state.confirmationPopupWarningMessage}
+           closePortal={() => this.setState({ isConfirmationPopupOpen: false})}
+          />
           <WorkspacePopupCanvas
             x={0}
             y={0}
@@ -1368,10 +1378,12 @@ class WorkspaceComponent extends Component {
             closePortal={() => {
               this.setState({ isWorkspacePopupCanvasOpen: false });
             }}
+            openConfirmationPopup={(warningMessage, confirmOnClick) => this.setState({ isConfirmationPopupOpen: true, confirmationPopupWarningMessage: warningMessage, confirmationPopupConfirmOnClick: confirmOnClick})}
             workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
           />
           <DeleteWorkspacePopup 
            show={this.state.isDeleteWorkspacePopupCanvasOpen}
+           openConfirmationPopup={(warningMessage, confirmOnClick) => this.setState({ isConfirmationPopupOpen: true, confirmationPopupWarningMessage: warningMessage, confirmationPopupConfirmOnClick: confirmOnClick})}
            closePortal={() => {
              this.setState({ isDeleteWorkspacePopupCanvasOpen: false });
            }} 

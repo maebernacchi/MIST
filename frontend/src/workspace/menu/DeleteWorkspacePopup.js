@@ -10,7 +10,8 @@ function PopupCanvas(props) {
     const onSubmit = (e) => {
         // prevent reload
         e.preventDefault();
-        deleteWorkspace(chosenWorkspace, updateAuthenticatedUser);
+        props.openConfirmationPopup(`You are about to delete the workspace: '${chosenWorkspace}'`,
+            () => deleteWorkspace(chosenWorkspace, updateAuthenticatedUser));
     }
     return (
         <Modal centered show={props.show} onHide={props.closePortal}>
