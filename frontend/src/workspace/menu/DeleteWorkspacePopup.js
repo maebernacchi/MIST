@@ -37,7 +37,7 @@ function PopupCanvas(props) {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="secondary"> Cancel </Button>
+                    <Button variant="secondary" onClick={props.closePortal}> Cancel </Button>
                     <Button type="submit" variant="danger">Delete</Button>
                 </Modal.Footer>
             </Form>
