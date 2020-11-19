@@ -220,7 +220,7 @@ function Menu2(props) {
             u === "save"
               ? props.openWorkspacePopupCanvas
               : u === "delete"
-                ? props.deleteWorkspace
+                ? props.openDeleteWorkspacePopup
                 : props.toggleTheme
           }
           theme={props.theme}

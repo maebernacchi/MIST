@@ -1284,6 +1284,7 @@ class WorkspaceComponent extends Component {
                         })
                       }}
                       openWorkspacePopupCanvas={() => this.setState({ isWorkspacePopupCanvasOpen: true })}
+                      openDeleteWorkspacePopup={() => this.setState({ isDeleteWorkspacePopupCanvasOpen: true})}
                     />
                   </ContextProvider>
                 </Layer>
@@ -1370,7 +1371,7 @@ class WorkspaceComponent extends Component {
             workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
           />
           <DeleteWorkspacePopup 
-           show={true}
+           show={this.state.isDeleteWorkspacePopupCanvasOpen}
            closePortal={() => {
              this.setState({ isDeleteWorkspacePopupCanvasOpen: false });
            }} 
