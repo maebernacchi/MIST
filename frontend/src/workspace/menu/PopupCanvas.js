@@ -26,7 +26,7 @@ function PopupCanvas(props) {
       <div>
         <input
           type={"text"}
-          placeholder={"Enter Name Of Image"}
+          placeholder={"Enter Name Of Workspace"}
           value={workspaceName}
           style={{
             border: "2px solid #008CBA",
