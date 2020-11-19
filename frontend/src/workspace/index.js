@@ -70,6 +70,7 @@ import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
 import ValNode from "./buildingtools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
 import WorkspacePopupCanvas from "./menu/PopupCanvas";
+import DeleteWorkspacePopup from "./menu/DeleteWorkspacePopup";
 import { animated, useSpring } from "react-spring";
 import Custom from "./menu/Custom";
 import RenderBox from "./buildingtools/RenderBox";
@@ -116,6 +117,7 @@ class WorkspaceComponent extends Component {
       offsetY: props.offset,
       isPopupCanvasOpen: false,
       isWorkspacePopupCanvasOpen: false,
+      isDeleteWorkspacePopupCanvasOpen: false,
       menuTabs: {
         valuesOpen: false,
         functionsOpen: true,
@@ -1366,6 +1368,12 @@ class WorkspaceComponent extends Component {
               this.setState({ isWorkspacePopupCanvasOpen: false });
             }}
             workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
+          />
+          <DeleteWorkspacePopup 
+           show={true}
+           closePortal={() => {
+             this.setState({ isDeleteWorkspacePopupCanvasOpen: false });
+           }} 
           />
         </ContextProvider>
 
