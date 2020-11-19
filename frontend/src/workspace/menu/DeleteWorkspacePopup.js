@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../pages/components/Contexts/UserContext";
 import { Button, Form, Modal } from "react-bootstrap";
-import { workspaceExists, saveWorkspace } from "../http.workspace";
+import { deleteWorkspace } from "../../http.workspace";
 
 function PopupCanvas(props) {
     const { user, updateAuthenticatedUser } = useContext(UserContext);
@@ -10,8 +10,7 @@ function PopupCanvas(props) {
     const onSubmit = (e) => {
         // prevent reload
         e.preventDefault();
-
-        alert(`Chosen the workspace named: ${chosenWorkspace}`)
+        deleteWorkspace(chosenWorkspace, updateAuthenticatedUser);
     }
     return (
         <Modal centered show={props.show} onHide={props.closePortal}>
