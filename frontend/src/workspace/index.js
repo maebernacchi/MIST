@@ -1053,7 +1053,6 @@ class WorkspaceComponent extends Component {
                       newNodes[prevState.newSource].draggable = true;
                     }
                     const newState = {
-                      currentNode: null,
                       newSource: null,
                       tempLine: null,
                       mouseListenerOn: false,

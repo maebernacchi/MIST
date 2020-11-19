@@ -19,6 +19,7 @@ export default function SavedItem(props) {
                 fontSize='25'
                 text={props.name}
                 onClick={props.openWS}
+                onTap={props.openWS}
                 fill='white'
             />
         </Label>
