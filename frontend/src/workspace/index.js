@@ -870,7 +870,7 @@ class WorkspaceComponent extends Component {
   nodeTapped = (index) => {
     if (typeof index === 'number') {
       this.setState(prevState => {
-        const newNodes = _.cloneDeep(prevState.nodes).map((node, i) => ({ ...node, draggable: i !== index }));
+        const newNodes = prevState.nodes.map((node, i) => ({ ...node, draggable: i !== index }));
         return {
           currentNode: index,
           newSource: index,
@@ -952,7 +952,7 @@ class WorkspaceComponent extends Component {
    */
   toggleDraggable = (index) => {
     this.setState(prevState => {
-      const newNodes = _.cloneDeep(prevState.nodes);
+      const newNodes = prevState.nodes;
       newNodes[index].draggable = !newNodes[index].draggable;
       return { nodes: newNodes };
     })
@@ -1048,7 +1048,7 @@ class WorkspaceComponent extends Component {
               onTouchEnd={() => {
                 if (this.state.mouseListenerOn && this.state.tempLine) {
                   this.setState(prevState => {
-                    const newNodes = _.cloneDeep(prevState.nodes);
+                    const newNodes = prevState.nodes;
                     if (prevState.newSource !== null) {
                       newNodes[prevState.newSource].draggable = true;
                     }
