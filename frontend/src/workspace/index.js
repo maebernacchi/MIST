@@ -572,6 +572,9 @@ class WorkspaceComponent extends Component {
     }
     newNodes[index] = false;
     this.setState({
+      tempLine: null,
+      newSource: null,
+      currentNode: null,
       nodes: newNodes,
       lines: newLines,
       redoFromIndices: newRedoIndices,
@@ -870,7 +873,10 @@ class WorkspaceComponent extends Component {
   nodeTapped = (index) => {
     if (typeof index === 'number') {
       this.setState(prevState => {
-        const newNodes = prevState.nodes.map((node, i) => ({ ...node, draggable: i !== index }));
+        // this accounts for the fact that when we delete a node
+        // we are not removing it from the array but rather are 
+        // replacing it with false
+        const newNodes = prevState.nodes.map((node, i) => (node ? { ...node, draggable: i !== index } : false));
         return {
           currentNode: index,
           newSource: index,

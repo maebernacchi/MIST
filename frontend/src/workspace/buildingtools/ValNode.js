@@ -102,7 +102,7 @@ function ValNode(props) {
         height={14}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
-        visible={hovered}
+        visible={hovered || !props.draggable}
         onMouseEnter={() => {
           setTrashHovered(true);
         }}
@@ -111,6 +111,9 @@ function ValNode(props) {
           setHovered(false);
         }}
         onClick={() => props.removeNode(props.index)}
+        // onTouchStart gets around the fact that we are using the 
+        // stage to detect onTouchEnd
+        onTouchStart={() => props.removeNode(props.index)}
       />
     );
   }
@@ -219,7 +222,8 @@ function ValNode(props) {
             return 0;
           });
         }}
-        onTap={() => { props.tapHandler(index) }}
+        onTap={() => { props.tapHandler(index); }}
+        onDblTap={() => { props.removeNode(index)}}
       >
         <Rect
           x={nodeDimensions.valueOffset}

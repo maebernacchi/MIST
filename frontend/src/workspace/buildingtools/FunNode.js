@@ -104,7 +104,7 @@ export default function FunNode(props) {
         height={14}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
-        visible={hovered} //Only visible when hovering over node
+        visible={hovered || !props.draggable} //Only visible when hovering over node
         onMouseEnter={() => {
           setTrashHovered(true);
         }}
@@ -113,6 +113,9 @@ export default function FunNode(props) {
           setHovered(false);
         }}
         onClick={() => props.removeNode(props.index)} //Removes the node from the workspace
+        // onTouchStart gets around the fact that we are using the 
+        // stage to detect onTouchEnd
+        onTouchStart={() => props.removeNode(props.index)}
       />
     );
   }
