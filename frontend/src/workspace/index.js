@@ -97,6 +97,8 @@ class WorkspaceComponent extends Component {
     this.functionWidth = props.functionWidth;
     this.valueWidth = props.valueWidth;
 
+    //this.createLayout = this.createLayout.bind(this);
+
     // +--------+--------------------------------------------------------
     // | States |
     // +--------+
@@ -129,6 +131,12 @@ class WorkspaceComponent extends Component {
         savedOpen: false,
         settingsOpen: false,
       },
+      width: props.width,
+      height: props.height,
+      menuHeight: props.menuHeight,
+      funBarHeight: props.funBarHeight,
+      functionWidth: props.functionWidth,
+      valueWidth: props.valueWidth,
     };
     // +--------+
     // | States |
@@ -185,10 +193,11 @@ class WorkspaceComponent extends Component {
         ).fill(false),
         parentNodes: [],
         imageShowing: false,
+        draggable: true,
       };
       console.log("pushed operation " + outermost.name);
-      evalFrom(sink, expression.operands, parentX, parentY);
       newNodes.push(outermost);
+      evalFrom.bind(this)(sink, expression.operands, parentX, parentY);
     } else {
       // it's a value
       if (gui.values[expression.name] === undefined) {
@@ -204,11 +213,12 @@ class WorkspaceComponent extends Component {
           (this.height - this.menuHeight - 2 * this.funBarHeight),
         renderFunction: { renderFunction: expression.code, isRenderable: true },
         lineOut: [],
-        numInputs: null,
-        numOutlets: null,
+        numInputs: 0,
+        numOutlets: 0,
         activeOutlets: null,
-        parentNodes: null,
+        parentNodes: [],
         imageShowing: false,
+        draggable: true,
       };
       newNodes.push(val);
     }
@@ -243,6 +253,7 @@ class WorkspaceComponent extends Component {
         }
       }
       for (let i = 0; i < operands.length; i++) {
+        console.log("entered for loop");
         let sourceIndex = newNodes.length;
         let lineIndex = newLines.length;
         // checking if the operand is a function
@@ -268,7 +279,7 @@ class WorkspaceComponent extends Component {
             parentNodes: [],
             imageShowing: false,
           };
-          evalFrom(sourceIndex, operands[i].operands, pX, pY);
+          evalFrom.bind(this)(sourceIndex, operands[i].operands, pX, pY);
           newNodes.push(sourceNode);
           newLines.push({
             sourceIndex: sourceIndex,
@@ -299,14 +310,15 @@ class WorkspaceComponent extends Component {
         } else {
           // value
           if (gui.values[operands[i].name] === undefined) {
+            console.log("error hereee");
             return Error();
           }
+          //error happens in the next thing, fix it
           const sourceNode = {
             name: operands[i].name,
             type: "val",
             x: Math.random() * (0.8 * this.width),
-            y:
-              this.menuHeight +
+            y: this.menuHeight +
               Math.random() *
               (this.height - this.menuHeight - 2 * this.funBarHeight),
             renderFunction: {
@@ -314,13 +326,17 @@ class WorkspaceComponent extends Component {
               isRenderable: true,
             },
             lineOut: [],
-            numInputs: null,
-            numOutlets: null,
-            activeOutlets: null,
-            parentNodes: null,
+            numInputs: 0,
+            numOutlets: 0,
+            activeOutlets: [],
+            parentNodes: [],
             imageShowing: false,
+            draggable: true,
           };
           newNodes.push(sourceNode);
+          console.log(sourceNode.x);
+          console.log(this.state.functionWidth);
+          console.log(newNodes[sinkIndex].x);
           newLines.push({
             sourceIndex: sourceIndex,
             sinkIndex: sinkIndex,
@@ -330,10 +346,11 @@ class WorkspaceComponent extends Component {
             },
             tailPosition: {
               x: newNodes[sinkIndex].x,
-              y: newNodes[sinkIndex].y, // outletIndex = i
+              y: newNodes[sinkIndex].y,
             },
             outletIndex: i,
           });
+          console.log("made new line");
           // setting all the dependent node values after pushing a new line
           newNodes[sourceIndex].lineOut.push(lineIndex); //add line to lineOut array of source node
           newNodes[sinkIndex].numInputs += 1; // updating the number of inputs for sink node
@@ -1403,7 +1420,10 @@ class WorkspaceComponent extends Component {
           functionWidth={this.functionWidth}
           valueWidth={this.valueWidth}
         >
-          <Custom menuTabs={this.state.menuTabs} />
+          <Custom
+            menuTabs={this.state.menuTabs}
+            createLayout={this.createLayout.bind(this)}
+          />
         </ContextProvider>
 
         {this.state.nodes.map(
