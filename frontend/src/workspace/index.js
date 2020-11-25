@@ -59,23 +59,20 @@
 import FunBar from "./funbar/FunBar";
 import FunNode from "./buildingtools/FunNode";
 import colors from "./globals/globals-themes";
-import { Container } from "react-bootstrap";
 import Edge from "./buildingtools/line";
 import { ContextProvider } from "./globals/ContextProvider";
 import Menu2 from "./menu/Menu2";
 import gui from "./globals/mistgui-globals";
 import { MIST } from "./mist/mist.js";
 import React, { Component } from "react";
-import { Stage, Layer, Rect, Group, Text, useStrictMode } from "react-konva";
+import { Stage, Layer } from "react-konva";
 import ValNode from "./buildingtools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
 import WorkspacePopupCanvas from "./menu/PopupCanvas";
 import ConfirmationPopup from "./menu/ConfirmationPopup";
 import DeleteWorkspacePopup from "./menu/DeleteWorkspacePopup";
-import { animated, useSpring } from "react-spring";
 import Custom from "./menu/Custom";
 import RenderBox from "./buildingtools/RenderBox";
-import _ from "lodash";
 import { UserContext } from "../pages/components/Contexts/UserContext";
 
 // +----------------------------+
