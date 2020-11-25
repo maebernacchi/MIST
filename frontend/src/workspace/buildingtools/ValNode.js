@@ -113,7 +113,7 @@ function ValNode(props) {
         onClick={() => props.removeNode(props.index)}
         // onTouchStart gets around the fact that we are using the 
         // stage to detect onTouchEnd
-        onTouchStart={() => props.removeNode(props.index)}
+        onTouchEnd={() => props.removeNode(props.index)}
       />
     );
   }
