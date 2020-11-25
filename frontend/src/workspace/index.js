@@ -61,7 +61,7 @@ import FunNode from "./buildingtools/FunNode";
 import colors from "./globals/globals-themes";
 import Edge from "./buildingtools/line";
 import { ContextProvider } from "./globals/ContextProvider";
-import Menu2 from "./menu/Menu2";
+import Menu from "./menu/Menu2";
 import gui from "./globals/mistgui-globals";
 import { MIST } from "./mist/mist.js";
 import React, { Component } from "react";
@@ -1249,7 +1249,7 @@ class WorkspaceComponent extends Component {
                     functionWidth={this.functionWidth}
                     valueWidth={this.valueWidth}
                   >
-                    <Menu2
+                    <Menu
                       addNode={this.pushNode.bind(this)}
                       addLine={this.pushLine.bind(this)}
                       clearWorkspace={this.clearWorkspace.bind(this)}
