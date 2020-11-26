@@ -193,7 +193,7 @@ function Menu2(props) {
           }
           tabs={{ savedOpen: savedOpen }}
           name={u.name}
-          openWS={() => props.openWS(u.data.nodes, u.data.lines)}
+          openWorkspace={() => props.openWorkspace(u.data.nodes, u.data.lines)}
         />
       );
     });

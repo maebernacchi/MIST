@@ -1294,16 +1294,13 @@ class WorkspaceComponent extends Component {
                         });
                       }
                       }
-                      deleteWorkspace={() => {
-                        alert('Not yet implemented');
-                        //this.deleteWorkspace.bind(this)
-                      }}
-                      workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
-                      openWS={(newNodes, newLines) => {
-                        alert("attempting to open a workspace");
+                      openWorkspace={(newNodes, newLines) => {
                         this.setState({
                           nodes: newNodes,
                           lines: newLines,
+                          currentNode: null,
+                          mouseListenerOn: false,
+                          newSource: null,
                         })
                       }}
                       openWorkspacePopupCanvas={() => this.setState({ isWorkspacePopupCanvasOpen: true })}
