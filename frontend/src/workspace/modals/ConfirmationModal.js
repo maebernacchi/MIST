@@ -1,7 +1,8 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import PropTypes from "prop-types";
 
-function PopupCanvas(props) {
+function ConfirmationModal(props) {
     return (
         <Modal centered show={props.show} onHide={props.closePortal}>
             <Modal.Header closeButton>
@@ -18,4 +19,11 @@ function PopupCanvas(props) {
         </Modal>
     );
 }
-export default PopupCanvas;
+
+ConfirmationModal.propTypes = {
+    confirmOnClickCallback: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired,
+    warningMessage: PropTypes.string.isRequired
+}
+export default ConfirmationModal;

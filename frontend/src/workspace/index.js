@@ -117,9 +117,9 @@ class WorkspaceComponent extends Component {
       offsetY: props.offset,
       isPopupCanvasOpen: false,
       isSaveWorkspaceModalOpen: false,
-      isConfirmationPopupOpen: false,
-      confirmationPopupWarningMessage: "",
-      confirmationPopupConfirmOnClick: () => {console.log('STUB Confirmation');},
+      isConfirmationModalOpen: false,
+      confirmationModalWarningMessage: "",
+      confirmationOnClickCallback: () => { console.log('STUB Confirmation'); },
       isDeleteWorkspacePopupCanvasOpen: false,
       menuTabs: {
         valuesOpen: false,
@@ -1379,12 +1379,14 @@ class WorkspaceComponent extends Component {
               // not implemented
             }}
           />
+
           <ConfirmationModal 
-           show={this.state.isConfirmationPopupOpen}
-           confirmOnClick={this.state.confirmationPopupConfirmOnClick}
-           warningMessage={this.state.confirmationPopupWarningMessage}
-           closePortal={() => this.setState({ isConfirmationPopupOpen: false})}
+           handleClose={() => this.setState({ isConfirmationModalOpen: false})}
+           show={this.state.isConfirmationModalOpen}
+           confirmOnClickCallback={this.state.confirmationOnClickCallback}
+           warningMessage={this.state.confirmationModalWarningMessage}
           />
+
           <SaveWorkspaceModal
             show={this.state.isSaveWorkspaceModalOpen}
             handleClose={() => {
