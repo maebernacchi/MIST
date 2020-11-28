@@ -57,22 +57,22 @@
 // +----------------------------+
 
 import FunBar from "./funbar/FunBar";
-import FunNode from "./buildingtools/FunNode";
+import FunNode from "./buildingTools/FunNode";
 import colors from "./globals/globals-themes";
-import Edge from "./buildingtools/line";
+import Edge from "./buildingTools/line";
 import { ContextProvider } from "./globals/ContextProvider";
 import Menu from "./menu/Menu2";
 import gui from "./globals/mistgui-globals";
 import { MIST } from "./mist/mist.js";
 import React, { Component } from "react";
 import { Stage, Layer } from "react-konva";
-import ValNode from "./buildingtools/ValNode";
+import ValNode from "./buildingTools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
 import WorkspacePopupCanvas from "./menu/PopupCanvas";
 import ConfirmationPopup from "./menu/ConfirmationPopup";
 import DeleteWorkspacePopup from "./menu/DeleteWorkspacePopup";
 import Custom from "./menu/Custom";
-import RenderBox from "./buildingtools/RenderBox";
+import RenderBox from "./buildingTools/RenderBox";
 import { UserContext } from "../pages/components/Contexts/UserContext";
 
 // +----------------------------+

@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
-import Portal from "../buildingtools/Portal";
+import Portal from "../buildingTools/Portal";
 import { Rect, Group, Text } from "react-konva";
 import gui from "../globals/mistgui-globals.js";
 import { globalContext } from "../globals/global-context";
 import { popupContext } from "../globals/globals-popup_canvas-dimensions";
-import MISTImage from "../buildingtools/MISTImage";
+import MISTImage from "../buildingTools/MISTImage";
 import "../../design/styleSheets/FunBar.css";
 import { Modal } from "react-bootstrap";
 import { imageExists, saveImage, saveImage2 } from '../http.workspace';
