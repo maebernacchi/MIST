@@ -68,7 +68,7 @@ import React, { Component } from "react";
 import { Stage, Layer } from "react-konva";
 import ValNode from "./buildingTools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
-import WorkspacePopupCanvas from "./menu/PopupCanvas";
+import WorkspacePopupCanvas from "./modals/SaveWorkspaceModal";
 import ConfirmationPopup from "./menu/ConfirmationPopup";
 import DeleteWorkspacePopup from "./menu/DeleteWorkspacePopup";
 import Custom from "./menu/Custom";
