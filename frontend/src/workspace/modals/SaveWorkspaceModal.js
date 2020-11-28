@@ -31,7 +31,7 @@ function PopupCanvas(props) {
   }
 
   return (
-    <Modal centered show={props.show} onHide={props.closePortal}>
+    <Modal centered show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Save you workspace</Modal.Title>
       </Modal.Header>
@@ -52,7 +52,7 @@ function PopupCanvas(props) {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={props.closePortal} variant='secondary'>
+          <Button onClick={props.handleClose} variant='secondary'>
             Exit
         </Button>
           <Button type="submit">

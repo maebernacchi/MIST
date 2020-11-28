@@ -1386,12 +1386,8 @@ class WorkspaceComponent extends Component {
            closePortal={() => this.setState({ isConfirmationPopupOpen: false})}
           />
           <SaveWorkspaceModal
-            x={0}
-            y={0}
-            top={0}
-            left={0}
             show={this.state.isWorkspacePopupCanvasOpen}
-            closePortal={() => {
+            handleClose={() => {
               this.setState({ isWorkspacePopupCanvasOpen: false });
             }}
             openConfirmationPopup={(warningMessage, confirmOnClick) => this.setState({ isConfirmationPopupOpen: true, confirmationPopupWarningMessage: warningMessage, confirmationPopupConfirmOnClick: confirmOnClick})}
