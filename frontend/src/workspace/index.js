@@ -68,7 +68,7 @@ import React, { Component } from "react";
 import { Stage, Layer } from "react-konva";
 import ValNode from "./buildingTools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
-import ConfirmationPopup from "./modals/ConfirmationPopup";
+import ConfirmationModal from "./modals/ConfirmationModal";
 import SaveWorkspaceModal from "./modals/SaveWorkspaceModal";
 import DeleteWorkspacePopup from "./menu/DeleteWorkspacePopup";
 import Custom from "./menu/Custom";
@@ -1379,7 +1379,7 @@ class WorkspaceComponent extends Component {
               // not implemented
             }}
           />
-          <ConfirmationPopup 
+          <ConfirmationModal 
            show={this.state.isConfirmationPopupOpen}
            confirmOnClick={this.state.confirmationPopupConfirmOnClick}
            warningMessage={this.state.confirmationPopupWarningMessage}
