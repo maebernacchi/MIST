@@ -67,7 +67,7 @@ import { MIST } from "./mist/mist.js";
 import React, { Component } from "react";
 import { Stage, Layer } from "react-konva";
 import ValNode from "./buildingTools/ValNode";
-import PopupCanvas from "./modals/PopupCanvas";
+import ImageModal from "./modals/ImageModal";
 import ConfirmationModal from "./modals/ConfirmationModal";
 import SaveWorkspaceModal from "./modals/SaveWorkspaceModal";
 import DeleteWorkspaceModal from "./modals/DeleteWorkspaceModal";
@@ -1346,7 +1346,7 @@ confirmationOnClickCallback: confirmOnClick
           functionWidth={this.functionWidth}
           valueWidth={this.valueWidth}
         >
-          <PopupCanvas
+          <ImageModal
             x={0}
             y={0}
             top={0}
