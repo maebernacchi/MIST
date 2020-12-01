@@ -70,7 +70,7 @@ import ValNode from "./buildingTools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
 import ConfirmationModal from "./modals/ConfirmationModal";
 import SaveWorkspaceModal from "./modals/SaveWorkspaceModal";
-import DeleteWorkspacePopup from "./modals/DeleteWorkspacePopup";
+import DeleteWorkspaceModal from "./modals/DeleteWorkspaceModal";
 import Custom from "./menu/Custom";
 import RenderBox from "./buildingTools/RenderBox";
 import { UserContext } from "../pages/components/Contexts/UserContext";
@@ -792,6 +792,22 @@ class WorkspaceComponent extends Component {
   // | Updating the Render Functions |
   // +-------------------------------+---------------------------------
 
+  // +-------------------------+---------------------------------------
+  // | Interacting with Modals |
+  // +-------------------------+
+
+  openConfirmationPopup= (warningMessage, confirmOnClick) => {
+	  this.setState({
+isConfirmationModalOpen: true,
+confirmationModalWarningMessage: warningMessage,
+confirmationOnClickCallback: confirmOnClick
+})
+}
+
+  // +-------------------------+
+  // | Interacting with Modals |
+  // +-------------------------+---------------------------------------
+
   // +------------------------+----------------------------------------
   // | Updating the Workspace |
   // +------------------------+
@@ -809,37 +825,6 @@ class WorkspaceComponent extends Component {
   // +-----------+----------------------------------------
   // | Workspace |
   // +-----------+
-
-  /**
-   * Delete a workspace of a name
-   * @param {String} name 
-   */
-  deleteWorkspace = async (name) => {
-    // async POST fetch request
-    const res = await fetch('api/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ action: 'deletews', name: name })
-    });
-    if (!res.ok)
-      throw new Error(`HTTP error! status: ${res.status}`);
-    else {
-      return await res.json()
-        .then(data => {
-          if (data === 'logged out')
-            throw new Error('You needed to be logged in!')
-          if (data.success) {
-            return 'Successfully deleted workspace';
-          }
-          else {
-            throw new Error(data.message);
-          }
-        });
-    }
-  }
-
 
   // +------------------------+
   // | Updating the Workspace |
@@ -1392,24 +1377,13 @@ class WorkspaceComponent extends Component {
             handleClose={() => {
               this.setState({ isSaveWorkspaceModalOpen: false });
             }}
-            openConfirmationPopup={(warningMessage, confirmOnClick) => {
-              this.setState({
-                isConfirmationModalOpen: true,
-                confirmationModalWarningMessage: warningMessage,
-                confirmationOnClickCallback: confirmOnClick
-              })
-            }}
+            openConfirmationPopup={this.openConfirmationPopup.bind(this)}
             workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
           />
 
-          <DeleteWorkspacePopup 
+          <DeleteWorkspaceModal 
            show={this.state.isDeleteWorkspaceModalOpen}
-           openConfirmationPopup={(warningMessage, confirmOnClick) => 
-			   this.setState({ 
-				   isConfirmationModalOpen: true, 
-				   confirmationModalWarningMessage: warningMessage, 
-				   confirmationOnClickCallback: confirmOnClick})
-			   }
+           openConfirmationPopup={this.openConfirmationPopup.bind(this)}
            handleClose={() => {
              this.setState({ isDeleteWorkspaceModalOpen: false });
            }} 
