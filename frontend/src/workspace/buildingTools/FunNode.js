@@ -263,8 +263,7 @@ export default function FunNode(props) {
           shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
           shadowBlur={3}
           _useStrictMode
-          strokeWidth={props.draggable ? 0 : 1} // border width
-          stroke="black" // border color
+          stroke={props.draggable ? gui.functions[name].color : 'black'}
         />
         <Text
           text={rep}
