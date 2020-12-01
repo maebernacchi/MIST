@@ -4,7 +4,7 @@ import { popupContext } from "../globals/globals-popup_canvas-dimensions";
 import MISTImage from "../buildingTools/MISTImage";
 import "../../design/styleSheets/FunBar.css";
 import { Modal } from "react-bootstrap";
-import { saveImage2 } from '../http.workspace';
+import { saveImage } from '../http.workspace';
 import PropTypes from "prop-types";
 
 function ImageModal(props) {
@@ -125,7 +125,7 @@ function ImageModal(props) {
       if (outerWhiteSpaceStrippedImageName === "") {
         alert('Please enter a title for your image.');
       } else {
-        saveImage2(outerWhiteSpaceStrippedImageName, props.renderFunction.renderFunction);
+        saveImage(outerWhiteSpaceStrippedImageName, props.renderFunction.renderFunction);
       }
     }
     const buttons = [
