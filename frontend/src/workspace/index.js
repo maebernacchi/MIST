@@ -1351,10 +1351,9 @@ confirmationOnClickCallback: confirmOnClick
             left={0}
             show={this.state.isImageModalOpen}
             renderFunction={
-              this.state.currentNode !== null &&
-                this.state.nodes[this.state.currentNode]
-                ? this.state.nodes[this.state.currentNode].renderFunction
-                : { renderFunction: "", isRenderable: false }
+              (this.state.currentNode !== null && this.state.nodes[this.state.currentNode]) ?
+                this.state.nodes[this.state.currentNode].renderFunction :
+                { renderFunction: "", isRenderable: false }
             }
             handleClose={() => {
               this.setState({ isImageModalOpen: false });

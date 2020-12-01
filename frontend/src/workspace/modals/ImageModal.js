@@ -177,7 +177,11 @@ function ImageModal(props) {
 
 ImageModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
+  renderFunction: PropTypes.shape({
+    isRenderable: PropTypes.bool.isRequired,
+    renderFunction: PropTypes.string.isRequired
+  }).isRequired,
+  show: PropTypes.bool.isRequired
 }
 
 /**
