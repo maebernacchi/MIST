@@ -61,14 +61,13 @@ function Custom(props) {
         }}
       >
         <input
-          id={"input"}
+          id="input"
           style={{
             width: global.width - 2 * padx,
             height: menuDimensions.mainMenuHeight - 2 * pady,
             backgroundColor: props.bgColor,
             border: "none",
           }}
-          id="textbox"
           type="text"
           placeholder={formValue}
           onChange={(e) => {
