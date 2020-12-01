@@ -1,5 +1,5 @@
 /**
- * This file creates the Value Nodes for the Menu bar.
+ * This file creates the Function Nodes for the Menu bar.
  *
  * MIST is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 /*  1. The parameters required are as follows: 
     - addNode : function; Calls the pushNode in the index.js once node has been dropped in 
                 the workspace
-    - valName : String; Name of the value node
+    - funName : String; Name of the function node
     - x : int; x coordinate
     - y : int; y coordinate 
     - vis : boolean; condition to either display or not display the function nodes on the menu bar
@@ -46,37 +46,37 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React from "react";
+import React, {useContext, useEffect} from "react";
 import { Group } from "react-konva";
 import Konva from "konva";
-import gui from "./mistgui-globals";
+import gui from "../globals/mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
-import nodeDimensions from "./globals-nodes-dimensions.js";
-import global, { width, height } from "./globals.js";
+import { globalContext } from "../globals/global-context.js";
+import {fontContext} from '../globals/globals-fonts';
 
 // +----------------------------+
 // | All dependent files        |
 // +----------------------------+------------------------------------
 
 // +----------------------------------------+------------------------
-// | Entire Value Group                     |
+// | Entire Function Group                  |
 // +----------------------------------------+
 
-export const valGroup = function (
-  addNode,
-  valName,
-  x,
-  y,
-  vis,
-  changeKey,
-  index
-) {
+function FuncGroup(props) {
+  const global = useContext(globalContext);
+  const funName = props.funName;
+  const fonts = useContext(fontContext);
+
+  useEffect(() => {
+    //console.log("props:"+props);
+  }, [props])
+
   return (
     <Group
-      name={valName}
-      key={index}
-      x={x}
-      y={y}
+      name={funName}
+      key={props.index}
+      x={props.x}
+      y={props.y}
       draggable
       onDragStart={(e) => {
         e.target.setAttrs({
@@ -95,25 +95,28 @@ export const valGroup = function (
         });
         if (e.currentTarget.y() > global.menuHeight) {
           //setTimeout(function () {
-          addNode("val", valName, e.target._lastPos.x, e.target._lastPos.y);
-          changeKey();
+          props.addNode("fun", funName, e.target._lastPos.x, e.target._lastPos.y);
+          props.changeKey();
           //}, 200);
         } else {
-          changeKey();
+          props.changeKey();
         }
       }}
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > width - nodeDimensions.valueWidth) {
-          pos.x = width - nodeDimensions.valueWidth;
+        if (pos.x > global.width - global.functionWidth) {
+          pos.x = global.width - global.functionWidth;
         }
         if (pos.y < 0) {
           pos.y = 0;
         }
-        if (pos.y > height - global.funBarHeight - nodeDimensions.valueWidth) {
-          pos.y = height - global.funBarHeight - nodeDimensions.valueWidth;
+        if (
+          pos.y >
+          global.height - global.funBarHeight - global.functionWidth
+        ) {
+          pos.y = global.height - global.funBarHeight - global.functionWidth;
         }
         return pos;
       }}
@@ -121,42 +124,62 @@ export const valGroup = function (
       <Spring
         native
         from={{
-          x: vis ? nodeDimensions.valueOffset : -300,
-          scaleX: 1,
-          scaleY: 1,
-        }}
+          x: props.tabs.valuesOpen ? global.width :
+            props.tabs.functionsOpen ? 0 :
+            /* props.tabs.customOpen ? - global.width :
+            props.tabs.savedOpen ? - 2 * global.width :
+            - 3 * global.width, */
+            - global.width,
+          fontSize: gui.nodeFontSize }}
         to={{
-          x: vis ? nodeDimensions.valueOffset : -300,
+          x: props.tabs.valuesOpen ? global.width :
+            props.tabs.functionsOpen ? 0 :
+            /* props.tabs.customOpen ? - global.width :
+            props.tabs.savedOpen ? - 2 * global.width :
+            - 3 * global.width, */
+            - global.width,
         }}
       >
         {(props) => (
           <animated.Rect
             {...props}
             y={0}
-            width={nodeDimensions.valueSideLength}
-            height={nodeDimensions.valueSideLength}
-            fill={gui.values[valName].color}
+            width={global.functionWidth}
+            height={global.functionWidth}
+            fill={gui.functions[funName].color}
             cornerRadius={10}
-            rotation={45}
           />
         )}
       </Spring>
       <Spring
         native
-        from={{ x: vis ? 0 : -300, fontSize: gui.nodeFontSize }}
+        from={{
+          x: props.tabs.valuesOpen ? global.width :
+            props.tabs.functionsOpen ? 0 :
+            /* props.tabs.customOpen ? - global.width :
+            props.tabs.savedOpen ? - 2 * global.width :
+            - 3 * global.width, */
+            - global.width,
+          fontSize: gui.nodeFontSize }}
         to={{
-          x: vis ? 0 : -300,
+          x: props.tabs.valuesOpen ? global.width :
+            props.tabs.functionsOpen ? 0 :
+            /* props.tabs.customOpen ? - global.width :
+            props.tabs.savedOpen ? - 2 * global.width :
+            - 3 * global.width, */
+            - global.width,
         }}
       >
         {(props) => (
           <animated.Text
             {...props}
-            text={gui.values[valName].rep}
+            text={gui.functions[funName].rep}
             fontFamily={gui.globalFont}
-            fill={"black"}
+            fontSize={fonts.functionFontSize}
+            fill={"white"}
             y={0}
-            width={nodeDimensions.valueWidth}
-            height={nodeDimensions.valueWidth}
+            width={global.functionWidth}
+            height={global.functionWidth}
             align={"center"}
             verticalAlign={"middle"}
           />
@@ -165,6 +188,8 @@ export const valGroup = function (
     </Group>
   );
   // +----------------------------------------+
-  // | Entire Value Group                     |
+  // | Entire Function Group                  |
   // +----------------------------------------+----------------------
 };
+
+export default FuncGroup

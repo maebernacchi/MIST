@@ -246,8 +246,6 @@ MIST.ui.Animator.prototype.bounds = function(left,top,width,height) {
   this.width = width;
   this.height = height;
 
-  console.log("mist ui bounds -- exp:"+this.exp);
-
    // Set up the render width and height
   if (this.exp.indexOf('t.') >= 0) {
     this.renderWidth = 200;

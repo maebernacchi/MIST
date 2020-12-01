@@ -13,7 +13,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 // +-------------+----------------------------------------------------------------------
 // | App.js      |
 // +-------------+
@@ -34,15 +33,15 @@
 /**
  * This app is a single-page website. It always renders into index.html's <root
  * element the following way:
- * 
- * It always displays a navigation bar: 
+ *
+ * It always displays a navigation bar:
  *      -- the user navigation bar if the user is signed in
  *      -- the base navigation bar if the user is NOT signed in
- * 
+ *
  * Then, it renders one of the 'pages' page content (eg. home, about, workspace, tutorials, etc.)
  *      -- the page it renders depends on the URL path
  *            if it calls the /about path, then it calls the About imported component
- * 
+ *
  * It always renders the 'footer' component in the end
  */
 
@@ -57,7 +56,7 @@ import { Container } from "react-bootstrap";
 
 /* imports stylesheet & userContext */
 import "./design/styleSheets/generalStyles.css";
-import { UserContext } from './pages/components/Contexts/UserContext';
+import { UserContext } from "./pages/components/Contexts/UserContext";
 
 /* Imports the 2 types of navigation bar */
 import BaseNavigation from "./pages/components/NavBar/navBarLoggedOut";
@@ -84,7 +83,7 @@ import Tutorial from "./pages/tutorial";
 import User from "./pages/user";
 import UserProfile from "./pages/profile";
 //import WorkSpace from "./Workspace";
-import WorkspaceComponent from './workspace';
+import WorkspaceComponent from "./workspace";
 
 /* imports the footer */
 import Footer from "./pages/components/footer";
@@ -94,7 +93,6 @@ import Footer from "./pages/components/footer";
 // +-------------+
 
 function App() {
-
   const { user } = useContext(UserContext);
 
   return (
@@ -128,7 +126,20 @@ function App() {
             <Route path="/user" component={User} />
             <Route path="/emailVerification/:token" component={EmailVerification} />
             {/* workspace */}
-            <Route path="/createWorkspace" children={<WorkspaceComponent />} />
+            <Route
+              path="/createWorkspace"
+              children={
+                <WorkspaceComponent
+                  width={document.documentElement.clientWidth}
+                  height={document.documentElement.clientHeight * 0.81}
+                  menuHeight={document.documentElement.clientWidth * 0.08}
+                  funBarHeight={document.documentElement.clientHeight * 0.1}
+                  functionWidth={document.documentElement.clientWidth * 0.047}
+                  valueWidth={document.documentElement.clientWidth * 0.047}
+                  offset={0}
+                />
+              }
+            />
             <Route path="/expert" render={(props) => <Expert {...props} />} />
 
             {/* overlay modal when opening an image */}
@@ -142,6 +153,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;
