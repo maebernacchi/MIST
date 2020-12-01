@@ -19,7 +19,7 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Rect, Group, Text, Line } from "react-konva";
 import gui from "../globals/mistgui-globals";
 import FuncGroup from "./MakeFunction2";
