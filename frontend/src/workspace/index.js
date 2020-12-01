@@ -67,7 +67,7 @@ import { MIST } from "./mist/mist.js";
 import React, { Component } from "react";
 import { Stage, Layer } from "react-konva";
 import ValNode from "./buildingTools/ValNode";
-import PopupCanvas from "./funbar/PopupCanvas";
+import PopupCanvas from "./modals/PopupCanvas";
 import ConfirmationModal from "./modals/ConfirmationModal";
 import SaveWorkspaceModal from "./modals/SaveWorkspaceModal";
 import DeleteWorkspaceModal from "./modals/DeleteWorkspaceModal";
