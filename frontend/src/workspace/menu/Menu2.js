@@ -205,6 +205,7 @@ function Menu2(props) {
     return [props.theme, "save", "delete"].map((u, i) => {
       return (
         <SettingsItem
+          key={u}
           name={u}
           x={
             menuDimensions.settingsMargin +
@@ -236,15 +237,12 @@ function Menu2(props) {
       { text: "Functions", open: functionsOpen, tabColor: props.funTabColor },
       { text: "Custom", open: customOpen, tabColor: props.customTabColor },
       { text: "Saved", open: savedOpen, tabColor: props.savedTabColor },
-      {
-        text: "Settings",
-        open: settingsOpen,
-        tabColor: props.settingsTabColor,
-      },
+      { text: "Settings", open: settingsOpen, tabColor: props.settingsTabColor }
     ];
     return tabs.map((u, i) => {
       return (
         <Group
+          key={u.text}
           x={(global.width / 5) * i}
           width={global.width / 5}
           height={menuDimensions.menuTabHeight}
