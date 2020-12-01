@@ -208,11 +208,24 @@ export async function getWorkspaces() {
     };
 };
 
-/** Rename a workspace */
-
-
-/** Delete a workspace */
-// API action deleteWorkspace
-
-/** Delete an image */
-// API + database not implemented
+/**
+ * Delete a workspace of a name
+ * API action deleteWorkspace
+ * @param {String} name 
+ */
+export async function deleteWorkspace(name, resolve){
+    // async POST fetch request
+    const res = await fetch('api/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'deleteWorkspace', name: name })
+    });
+    if (!res.ok)
+        handleResponseNotOk(res);
+    else {
+        alert(`Successfully deleted the workspace: ${name}`);
+        resolve();
+    }
+};

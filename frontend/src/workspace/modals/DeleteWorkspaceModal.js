@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../pages/components/Contexts/UserContext";
 import { Button, Form, Modal } from "react-bootstrap";
-import { deleteWorkspace } from "../../http.workspace";
+import { deleteWorkspace } from "../http.workspace";
 import PropTypes from "prop-types";
 
 function DeleteWorkspaceModal(props) {
