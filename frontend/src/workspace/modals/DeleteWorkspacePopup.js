@@ -48,6 +48,8 @@ function DeleteWorkspaceModal(props) {
 }
 
 DeleteWorkspaceModal.propTypes = {
-	handleClose: PropTypes.func.isRequired
+	openConfirmationPopup: PropTypes.func.isRequired,
+	handleClose: PropTypes.func.isRequired,
+	show: PropTypes.bool.isRequired
 }
 export default DeleteWorkspaceModal;

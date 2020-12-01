@@ -37,6 +37,7 @@ import {
   saveWorkspace,
   getWorkspaces,
 } from "../http.workspace";
+import PropTypes from "prop-types";
 
 // +----------------------------+
 // | All dependent files        |
@@ -218,9 +219,9 @@ function Menu2(props) {
           tabs={{ settingsOpen: settingsOpen }}
           handler={
             u === "save"
-              ? props.openWorkspacePopupCanvas
+              ? props.openSaveWorkspaceModal
               : u === "delete"
-                ? props.openDeleteWorkspacePopup
+                ? props.openDeleteWorkspaceModal
                 : props.toggleTheme
           }
           theme={props.theme}
@@ -350,6 +351,11 @@ function Menu2(props) {
       );
     });
   }
+}
+
+Menu2.propTypes = {
+	openSaveWorkspaceModal: PropTypes.func.isRequired,
+	openDeleteWorkspaceModal: PropTypes.func.isRequired
 }
 
 export default Menu2;

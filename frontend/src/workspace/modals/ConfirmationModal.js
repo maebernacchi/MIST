@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 function ConfirmationModal(props) {
     return (
-        <Modal centered show={props.show} onHide={props.closePortal}>
+        <Modal centered show={props.show} onHide={props.handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Warning! Confirmation Necessary</Modal.Title>
             </Modal.Header>
@@ -13,8 +13,8 @@ function ConfirmationModal(props) {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={props.closePortal}> Cancel </Button>
-                    <Button variant="danger" onClick={props.confirmOnClick}>Confirm</Button>
+                    <Button variant="secondary" onClick={props.handleClose}> Cancel </Button>
+                    <Button variant="danger" onClick={props.confirmOnClickCallback}>Confirm</Button>
                 </Modal.Footer>
         </Modal>
     );

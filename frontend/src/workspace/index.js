@@ -120,7 +120,7 @@ class WorkspaceComponent extends Component {
       isConfirmationModalOpen: false,
       confirmationModalWarningMessage: "",
       confirmationOnClickCallback: () => { console.log('STUB Confirmation'); },
-      isDeleteWorkspacePopupCanvasOpen: false,
+      isDeleteWorkspaceModalOpen: false,
       menuTabs: {
         valuesOpen: false,
         functionsOpen: true,
@@ -1303,8 +1303,8 @@ class WorkspaceComponent extends Component {
                           newSource: null,
                         })
                       }}
-                      openWorkspacePopupCanvas={() => this.setState({ isWorkspacePopupCanvasOpen: true })}
-                      openDeleteWorkspacePopup={() => this.setState({ isDeleteWorkspacePopupCanvasOpen: true})}
+                      openSaveWorkspaceModal={() => this.setState({ isSaveWorkspaceModalOpen: true })}
+                      openDeleteWorkspaceModal={() => this.setState({ isDeleteWorkspaceModalOpen: true})}
                     />
                   </ContextProvider>
                 </Layer>
@@ -1390,23 +1390,28 @@ class WorkspaceComponent extends Component {
           <SaveWorkspaceModal
             show={this.state.isSaveWorkspaceModalOpen}
             handleClose={() => {
-              this.setState({ isWorkspacePopupCanvasOpen: false });
+              this.setState({ isSaveWorkspaceModalOpen: false });
             }}
             openConfirmationPopup={(warningMessage, confirmOnClick) => {
               this.setState({
-                isConfirmationPopupOpen: true,
-                confirmationPopupWarningMessage: warningMessage,
-                confirmationPopupConfirmOnClick: confirmOnClick
+                isConfirmationModalOpen: true,
+                confirmationModalWarningMessage: warningMessage,
+                confirmationOnClickCallback: confirmOnClick
               })
             }}
             workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
           />
 
           <DeleteWorkspacePopup 
-           show={this.state.isDeleteWorkspacePopupCanvasOpen}
-           openConfirmationPopup={(warningMessage, confirmOnClick) => this.setState({ isConfirmationPopupOpen: true, confirmationPopupWarningMessage: warningMessage, confirmationPopupConfirmOnClick: confirmOnClick})}
+           show={this.state.isDeleteWorkspaceModalOpen}
+           openConfirmationPopup={(warningMessage, confirmOnClick) => 
+			   this.setState({ 
+				   isConfirmationModalOpen: true, 
+				   confirmationModalWarningMessage: warningMessage, 
+				   confirmationOnClickCallback: confirmOnClick})
+			   }
            handleClose={() => {
-             this.setState({ isDeleteWorkspacePopupCanvasOpen: false });
+             this.setState({ isDeleteWorkspaceModalOpen: false });
            }} 
           />
         </ContextProvider>
