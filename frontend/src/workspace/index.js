@@ -1355,17 +1355,17 @@ confirmationOnClickCallback: confirmOnClick
                 this.state.nodes[this.state.currentNode]
                 ? this.state.nodes[this.state.currentNode].renderFunction
                 : { renderFunction: "", isRenderable: false }
-            } 
+            }
             handleClose={() => {
               this.setState({ isImageModalOpen: false });
             }}
           />
 
-          <ConfirmationModal 
-           handleClose={() => this.setState({ isConfirmationModalOpen: false})}
-           show={this.state.isConfirmationModalOpen}
-           confirmOnClickCallback={this.state.confirmationOnClickCallback}
-           warningMessage={this.state.confirmationModalWarningMessage}
+          <ConfirmationModal
+            handleClose={() => this.setState({ isConfirmationModalOpen: false })}
+            show={this.state.isConfirmationModalOpen}
+            confirmOnClickCallback={this.state.confirmationOnClickCallback}
+            warningMessage={this.state.confirmationModalWarningMessage}
           />
 
           <SaveWorkspaceModal
@@ -1377,12 +1377,12 @@ confirmationOnClickCallback: confirmOnClick
             workspaceData={{ nodes: this.state.nodes, lines: this.state.lines }}
           />
 
-          <DeleteWorkspaceModal 
-           show={this.state.isDeleteWorkspaceModalOpen}
-           openConfirmationPopup={this.openConfirmationPopup.bind(this)}
-           handleClose={() => {
-             this.setState({ isDeleteWorkspaceModalOpen: false });
-           }} 
+          <DeleteWorkspaceModal
+            show={this.state.isDeleteWorkspaceModalOpen}
+            openConfirmationPopup={this.openConfirmationPopup.bind(this)}
+            handleClose={() => {
+              this.setState({ isDeleteWorkspaceModalOpen: false });
+            }}
           />
         </ContextProvider>
 
