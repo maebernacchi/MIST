@@ -35,7 +35,7 @@
 
   3. Lines save the following information:
   -- sourceIndex: int; index of the source node in the nodes array
-  -- sinkIndex: int; ndex of the sink node in the nodes array
+  -- sinkIndex: int; index of the sink node in the nodes array
   -- headPosition: {float, float}; coordinates of the vertex that connects to the source
   -- tailPosition: {float, float}; coordinates of the vertex that connects to the sink
   -- outletIndex: int; index of outlet that the line goes into
@@ -70,7 +70,7 @@ import ValNode from "./buildingTools/ValNode";
 import PopupCanvas from "./funbar/PopupCanvas";
 import ConfirmationModal from "./modals/ConfirmationModal";
 import SaveWorkspaceModal from "./modals/SaveWorkspaceModal";
-import DeleteWorkspacePopup from "./menu/DeleteWorkspacePopup";
+import DeleteWorkspacePopup from "./modals/DeleteWorkspacePopup";
 import Custom from "./menu/Custom";
 import RenderBox from "./buildingTools/RenderBox";
 import { UserContext } from "../pages/components/Contexts/UserContext";
@@ -1405,7 +1405,7 @@ class WorkspaceComponent extends Component {
           <DeleteWorkspacePopup 
            show={this.state.isDeleteWorkspacePopupCanvasOpen}
            openConfirmationPopup={(warningMessage, confirmOnClick) => this.setState({ isConfirmationPopupOpen: true, confirmationPopupWarningMessage: warningMessage, confirmationPopupConfirmOnClick: confirmOnClick})}
-           closePortal={() => {
+           handleClose={() => {
              this.setState({ isDeleteWorkspacePopupCanvasOpen: false });
            }} 
           />
