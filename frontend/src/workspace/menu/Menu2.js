@@ -30,13 +30,6 @@ import { globalContext } from "../globals/global-context.js";
 import { menuContext } from "../globals/globals-menu-dimensions";
 import { fontContext } from "../globals/globals-fonts";
 import { UserContext } from "../../pages/components/Contexts/UserContext";
-import {
-  imageExists,
-  saveImage,
-  workspaceExists,
-  saveWorkspace,
-  getWorkspaces,
-} from "../http.workspace";
 import PropTypes from "prop-types";
 
 // +----------------------------+
@@ -239,6 +232,7 @@ function Menu2(props) {
       { text: "Saved", open: savedOpen, tabColor: props.savedTabColor },
       { text: "Settings", open: settingsOpen, tabColor: props.settingsTabColor }
     ];
+
     return tabs.map((u, i) => {
       return (
         <Group
@@ -307,7 +301,7 @@ function Menu2(props) {
                   setSavedOpen,
                   setSettingsOpen,
                 ];
-                temp.map((u, i) => {
+                temp.forEach((u, i) =>{
                   funs[i](u);
                 });
                 props.setMenuTabs(...temp);
@@ -337,7 +331,7 @@ function Menu2(props) {
                   setSavedOpen,
                   setSettingsOpen,
                 ];
-                temp.map((u, i) => {
+                temp.forEach((u, i) =>{
                   funs[i](u);
                 });
                 props.setMenuTabs(...temp);
