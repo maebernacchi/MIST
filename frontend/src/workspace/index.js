@@ -499,7 +499,6 @@ class WorkspaceComponent extends Component {
       for (let i = 0; i < this.state.nodes[nodeIndex].numOutlets; i++) {
         if (typeof this.state.nodes[nodeIndex].activeOutlets[i] === "number") {
           let lineIndex = this.state.nodes[nodeIndex].activeOutlets[i];
-          let line = newLines[lineIndex];
           newLines[lineIndex].tailPosition = {
             x: x,
             y: y,
@@ -641,14 +640,18 @@ class WorkspaceComponent extends Component {
    * Updates the numeric value in the '#' node
    */
   updateHashValue = (index, value) => {
-    this.state.nodes[index].renderFunction.renderFunction = value;
-    const temp = [];
-    for (let i = 0; i < this.state.nodes[index].lineOut.length; i++) {
-      temp.push(this.state.lines[this.state.nodes[index].lineOut[i]].sinkIndex)
-    }
-    this.setState({
-      redoFromIndices: temp
-    })
+    this.setState((prevState) => {
+      const prevNodes = prevState.nodes;
+      prevNodes[index].renderFunction.renderFunction = value;
+      const temp = [];
+      for (let i = 0; i < prevState.nodes[index].lineOut.length; i++) {
+        temp.push(prevState.lines[prevState.nodes[index].lineOut[i]].sinkIndex)
+      }
+      return ({
+        nodes: prevNodes,
+        redoFromIndices: temp
+      });
+    });
   }
 
   /**
