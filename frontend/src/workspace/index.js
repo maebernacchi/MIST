@@ -1347,8 +1347,6 @@ confirmationOnClickCallback: confirmOnClick
           valueWidth={this.valueWidth}
         >
           <ImageModal
-            x={0}
-            y={0}
             top={0}
             left={0}
             show={this.state.isPopupCanvasOpen}
@@ -1357,11 +1355,9 @@ confirmationOnClickCallback: confirmOnClick
                 this.state.nodes[this.state.currentNode]
                 ? this.state.nodes[this.state.currentNode].renderFunction
                 : { renderFunction: "", isRenderable: false }
-            } closePortal={() => {
+            } 
+            closePortal={() => {
               this.setState({ isPopupCanvasOpen: false });
-            }}
-            setImageName={(name) => {
-              // not implemented
             }}
           />
 

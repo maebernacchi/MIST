@@ -1,18 +1,12 @@
 import React, { useState, useContext } from "react";
-import Portal from "../buildingTools/Portal";
-import { Rect, Group, Text } from "react-konva";
 import gui from "../globals/mistgui-globals.js";
-import { globalContext } from "../globals/global-context";
 import { popupContext } from "../globals/globals-popup_canvas-dimensions";
 import MISTImage from "../buildingTools/MISTImage";
 import "../../design/styleSheets/FunBar.css";
 import { Modal } from "react-bootstrap";
-import { imageExists, saveImage, saveImage2 } from '../http.workspace';
+import { saveImage2 } from '../http.workspace';
 
-
-function PopupCanvas(props) {
-  const width = useContext(globalContext).width;
-  const height = useContext(globalContext).height;
+function ImageModal(props) {
   const popupDimensions = useContext(popupContext);
   const [imageName, setImageName] = useState("");
 
@@ -125,14 +119,30 @@ function PopupCanvas(props) {
   }
 
   function Buttons(props) {
-
     async function SaveImage() {
-      if (imageName === "") {
+      const outerWhiteSpaceStrippedImageName = removeOuterWhiteSpace(imageName);
+      if (outerWhiteSpaceStrippedImageName === "") {
         alert('Please enter a title for your image.');
       } else {
-        saveImage2(imageName, props.renderFunction.renderFunction);
+        saveImage2(outerWhiteSpaceStrippedImageName, props.renderFunction.renderFunction);
       }
     }
+    const buttons = [
+      {
+        buttonName: 'Exit',
+        buttonOnClick: props.closePortal
+      },
+      {
+        buttonName: 'Download'
+      },
+      {
+        buttonName: 'Save',
+        buttonOnClick: SaveImage
+      },
+      {
+        buttonName: 'Expert'
+      }
+    ];
 
     return (
       <div
@@ -142,73 +152,27 @@ function PopupCanvas(props) {
           alignSelf: 'center',
           width: popupDimensions.imageWidth,
           height: popupDimensions.buttonHeight,
-          backgroundcolor: 'green'
         }}>
-        <div
-          style={{
-            cursor: 'pointer',
-            position: 'absolute',
-            left: 0,
-            width: popupDimensions.buttonWidth,
-            height: popupDimensions.buttonHeight,
-            backgroundColor: 'white',
-            border: "2px solid #008CBA",
-            textAlign: 'center',
-          }}
-          onClick={props.closePortal}>
-          Exit
+        {buttons.map((button, index) => (
+          <div
+            style={{
+              cursor: 'pointer',
+              position: 'absolute',
+              left: (popupDimensions.buttonWidth + popupDimensions.buttonMargin) * index,
+              width: popupDimensions.buttonWidth,
+              height: popupDimensions.buttonHeight,
+              backgroundColor: 'white',
+              border: "2px solid #008CBA",
+              textAlign: 'center',
+            }}
+            onClick={button.buttonOnClick}>
+            {button.buttonName}
           </div>
-        <div
-          style={{
-            cursor: 'pointer',
-            position: 'absolute',
-            left: popupDimensions.buttonWidth + popupDimensions.buttonMargin,
-            width: popupDimensions.buttonWidth,
-            height: popupDimensions.buttonHeight,
-            backgroundColor: 'white',
-            border: "2px solid #008CBA",
-            textAlign: 'center',
-          }}
-        //onClick={}
-        >
-          Download
-          </div>
-        <div
-          style={{
-            cursor: 'pointer',
-            position: 'absolute',
-            left: (popupDimensions.buttonWidth + popupDimensions.buttonMargin) * 2,
-            width: popupDimensions.buttonWidth,
-            height: popupDimensions.buttonHeight,
-            backgroundColor: 'white',
-            border: "2px solid #008CBA",
-            textAlign: 'center',
-          }}
-          onClick={SaveImage}
-        >
-          Save
-          </div>
-        <div
-          style={{
-            cursor: 'pointer',
-            position: 'absolute',
-            left: (popupDimensions.buttonWidth + popupDimensions.buttonMargin) * 3,
-            width: popupDimensions.buttonWidth,
-            height: popupDimensions.buttonHeight,
-            backgroundColor: 'white',
-            border: "2px solid #008CBA",
-            textAlign: 'center',
-          }}
-        //onClick={}
-        >
-          Expert
-          </div>
+        ))}
       </div>
     )
   }
 }
-
-
 
 /**
  * removeOuterWhiteSpace takes a string and removes white space at the beginning and end
@@ -221,4 +185,4 @@ var removeOuterWhiteSpace = function (string) {
   return string;
 };
 
-export default PopupCanvas;
+export default ImageModal;
