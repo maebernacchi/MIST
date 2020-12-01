@@ -5,6 +5,7 @@ import MISTImage from "../buildingTools/MISTImage";
 import "../../design/styleSheets/FunBar.css";
 import { Modal } from "react-bootstrap";
 import { saveImage2 } from '../http.workspace';
+import PropTypes from "prop-types";
 
 function ImageModal(props) {
   const popupDimensions = useContext(popupContext);
@@ -130,7 +131,7 @@ function ImageModal(props) {
     const buttons = [
       {
         buttonName: 'Exit',
-        buttonOnClick: props.closePortal
+        buttonOnClick: props.handleClose
       },
       {
         buttonName: 'Download'
@@ -172,6 +173,11 @@ function ImageModal(props) {
       </div>
     )
   }
+}
+
+ImageModal.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
 }
 
 /**

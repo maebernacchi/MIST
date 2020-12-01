@@ -115,7 +115,7 @@ class WorkspaceComponent extends Component {
       pos2: { x: 0, y: 100 },
       offsetX: 0,
       offsetY: props.offset,
-      isPopupCanvasOpen: false,
+      isImageModalOpen: false,
       isSaveWorkspaceModalOpen: false,
       isConfirmationModalOpen: false,
       confirmationModalWarningMessage: "",
@@ -1326,7 +1326,7 @@ confirmationOnClickCallback: confirmOnClick
                       }
                       openPopupCanvas={() => {
                         this.setState({
-                          isPopupCanvasOpen: true,
+                          isImageModalOpen: true,
                         });
                         console.log("opened popup canvas");
                       }}
@@ -1349,15 +1349,15 @@ confirmationOnClickCallback: confirmOnClick
           <ImageModal
             top={0}
             left={0}
-            show={this.state.isPopupCanvasOpen}
+            show={this.state.isImageModalOpen}
             renderFunction={
               this.state.currentNode !== null &&
                 this.state.nodes[this.state.currentNode]
                 ? this.state.nodes[this.state.currentNode].renderFunction
                 : { renderFunction: "", isRenderable: false }
             } 
-            closePortal={() => {
-              this.setState({ isPopupCanvasOpen: false });
+            handleClose={() => {
+              this.setState({ isImageModalOpen: false });
             }}
           />
 
