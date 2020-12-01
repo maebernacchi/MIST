@@ -74,6 +74,7 @@ import DeleteWorkspaceModal from "./modals/DeleteWorkspaceModal";
 import Custom from "./menu/Custom";
 import RenderBox from "./buildingTools/RenderBox";
 import { UserContext } from "../pages/components/Contexts/UserContext";
+import PropTypes from "prop-types";
 
 // +----------------------------+
 // | All dependent files        |
@@ -92,6 +93,8 @@ class WorkspaceComponent extends Component {
     this.menuHeight = props.menuHeight;
     this.funBarHeight = props.funBarHeight;
     this.functionWidth = props.functionWidth;
+    this.offsetX = 0;
+    this.offsetY = props.offset;
     this.valueWidth = props.valueWidth;
 
     //this.createLayout = this.createLayout.bind(this);
@@ -113,8 +116,6 @@ class WorkspaceComponent extends Component {
       theme: "dusk",
       pos1: { x: 100, y: 200 },
       pos2: { x: 0, y: 100 },
-      offsetX: 0,
-      offsetY: props.offset,
       isImageModalOpen: false,
       isSaveWorkspaceModalOpen: false,
       isConfirmationModalOpen: false,
@@ -128,12 +129,6 @@ class WorkspaceComponent extends Component {
         savedOpen: false,
         settingsOpen: false,
       },
-      width: props.width,
-      height: props.height,
-      menuHeight: props.menuHeight,
-      funBarHeight: props.funBarHeight,
-      functionWidth: props.functionWidth,
-      valueWidth: props.valueWidth,
     };
     // +--------+
     // | States |
@@ -1148,8 +1143,8 @@ confirmationOnClickCallback: confirmOnClick
                             index={index}
                             x={node.x}
                             y={node.y}
-                            offsetX={this.state.offsetX}
-                            offsetY={this.state.offsetY}
+                            offsetX={this.offsetX}
+                            offsetY={this.offsetY}
                             numInputs={node.numInputs}
                             numOutlets={node.numOutlets}
                             renderFunction={
@@ -1195,8 +1190,8 @@ confirmationOnClickCallback: confirmOnClick
                             index={index}
                             x={node.x}
                             y={node.y}
-                            offsetX={this.state.offsetX}
-                            offsetY={this.state.offsetY}
+                            offsetX={this.offsetX}
+                            offsetY={this.offsetY}
                             renderFunction={
                               node.renderFunction.isRenderable
                                 ? node.renderFunction.renderFunction
@@ -1429,9 +1424,18 @@ confirmationOnClickCallback: confirmOnClick
             )
         )}
       </div>
-      /* </Container> */
     );
   }
 }
+
+WorkspaceComponent.propTypes = {
+    funBarHeight: PropTypes.number.isRequired,
+    functionWidth: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    menuHeight: PropTypes.number.isRequired,
+    offset:  PropTypes.number,
+    valueWidth: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired
+};
 
 export default WorkspaceComponent;
