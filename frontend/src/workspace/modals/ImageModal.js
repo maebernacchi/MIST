@@ -129,20 +129,10 @@ function ImageModal(props) {
       }
     }
     const buttons = [
-      {
-        buttonName: 'Exit',
-        buttonOnClick: props.handleClose
-      },
-      {
-        buttonName: 'Download'
-      },
-      {
-        buttonName: 'Save',
-        buttonOnClick: SaveImage
-      },
-      {
-        buttonName: 'Expert'
-      }
+      { buttonName: 'Exit', buttonOnClick: props.handleClose },
+      { buttonName: 'Download' },
+      { buttonName: 'Save', buttonOnClick: SaveImage },
+      { buttonName: 'Expert' }
     ];
 
     return (
@@ -157,14 +147,15 @@ function ImageModal(props) {
         {buttons.map((button, index) => (
           <div
             style={{
-              cursor: 'pointer',
-              position: 'absolute',
-              left: (popupDimensions.buttonWidth + popupDimensions.buttonMargin) * index,
-              width: popupDimensions.buttonWidth,
-              height: popupDimensions.buttonHeight,
               backgroundColor: 'white',
               border: "2px solid #008CBA",
+              cursor: 'pointer',
+              height: popupDimensions.buttonHeight,
+              left: (popupDimensions.buttonWidth + popupDimensions.buttonMargin) * index,
+              key: button.buttonName,
+              position: 'absolute',
               textAlign: 'center',
+              width: popupDimensions.buttonWidth,
             }}
             onClick={button.buttonOnClick}>
             {button.buttonName}
