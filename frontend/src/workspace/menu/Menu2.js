@@ -217,7 +217,7 @@ function Menu2(props) {
               : u === "delete"
                 ? props.openDeleteWorkspaceModal
                 : u === "clear"
-                ? console.log("execute clear here")
+                ? props.clearWorkspace
                 : props.toggleTheme
           }
           theme={props.theme}
@@ -349,7 +349,8 @@ function Menu2(props) {
 
 Menu2.propTypes = {
 	openSaveWorkspaceModal: PropTypes.func.isRequired,
-  openDeleteWorkspaceModal: PropTypes.func.isRequired
+  openDeleteWorkspaceModal: PropTypes.func.isRequired,
+  clearWorkspace: PropTypes.func.isRequired
 }
 
 export default Menu2;
