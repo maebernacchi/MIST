@@ -195,7 +195,7 @@ function Menu2(props) {
 
   function Settings(props) {
 
-    return [props.theme, "save", "delete", "clear"].map((u, i) => {
+    return [props.theme, "Save", "Delete", "Reset Workspace"].map((u, i) => {
       return (
         <SettingsItem
           key={u}
@@ -212,11 +212,11 @@ function Menu2(props) {
           height={global.functionWidth}
           tabs={{ settingsOpen: settingsOpen }}
           handler={
-            u === "save"
+            u === "Save"
               ? props.openSaveWorkspaceModal
-              : u === "delete"
+              : u === "Delete"
                 ? props.openDeleteWorkspaceModal
-                : u === "clear"
+                : u === "Reset Workspace"
                 ? props.clearWorkspace
                 : props.toggleTheme
           }
