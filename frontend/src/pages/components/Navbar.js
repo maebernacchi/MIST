@@ -71,8 +71,9 @@ import { UserContext } from './Contexts/UserContext';
 
 /** Returns the whole header for logged out users */
 function Header(props) {
+
   return (
-    <div>
+    <div id={'basenav'}>
       <Navbar variant="dark" expand="lg" className="navigationBar">
         <Logo />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -67,6 +67,55 @@ fail = function (res, message) {
   res.status(400).send(message); // "Bad request"
 }; // fail
 
+// https://stackoverflow.com/questions/38820251/how-is-req-isauthenticated-in-passport-js-implemented
+function checkAuthentication(request, response, next) {
+  if (request.isAuthenticated()) {
+    //req.isAuthenticated() will return true if user is logged in
+    next();
+  } else {
+    // This is the jsend response status for rejected API call
+    const responseStatus = "fail";
+    // This is the unauthorized/unauthenticated HTTP response status code
+    const responseStatusCode = 401;
+    const data = { "Authentication": "You need to be logged in!" };
+    dispatchResponse(response, responseStatus, responseStatusCode, data);
+  };
+};
+
+// This implements response in jsend standard https://github.com/omniti-labs/jsend
+function dispatchResponse(response, status, statusCode, data, message){
+  switch(status){
+    case "success":
+      response.json({
+        "status": "success",
+        "data": data
+      });
+      break;
+    case "fail":
+      // statusCode should be in the 400s
+      response.status(statusCode).json({
+        "status": "fail",
+        "data": data
+      })
+      break;
+    case "error":
+      // statusCode should be in the 500s
+      response.status(statusCode).json({
+        "status": "error",
+        "message": message,
+      })
+      break;
+    default:
+      // We do not expect to be here
+      throw Error(`Unknown Status: ${status}`);
+  }
+}
+
+function dispatchError(response, error){
+  response.status(500).json({ "status": "error", "message": `Server Error: ${error}`});
+}
+
+
 // +----------+--------------------------------------------------------
 // | Handlers |
 // +----------+
@@ -89,16 +138,18 @@ var handlers = {};
  *   info.action: imageexists
  *   info.title: The title of the image
  */
-handlers.imageexists = function (info, req, res) {
-  if (!req.isAuthenticated()) {
-    res.json("logged out");
-  } else {
+handlers.imageExists = function (info, req, res) {
+  const next = () => {
     database.imageExists(req.user.username, info.title, (err, response) => {
-      if (err) fail(res, "Unable to save image");
-      if (response) res.json("image exists");
-      else res.json("image does not exist");
+      if (err) {
+        const errorMessage = `Unable to save image due to server error: ${err}`;
+        dispatchResponse(res, "error", 500, undefined, errorMessage);
+      } else {
+        dispatchResponse(res, "success", undefined, { exists: (Boolean)(response) })
+      };
     });
-  }
+  };
+  checkAuthentication(req, res, next);
 };
 
 /**
@@ -106,13 +157,15 @@ handlers.imageexists = function (info, req, res) {
  *   info.action: saveimage
  *   info.title: The title of the image
  */
-handlers.saveimage = function (info, req, res) {
-  database.getUserIdByUsername(req.user.username, (err, userId) => {
-    if (err) fail(res, "no user found");
-    else {
-      database.saveImage(userId, req.body.title, req.body.code, res);
-    }
-  });
+handlers.saveImage = function (info, req, res) {
+  const next = () => {
+    const { title, code } = info;
+    database.saveImage(req.user._id, title, code)
+      .then(() => dispatchResponse(res, "success", undefined, null))
+      .catch(error => dispatchResponse(res, "error", 500, undefined, `Error: ${error}`));
+  };
+  // The user must be authenticated in order to save an image
+  checkAuthentication(req, res, next);
 };
 
 /**
@@ -175,17 +228,13 @@ handlers.addToAlbum = async function (info, req, res) {
  *   info.action: wsexists
  *   info.title: The title of the image
  */
-handlers.wsexists = async function (info, req, workspace) {
-  if (!req.isAuthenticated()) {
-    res.json("logged out");
-  } else {
-    try {
-      const exists = await database.wsexists(req.user._id, info.name);
-      res.json({ exists: exists, success: true });
-    } catch (error) {
-      res.json("Database query failed for unknown reason");
-    }
-  } // else
+handlers.workspaceExists = function (info, request, response) {
+  const next = () => {
+    database.workspaceExists(request.user._id, info.name)
+    .then(exists => dispatchResponse(response, 'success', undefined, { exists: exists}))
+    .catch(err => dispatchResponse(response, 'error', 500, undefined, `Server Error: ${err}`))
+  }
+  checkAuthentication(request, response, next);
 };
 
 /**
@@ -193,70 +242,39 @@ handlers.wsexists = async function (info, req, workspace) {
  *  info.action: getws
  *  info.
  */
-handlers.getws = async function (info, req, res) {
-  try {
-    // check if user is authenticated
-    if (!req.isAuthenticated()) throw "You have to be logged in!";
-
-    // retrieve the workspaces corresponding to a user
-    const { workspaces } = await database.getws(req.user._id);
-    // send the response containing the workspaces
-    res.json({
-      success: true,
-      workspaces: workspaces,
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error,
-    });
-  }
+handlers.getWorkspaces = function (info, req, res) {
+  const next = () => {
+    database.getWorkspaces(req.user._id)
+      .then(({ workspaces }) => dispatchResponse(res, "success", undefined, { workspaces: workspaces }))
+      .catch(err => dispatchResponse(res, "error", 500, undefined, `Server Error: ${err}`))
+  };
+  checkAuthentication(req, res, next);
 };
 
 /**
  * Save a workspace.
  *   action: savews
- *   name: the name of the workspace
- *   data: The information about the workspace
- *   replace: true or false [optional]
+ *   workspace: { name: String, data: Object }
  * Precondition:
  * The user does not already own a workspace by the same name.
  */
-handlers.savews = async function (info, req, res) {
-  if (!req.isAuthenticated()) {
-    fail(res, "Could not save workspace because you're not logged in");
-  } else if (!info.workspace.name) {
-    fail(res, "Could not save workspace because you didn't title it");
-  } else {
-    try {
+handlers.saveWorkspace = async function (info, req, res) {
+  const next = () => {
       const workspace = info.workspace;
-      const bulkWriteOpResult = await database.savews(req.user._id, workspace);
-      if (bulkWriteOpResult.nMatched === 0) {
-        throw "Error Unknown";
-      } else res.json({ success: true });
-    } catch (error) {
-      res.json({ success: false, message: error });
-    }
+      database.saveWorkspace(req.user._id, workspace)
+      .then(()=> dispatchResponse(res, "success", undefined, null))
+      .catch(err => dispatchResponse(res, "error", 500, undefined, `Server Error: ${err}`))
   }
-}; // handlers.savews
+  checkAuthentication(req, res, next);
+}; // handlers.saveWorkspace
 
-handlers.deletews = async function (info, req, res) {
-  if (!req.isAuthenticated()) {
-    fail(res, "Could not save workspace because you're not logged in");
-  } else if (!info.name) {
-    fail(res, "Could not save workspace because you didn't title it");
-  } else {
-    try {
-      const result = await database.deletews(req.user._id, info.name);
-      console.log(result);
-      if (result.nModified) res.json({ success: true });
-      else {
-        res.json({ success: false, message: "Failed due to unknown error" });
-      }
-    } catch (error) {
-      res.json({ success: false, message: error });
-    }
+handlers.deleteWorkspace = async function (info, req, res) {
+  const next = () => {
+      database.deleteWorkspace(req.user._id, info.name)
+      .then(()=> dispatchResponse(res, "success", undefined, null))
+      .catch(err => dispatchResponse(res, "error", 500, undefined, `Server Error: ${err}`))
   }
+  checkAuthentication(req, res, next);
 };
 
 // +----------------+--------------------------------------------------
@@ -267,60 +285,124 @@ handlers.deletews = async function (info, req, res) {
  *   Get 9 random public images
  *   info.action: getRandomImages
  */
-
 handlers.getRandomImages = function (info, req, res) {
-  database.getRandomImagesLoggedOut(9, (images, error) => {
-    if (error) {
-      console.log(error);
-      res.json([]);
-    } else if (!images) res.json([]);
-    else res.json(images);
-  });
+  let loginStatus = false
+  if (req.isAuthenticated())
+    loginStatus = true;
+
+  if (loginStatus) {
+    // if the user is logged in, show them non-blocked images made from non-blocked users
+    database.getRandomImagesLoggedIn(req.user._id, 9, (images, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!images) res.json([]);
+      else res.json(images);
+    });
+  }
+  else {
+    // if the user is not logged in, show everything
+    database.getRandomImagesLoggedOut(9, (images, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!images) res.json([]);
+      else res.json(images);
+    });
+  }
 };
 
 /**
  *   Get 9 top public images
  *   info.action: getTopImages
  */
-
 handlers.getTopImages = function (info, req, res) {
-  database.getTopRatedLoggedOut(9, 1, (images, error) => {
-    if (error) {
-      console.log(error);
-      res.json([]);
-    } else if (!images) res.json([]);
-    else res.json(images);
-  });
+  let loginStatus = false
+  if (req.isAuthenticated())
+    loginStatus = true;
+
+  if (loginStatus) {
+    // if the user is logged in, show them non-blocked images made from non-blocked users
+    database.getTopRatedLoggedIn(req.user._id, 9, 1, (images, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!images) res.json([]);
+      else res.json(images);
+    });
+  }
+  else {
+    // if the user is not logged in, show everything
+    database.getTopRatedLoggedOut(9, 1, (images, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!images) res.json([]);
+      else res.json(images);
+    });
+  }
 };
 
 /**
  *   Get 9 featured public images
  *   info.action: getFeaturedImages
  */
-
 handlers.getFeaturedImages = function (info, req, res) {
-  database.getFeaturedImagesLoggedOut(9, (images, error) => {
-    if (error) {
-      console.log(error);
-      res.json([]);
-    } else if (!images) res.json([]);
-    else res.json(images);
-  });
+  let loginStatus = false
+  if (req.isAuthenticated())
+    loginStatus = true;
+
+  if (loginStatus) {
+    // if the user is logged in, show them non-blocked images made from non-blocked users
+    database.getFeaturedImagesLoggedIn(req.user._id, 9, (images, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!images) res.json([]);
+      else res.json(images);
+    });
+  }
+  else {
+    // if the user is not logged in, show everything
+    database.getFeaturedImagesLoggedOut(9, (images, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!images) res.json([]);
+      else res.json(images);
+    });
+  }
 };
 
 /**
  *   Get 9 recent public images
  *   info.action: getPopularImages
  */
-
 handlers.getRecentImages = function (info, req, res) {
-  database.getRecentImagesLoggedOut(9, 1, (images, error) => {
-    if (error) {
-      console.log(error);
-      res.json([]);
-    } else if (!images) res.json([]);
-    else res.json(images);
-  });
+  let loginStatus = false
+  if (req.isAuthenticated())
+    loginStatus = true;
+
+  if (loginStatus) {
+    // if the user is logged in, show them non-blocked images made from non-blocked users
+    database.getRecentImagesLoggedIn(req.user._id, 9, 1, (images, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!images) res.json([]);
+      else res.json(images);
+    });
+  }
+  else {
+    // if the user is not logged in, show everything
+    database.getRecentImagesLoggedOut(9, 1, (images, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!images) res.json([]);
+      else res.json(images);
+    });
+  }
 };
 
 // +----------------+--------------------------------------------------
@@ -342,13 +424,29 @@ handlers.postComment = function (info, req, res) {
  */
 
 handlers.getImageComments = function (info, req, res) {
-  database.getComments(req.query.id, (comments, error) => {
-    if (error) {
-      console.log(error);
-      res.json([]);
-    } else if (!comments) res.json([]);
-    else res.json(comments);
-  });
+
+  let loginStatus = false
+  if (req.isAuthenticated())
+    loginStatus = true;
+
+  if (loginStatus) {
+    database.getCommentsLoggedIn(req.user._id, req.query.id, (comments, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!comments) res.json([]);
+      else res.json(comments);
+    });
+   }
+  else {
+    database.getCommentsLoggedOut(req.query.id, (comments, error) => {
+      if (error) {
+        console.log(error);
+        res.json([]);
+      } else if (!comments) res.json([]);
+      else res.json(comments);
+    });
+  }
 };
 
 // +----------------+--------------------------------------------------
@@ -521,11 +619,11 @@ handlers.getAuthenticatedCompletePersonalProfile = async function (info, req, re
 };
 
 /** */
-handlers.getCompleteUserProfile = async function (info, req, res) {
+handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
   try {
-    const { userid } = info;
+    if (!req.isAuthenticated()) throw "You need to login to view a profile!";
+    const userid = info.userid;
     const complete_user = await database.getCompleteUserProfile(userid);
-    console.log(complete_user);
     res.json({
       user: complete_user,
     });
@@ -533,6 +631,7 @@ handlers.getCompleteUserProfile = async function (info, req, res) {
     fail(res, error);
   }
 };
+
 
 // +-----------+------------------------------------------------------
 // | Expert UI |
@@ -817,24 +916,45 @@ handlers.unhideContent = async function (info, req, res) {
   }
 };
 
-handlers.blockUser = async function (info, req, res) {
-  try {
-    if (!req.isAuthenticated())
-      throw "You have to be logged in to block a user";
-    const userid = req.user._id;
-    const { contentid } = info;
-    const success = await database.blockUser(userid, contentid);
-    console.log(success);
-  } catch (error) {
-    // not sure if it is relevant to distinguish between
-    // server-side or client-side errors
-    res.json({
-      success: false,
-      message: error,
-    });
+/*
+ * Return whether the user is blocked
+ * info.action: getBlockedStatus
+ * info = {
+ *  blockedid: STRING,
+ * }
+ */
+handlers.getBlockedStatus = function (info, req, res) {
+  if (!req.user)
+    res.json(null);
+  else {
+    database.isBlocked(req.user._id, info.blockedid, (status) => {
+      res.json(status)
+    })
   }
 };
 
+/*
+ * Block the user('blockedid') for the current user
+ * info.action: blockUser
+ * info = {
+ *  blockedid: STRING,
+ * }
+ */
+handlers.blockUser = function (info, req, res) {
+  if (!req.isAuthenticated())
+    throw "You have to be logged in to block a user";
+  else
+    database.blockUser(req.user._id, req.body.blockedid, (message) => res.json(message))
+}
+
+
+/*
+ * Unblock the user('contentid') for the current user
+ * info.action: blockUser
+ * info = {
+ *  contentid: STRING,
+ * }
+ */
 handlers.unblockUser = async function (info, req, res) {
   if (!req.isAuthenticated())
     res.json({
@@ -971,16 +1091,3 @@ handlers.addImageToAlbum = async function (info, req, res) {
 // |  Users |
 // +--------+
 
-/** */
-handlers.getAuthenticatedCompleteUserProfile = async function (info, req, res) {
-  try {
-    if (!req.isAuthenticated()) throw "You need to login to view a profile!";
-    const userid = info.userid;
-    const complete_user = await database.getCompleteUserProfile(userid);
-    res.json({
-      user: complete_user,
-    });
-  } catch (error) {
-    fail(res, error);
-  }
-};

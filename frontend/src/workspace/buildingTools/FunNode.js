@@ -52,41 +52,47 @@
 // | Notes |
 // +-------+---------------------------------------------------------
 
-
 // +----------------------------+------------------------------------
 // | All dependent files        |
 // +----------------------------+
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Rect, Group, Text, Shape, Image } from "react-konva";
 import Konva from "konva";
-import Portal from "./Portal";
-import gui from "./mistgui-globals.js";
-import MISTImage from "./MISTImage";
+import gui from "../globals/mistgui-globals.js";
 import useImage from "use-image";
-import nodeDimensions from "./globals-nodes-dimensions.js";
-import globals from "./globals.js";
+import { nodeContext } from "../globals/globals-nodes-dimensions.js";
+import { globalContext } from "../globals/global-context";
+import { fontContext } from "../globals/globals-fonts";
 
 // +----------------------------+
 // | All dependent files        |
 // +----------------------------+------------------------------------
 
-function FunNode(props) {
+export default function FunNode(props) {
   const name = props.name;
   const index = props.index;
   const x = props.x;
   const y = props.y;
   const rep = gui.functions[name].rep;
   const numOutlets = props.numOutlets;
-  const [showImage, setShowImage] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
   const [image] = useImage(require("./trash.png"));
   const groupRef = useRef(null);
+  const nodeDimensions = useContext(nodeContext);
+  const width = useContext(globalContext).width;
+  const height = useContext(globalContext).height;
+  const funBarHeight = useContext(globalContext).funBarHeight;
+  const menuHeight = useContext(globalContext).menuHeight;
+  const functionWidth = useContext(globalContext).functionWidth;
+  const fonts = useContext(fontContext);
+  const [onDrag, setOnDrag] = useState(false);
+  const bezPoint = width / 50;
 
-// +----------------------------+------------------------------------
-// | Trashcan                   |
-// +----------------------------+
+  // +----------------------------+------------------------------------
+  // | Trashcan                   |
+  // +----------------------------+
 
   function Trashcan() {
     return (
@@ -98,7 +104,7 @@ function FunNode(props) {
         height={14}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
-        visible={hovered} //Only visible when hovering over node
+        visible={hovered || !props.draggable} //Only visible when hovering over node
         onMouseEnter={() => {
           setTrashHovered(true);
         }}
@@ -107,56 +113,43 @@ function FunNode(props) {
           setHovered(false);
         }}
         onClick={() => props.removeNode(props.index)} //Removes the node from the workspace
+        // onTouchStart gets around the fact that we are using the 
+        // stage to detect onTouchEnd
+        onTouchEnd={() => props.removeNode(props.index)}
       />
     );
   }
 
-// +----------------------------+
-// | Trashcan                   |
-// +----------------------------+------------------------------------
+  // +----------------------------+
+  // | Trashcan                   |
+  // +----------------------------+------------------------------------
 
-  useEffect(() => {
-    if (!props.renderFunction) {
-      setShowImage(false);
-    }
-  }, [props.renderFunction]); //Re-renders whenever the render function changes
-
-// +----------------------------------------+------------------------
-// | Entire Function Group                  |
-// +----------------------------------------+
+  // +----------------------------------------+------------------------
+  // | Entire Function Group                  |
+  // +----------------------------------------+
 
   return (
     <Group
       ref={groupRef}
       x={x}
       y={y}
-      draggable
-
+      draggable={props.draggable}
       // helps keep the function nodes in the designated workspace area
       dragBoundFunc={function (pos) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > window.innerWidth - nodeDimensions.functionWidth) {
-          pos.x = window.innerWidth - nodeDimensions.functionWidth;
+        if (pos.x > width - functionWidth) {
+          pos.x = width - functionWidth;
         }
-        if (pos.y < globals.menuHeight) {
-          pos.y = globals.menuHeight;
+        if (pos.y < menuHeight) {
+          pos.y = menuHeight;
         }
-        if (
-          pos.y >
-          window.innerHeight -
-            globals.funBarHeight -
-            nodeDimensions.functionWidth
-        ) {
-          pos.y =
-            window.innerHeight -
-            globals.funBarHeight -
-            nodeDimensions.functionWidth;
+        if (pos.y > height - funBarHeight - functionWidth) {
+          pos.y = height - funBarHeight - functionWidth;
         }
         return pos;
       }}
-
       onDragStart={(e) => {
         e.target.setAttrs({
           duration: 0.5,
@@ -168,8 +161,11 @@ function FunNode(props) {
           scaleX: 1.1,
           scaleY: 1.1,
         });
+        if (props.renderFunction && props.imageShowing) {
+          props.toggleBox();
+          setOnDrag(true);
+        }
       }}
-
       onDragEnd={(e) => {
         e.target.to({
           duration: 0.5,
@@ -177,15 +173,25 @@ function FunNode(props) {
           scaleX: 1,
           scaleY: 1,
         });
+        if (props.renderFunction && onDrag) {
+          props.toggleBox();
+        }
         // Updates the x & y coordinates once the node has stopped dragging
-        props.updateNodePosition(index, e.currentTarget.x(), e.currentTarget.y());
+        props.updateNodePosition(
+          index,
+          e.currentTarget.x(),
+          e.currentTarget.y()
+        );
       }}
-
       onDragMove={(e) => {
         // Updates the line position dynamically while the node is being dragged
-        props.updateLinePosition(index, 'fun', e.currentTarget.x(), e.currentTarget.y());
+        props.updateLinePosition(
+          index,
+          "fun",
+          e.currentTarget.x(),
+          e.currentTarget.y()
+        );
       }}
-
       onClick={(e) => {
         if (e.target.attrs.name) {
           props.outletClicked(
@@ -196,10 +202,21 @@ function FunNode(props) {
           props.funClicked(index);
         }
       }}
-
       onDblClick={() => {
         // Generates the temporary line when double clicked
         props.dblClickHandler(index);
+      }}
+
+      onTap={() => props.tapHandler(index)}
+      onTouchEnd={(e) => {
+        if (e.target.attrs.name) {
+          props.outletClicked(
+            index,
+            parseInt(e.target.attrs.name.substring(6)) - 1
+          );
+        } else {
+          props.funClicked(index);
+        }
       }}
     >
       <Group
@@ -209,13 +226,12 @@ function FunNode(props) {
               duration: 0.5,
               easing: Konva.Easings.ElasticEaseOut,
               scaleX: 1.07,
-              scaleY: 1.07
-            })
+              scaleY: 1.07,
+            });
             return 0;
-          })
+          });
           setHovered(true);
         }}
-
         onMouseLeave={(e) => {
           setHovered(false);
           groupRef.current.children.map((u, i) => {
@@ -223,20 +239,20 @@ function FunNode(props) {
               duration: 0.5,
               easing: Konva.Easings.ElasticEaseOut,
               scaleX: 1,
-              scaleY: 1
-            })
+              scaleY: 1,
+            });
             return 0;
-          })
+          });
         }}
       >
         <Rect
           x={0}
           y={0}
-          width={nodeDimensions.functionWidth}
+          width={functionWidth}
           height={
             props.numOutlets <= 3
-              ? nodeDimensions.functionWidth
-              : nodeDimensions.functionWidth +
+              ? functionWidth
+              : functionWidth +
                 (props.numOutlets - 3) * nodeDimensions.outletYOffset
           }
           fill={gui.functions[name].color}
@@ -247,19 +263,20 @@ function FunNode(props) {
           shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
           shadowBlur={3}
           _useStrictMode
+          stroke={props.draggable ? gui.functions[name].color : 'black'}
         />
         <Text
           text={rep}
-          fontFamily={gui.globalFont}
+          fontFamily={fonts.globalFont}
           fill={"white"}
-          fontSize={gui.nodeFontSize}
+          fontSize={fonts.functionFontSize}
           x={0}
           y={0}
-          width={nodeDimensions.functionWidth}
+          width={functionWidth}
           height={
             props.numOutlets <= 3
-              ? nodeDimensions.functionWidth
-              : nodeDimensions.functionWidth +
+              ? functionWidth
+              : functionWidth +
                 (props.numOutlets - 3) * nodeDimensions.outletYOffset
           }
           align={"center"}
@@ -268,48 +285,35 @@ function FunNode(props) {
         />
         <Trashcan />
       </Group>
-      {showImage ? (
-        <Portal>
-          <MISTImage //Mini image that can be seen at the bottom right of the node
-            onClick={() => setShowImage(false)}
-            x={x + nodeDimensions.functionImageBoxOffset + props.offsetX}
-            y={y + props.offsetY + (props.numOutlets <= 3
-              ? nodeDimensions.functionImageBoxOffset
-              : nodeDimensions.functionImageBoxOffset +
-                (props.numOutlets - 3) * nodeDimensions.outletYOffset)}
-            width={nodeDimensions.renderSideLength}
-            height={nodeDimensions.renderSideLength}
-            renderFunction={props.renderFunction ? props.renderFunction : ""}
-            automated={false}
-          />
-        </Portal>
-      ) : (
-        <Rect
-          onClick={() => {
-            console.log(props.renderFunction);
-            if (props.renderFunction) {
-              setShowImage(true);
-            }
-          }}
-          name={"imageBox"}
-          x={nodeDimensions.functionImageBoxOffset}
-          y={
-            props.numOutlets <= 3
-              ? nodeDimensions.functionImageBoxOffset
-              : nodeDimensions.functionImageBoxOffset +
-                (props.numOutlets - 3) * nodeDimensions.outletYOffset
+      <Rect
+        onTap={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
           }
-          width={nodeDimensions.imageBoxSideLength}
-          height={nodeDimensions.imageBoxSideLength}
-          fill={gui.imageBoxColor}
-          shadowColor={"gray"}
-          shadowBlur={2}
-          shadowOffsetX={1}
-          shadowOffsetY={1}
-          expanded={false}
-          visible={typeof props.renderFunction === 'string'}
-        />
-      )}
+        }}
+        onClick={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
+        name={"imageBox"}
+        x={nodeDimensions.functionImageBoxOffset}
+        y={
+          props.numOutlets <= 3
+            ? nodeDimensions.functionImageBoxOffset
+            : nodeDimensions.functionImageBoxOffset +
+              (props.numOutlets - 3) * nodeDimensions.outletYOffset
+        }
+        width={nodeDimensions.imageBoxSideLength}
+        height={nodeDimensions.imageBoxSideLength}
+        fill={gui.imageBoxColor}
+        shadowColor={"gray"}
+        shadowBlur={2}
+        shadowOffsetX={1}
+        shadowOffsetY={1}
+        expanded={false}
+        visible={typeof props.renderFunction === "string"}
+      />
       {name === "rgb"
         ? ["red", "green", "blue"].map((u, i) => (
             <Shape
@@ -317,10 +321,10 @@ function FunNode(props) {
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.bezierCurveTo(
-                  -gui.bezPoint,
-                  -gui.bezPoint,
-                  -gui.bezPoint,
-                  gui.bezPoint,
+                  -bezPoint,
+                  -bezPoint,
+                  -bezPoint,
+                  bezPoint,
                   0,
                   0
                 );
@@ -364,10 +368,10 @@ function FunNode(props) {
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.bezierCurveTo(
-                  -gui.bezPoint,
-                  -gui.bezPoint,
-                  -gui.bezPoint,
-                  gui.bezPoint,
+                  -bezPoint,
+                  -bezPoint,
+                  -bezPoint,
+                  bezPoint,
                   0,
                   0
                 );
@@ -408,12 +412,21 @@ function FunNode(props) {
                   shadowOffsetY: 5,
                 });
               }}
+              onTouchMove={(e) => {
+                e.target.to({
+                  duration: 0.3,
+                  easing: Konva.Easings.ElasticEaseOut,
+                  scaleX: 1.2,
+                  scaleY: 1.2,
+                  shadowOffsetX: 5,
+                  shadowOffsetY: 5,
+                });
+              }}
             />
           ))}
     </Group>
   );
-// +----------------------------------------+
-// | Entire Function Group                  |
-// +----------------------------------------+----------------------
+  // +----------------------------------------+
+  // | Entire Function Group                  |
+  // +----------------------------------------+----------------------
 }
-export default FunNode;

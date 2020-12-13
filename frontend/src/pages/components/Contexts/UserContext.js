@@ -21,4 +21,5 @@ const UserContextProvider = (props) => {
   // Fetch method to get the data
   return <UserContext.Provider value={{ user: data, updateAuthenticatedUser }}>{props.children}</UserContext.Provider>;
 };
+
 export default UserContextProvider;
