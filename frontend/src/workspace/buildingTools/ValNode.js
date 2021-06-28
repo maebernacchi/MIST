@@ -96,10 +96,10 @@ function ValNode(props) {
     return (
       <Image
         image={image}
-        x={nodeDimensions.valueTrashX-1}
-        y={nodeDimensions.valueTrashY-1}
-        width={14}
-        height={14}
+        x={nodeDimensions.functionTrashX-50}
+        y={nodeDimensions.functionTrashY}
+        width={25}
+        height={25}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
         visible={hovered || !props.draggable}
