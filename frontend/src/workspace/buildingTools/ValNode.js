@@ -96,8 +96,8 @@ function ValNode(props) {
     return (
       <Image
         image={image}
-        x={nodeDimensions.valueTrashX}
-        y={nodeDimensions.valueTrashY}
+        x={nodeDimensions.valueTrashX-1}
+        y={nodeDimensions.valueTrashY-1}
         width={14}
         height={14}
         shadowColor={trashHovered ? "red" : "cyan"}
@@ -188,6 +188,14 @@ function ValNode(props) {
           e.currentTarget.x(),
           e.currentTarget.y()
         );
+        // Updates the x & y coordinates only when the custom node is being dragged
+        if(rep == '#'){
+          props.updateNodePosition(
+            index,
+            e.currentTarget.x(),
+            e.currentTarget.y()
+          );
+        }
       }}
       onClick={(e) => {
         props.clickHandler(index);
@@ -248,8 +256,8 @@ function ValNode(props) {
               id="form#"
               style={{
                 position: "absolute",
-                left: x + props.offsetX + 20,
-                top: y + props.offsetY + 10,
+                left: props.x + 25,
+                top: props.y + 90,
               }}
               onSubmit={(e) => {
                 e.preventDefault();
@@ -270,8 +278,8 @@ function ValNode(props) {
                   type="text"
                   placeholder="#"
                   style={{
-                    width: 0.45 * valueWidth,
-                    height: 0.45 * valueWidth,
+                    width: 0.33 * valueWidth,
+                    height: 0.29 * valueWidth,
                     backgroundColor: "#D8AB24",
                     border: "none"
                   }}
