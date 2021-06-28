@@ -41,12 +41,20 @@ function Menu2(props) {
   const menuDimensions = useContext(menuContext);
   const fonts = useContext(fontContext);
 
+  //button names
+  const button1 = "Values";
+  const button2 = "Functions";
+  const button3 = "Custom";
+  const button4 = "Saved";
+  const button5 = "Settings";
+  
+
   // +--------+--------------------------------------------------------
   // | States |
   // +--------+
 
-  const [valuesOpen, setValuesOpen] = useState(false);
-  const [functionsOpen, setFunctionsOpen] = useState(true);
+  const [valuesOpen, setValuesOpen] = useState(true);
+  const [functionsOpen, setFunctionsOpen] = useState(false);
   const [customOpen, setCustomOpen] = useState(false);
   const [savedOpen, setSavedOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -228,11 +236,11 @@ function Menu2(props) {
 
   function Tabs(props) {
     const tabs = [
-      { text: "Values", open: valuesOpen, tabColor: props.valTabColor },
-      { text: "Functions", open: functionsOpen, tabColor: props.funTabColor },
-      { text: "Custom", open: customOpen, tabColor: props.customTabColor },
-      { text: "Saved", open: savedOpen, tabColor: props.savedTabColor },
-      { text: "Settings", open: settingsOpen, tabColor: props.settingsTabColor }
+      { text: button1, open: valuesOpen, tabColor: props.valTabColor },
+      { text: button2, open: functionsOpen, tabColor: props.funTabColor },
+      { text: button3, open: customOpen, tabColor: props.customTabColor },
+      { text: button4, open: savedOpen, tabColor: props.savedTabColor },
+      { text: button5, open: settingsOpen, tabColor: props.settingsTabColor }
     ];
 
     return tabs.map((u, i) => {
@@ -282,11 +290,11 @@ function Menu2(props) {
             verticalAlign={"middle"}
             onTap={() => {
               const temp = [
-                u.text === "Values",
-                u.text === "Functions",
-                u.text === "Custom",
-                u.text === "Saved",
-                u.text === "Settings",
+                u.text === button1,
+                u.text === button2,
+                u.text === button3,
+                u.text === button4,
+                u.text === button5,
               ];
               const states = [
                 valuesOpen,
@@ -312,11 +320,11 @@ function Menu2(props) {
             }}
             onMouseEnter={() => {
               const temp = [
-                u.text === "Values",
-                u.text === "Functions",
-                u.text === "Custom",
-                u.text === "Saved",
-                u.text === "Settings",
+                u.text === button1,
+                u.text === button2,
+                u.text === button3,
+                u.text === button4,
+                u.text === button5,
               ];
               const states = [
                 valuesOpen,
