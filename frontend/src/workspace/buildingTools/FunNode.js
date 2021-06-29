@@ -100,8 +100,8 @@ export default function FunNode(props) {
         image={image}
         x={nodeDimensions.functionTrashX}
         y={nodeDimensions.functionTrashY}
-        width={14}
-        height={14}
+        width={20}
+        height={20}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
         visible={hovered || !props.draggable} //Only visible when hovering over node

@@ -53,6 +53,16 @@ export const MIST_builtin_functions = {
         "maxarity": 1,
         "type": "GENERAL"
     },
+    "atan": {
+        "class": "MIST.FunInfo",
+        "name": "arctan",
+        "display": "atan",
+        "about": "The inverse tangent of a",
+        "params": "a",
+        "minarity": 1,
+        "maxarity": 1,
+        "type": "GENERAL"
+    },
     "mult": {
         "class": "MIST.FunInfo",
         "name": "multiply",
@@ -61,6 +71,16 @@ export const MIST_builtin_functions = {
         "params": "...",
         "minarity": 2,
         "maxarity": 20,
+        "type": "GENERAL"
+    },
+    "div": {
+        "class": "MIST.FunInfo",
+        "name": "divide",
+        "display": "div",
+        "about": "divide one value by another",
+        "params": "n, d",
+        "minarity": 2,
+        "maxarity": 2,
         "type": "GENERAL"
     },
     "neg": {
@@ -110,11 +130,32 @@ export const MIST_builtin_functions = {
         "maxarity": 1,
         "type": "GENERAL"
     },
+    "tan": {
+        "class": "MIST.FunInfo",
+        "name": "tangent",
+        "display": "tan",
+        "about": "The tangent of pi*a",
+        "params": "a",
+        "minarity": 1,
+        "maxarity": 1,
+        "type": "GENERAL"
+    },
     "square": {
         "class": "MIST.FunInfo",
         "name": "square",
         "display": "square",
         "about": "Square i",
+        "params": "i",
+        "minarity": 1,
+        "maxarity": 1,
+        "type": "GENERAL"
+    },
+
+    "square": {
+        "class": "MIST.FunInfo",
+        "name": "sqrt",
+        "display": "sqrt",
+        "about": "Square roof of i",
         "params": "i",
         "minarity": 1,
         "maxarity": 1,
@@ -186,8 +227,17 @@ export const MIST_builtin_values = {
         "name": "m.y",
         "about": "takes the y-value of the position of the mouse on the image"
     },
+    "rad": {
+        "name": "r",
+        "about": "radius"
+    },
+    "ang": {
+        "name": "a",
+        "about": "angle"
+    },
     "constant": {
         "name": "#",
         "about": "enter your own number"
     },
+
 };

@@ -137,7 +137,7 @@ function Menu(props) {
                     />
                 </Form>
                 <OverlayTrigger
-                    placement='top'
+                    placement='top' //might be good to change to 'bottom;
                     overlay={<Tooltip>Publish your final image</Tooltip>}
                 >
                     <Button className='menu-btn'
@@ -237,7 +237,7 @@ function FullscreenButton(props) {
             <Button
                 className='menu-btn'
                 onClick={props.exitFullscreen}
-                variant='outline'><BsFullscreenExit /></Button>
+                variant='outline-light'><BsFullscreenExit /></Button>
         );
     } else {
         return (

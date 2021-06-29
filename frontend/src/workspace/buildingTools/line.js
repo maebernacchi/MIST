@@ -19,8 +19,8 @@ export default function Edge(props) {
         image={image}
         x={props.sourceX + (sinkX - props.sourceX) * (3 / 5) - 7}
         y={props.sourceY + (sinkY - props.sourceY) * (3 / 5) - 7}
-        width={14}
-        height={14}
+        width={20}
+        height={20}
         shadowColor={trashHovered ? "red" : props.hoverShadowColor}
         shadowBlur={5}
         visible={hovered}

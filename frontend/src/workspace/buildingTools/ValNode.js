@@ -98,8 +98,8 @@ function ValNode(props) {
         image={image}
         x={nodeDimensions.valueTrashX}
         y={nodeDimensions.valueTrashY}
-        width={14}
-        height={14}
+        width={20}
+        height={20}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
         visible={hovered || !props.draggable}
@@ -248,8 +248,8 @@ function ValNode(props) {
               id="form#"
               style={{
                 position: "absolute",
-                left: x + props.offsetX + 20,
-                top: y + props.offsetY + 10,
+                left: x + props.offsetX + 0,
+                top: y + props.offsetY + 0,
               }}
               onSubmit={(e) => {
                 e.preventDefault();

@@ -12,7 +12,7 @@ export function FunBarDimensions(props) {
 
   const functionButtonX = margin + rfTextAreaWidth + margin;
   const functionButtonWidth = (props.width - 4 * margin - rfTextAreaWidth) / 2;
-  const functionButtonHeight = props.funBarHeight * 0.5;
+  const functionButtonHeight = props.funBarHeight * 0.8;
 
   const imageButtonX = functionButtonX + functionButtonWidth + margin;
   const imageButtonWidth = functionButtonWidth;

@@ -33,9 +33,9 @@ export function NodeContextProvider(props) {
 
   const valueSideLength = valueOffset * 1.414; // 1.414 === √2
 
-  const valueTrashX = (props.valueWidth * 1) / 6;
+  const valueTrashX = (props.valueWidth * 1) / 20;
 
-  const valueTrashY = (props.valueWidth * 1) / 7;
+  const valueTrashY = (props.valueWidth * 1) / 21;
 
   // Offset of the image render box in relation to the value group.
   const valueImageBoxOffset = (props.valueWidth * 2) / 3;
