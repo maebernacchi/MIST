@@ -130,9 +130,9 @@ function ImageModal(props) {
     }
     const buttons = [
       { buttonName: 'Exit', buttonOnClick: props.handleClose },
-      { buttonName: 'Download' },
+      { buttonName: 'Download', buttonOnClick: props.handleDownload },
       { buttonName: 'Save', buttonOnClick: SaveImage },
-      { buttonName: 'Expert' }
+      { buttonName: 'Expert', buttonOnClick: props.handleExpert }
     ];
 
     return (
