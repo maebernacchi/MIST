@@ -798,11 +798,11 @@ class WorkspaceComponent extends Component {
 
   openConfirmationPopup= (warningMessage, confirmOnClick) => {
 	  this.setState({
-isConfirmationModalOpen: true,
-confirmationModalWarningMessage: warningMessage,
-confirmationOnClickCallback: confirmOnClick
-})
-}
+      isConfirmationModalOpen: true,
+      confirmationModalWarningMessage: warningMessage,
+      confirmationOnClickCallback: confirmOnClick
+    })
+  }
 
   // +-------------------------+
   // | Interacting with Modals |
@@ -1397,6 +1397,7 @@ confirmationOnClickCallback: confirmOnClick
               this.setState({ isDeleteWorkspaceModalOpen: false });
             }}
           />
+          
         </ContextProvider>
 
         <ContextProvider
