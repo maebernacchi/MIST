@@ -341,7 +341,7 @@ export default function FunNode(props) {
               fillRadialGradientEndRadius={15}
               fillRadialGradientColorStops={[
                 0,
-                "#444444",
+                "#B3B3B3",
                 0,
                 u
               ]}
@@ -393,7 +393,7 @@ export default function FunNode(props) {
               fillRadialGradientEndRadius={15}
               fillRadialGradientColorStops={[
                 0,
-                '#444444',
+                '#B3B3B3',
                 0,
                 gui.functions[name].color,
               ]}
@@ -435,7 +435,7 @@ export default function FunNode(props) {
         x={70}
         y={35}
         radius={8}
-        fill={"#444444"}
+        fill={"#B3B3B3"}
         onDblClick={(e) => {
           // Generates the temporary line when double clicked
           props.dblClickHandler(index);

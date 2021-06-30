@@ -310,6 +310,11 @@ function ValNode(props) {
             props.toggleBox();
           }
         }}
+        onClick={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
         OnMouseEnter={() => {
           if (props.renderFunction) {
             props.toggleBox();
@@ -331,7 +336,7 @@ function ValNode(props) {
         x={65}
         y={35}
         radius={8}
-        fill={"#444444"}
+        fill={"#B3B3B3"}
         onDblClick={(e) => {
           // Generates the temporary line when double clicked
           props.dblClickHandler(index);
@@ -360,7 +365,6 @@ function ValNode(props) {
             return 0;
           });
         }}
-        
       />
     </Group>
   );
