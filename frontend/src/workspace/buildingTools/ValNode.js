@@ -55,7 +55,7 @@
 // +----------------------------+
 
 import React, { useState, useRef, useContext } from "react";
-import { Rect, Group, Text, Image } from "react-konva";
+import { Rect, Group, Text, Image, Circle } from "react-konva";
 import Konva from "konva";
 import Portal from "./Portal";
 import gui from "../globals/mistgui-globals.js";
@@ -200,10 +200,6 @@ function ValNode(props) {
       onClick={(e) => {
         props.clickHandler(index);
       }}
-      onDblClick={(e) => {
-        // Generates the temporary line when double clicked
-        props.dblClickHandler(index);
-      }}
       onTap={() => { props.tapHandler(index); }}
       onDblTap={() => { props.removeNode(index)}}
     >
@@ -314,7 +310,7 @@ function ValNode(props) {
             props.toggleBox();
           }
         }}
-        onClick={() => {
+        OnMouseEnter={() => {
           if (props.renderFunction) {
             props.toggleBox();
           }
@@ -330,6 +326,41 @@ function ValNode(props) {
         shadowBlur={2}
         shadowOffsetX={1}
         shadowOffsetY={1}
+      />
+      <Circle
+        x={65}
+        y={35}
+        radius={8}
+        fill={"#444444"}
+        onDblClick={(e) => {
+          // Generates the temporary line when double clicked
+          props.dblClickHandler(index);
+        }}
+        onMouseEnter={(e) => {
+          groupRef.current.children.map((u, i) => {
+            u.to({
+              duration: 0.5,
+              easing: Konva.Easings.ElasticEaseOut,
+              scaleX: 1.07,
+              scaleY: 1.07,
+            });
+            return 0;
+          });
+          setHovered(true);
+        }}
+        onMouseLeave={(e) => {
+          setHovered(false);
+          groupRef.current.children.map((u, i) => {
+            u.to({
+              duration: 0.5,
+              easing: Konva.Easings.ElasticEaseOut,
+              scaleX: 1,
+              scaleY: 1,
+            });
+            return 0;
+          });
+        }}
+        
       />
     </Group>
   );

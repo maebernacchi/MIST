@@ -57,7 +57,7 @@
 // +----------------------------+
 
 import React, { useState, useRef, useContext } from "react";
-import { Rect, Group, Text, Shape, Image } from "react-konva";
+import { Rect, Group, Text, Shape, Image, Circle } from "react-konva";
 import Konva from "konva";
 import gui from "../globals/mistgui-globals.js";
 import useImage from "use-image";
@@ -335,17 +335,22 @@ export default function FunNode(props) {
               key={i} // to silence a warning
               x={nodeDimensions.outletXOffset}
               y={i * nodeDimensions.outletYOffset + nodeDimensions.outletStartY}
-              fillRadialGradientStartPoint={{ x: -19, y: -5 }}
-              fillRadialGradientStartRadius={3}
-              fillRadialGradientEndPoint={{ x: -15, y: -5 }}
+              fillRadialGradientStartPoint={{ x: -19, y: 0 }}
+              fillRadialGradientStartRadius={8}
+              fillRadialGradientEndPoint={{ x: -15, y: 0 }}
               fillRadialGradientEndRadius={15}
-              fillRadialGradientColorStops={[0, u, 1, "dark" + u]}
+              fillRadialGradientColorStops={[
+                0,
+                "#444444",
+                0,
+                u
+              ]}
               onMouseOver={(e) => {
                 e.target.to({
                   duration: 0.3,
                   easing: Konva.Easings.ElasticEaseOut,
-                  scaleX: 1.2,
-                  scaleY: 1.2,
+                  scaleX: 1.07,
+                  scaleY: 1.07,
                   shadowOffsetX: 5,
                   shadowOffsetY: 5,
                 });
@@ -382,22 +387,23 @@ export default function FunNode(props) {
               x={nodeDimensions.outletXOffset}
               key={i}
               y={i * nodeDimensions.outletYOffset + nodeDimensions.outletStartY}
-              fillRadialGradientStartPoint={{ x: -19, y: -5 }}
-              fillRadialGradientStartRadius={3}
-              fillRadialGradientEndPoint={{ x: -15, y: -5 }}
+              fillRadialGradientStartPoint={{ x: -19, y: 0 }}
+              fillRadialGradientStartRadius={8}
+              fillRadialGradientEndPoint={{ x: -15, y: 0 }}
               fillRadialGradientEndRadius={15}
               fillRadialGradientColorStops={[
                 0,
-                gui.outletColor,
-                1,
-                gui.outletColor2,
+                '#444444',
+                0,
+                gui.functions[name].color,
               ]}
+              opacity = {1}
               onMouseOver={(e) => {
                 e.target.to({
                   duration: 0.3,
                   easing: Konva.Easings.ElasticEaseOut,
-                  scaleX: 1.2,
-                  scaleY: 1.2,
+                  scaleX: 1.07,
+                  scaleY: 1.07,
                   shadowOffsetX: 5,
                   shadowOffsetY: 5,
                 });
@@ -423,7 +429,42 @@ export default function FunNode(props) {
                 });
               }}
             />
+            
           ))}
+          <Circle
+        x={70}
+        y={35}
+        radius={8}
+        fill={"#444444"}
+        onDblClick={(e) => {
+          // Generates the temporary line when double clicked
+          props.dblClickHandler(index);
+        }}
+        onMouseEnter={(e) => {
+          groupRef.current.children.map((u, i) => {
+            u.to({
+              duration: 0.5,
+              easing: Konva.Easings.ElasticEaseOut,
+              scaleX: 1.07,
+              scaleY: 1.07,
+            });
+            return 0;
+          });
+          setHovered(true);
+        }}
+        onMouseLeave={(e) => {
+          setHovered(false);
+          groupRef.current.children.map((u, i) => {
+            u.to({
+              duration: 0.5,
+              easing: Konva.Easings.ElasticEaseOut,
+              scaleX: 1,
+              scaleY: 1,
+            });
+            return 0;
+          });
+        }}
+      />
     </Group>
   );
   // +----------------------------------------+

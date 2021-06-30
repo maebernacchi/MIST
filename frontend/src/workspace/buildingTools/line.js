@@ -48,9 +48,9 @@ export default function Edge(props) {
     >
       <Line
         points={[
-          props.sourceX,
+          props.sourceX+35,
           props.sourceY,
-          sinkX,
+          sinkX-7,
           sinkY,
         ]}
         pointerLength={0}
