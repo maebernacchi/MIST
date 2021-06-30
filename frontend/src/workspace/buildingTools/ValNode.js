@@ -280,7 +280,7 @@ function ValNode(props) {
                   style={{
                     width: 0.33 * valueWidth,
                     height: 0.29 * valueWidth,
-                    backgroundColor: "#D8AB24",
+                    backgroundColor: gui.valueConstantColor, 
                     border: "none"
                   }}
                   onChange={(e) => {
