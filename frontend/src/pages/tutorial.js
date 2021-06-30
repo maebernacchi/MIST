@@ -1,3 +1,5 @@
+
+// frontend\src\TutorialImages\(x).png
 // +----------------------------------------------------------------------------------------------------------
 // | Tutorial.js |
 // +-------------+
@@ -93,6 +95,7 @@
 import React from "react";
 import {
   Nav,
+  Image,
   Accordion,
   Card,
   Button,
@@ -119,6 +122,17 @@ import Circle from "./../TutorialImages/CircleImages/circle.png";
 import Circle1 from "./../TutorialImages/CircleImages/circle1.png";
 import Circle2 from "./../TutorialImages/CircleImages/circle2.png";
 import Circle3 from "./../TutorialImages/CircleImages/circle3.png";
+import xImage from "./../TutorialImages/(x).png";
+import GUIgif from "./../TutorialImages/GraphicUI.gif";
+import arrowX from "./../TutorialImages/arrowShowingX.png";
+import arrowY from "./../TutorialImages/arrowShowingY.png";
+import arrowXandY from "./../TutorialImages/arrowsShowingXandY.png";
+// import GUIgif from "./../TutorialImages/";
+// import GUIgif from "./../TutorialImages/GraphicUI.gif";
+
+
+
+
 
 //Tutorial Header
 function Tutorial() {
@@ -551,38 +565,54 @@ const sections = [
           title: "Introduction to MIST",
           id: "intro-to-mist",
           keywords: ["introduction", "MIST", "general"],
-          image: <MISTImage code="x" resolution="250" />,
+          image: <MISTImage code="sum(x,y)" resolution="250" />,
           isAnimated: false,
           //Text
           text: (
             <Container>
-              Welcome to MIST, the Mathematical Image Synthesis Toolkit!
-              <br />
-              In this video we will go over the basic ideas of MIST!
-              <br />
-              After this, you will have a better understanding of how variables
+              {/* Welcome to MIST, the Mathematical Image Synthesis Toolkit! */}
+              <br /><br />
+              {/* In this video we will go over the basic ideas of MIST! */}
+              <br /><br />
+              
+              {/* After this, you will have a better understanding of how variables
               and functions are getting translated to the cool images that you
-              can create with MIST.
-              <br />
+              can create with MIST. */}
+              <br /><br />
               All images in MIST are drawn on a square canvas.
+              <br />
               <br />
               We have an x and a y axis, just like in math class!
               <br />
-              X values range from -1 at the left to 1 at the right. Y values
-              range from -1 at the top to 1 at the bottom (This is different
+              <br />
+              X values range from -1 at the left to 1 at the right.
+              <Image src={arrowX} fluid></Image>
+              
+              <br />
+              <br />
+              Y values range from -1 at the top to 1 at the bottom.
+              
+              <Image src={arrowY} fluid></Image>
+              (This is different
               from what you have experienced in math class!).
+              <br />
+
+              <br />
+              <Image src={arrowXandY} fluid></Image>
+              {/* <MISTImage code="x" resolution="250"/> */}
+              <br/><br/>
               <br />
               Numbers also represent colors. Since we're working in the range -1
               to 1, we must assign a meaning to each number. We'll start with
               greyscale images. In greyscale, the value 1 represents the color
               black (or lots of ink). Conversely, -1 is white.
-              <br />
+              <br /><br />
               And anything between -1 and 1 is grey.
-              <br />
+              <br /><br />
               Here's an image in which each color depends on the x coordinate.
-              <br />
+              <br /><br />
               We would write this as x.
-              <br />
+              <br /><br />
               We can apply mathematical operations, too. Here's what happens
               when we multiply x times y. (Don't worry about how we're writing
               it; you'll use a graphical user interface to build images.) You've
@@ -595,7 +625,7 @@ const sections = [
           video: <Container>This is a video </Container>,
 
           //Final
-          final: <Container> This is the final imaget </Container>,
+          final: <Container> This is the final image </Container>,
 
           isChallenge: false,
 
@@ -631,7 +661,11 @@ const sections = [
             <Container>
               Welcome to the workspace! This is where you will be making all of
               your lovely images from mathematical equations.
-              <br />
+              <br/>
+              <br/>
+              <Image src={GUIgif} fluid></Image>
+              <br/>
+              <br/>
               Here, you are able to choose from a variety of values and
               functions that allow the images to be made and are connected
               through lines.
