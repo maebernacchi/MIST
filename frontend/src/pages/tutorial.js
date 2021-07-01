@@ -140,9 +140,10 @@ import codeIntro from "./../TutorialImages/codeIntro.mp4";
 import savingFunction from "./../TutorialImages/savingFunction.mp4";
 // import savingFunction2 from "./../TutorialImages/savingFunction2.mp4";
 import usingParams from "./../TutorialImages/usingParams.mp4";
-
-
-
+import allVars from "./../TutorialImages/allVariables.mp4";
+import constantDemo from "./../TutorialImages/constNodeInput.mp4";
+import timeNodeDemo from "./../TutorialImages/timeNodeInput.mp4";
+import mouseNodeDemo from "./../TutorialImages/axisNodeInput.mp4";
 
 
 //Tutorial Header
@@ -700,7 +701,7 @@ const sections = [
               <Container fluid>
                 <iframe width="560" height="315" src={workspaceIntro} 
                         title="workspace-function-connect" frameborder="0"
-                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
+                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen>
                 </iframe>
               </Container>
@@ -714,7 +715,7 @@ const sections = [
                <Container fluid>
                 <iframe width="560" height="315" src={workspaceDrag} 
                         title="workspace-function-connect" frameborder="0"
-                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
+                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen>
                 </iframe>
               </Container>
@@ -728,7 +729,7 @@ const sections = [
                <Container fluid>
                 <iframe width="560" height="315" src={workspaceConnect} 
                         title="workspace-function-connect" frameborder="0"
-                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
+                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen>
                 </iframe>
               </Container>
@@ -740,7 +741,7 @@ const sections = [
               <Container fluid>
                 <iframe width="560" height="315" src={funcConnectVideo} 
                         title="workspace-function-connect" frameborder="0"
-                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
+                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen>
                 </iframe>
               </Container>
@@ -898,7 +899,7 @@ const sections = [
               <Container fluid> 
                 <iframe width="560" height="315" src={codeIntro}  
                         title="code-intro" frameborder="0" 
-                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
+                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
                         allowfullscreen> 
                 </iframe> 
               </Container> 
@@ -912,7 +913,7 @@ const sections = [
               <Container fluid> 
                 <iframe width="560" height="315" src={savingFunction}  
                         title="using-params" frameborder="0" 
-                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
+                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
                         allowfullscreen>
                 </iframe> 
               </Container> 
@@ -1520,7 +1521,7 @@ const sections = [
 
         //Video
         video: <Container> <iframe width="560" height="315" src="https://www.youtube.com/embed/YQwvc7hdggE" title="circle-tutorial" frameborder="0"
-         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> </Container>,
+         allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> </Container>,
 
         //Final
         final: <Container> This is the final image: <br />
