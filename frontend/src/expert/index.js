@@ -49,7 +49,7 @@
  * We also rely on a Popup Component, whose contents will be modified at
  * shown whenever a popup is needed via the triggerPopup() function.
  * 
- * The initialState of th Expert Component is stored under './initial-state.js
+ * The initialState of the Expert Component is stored under './initial-state.js
  * 
  * We handle macros using the expand_macros function from the './macros' module.
  * 
@@ -90,7 +90,7 @@ function Expert(props) {
     // +-------+
     const [popup, setPopup] = useState(getInitialPopup());
 
-    /**
+    /*
      * Opens and Closes the current Popup 
      * */
     const togglePopup = () => {
@@ -100,7 +100,7 @@ function Expert(props) {
         })
     }
 
-    /**
+    /*
      * Opens a popup with the given message and a specific confirmation action
      * @param {*} param0 
      */
@@ -119,7 +119,7 @@ function Expert(props) {
     // | Form |
     // +------+
     const [form, setForm] = useState(getInitialForm());
-    // For when we have a Link to the Expert UI from the GUI ready
+    // For when we have a Link to the Expert UI from the GUI ready.
     useEffect(() => {
         if (props.location && props.location.state && props.location.state.code) {
             setForm({
@@ -128,14 +128,14 @@ function Expert(props) {
             })
         }
     }, [props.location])
-    /**
+    /*
      * Resets the form to the initial state
      */
     const resetForm = () => {
         setForm(getInitialForm);
     }
 
-    /** 
+    /*
      * Returns true if the form is in use, false otherwise
      */
     const isFormInUse = () => {
@@ -151,7 +151,7 @@ function Expert(props) {
     }
 
 
-    /**
+    /*
      * Loads the object (functionToLoad) into the form
      */
     const loadFunctionToForm = (functionToLoad) => {
@@ -162,14 +162,14 @@ function Expert(props) {
         setForm(fun);
     }
 
-    /**
+    /*
      * Returns a value from the form corresponding to the key str
      */
     const getFormValue = (str) => {
         return form[str]
     }
 
-    /**
+    /*
      * Sets a field in the form
      */
     const setFormValue = (key, to) => {
@@ -184,7 +184,7 @@ function Expert(props) {
     // +--------+
     const [macros, setMacros] = useState(getInitialMacros());
 
-    /**
+    /*
      * Saves a user defined function to be resused in the workspace
      * @param {Object} new_function 
      */
@@ -233,7 +233,7 @@ function Expert(props) {
         }
     } // addUserDefinedFunction()
 
-    /**
+    /*
      * Reorders the macros
      * @param {Array} order 
      */
@@ -278,7 +278,7 @@ function Expert(props) {
             .catch(error => alert('We failed to save because of Error: ' + error))
     }
 
-    /**
+    /*
      * Wrapper that checks the if the user already has an expert workspace
      * of the given name and triggers a popup that asks for confirmation
      * for overwrite.

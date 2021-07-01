@@ -28,7 +28,7 @@ import { Spring, animated } from "react-spring/renderprops-konva";
 // | All dependent files        |
 // +----------------------------+------------------------------------
 
-/**
+/*
  * Makes one of those "Reset Workspace", "Open Workspace", and "Save Workspace" buttons
  * @param {*} props
  */

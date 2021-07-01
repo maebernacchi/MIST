@@ -1337,6 +1337,7 @@ MIST.expToGL = (function() {
     "t.d": "t.w",
     "m.x": "m.x",
     "m.y": "m.y"
+    
   };
 
   function func(name, limit) {
@@ -1364,6 +1365,10 @@ MIST.expToGL = (function() {
     square: func("SQUARE", 1),
     wrap: func("WRAP", 1),
     mistif: func("MISTIF", 3),
+    sqrt: func("SQRT", 1),
+    tan: func("TAN", 1),
+    div: func("DIV", 2),
+    atan: func("ATAN", 1),
 
     abs: func("abs"),
     signz: func("sign"),
@@ -1514,8 +1519,7 @@ MIST.builtins.functions = new MIST.Collection();
 //   BUILTIN = MIST.builtins.functions.addBuiltinFun
 // But that seems to be illegal.
 function BUILTIN() {
-  MIST.builtins.functions.addBuiltinFun.apply(MIST.builtins.functions, 
-    arguments);
+  MIST.builtins.functions.addBuiltinFun.apply(MIST.builtins.functions, arguments);
 }
 
 // +-----------+-----------------------------------------------------
@@ -1644,16 +1648,45 @@ BUILTIN("signz", "signz",
 var sine = function(a) {
     return Math.sin(Math.PI * a);
 };
+
 var sin = sine;
 MIST.sine = sine;
 MIST.sin = sine;
 BUILTIN("sine", "sin", "The sine of pi*a", "a",
   1, 1, "GENERAL");
 
+var tan = function(a) {
+  return Math.tan(Math.PI * a);
+};
+MIST.tan = tan;
+BUILTIN("tangent", "tan", "The tangent of pi*a", "a",
+  1, 1, "GENERAL");
+
+var arctan = function(a) {
+  return Math.atan(1 * a) *2 / Math.PI ;
+};
+//
+var atan = arctan;
+MIST.arctan = arctan;
+MIST.atan = arctan;
+BUILTIN("arctan", "atan", "The inverse tangent of a", "a", 1, 1, "GENERAL");
+
 var square = function(i) {
   return i*i;
 } // square
 BUILTIN("square", "square", "Square i", "i", 1, 1, "GENERAL");
+
+var sqrt = function(i) {
+  return Math.sqrt(i);
+} // sqrt
+MIST.sqrt = sqrt;
+BUILTIN("sqrt", "sqrt", "Square root of i", "i", 1, 1, "GENERAL");
+
+var div = function(n, d) {
+  return n / d;
+} // div
+MIST.div = div;
+BUILTIN("div", "div", "divides the first value by the second", "any", 2, 2, "GENERAL");
 
 var sum = function() {
   var sum = 0;
@@ -1680,7 +1713,9 @@ var mistif = function(test, pos, neg) {
     return neg;
 };
 BUILTIN("mistif", "if", "if test is greater than or equal to zero, return pos, if test is less than zero, return neg", "test, pos, neg", 3, 3, "GENERAL");/**
- * mist-layout.js
+
+
+* mist-layout.js
  *   Information on the layout of a MIST editing session.
  */
 
@@ -2066,6 +2101,7 @@ function c2r(c)
 {
   return (c/127.5) - 1.0;
 } // c2r
+
 
 
 // +-------------------+---------------------------------------------

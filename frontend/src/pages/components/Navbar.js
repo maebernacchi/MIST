@@ -126,7 +126,7 @@ function Search() {
 
 function NavBarCenter() {
 
-  const [mode, setMode] = useState("default");
+  const [mode, setMode] = useState("signIn");
   function handleSignInClick() { setMode("signIn") };
   function handleCancelClick() { setMode("default") };
 
