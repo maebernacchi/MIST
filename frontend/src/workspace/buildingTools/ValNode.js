@@ -341,6 +341,11 @@ function ValNode(props) {
           // Generates the temporary line when double clicked
           props.dblClickHandler(index);
         }}
+        shadowColor={
+          hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
+        }
+        shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
+        shadowBlur={3}
         onMouseEnter={(e) => {
           groupRef.current.children.map((u, i) => {
             u.to({

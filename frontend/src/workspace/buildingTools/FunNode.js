@@ -432,39 +432,47 @@ export default function FunNode(props) {
             
           ))}
           <Circle
-        x={70}
-        y={35}
-        radius={8}
-        fill={"#B3B3B3"}
-        onDblClick={(e) => {
-          // Generates the temporary line when double clicked
-          props.dblClickHandler(index);
-        }}
-        onMouseEnter={(e) => {
-          groupRef.current.children.map((u, i) => {
-            u.to({
-              duration: 0.5,
-              easing: Konva.Easings.ElasticEaseOut,
-              scaleX: 1.07,
-              scaleY: 1.07,
+            x={75}
+            y={35}
+            radius={8}
+            fill={"#B3B3B3"}
+            onDblClick={(e) => {
+                // Generates the temporary line when double clicked
+                props.dblClickHandler(index);
+            }}
+            opacity={
+              name==="rgb" ? 0:1
+            }
+            shadowColor={
+              hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
+            }
+            shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
+            shadowBlur={3}
+            onMouseEnter={(e) => {
+            groupRef.current.children.map((u, i) => {
+              u.to({
+                duration: 0.5,
+                easing: Konva.Easings.ElasticEaseOut,
+                scaleX: 1.07,
+                scaleY: 1.07,
+              });
+              return 0;
             });
-            return 0;
-          });
-          setHovered(true);
-        }}
-        onMouseLeave={(e) => {
-          setHovered(false);
-          groupRef.current.children.map((u, i) => {
-            u.to({
-              duration: 0.5,
-              easing: Konva.Easings.ElasticEaseOut,
-              scaleX: 1,
-              scaleY: 1,
-            });
-            return 0;
-          });
-        }}
-      />
+            setHovered(true);
+            }}
+            onMouseLeave={(e) => {
+              setHovered(false);
+              groupRef.current.children.map((u, i) => {
+                u.to({
+                  duration: 0.5,
+                  easing: Konva.Easings.ElasticEaseOut,
+                  scaleX: 1,
+                  scaleY: 1,
+                });
+                return 0;
+              });
+            }}
+          />
     </Group>
   );
   // +----------------------------------------+
