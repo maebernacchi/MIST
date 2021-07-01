@@ -132,9 +132,15 @@ import arrowY from "./../TutorialImages/arrowShowingY.png";
 import arrowXandY from "./../TutorialImages/arrowsShowingXandY.png";
 import nodeDragGif from "./../TutorialImages/nodeDragGif.gif";
 // import funcConnectVideo from "./../TutorialImages/funcConnectVideo.mp4";
-import workspaceConnect from "./../TutorialImages/workspaceConnect.mp4"
-import workspaceDrag from "./../TutorialImages/workspaceDrag.mp4"
-import funcConnectVideo from "./../TutorialImages/workspaceFuncConnectAndPreview.mp4"
+import workspaceConnect from "./../TutorialImages/workspaceConnect.mp4";
+import workspaceDrag from "./../TutorialImages/workspaceDrag.mp4";
+import funcConnectVideo from "./../TutorialImages/workspaceFuncConnectAndPreview.mp4";
+import workspaceIntro from "./../TutorialImages/workspaceIntro.mp4";
+import codeIntro from "./../TutorialImages/codeIntro.mp4";
+import savingFunction from "./../TutorialImages/savingFunction.mp4";
+// import savingFunction2 from "./../TutorialImages/savingFunction2.mp4";
+import usingParams from "./../TutorialImages/usingParams.mp4";
+
 
 
 
@@ -310,15 +316,15 @@ function Tutorials() {
                 {/* Text, Video, Final, Challenges sections */}
                 <Text text={subsection.text} id={subsection.id} />
                 {/* <Video video={subsection.video} id={subsection.id} />
-                <Final final={subsection.final} id={subsection.id} />
+                <Final final={subsection.final} id={subsection.id} /> */}
                 {subsection.isChallenge ? (
                   <Challenges
                     challenges={subsection.challenges}
                     id={subsection.id}
-                  /> */}
-                {/* ) : (
+                  /> 
+                 ) : (
                   ""
-                )} */}
+                )} 
               </Container>
             </section>
           ))}
@@ -382,7 +388,7 @@ function Video(props) {
       id={props.id + "-video"}
       style={{
         borderRadius: "15px",
-        backgroundColor: "white",
+        backgroundColor: "aliceblue",
         borderWidth: "1px",
         margin: "1vh",
       }}
@@ -411,7 +417,7 @@ function Final(props) {
       id={props.id + "-final"}
       style={{
         borderRadius: "15px",
-        backgroundColor: "white",
+        backgroundColor: "aliceblue",
         borderWidth: "1px",
         margin: "1vh",
       }}
@@ -438,7 +444,7 @@ function Challenges(props) {
       id={props.id + "-challenges"}
       style={{
         borderRadius: "15px",
-        backgroundColor: "white",
+        backgroundColor: "aliceblue",
         borderWidth: "1px",
         margin: "1vh",
       }}
@@ -691,7 +697,13 @@ const sections = [
               <br/>
               <br/>
               {/* <Image src={GUIgif} fluid></Image> */}
-              
+              <Container fluid>
+                <iframe width="560" height="315" src={workspaceIntro} 
+                        title="workspace-function-connect" frameborder="0"
+                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+              </Container>
               <br/>
               <br/>
               Here you can click
@@ -866,34 +878,77 @@ const sections = [
         //| The Expert UI    |
         //+------------------+
 
-        {
-          title: "The Expert UI",
-          id: "expert-ui",
-          keywords: ["graph", "grayscale", "axis"],
-          image: <MISTImage code="x" resolution="250" />,
-          isAnimated: false,
-          //Text
-          text: <Container>This section is about the Expert UI!</Container>,
+          { 
+            title: "The Expert UI", 
+            id: "expert-ui", 
+            keywords: ["graph", "grayscale", "axis"], 
+            image: <MISTImage code="x" resolution="250" />, 
+            isAnimated: false, 
+            //Text 
+            text: <Container>
+              In addition to the Graphical Workspace, we have 
+              a workspace that takes in the code itself.
+              <br/>
+              <br/>
+              You can type code in the “create image” tab 
+              (demonstrate!) and click the play button to 
+              generate the image.
+              <br/>
+              <br/>
+              <Container fluid> 
+                <iframe width="560" height="315" src={codeIntro}  
+                        title="code-intro" frameborder="0" 
+                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
+                        allowfullscreen> 
+                </iframe> 
+              </Container> 
+              <br/>
+              <br/>
+              If you find that your code makes a really cool image,
+              you can save it in the “create function” tab and use 
+              it in other images later. 
+              <br/>
+              <br/>
+              <Container fluid> 
+                <iframe width="560" height="315" src={savingFunction}  
+                        title="using-params" frameborder="0" 
+                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
+                        allowfullscreen>
+                </iframe> 
+              </Container> 
+              <br/>
+              <br/>
+              If you want to share your image, you can publish it 
+              or download it as a .png file. We currently don’t have
+              support for downloading .gif files, but we’re working
+              on it!
+              <br/>
+              <br/>
+              VIDEO
+              <br/>
+              <br/>
+            </Container>,
 
-          //Video
-          video: <Container>This is a video </Container>,
+            // //Video 
+            // video: <Container>This is a video </Container>, 
 
-          //Final
-          final: <Container> This is the final image </Container>,
+            // //Final 
+            // final: <Container> This is the final image </Container>, 
 
-          isChallenge: true,
-          //Challenges
-          challenges: [
-            {
-              question: <Container> This is a Challenge 1 </Container>,
-              hint: <Container>This is a hint 1 </Container>,
-            },
-            {
-              question: <Container> This is a Challenge 2 </Container>,
-              hint: <Container> This is a hint 2</Container>,
-            },
-          ],
-        },
+            isChallenge: true, 
+            //Challenges 
+            challenges: [ 
+              { 
+                question: <Container> This is a Challenge 1 </Container>, 
+                hint: <Container>This is a hint 1 </Container>, 
+              }, 
+              { 
+                question: <Container> This is a Challenge 2 </Container>, 
+                hint: <Container> This is a hint 2</Container>, 
+              }, 
+            ], 
+          }, 
+
 
         //+------------------+----------------------------------------------------------------------------------------------------------------------
         //| Good Practices  |
