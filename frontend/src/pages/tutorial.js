@@ -108,6 +108,9 @@ import {
   Dropdown,
 } from "react-bootstrap";
 
+import ResponsiveEmbed from 'react-bootstrap/ResponsiveEmbed';
+
+
 import "bootstrap/dist/css/bootstrap.css";
 
 import { Link } from "react-router-dom";
@@ -127,9 +130,11 @@ import GUIgif from "./../TutorialImages/GraphicUI.gif";
 import arrowX from "./../TutorialImages/arrowShowingX.png";
 import arrowY from "./../TutorialImages/arrowShowingY.png";
 import arrowXandY from "./../TutorialImages/arrowsShowingXandY.png";
-// import GUIgif from "./../TutorialImages/";
-// import GUIgif from "./../TutorialImages/GraphicUI.gif";
-
+import nodeDragGif from "./../TutorialImages/nodeDragGif.gif";
+// import funcConnectVideo from "./../TutorialImages/funcConnectVideo.mp4";
+import workspaceConnect from "./../TutorialImages/workspaceConnect.mp4"
+import workspaceDrag from "./../TutorialImages/workspaceDrag.mp4"
+import funcConnectVideo from "./../TutorialImages/workspaceFuncConnectAndPreview.mp4"
 
 
 
@@ -304,16 +309,16 @@ function Tutorials() {
 
                 {/* Text, Video, Final, Challenges sections */}
                 <Text text={subsection.text} id={subsection.id} />
-                <Video video={subsection.video} id={subsection.id} />
+                {/* <Video video={subsection.video} id={subsection.id} />
                 <Final final={subsection.final} id={subsection.id} />
                 {subsection.isChallenge ? (
                   <Challenges
                     challenges={subsection.challenges}
                     id={subsection.id}
-                  />
-                ) : (
+                  /> */}
+                {/* ) : (
                   ""
-                )}
+                )} */}
               </Container>
             </section>
           ))}
@@ -347,15 +352,17 @@ function Text(props) {
       id={props.id + "-text"}
       style={{
         borderRadius: "15px",
-        backgroundColor: "white",
+        backgroundColor: "aliceblue",
         borderWidth: "1px",
         margin: "1vh",
+        textAlign: "left"
+
       }}
     >
       <Card.Body>
         <Row>
           <Col xs="11">
-            <Container> Text </Container>
+            <Container></Container>
             {props.text}
           </Col>
           <Col xs="1">
@@ -570,80 +577,99 @@ const sections = [
           //Text
           text: (
             <Container>
-              {/* Welcome to MIST, the Mathematical Image Synthesis Toolkit! */}
-              <br /><br />
+              Welcome to MIST, the Mathematical Image Synthesis Toolkit!
+             
               {/* In this video we will go over the basic ideas of MIST! */}
-              <br /><br />
+              {/* <br /><br /> */}
               
               {/* After this, you will have a better understanding of how variables
               and functions are getting translated to the cool images that you
               can create with MIST. */}
-              <br /><br />
-              All images in MIST are drawn on a square canvas.
               <br />
               <br />
-              We have an x and a y axis, just like in math class!
+              Images in MIST are drawn on a square canvas.
+              {/* <br />
+              <br /> */}
+              {/* We have an x and a y axis, just like in math class! */}
               <br />
               <br />
-              X values range from -1 at the left to 1 at the right.
+              On our canvas we have an x and y axis. X values range 
+              from –1 to 1 (left to right).  
+              {/* X values range from -1 at the left to 1 at the right. */}
               <Image src={arrowX} fluid></Image>
               
               <br />
               <br />
               Y values range from -1 at the top to 1 at the bottom.
-              
-              <Image src={arrowY} fluid></Image>
-              (This is different
-              from what you have experienced in math class!).
               <br />
-
+              <br />
+              <Image src={arrowY} fluid></Image>
+              <br />
+              <br />
+              Y values are likely 
+              different than the ones you’ve seen before. The values
+               range from –1 at the top of the canvas to 1 at the bottom.
+              <br />
               <br />
               <Image src={arrowXandY} fluid></Image>
               {/* <MISTImage code="x" resolution="250"/> */}
-              <br/><br/>
+              <br/>
+              <br/>
+              To begin, lets learn to make greyscale images! In greyscale,
+               1 corresponds to black, and –1 is white. Any number in between
+                renders a shade of gray. 
               <br />
-              Numbers also represent colors. Since we're working in the range -1
-              to 1, we must assign a meaning to each number. We'll start with
-              greyscale images. In greyscale, the value 1 represents the color
-              black (or lots of ink). Conversely, -1 is white.
-              <br /><br />
+              <br />
               And anything between -1 and 1 is grey.
-              <br /><br />
-              Here's an image in which each color depends on the x coordinate.
-              <br /><br />
-              We would write this as x.
-              <br /><br />
-              We can apply mathematical operations, too. Here's what happens
+              <br />
+              <br />
+              If we look at the image made with a function of x, the rendered
+              shades depend on the value of the x coordinate. This means that
+              as x increases, the image gets darker.
+
+              <MISTImage code="x" fluid resolution="500"></MISTImage>
+              <br />
+              <br />
+              {/* We can apply mathematical operations, too. Here's what happens
               when we multiply x times y. (Don't worry about how we're writing
               it; you'll use a graphical user interface to build images.) You've
               learned the basics of the MIST world. It's time to start making
-              your own images.
+              your own images. */}
+              To manipulate images, we can apply Mathematical operations to our
+              variables, such as multiplying together x and y.
+              <br />
+              <br />
+              <MISTImage code="mult(x,y)" fluid resolution="500"></MISTImage>
+              <br />
+              <br />
+              Notice that when one variable is negative and the other is positive, the 
+              image is lighter--negative values produce less "ink"!
             </Container>
           ),
 
-          //Video
-          video: <Container>This is a video </Container>,
+          // //Video
+          // video: <Container>This is a video </Container>,
 
-          //Final
-          final: <Container> This is the final image </Container>,
+          // //Final
+          // final: <Container> This is the final image </Container>,
 
-          isChallenge: false,
+          // isChallenge: false,
 
-          //Challenges
-          challenges: [
-            //   {
-            //   question:
-            //     <Container>This is a Challenge 1 </Container>,
-            //   hint:
-            //     <Container>This is a hint 1 </Container>
-            // },
-            // {
-            //   question:
-            //     <Container> This is a Challenge 2 </Container>,
-            //   hint:
-            //     <Container> This is a hint 2</Container>
-            // }
-          ],
+          // //Challenges
+          // challenges: [
+          //   //   {
+          //   //   question:
+          //   //     <Container>This is a Challenge 1 </Container>,
+          //   //   hint:
+          //   //     <Container>This is a hint 1 </Container>
+          //   // },
+          //   // {
+          //   //   question:
+          //   //     <Container> This is a Challenge 2 </Container>,
+          //   //   hint:
+          //   //     <Container> This is a hint 2</Container>
+          //   // }
+          // ],
         },
 
         //+------------------+----------------------------------------------------------------------------------------------------------------------
@@ -659,33 +685,82 @@ const sections = [
           //Text
           text: (
             <Container>
-              Welcome to the workspace! This is where you will be making all of
-              your lovely images from mathematical equations.
+              {/* Welcome to the workspace! This is where you will be making all of
+              your lovely images from mathematical equations. */}
+              This is the graphical workspace! 
               <br/>
               <br/>
-              <Image src={GUIgif} fluid></Image>
+              {/* <Image src={GUIgif} fluid></Image> */}
+              
               <br/>
               <br/>
-              Here, you are able to choose from a variety of values and
+              Here you can click
+               on different nodes and drag them to the center panel.
+              <br/>
+              <br/>
+               {/* <Image src={nodeDragGif} fluid></Image>  */}
+               <Container fluid>
+                <iframe width="560" height="315" src={workspaceDrag} 
+                        title="workspace-function-connect" frameborder="0"
+                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+              </Container>
+               {/* //gif of moving the nodes!!! */}
+               <br/>
+              <br/>
+               By <b>double-clicking</b> on variables and dragging away from 
+               the node, you can connect them to function blocks.
+               <br/>
+               <br/>
+               <Container fluid>
+                <iframe width="560" height="315" src={workspaceConnect} 
+                        title="workspace-function-connect" frameborder="0"
+                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+              </Container>
+               <br/>
+               <br/>
+               Some functions can also be inputs for other functions!
+               <br/>
+               <br/>
+              <Container fluid>
+                <iframe width="560" height="315" src={funcConnectVideo} 
+                        title="workspace-function-connect" frameborder="0"
+                        allow="accelerometer; autoplay; autopause; loop; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+              </Container>
+               <br/>
+               <br/>
+               Always drag from an input to a function.
+              <br/>
+              <br/>
+              
+              {/* <Image src={GUIgif} fluid></Image> */}
+              <br/>
+              <br/>
+              {/* Here, you are able to choose from a variety of values and
               functions that allow the images to be made and are connected
-              through lines.
+              through lines. */}
               <br />
-              Each image has a range of -1 to 1, where -1 represents white and 1
+              {/* Each image has a range of -1 to 1, where -1 represents white and 1
               represents black; everything in between is gray until the rbg
               function is used. X- values range from -1 on the left and 1 on the
-              right, while y-values range from -1 at the top to 1 at the bottom.
+              right, while y-values range from -1 at the top to 1 at the bottom. */}
             </Container>
           ),
 
-          //Video
-          video: <Container>This is a video </Container>,
+          // //Video
+          // video: <Container>This is a video </Container>,
 
-          //Final
-          final: <Container> This is the final image </Container>,
+          // //Final
+          // final: <Container> This is the final image </Container>,
 
-          isChallenge: false,
-          //Challenges
-          challenges: [
+          // isChallenge: false,
+          // //Challenges
+          // challenges: [
             //{
             //   question:
             //     <Container> This is a Challenge 1 </Container>,
@@ -698,7 +773,7 @@ const sections = [
             //   hint:
             //     <Container> This is a hint 2</Container>
             // }
-          ],
+          // ],
         },
 
         //+------------------+----------------------------------------------------------------------------------------------------------------------
@@ -714,14 +789,17 @@ const sections = [
           //Text
           text: (
             <Container>
-              Welcome to a tour of the MIST website!
               <br />
-              To start off, this is the home page. There are many different
-              routes you can take here, from looking at other peoples' images to
-              creating your own. Let's begin with the create page, which you can
-              get to by clicking "create" on the top left of the page on the
-              menu bar.
               <br />
+              On this website, you can create images or 
+              explore images other people have made.
+              <br />
+              <br />
+              To open the visual workspace, click the "create" 
+              tab on the top left of the menu bar.
+              <br />
+              <br />
+              
               <WorkSpace
                 width={800}
                 height={580}
