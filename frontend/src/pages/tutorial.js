@@ -146,6 +146,25 @@ import timeNodeDemo from "./../TutorialImages/timeNodeInput.mp4";
 import mouseNodeDemo from "./../TutorialImages/axisNodeInput.mp4";
 
 
+const bodyTextSize = "110%";
+
+
+// workspace Demo, so we can include workspaces in our tutorials easily.
+function WorkSpaceDemo() {
+  return (
+    <WorkSpace
+      width={900}
+      height={580}
+      menuHeight={90}
+      funBarHeight={60}
+      functionWidth={40}
+      valueWidth={40}
+    />
+  );
+}
+
+
+
 //Tutorial Header
 function Tutorial() {
   return (
@@ -263,7 +282,7 @@ function Tutorials() {
                   <Container>
                     <Row>
                       <Col sm="8">
-                        <h1 style={{ textAlign: "left" }}>
+                        <h1 style={{ textAlign: "left"}}>
                           {subsection.title}{" "}
                           <Link
                             to={"#" + subsection.id}
@@ -318,6 +337,11 @@ function Tutorials() {
                 <Text text={subsection.text} id={subsection.id} />
                 {/* <Video video={subsection.video} id={subsection.id} />
                 <Final final={subsection.final} id={subsection.id} /> */}
+                {subsection.isCheckpoint ? (
+                  <CheckPoint checkpoint={subsection.checkpoint} id={subsection.id}/> 
+                 ) : (
+                  ""
+                )}
                 {subsection.isChallenge ? (
                   <Challenges
                     challenges={subsection.challenges}
@@ -362,24 +386,79 @@ function Text(props) {
         backgroundColor: "aliceblue",
         borderWidth: "1px",
         margin: "1vh",
-        textAlign: "left"
+        textAlign: "left",
+        fontSize: {bodyTextSize}
 
       }}
     >
       <Card.Body>
         <Row>
           <Col xs="11">
-            <Container></Container>
-            {props.text}
+            <Container><h4>Introduction</h4></Container>
+            {/* {props.text} */}
           </Col>
           <Col xs="1">
             <SectionMenu id={props.id} />
+          </Col>
+        </Row>
+        <br/>
+        <br/>
+        <Row>
+          <Col xs="auto">
+            {/* <Container><h4>Introduction</h4></Container> */}
+            {props.text}
           </Col>
         </Row>
       </Card.Body>
     </Card>
   );
 }
+
+function CheckPoint(props) {
+  return (
+    <Card
+      id={props.id + "-checkpoint"}
+      style={{
+        borderRadius: "15px",
+        backgroundColor: "aliceblue",
+        borderWidth: "1px",
+        margin: "1vh",
+        textAlign: "left",
+        fontSize: {bodyTextSize}
+
+      }}
+    >
+      <Card.Body>
+        <Row>
+        <Col xs="11">
+            <Container><h4>Checkpoint</h4></Container>
+            {/* {props.checkpoint} */}
+            
+          </Col>
+          <Col xs="1">
+            <SectionMenu id={props.id} />
+          </Col>
+        </Row>
+        <br/>
+        <br/>
+        <Row>
+          <Col xs="auto">
+            {/* <Container><h4>Checkpoint</h4></Container> */}
+            {props.checkpoint}
+            
+            <WorkSpaceDemo/>
+            
+          </Col>
+          {/* <Col xs="1">
+            <SectionMenu id={props.id} />
+          </Col> */}
+        </Row>
+      </Card.Body>
+    </Card>
+  );
+}
+
+
 /**
  * Video section
  */
@@ -392,16 +471,25 @@ function Video(props) {
         backgroundColor: "aliceblue",
         borderWidth: "1px",
         margin: "1vh",
+        fontSize: {bodyTextSize}
       }}
     >
       <Card.Body>
         <Row>
           <Col xs="11">
             <Container>Video </Container>
-            {props.video}
+            {/* {props.video} */}
           </Col>
           <Col xs="1">
             <SectionMenu id={props.id} />
+          </Col>
+        </Row>
+        <br/>
+        <br/>
+        <Row>
+          <Col xs="auto">
+            {/* <Container><h4>Introduction</h4></Container> */}
+            {props.video}
           </Col>
         </Row>
       </Card.Body>
@@ -433,6 +521,14 @@ function Final(props) {
             <SectionMenu id={props.id} />
           </Col>
         </Row>
+        <br/>
+        <br/>
+        <Row>
+          <Col xs="auto">
+            {/* <Container><h4>Introduction</h4></Container> */}
+            {props.final}
+          </Col>
+        </Row>
       </Card.Body>
     </Card>
   );
@@ -448,27 +544,45 @@ function Challenges(props) {
         backgroundColor: "aliceblue",
         borderWidth: "1px",
         margin: "1vh",
+        fontSize: {bodyTextSize}
       }}
     >
       <Card.Body>
         <Row>
           <Col xs="11">
-            <Container>Challenges</Container>
-            <Container>
-              {/* Maps each challenges */}
-              {props.challenges.map((challenge) => (
+            <Container><h4>Challenges</h4></Container>
+            {/* <Container>
+              {// Maps each challenges }
+              { {props.challenges.map((challenge) => (
                 <Challenge
                   question={challenge.question}
                   hint={challenge.hint}
                 />
               ))}
-            </Container>
+              <br/><br/>
+              <WorkSpaceDemo/> 
+            </Container> */}
           </Col>
 
           {/* each section's small menu icon on the right side */}
           <Col xs="1">
             <SectionMenu id={props.id} />
           </Col>
+        </Row>
+        <br/>
+        <br/>
+        <Row>
+          <Container>
+            {/* Maps each challenges */}
+            {props.challenges.map((challenge) => (
+              <Challenge
+                question={challenge.question}
+                hint={challenge.hint}
+              />
+            ))}
+            <br/><br/>
+            <WorkSpaceDemo/> 
+          </Container>
         </Row>
       </Card.Body>
     </Card>
@@ -752,12 +866,12 @@ const sections = [
               <br/>
               
               {/* <Image src={GUIgif} fluid></Image> */}
-              <br/>
-              <br/>
+              {/* <br/>
+              <br/> */}
               {/* Here, you are able to choose from a variety of values and
               functions that allow the images to be made and are connected
               through lines. */}
-              <br />
+              {/* <br /> */}
               {/* Each image has a range of -1 to 1, where -1 represents white and 1
               represents black; everything in between is gray until the rbg
               function is used. X- values range from -1 on the left and 1 on the
@@ -813,14 +927,7 @@ const sections = [
               <br />
               <br />
               
-              <WorkSpace
-                width={800}
-                height={580}
-                menuHeight={90}
-                funBarHeight={60}
-                functionWidth={40}
-                valueWidth={40}
-              /> 
+              <WorkSpaceDemo/> 
               On the create page, you can make your own images using the
               workspace on it.
               <br />
@@ -891,8 +998,7 @@ const sections = [
               a workspace that takes in the code itself.
               <br/>
               <br/>
-              You can type code in the “create image” tab 
-              (demonstrate!) and click the play button to 
+              You can type code in the “create image” tab and click the play button to 
               generate the image.
               <br/>
               <br/>
@@ -999,29 +1105,122 @@ const sections = [
         //Text
         text: (
           <Container>
-            <b>X</b>, <b>Y</b> and <b>constants</b> are values in MIST that are
-            inputted into functions or even used on their own.
+            There are many expressions that can be used as inputs in MIST. The most 
+            basic building building block are the values, shown here: 
+            
+            {/* <b>X</b>, <b>Y</b> and <b>constants</b> are values in MIST that are
+            inputted into functions or even used on their own. Here's a demonstration of them: */}
+            <br/>
             <br />
-            The <b>X</b> variable ranges from -1 to 1 based on the x-values.
+            <Container fluid> 
+                <iframe width="560" height="315" src={allVars}  
+                        title="values" frameborder="0" 
+                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
+                        allowfullscreen>
+                </iframe> 
+              </Container> 
+            {/* The <b>X</b> variable ranges from -1 to 1 based on the x-values.
             This means that from left to right, the colors of this block change
-            white to black. This is because x-values change horizontally.
+            white to black. This is because x-values change horizontally. */}
             <br />
+            <br />
+            Remember that both the <b>X</b> and <b>Y</b> values on the canvas range from -1 to 1.
+            <br />
+            <br />
+            <Row fluid >
+              <Col>
+                <b>Code:</b> x
+                <MISTImage code="x" resolution="400" />
+                <br/>
+                <br/>
+                As <b>X</b> increases, the image gets darker.
+              </Col>
+              <Col>
+                <b>Code:</b> y
+                <MISTImage code="y" resolution="400" />
+                <br/>
+                <br/>
+                As <b>Y</b> increases, the image gets darker.
+              </Col>
+            </Row>
+            
+
+{/*             
             The <b>Y</b> variable ranges from -1 to 1 based on the y-values.
             Remember that for <b>Y</b>, -1 starts at the top and 1 is at the
             bottom. Therefore, white is at the top and slowly turns black, which
-            comes from y-values changing hoizontally.
-            <br />A constant is a value that doesn't change, hence the name
+            comes from y-values changing hoizontally. */}
+            <br />
+            A constant is a value that doesn't change, hence the name
             constant. For example, if we had the value <b>2</b>, it would always
             remain as <b>2</b>.
+            <br />
+            <br />
+            <Row>
+              <Col>
+                <MISTImage code="neg(1)" resolution="150" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> -1
+              </Col>
+              <Col>
+                <MISTImage code="neg(0.5)" resolution="150" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> -0.5
+              </Col>
+              <Col>
+                <MISTImage code="0" resolution="150" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> 0
+              </Col>
+              <Col>
+                <MISTImage code="0.5" resolution="150" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> 0.5
+              </Col>
+              <Col>
+                <MISTImage code="1" resolution="150" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> 1
+              </Col>
+            </Row>
+            <br/>
+            <br/>
+            Notice that all of the images produced by the constants are completely
+            flat--their light/dark values don't depend on any inputs from the canvas.
+            <br/>
+            <br/>
+            In the Code Workspace, you can simply use a number. In the Graphical Workspace, you drag
+            a constant node into the panel and enter a number (shown on the right of the workspace):
+            <br/>
+            <br/>
+            <Container fluid> 
+              <iframe width="560" height="315" src={constantDemo}  
+                      title="constant-entry" frameborder="0" 
+                      allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
+                      allowfullscreen>
+              </iframe> 
+            </Container> 
+
+
           </Container>
         ),
         //need to add how to change.
 
         //Video
-        video: <Container> This is a video </Container>,
+        // video: <Container> This is a video </Container>,
 
-        //Final
-        final: <Container> This is the final image </Container>,
+        // //Final
+        // final: <Container> This is the final image </Container>,
+        isCheckpoint: true,
+        CheckPoint: (
+          <Container> Try combining different values and functions:</Container>
+        ),
+        
         isChallenge: false,
         //Challenges
         challenges: [
@@ -1052,22 +1251,81 @@ const sections = [
         //Text
         text: (
           <Container>
-            In order to get an animation, you'll have to connect a time variable
-            to your workspace! This includes the blocks <b>t.s</b>, <b>t.m</b>,{" "}
-            <b>t.h</b>, <b>t.d</b>. These are divided by increasing times, with
+            <br />
+            <br />
+            Functions can also take time as an input, resulting in an animation.
+            In MIST, we've used:
+            <br/>
+            <br/>            
+            {/* In order to get an animation, you'll have to connect a time variable
+            to your workspace! */}
+            {/* <br/>
+            <b>t.s</b> = time in seconds
+            <br/>
+            <b>t.m</b> = time in minutes
+            <br/>
+            <b>t.h</b> = time in hours
+            <br/>
+            <b>t.d</b> = time in days
+            <br/> */}
+            <Row>
+              <Col>
+                <MISTImage code="t.s" resolution="200" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> t.s
+                <br/> Time in seconds
+              </Col>
+              <Col>
+                <MISTImage code="t.m" resolution="200" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> t.m
+                <br/> Time in minutes
+              </Col>
+              <Col>
+                <MISTImage code="t.h" resolution="200" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> t.h
+                <br/> Time in hours
+              </Col>
+              <Col>
+                <MISTImage code="t.d" resolution="200" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> t.d
+                <br/> Time in days
+              </Col>
+              
+            </Row>
+            <br/>
+            <br/>
+            You'll notice that t.h and t.d move very slowly. Each time input moves between
+             -1 and 1 over the course of its period. The hour and day inputs move slowest
+              because they are much larger units of time.
+            <br/>
+            <br/>         
+            {/* These are divided by increasing times, with
             s standing for seconds, m for minutes, h for hours, and d for days.
-            <br />
-            Adding time causes the image to become an animation. This is because
-            time passes, it changes the input and therefore changes the image.
-            <br />
-            Time and animations can be manipulated. You can add them, multiply
-            them, or change them with other functions and this speeds up or
-            slows down the animation.
-            <br />
-            To show an example of this:
-            <br />
-            1. Add an <b>x</b> and <b>t.s</b> variable to the workspace.
-            <br />
+            <br /> */}
+
+            {/* <Container fluid> 
+                <iframe width="560" height="315" src={allVars}  
+                        title="values" frameborder="0" 
+                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
+                        allowfullscreen>
+                </iframe> 
+              </Container>  */}
+            {/* Adding time causes the image to become an animation. This is because
+            time passes, it changes the input and therefore changes the image. */}
+            {/* <br />
+            <br /> */}
+            Time and animations can be really powerful as you experiment with them. You can multiply
+            them, add them, or feed them into other functions. This speeds up, slows down, or offsets the resulting animation.
+            {/* <br />
+            <br /> */}
+{/*                       
             2. Drag in a <b>mult</b> block and connect the <b>x</b> and{" "}
             <b>t.s</b> to it. Now you can see time changes what was once a a
             simple <b>x</b> image.
@@ -1077,9 +1335,39 @@ const sections = [
             </b>{" "}
             variable and set it equal to 2. Connect this to the <b>mult</b>{" "}
             block that is already there and see how the speed changes. It should
-            move much quicker now!
+            move much quicker now! */}
           </Container>
         ),
+        isCheckpoint: true,
+        checkpoint: (
+          <Container>
+            Try this:
+            <br />
+            <Row>
+              <Col>
+                1. Add an <b>x</b> and <b>t.s</b> variable to the workspace.
+              </Col>
+              
+              <Col>
+                2. Drag in a <b>mult</b> block and connect the <b>x</b> and <b>t.s</b> to it.
+              Now you can see that as <b>t.s</b> changes, so does the <b>x</b> image.
+              </Col>
+
+              <Col>
+              3. Bring in a{" "}
+              <b>constant</b> variable and set it equal to 2. Connect this to the{" "}
+              <b>mult</b> block that is already there.
+              {/* and see how the speed changes.
+              It should move much quicker now! */}
+              </Col>
+
+            </Row>
+          
+            <br />
+            <br />
+
+            <WorkSpaceDemo/>
+          </Container>),
 
         //Video
         video: <Container> This is a video </Container>,
@@ -1093,7 +1381,7 @@ const sections = [
             question: (
               <Container>
                 <p1>
-                  Try making the following image: <br />
+                  Try making the following image: <br /><br />
                 </p1>
                 <MISTImage code="mult(x,y,t.s)" resolution="250" />
               </Container>
@@ -1107,8 +1395,18 @@ const sections = [
             ),
           },
           {
-            question: <Container> This is a Challenge 2 </Container>,
-            hint: <Container> This is a hint 2</Container>,
+            question: (
+              <Container>
+                <p1>
+                  Now try making this image: <br/> <br/>
+                </p1>
+                <MISTImage code="wsum(sin(x),y,t.s)" resolution="250"></MISTImage>
+              </Container>
+            ),
+            hint: <Container>
+              What happens when you use <b>wsum</b> with <b>sin</b>? Try a few different values.
+              {/* What happens when you add <b>sin</b> of <b>x</b> and another value? */}
+              </Container>,
           },
         ],
       },
@@ -1125,25 +1423,62 @@ const sections = [
         //Text
         text: (
           <Container>
-            Moving with the mouse means that you can change what the image looks
-            like just by moving your mouse around on the image. In order to do
-            this, the <b>m.x</b> block, <b>m.y</b> block, or both must be used.
+            MIST can also use your mouse's position as an input. Try moving your mouse over these two images:
             <br />
-            The <b>m.x</b> block changes the colors along the x-values. You can
+            <br />
+            <Row>
+              <Col>
+                <MISTImage code="m.x" resolution="300" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> m.x
+                <br/> The mouse's <b>x</b> value 
+              </Col>
+              <Col>
+                <MISTImage code="m.y" resolution="300" />
+                {/* <br/> */}
+                <br/>
+                <b>Code:</b> m.x
+                <br/> The mouse's <b>y</b> value 
+              </Col>
+            </Row>
+            <br/>
+            <br/>
+            The <b>m.x</b> block changes the colors along the x-values.
+            
+            {/* You can
             try it yourself by opening the preview for <b>m.x</b> and moving
-            your mouse from side to side over it!
+            your mouse from side to side over it! */}
+            <br />
             <br />
             The <b>m.y</b> block changes the shades from white to black across
-            the y-values. This is because the y-values refer to the vertical
-            values in math!
-            <br />
+            the y-values.
+            
+            {/* This is because the y-values refer to the vertical
+            values in math! */}
+          </Container>
+        ),
+        isCheckpoint: true,
+
+        checkpoint: (
+          <Container>
             To try it yourself:
             <br />
-            1. Bring a <b>x</b>, <b>y</b>,<b>m.x</b> and <b>m.y</b> variable
-            into the workspace.
             <br />
-            2. Then add a <b>wsum</b> in and connect all 4 variables to it. You
-            should have a simple animation that moves when you hover over it!
+            <Row>
+              <Col>
+                1. Bring a <b>x</b>, <b>y</b>,<b>m.x</b> and <b>m.y</b> variable
+              into the workspace.
+              </Col>
+              
+              <Col>
+                2. Then add a <b>wsum</b> in and connect all 4 variables to it. You
+              should have a simple animation that moves when you hover over it!
+              </Col>
+
+            </Row>
+            <br/>
+            {/* <WorkSpaceDemo/>  */}
           </Container>
         ),
 
@@ -1168,7 +1503,7 @@ const sections = [
             hint: (
               <Container>
                 {" "}
-                Try using <b>wsum</b> instead of <b>sum</b>
+                What happens when you change the inputs to <b>mult</b>?
               </Container>
             ),
           },
@@ -1187,7 +1522,9 @@ const sections = [
             hint: (
               <Container>
                 {" "}
-                Try using <b>wsum</b> instead of <b>sum</b>{" "}
+                What happens when you add <b>sin</b> and <b>cos</b>?{" "}
+                <br/>
+                Try using <b>wsum</b> instead of <b>sum</b>
               </Container>
             ),
           },
@@ -1211,29 +1548,79 @@ const sections = [
         //Text
         text: (
           <Container>
-            Multiple input functions are functions that must have at least 2
+            Multiple-input functions are functions that must have at least 2
             inputs and can have up to 20. These functions include <b>sum</b>,{" "}
             <b>wsum</b>, <b>mult</b>, and <b>avg</b>.
             <br />
-            The <b>sum</b> function adds numbers together. It sums together
-            numbers up to -1 and 1. For example, if you add together 0.5 and
-            0.7, it will stay equal to 1.
             <br />
-            The <b>wsum</b> (wrap sum) function works similarly to how{" "}
-            <b>sum</b> does. However, instead of maxing out at 1 or -1, it wraps
-            back around.
+
+            <h4><b>sum</b> and <b>wsum</b></h4>
+            <br/>
+            <Row>
+              <Col>
+                The <b>sum</b> function adds numbers together. If the result is greater than 1, the function
+              outputs 1. If the result is less than 1, the function outputs -1. 
+              or less than -1, the function outputs the minimum/maximum. Here's <b>sum(x,y)</b>.
+              <br/><br/>
+              </Col>
+              <Col>
+                The <b>wsum</b> (wrap sum) function "wraps" the values around if they're outside{" "}
+              the normal range of output. 
+              </Col>
+            </Row>
+            <br/>
+            <Row>
+              <Col>
+              Here's <b>sum(x,y)</b>.
+              <br/>
+                <MISTImage code="sum(x,y)" resolution="300"/>
+              </Col>
+              <Col>
+              
+              Here's <b>wsum(x,y)</b>.
+              <br/>
+                <MISTImage code="wsum(x,y)" resolution="300"/>
+              </Col>
+            </Row>
+            
             <br />
-            The <b>mult</b> block lets you multiply two or more numbers
-            together. Using the example multiplying x and y together, you can
+            <br />
+            <h4><b>mult</b> and <b>avg</b></h4>
+            <br />
+            <Row>
+              <Col>
+              The <b>mult</b> block lets you multiply two or more numbers
+            together. Take the example of <b>mult(x,y)</b>.
+              </Col>
+              <Col>
+                The <b>wsum</b> (wrap sum) function "wraps" the values around if they're outside{" "}
+              the normal range of output.
+              </Col>
+            </Row>
+            <br/>
+            <Row>
+              <Col>
+              Here's <b>mult(x,y)</b>.
+              <br/>
+                <MISTImage code="mult(x,y)" resolution="300"/>
+              </Col>
+              <Col>
+              Here's <b>avg(x,y)</b>.
+              <br/>
+                <MISTImage code="avg(x,y)" resolution="300"/>
+              </Col>
+            </Row>
+            <br/><br/>
+
+            {/* Using the example multiplying x and y together, you can
             see in the top left corner, that it is black because -1 x -1 is 1.
-            Then, if you look at the bottom left corner, it is black
-            <br />
+            Then, if you look at the bottom left corner, it is black */}
+            {/* <br />
             The <b>avg</b> function averages together values. For example, the
-            average of -1 and 1 is 0.
+            average of -1 and 1 is 0. */}
             <br />
-            To use this yourself try:
-            <br />
-            1. Adding an <b>x</b> and <b>y</b> variable to the workspace.
+            
+            {/* 1. Adding an <b>x</b> and <b>y</b> variable to the workspace.
             <br />
             2. Then add a <b>sum</b> block and a <b>mult</b> block in.
             <br />
@@ -1241,7 +1628,37 @@ const sections = [
             <b>y</b> to the <b>mult</b> twice.
             <br />
             4. Then bring in an <b>avg</b> block and connect the <b>sum</b> and{" "}
-            <b>mult</b> block to it! Now take a look at your final image!
+            <b>mult</b> block to it! Now take a look at your final image! */}
+          </Container>
+        ),
+        isCheckpoint: true,
+
+        checkpoint: (
+          <Container>
+            To use this yourself try:
+            <br/>
+            <br/>
+            <Row>
+              <Col>
+                1. Adding an <b>x</b> and <b>y</b> variable to the workspace.
+              </Col>
+              <Col>
+                2. Then add a <b>sum</b> block and a <b>mult</b> block in.
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+                3. Connect the <b>x</b> to the <b>sum</b> block twice, and then the{" "}
+              <b>y</b> to the <b>mult</b> twice.
+              </Col>
+              <Col>
+                4. Then bring in an <b>avg</b> block and connect the <b>sum</b> and{" "}
+              <b>mult</b> block to it! Now take a look at your final image!
+              </Col>
+            </Row>
+            <br />
+            {/* <WorkSpaceDemo/> */}
           </Container>
         ),
 
