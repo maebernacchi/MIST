@@ -53,6 +53,7 @@ function FunBar(props) {
   }
 
   function FunctionButton(props) {
+    const functionButtonColor = "#f7a731";
     return (
       <Group // Function Button on blue bar
         x={funBarDimensions.functionButtonX}
@@ -61,13 +62,13 @@ function FunBar(props) {
         <Spring // animates function button fill
           native
           from={{
-            fill: "orange",
+            fill: functionButtonColor,
           }}
           to={{
             fill:
               props.renderFunction.isRenderable && functionButtonHovered
                 ? "white"
-                : "orange",
+                : functionButtonColor,
           }}
         >
           {(props) => (
@@ -107,6 +108,7 @@ function FunBar(props) {
   }
 
   function ImageButton(props) {
+    const imageButtonColor = "#f7a731";
 
     return (
       <Group // Image Button on blue bar
@@ -116,13 +118,13 @@ function FunBar(props) {
         <Spring // animates image button fill
           native
           from={{
-            fill: "orange",
+            fill: imageButtonColor,
           }}
           to={{
             fill:
               props.renderFunction.isRenderable && imageButtonHovered
                 ? "white"
-                : "orange",
+                : imageButtonColor,
           }}
         >
           {(props) => (
