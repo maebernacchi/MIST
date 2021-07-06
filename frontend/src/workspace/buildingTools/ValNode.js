@@ -333,8 +333,8 @@ function ValNode(props) {
         shadowOffsetY={1}
       />
       <Circle
-        x={65}
-        y={35}
+        x={valueWidth}
+        y={valueWidth/2}
         radius={8}
         fill={"#B3B3B3"}
         onDblClick={(e) => {
