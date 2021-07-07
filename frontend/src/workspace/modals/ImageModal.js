@@ -54,6 +54,7 @@ function ImageModal(props) {
         }}
       >
         <input
+          id={"PortalTextBox"}
           type={"text"}
           placeholder={"Enter Name Of Image"}
           value={imageName}
@@ -131,7 +132,7 @@ function ImageModal(props) {
     }
     function DownloadImage() {
       let link = document.createElement('a');
-      link.download = "MISTImage";
+      link.download = (document.getElementById("PortalTextBox").value || 'MISTImage') + '.png';
       link.href = document.getElementById("MISTImage").getElementsByTagName("canvas")[0].toDataURL();
       link.click();
   }
