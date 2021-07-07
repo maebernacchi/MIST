@@ -1,5 +1,5 @@
 const pool = require("../db/dbconfig");
-const api = require("./api");
+const api = require("../api/api");
 const database = require("./database");
 
 module.exports = (app) => {

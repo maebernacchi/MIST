@@ -44,3 +44,9 @@ function dispatchError(response, error) {
 		.status(500)
 		.json({ status: "error", message: `Server Error: ${error}` });
 }
+
+module.exports = {
+	handleError,
+	dispatchResponse,
+	dispatchError,
+};
