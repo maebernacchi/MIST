@@ -63,8 +63,6 @@ module.exports.run = function (info, req, res) {
 /**
  * The collection of handlers.
  */
-var handlers = {};
-handlers.signUp = signUp;
 
 // Note: Each handler should have parameters (info, req, res).
 

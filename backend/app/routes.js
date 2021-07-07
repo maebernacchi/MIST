@@ -1,8 +1,10 @@
 const pool = require("../db/dbconfig");
 const api = require("../api/api");
 const database = require("./database");
+const users = require("../api/user.js");
 
 module.exports = (app) => {
+	app.use("/api/users", users);
 	// Our stuff
 	// ROUTES
 	// create
@@ -22,8 +24,12 @@ module.exports = (app) => {
 	// read
 	app.get("/users", async (req, res) => {
 		try {
-			const allUsers = await pool.query("select * from users");
-			res.json(allUsers.rows);
+			// const allUsers = await pool.query("select * from users");
+			// res.json(allUsers.rows);
+			pool.query("select * from users", (err, result) => {
+				if (err) throw err;
+				res.json(result.rows);
+			});
 		} catch (error) {
 			console.error(error.message);
 		}

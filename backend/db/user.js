@@ -1,5 +1,6 @@
 const User = require("../Models/User");
 const pool = require("./dbconfig");
+const bcrypt = require("bcrypt");
 // +------------+-------------------------------------------------
 // |    Users   |
 // +------------+
@@ -11,7 +12,7 @@ passwordSecurity = (pass) => {
 	let digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 	let checkNumber = false;
 	let checkSpecial = false;
-	let Special = ["!", "@"];
+	let Special = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
 	if (pass.length < 8) {
 		return "Required: At least 8 characters";
 	}
@@ -33,6 +34,75 @@ passwordSecurity = (pass) => {
 		return "Success";
 	}
 };
+
+// TODO make it applic`able to email
+const checkUserExists = (user_id) => {
+	pool.query(
+		"select exists (select 1 from users where user_id=$1)",
+		[user_id],
+		(err, result) => {
+			// database error
+			if (err) {
+				console.log(err);
+				callback(err);
+				return;
+			}
+			return result.rows.exists;
+		}
+	);
+};
+
+/**
+ * creates a new user in the database
+ * @param req the request, must contain a user object
+ * with user_id, email, password
+ * @param callback returns if the user exists already or if the user was created succesfully
+ */
+module.exports.createUser = async (req, callback) => {
+	let user = req.body;
+	// check userid duplicate
+	if (checkUserExists(user.user_id)) {
+		callback("User ID Already taken");
+		return;
+	}
+	// check email duplicate
+	pool.query(
+		"select exists(select 1 from users where email=$1)",
+		[user.email],
+		(err, res) => {
+			if (err) {
+				callback(err);
+				return;
+			}
+			if (res.rows.exists) {
+				callback("Email already registered.");
+				return;
+			}
+		}
+	);
+	let passwordMessage = passwordSecurity(user.password);
+	if (passwordMessage !== "Success") {
+		callback(passwordMessage);
+		return;
+	}
+	const hashedPassword = await bcrypt.hash(req.body.password, 12);
+	pool.query(
+		"insert into users (user_id, email, password) \
+        values($1, $2, $3)",
+		[user.user_id, user.email, hashedPassword],
+		(err, res) => {
+			if (err) {
+				callback(err);
+				console.log(err);
+				return;
+			}
+			console.log(res);
+			callback("User Created");
+			return;
+		}
+	);
+};
+
 /**
  * Changes the password of the user
  *
@@ -86,13 +156,14 @@ module.exports.changePassword = async (req, callback) => {
  */
 module.exports.changeEmail = (req, callback) => {
 	// TODO figure out if it's req or req.body
+	let user = req.body;
 	pool.query(
 		"update users set email='$1' where user_id='$2'",
-		[req.email, req.user_id],
+		[user.email, user.user_id],
 		(err, res) => {
 			if (err) throw err;
 			console.log(res);
-			callback(`Successfully Updated Email for user ${req.user_id}`);
+			callback(`Successfully Updated Email for user ${user.user_id}`);
 		}
 	);
 };
@@ -107,27 +178,20 @@ module.exports.changeEmail = (req, callback) => {
 module.exports.changeUserId = (req, callback) => {
 	if (req.body.new_user_id === "") callback("Username cannot be blank");
 	else {
-		pool.query(
-			"select exists (select 1 from users where user_id='$1')",
-			[req.body.new_user_id],
-			(err, row) => {
-				if (err) throw err;
-				if (row && row.length) {
-					console.log("duplicate user_id");
-					callback("User ID already in use!");
-				} else {
-					pool.query(
-						"update users set user_id='$1' where user_id='$2'",
-						[req.new_user_id, req.user_id],
-						(err, res) => {
-							if (err) throw err;
-							console.log(result);
-							callback(`User ID updated successfully`);
-						}
-					);
+		if (checkUserExists(req.body.new_user_id)) {
+			console.log("duplicate user_id");
+			callback("User ID already in use!");
+		} else {
+			pool.query(
+				"update users set user_id='$1' where user_id='$2'",
+				[req.new_user_id, req.user_id],
+				(err, res) => {
+					if (err) throw err;
+					console.log(result);
+					callback(`User ID updated successfully`);
 				}
-			}
-		);
+			);
+		}
 	}
 };
 
@@ -138,19 +202,18 @@ module.exports.changeUserId = (req, callback) => {
  * @param {*} callback
  * @returns a message if the name was successfully updated or an error occurred
  */
- module.exports.changeName = (req, callback) => {
+module.exports.changeFullname = (req, callback) => {
 	let user = req.body;
-	const user_exists = pool.query(
-		"select exists (select 1 from users where user_id='$1')",
-		[user.user_id]
-	);
-	if(!user_exists){
+	pool.query("select exists (select 1 from users where user_id='$1')", [
+		user.user_id,
+	]);
+	if (!user_exists) {
 		callback("User does not exist");
 	}
-	pool.query(
-		"update users set fullname = $1 where user_id = $2",
-		[user.newBio, user.user_id]
-	);
+	pool.query("update users set fullname = $1 where user_id = $2", [
+		user.newBio,
+		user.user_id,
+	]);
 };
 
 /**
@@ -162,16 +225,26 @@ module.exports.changeUserId = (req, callback) => {
  */
 module.exports.changeAbout = (req, callback) => {
 	let user = req.body;
-	const user_exists = pool.query(
+	let user_exists;
+	pool.query(
 		"select exists (select 1 from users where user_id='$1')",
-		[user.user_id]
+		[user.user_id],
+		(err, res) => {
+			if (err) throw err;
+			user_exists = res;
+		}
 	);
-	if(!user_exists){
+	if (!user_exists) {
 		callback("User does not exist");
 	}
 	pool.query(
-		"update users set about = $1 where user_id = $2",
-		[user.newBio, user.user_id]
+		"update users set about = '$1' where user_id = '$2'",
+		[user.newBio, user.user_id],
+		(err, res) => {
+			if (err) throw err;
+			console.log(res);
+			callback(`Updated the about description for user: ${user.user_id}`);
+		}
 	);
 };
 
@@ -184,16 +257,19 @@ module.exports.changeAbout = (req, callback) => {
  */
 module.exports.changeProfilePic = (req, callback) => {
 	let user = req.body;
-	const user_exists = pool.query(
-		"select exists (select 1 from users where user_id='$1')",
-		[user.user_id]
-	);
-	if(!user_exists){
+	let user_exists;
+	if (!checkUserExists(user.user_id)) {
 		callback("User does not exist");
+		return;
 	}
 	pool.query(
 		"update users set profile_pic = $1 where user_id = $2",
-		[user.newProfilePic, user.user_id]
+		[user.newProfilePic, user.user_id],
+		(err, res) => {
+			if (err) throw err;
+			console.log(res);
+			callback(`Updated profile picture for user: ${user.user_id}`);
+		}
 	);
 };
 
@@ -215,16 +291,18 @@ module.exports.getUsername = (userId, callback) => {
 
 module.exports.deleteAccount = async (req, callback) => {
 	let user = req.body;
-	const is_active_user = pool.query(
-		"select exists (select 1 from users where user_id='$1')",
-		[user.user_id]
-	);
-	if (!is_active_user) {
+	let dbPassword = "";
+	if (!checkUserExists(user.user_id)) {
 		callback("User does not exist");
 	}
-	const dbPassword = pool.query(
+	pool.query(
 		"select password from users where user_id='$1'",
-		[user.user_id]
+		[user.user_id],
+		(err, res) => {
+			if (err) throw err;
+			dbPassword = res;
+			console.log(res);
+		}
 	);
 
 	bcrypt.compare(req.body.currentPassword, dbPassword, (err, result) => {
@@ -235,68 +313,16 @@ module.exports.deleteAccount = async (req, callback) => {
 			callback("Old Password Does Not Match");
 		} else {
 			pool.query(
-				"delete from users where user_id='$1'", 
-				[user.user_id]
+				"delete from users where user_id='$1'",
+				[user.user_id],
+				(err, res) => {
+					if (err) throw err;
+					console.log(res);
+					callback(`Deleted user!`);
+				}
 			);
 		}
 	});
-};
-
-/**
- * creates a new user in the database
- * @param req the request, must contain a user object
- * with user_id, email, password
- * @param callback returns if the user exists already or if the user was created succesfully
- */
-module.exports.createUser = async (req, callback) => {
-	let user = req.body;
-	const is_duplicate_id = await pool.query(
-		"select exists(select 1 from users where user_id='$1')",
-		[user.user_id]
-	);
-	if (is_duplicate_id) callback("User ID Already taken");
-	const is_duplicate_email = await pool.query(
-		"select exists(select 1 from users where email='$1')",
-		[user.email]
-	);
-	if (is_duplicate_email) callback("Email already registered");
-	let passwordMessage = passwordSecurity(user.password);
-	if (passwordMessage !== "Success") {
-		callback(passwordMessage);
-	}
-	const hashedPassword = await bcrypt.hash(req.body.password, 12);
-	const result = await pool.query(
-		"insert into users (user_id, email, password) \
-        values('$1', '$2', '$3')",
-		[user.user_id, user.email, user.hashedPassword]
-	);
-	console.log(result);
-	callback("User Created");
-	//   User.findOne({ username: user.username }, async (err, doc) => {
-	//     if (err) throw err;
-	//     if (doc) callback("User Already Exists");
-	//     if (!doc) {
-	//       let passwordMessage = passwordSecurity(user.password);
-	//       if (passwordMessage !== "Success") {
-	//         callback(passwordMessage);
-	//       } else {
-	//         const hashedPassword = await bcrypt.hash(req.body.password, 12);
-	//         const newUser = new User({
-	//           forename: user.firstname,
-	//           surname: user.lastname,
-	//           username: user.username,
-	//           password: hashedPassword,
-	//           email: user.email,
-	//           verified: false,
-	//           admin: false,
-	//           moderator: false,
-	//           token: user.token,
-	//         });
-	//         await newUser.save();
-	//         callback("User Created");
-	//       }
-	//     }
-	//   });
 };
 
 // given a username, returns the userId
