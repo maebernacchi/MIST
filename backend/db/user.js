@@ -41,13 +41,14 @@ passwordSecurity = (pass) => {
  */
 module.exports.changePassword = async (req, callback) => {
 	let dbPassword = "";
-	await User.findOne({ _id: req.body._id }, (err, doc) => {
-		if (err) {
-			console.log("No doc");
-			console.log(err);
+	pool.query(
+		"select password from users where user_id='$1'",
+		[req.body.user_id],
+		(err, result) => {
+			if (err) throw err;
+			dbPassword = result;
 		}
-		dbPassword = doc.password;
-	});
+	);
 	bcrypt.compare(req.body.currentPassword, dbPassword, async (err, result) => {
 		if (err) {
 			callback(err);
@@ -55,23 +56,23 @@ module.exports.changePassword = async (req, callback) => {
 		if (result === false) {
 			callback("Old Password Does Not Match");
 		} else {
-			if (passwordSecurity(req.body.newPassword) !== "Success") {
+			let message = passwordSecurity(req.body.newPassword);
+			if (message !== "Success") {
 				callback(passwordSecurity(req.body.newPassword));
-			} else {
-				let newPass = await bcrypt.hash(req.body.newPassword, 12);
-				User.findOneAndUpdate(
-					{ _id: req.body._id },
-					{ $set: { password: newPass } },
-					{ new: true },
-					(err, doc) => {
-						if (err) {
-							callback(err);
-						} else {
-							callback("Successfully Updated Password");
-						}
-					}
-				);
 			}
+			let newPass = await bcrypt.hash(req.body.newPassword, 12);
+			pool.query(
+				"update users set password='$1' where user_id='$2'",
+				[newPass, req.body.user_id],
+				(err, result) => {
+					if (err) throw err;
+					console.log(result);
+					callback(
+						`Successfully updated password of user: ${req.body.user_id}`
+					);
+				}
+			);
+			// TODO error handling
 		}
 	});
 };
@@ -84,16 +85,14 @@ module.exports.changePassword = async (req, callback) => {
  * @returns a message if the email was successfully updated or an error occurred
  */
 module.exports.changeEmail = (req, callback) => {
-	User.updateOne(
-		{ _id: req.user._id },
-		{ $set: { email: sanitize(req.body.newEmail) } },
-		{ new: true },
-		(err, doc) => {
-			if (err) {
-				callback(err);
-			} else {
-				callback("Successfully Updated Email");
-			}
+	// TODO figure out if it's req or req.body
+	pool.query(
+		"update users set email='$1' where user_id='$2'",
+		[req.email, req.user_id],
+		(err, res) => {
+			if (err) throw err;
+			console.log(res);
+			callback(`Successfully Updated Email for user ${req.user_id}`);
 		}
 	);
 };
@@ -105,27 +104,30 @@ module.exports.changeEmail = (req, callback) => {
  * @param {*} callback
  * @returns a message if the username is taken, was successfully updated, or an error occurred
  */
-module.exports.changeUsername = (req, callback) => {
-	if (req.body.newUsername === "") callback("Username cannot be blank");
+module.exports.changeUserId = (req, callback) => {
+	if (req.body.new_user_id === "") callback("Username cannot be blank");
 	else {
-		User.find({ username: req.body.newUsername }, (err, docs) => {
-			if (docs.length) {
-				callback("Username already in use, try something else");
-			} else {
-				User.updateOne(
-					{ _id: req.user._id },
-					{ $set: { username: sanitize(req.body.newUsername) } },
-					{ new: true },
-					(err, doc) => {
-						if (err) {
-							callback(err);
-						} else {
-							callback("Successfully Updated Username");
+		pool.query(
+			"select exists (select 1 from users where user_id='$1')",
+			[req.body.new_user_id],
+			(err, row) => {
+				if (err) throw err;
+				if (row && row.length) {
+					console.log("duplicate user_id");
+					callback("User ID already in use!");
+				} else {
+					pool.query(
+						"update users set user_id='$1' where user_id='$2'",
+						[req.new_user_id, req.user_id],
+						(err, res) => {
+							if (err) throw err;
+							console.log(result);
+							callback(`User ID updated successfully`);
 						}
-					}
-				);
+					);
+				}
 			}
-		});
+		);
 	}
 };
 
