@@ -75,7 +75,7 @@ function FuncGroup(props) {
     <Group
       name={funName}
       key={props.index}
-      x={props.x*1.2+15}
+      x={props.x*1.15+15}
       y={props.y}
       draggable
       shadowBlur={5}
@@ -123,44 +123,44 @@ function FuncGroup(props) {
       }}
     >
       <Circle
-        y={35}
-        x={65}
+        x={global.functionWidth}
+        y={global.functionWidth/2}
         opacity={props.tabs.functionsOpen? 
           funName==="rgb" ? 0:1
           : 0
         }
-        Radius={7}
+        Radius={global.valueWidth/10}
         fill={"#B3B3B3"}
       />
       <Group>
         <Circle
-          y={15}
           x={0}
+          y={global.functionWidth/5}
           opacity={props.tabs.functionsOpen? 1:0}
-          Radius={7}
+          Radius={global.valueWidth/12}
           fill={ funName === "rgb"? "red" : "#B3B3B3"}
         />
         <Circle
-          y={35}
           x={0}
+          y={global.functionWidth*2/5}
           opacity={
             props.tabs.functionsOpen? 
               funName==="square" ||
               funName==="negate" ||
               funName==="sine" ||
               funName==="cosine" ||
-              funName==="abs" ||
+              funName==="absolute" ||
               funName==="sign"
               ?
                 0 : 1
               : 0
           }
-          Radius={7}
+          Radius={global.valueWidth/12}
           fill={ funName === "rgb"? "green" : "#B3B3B3"}
         />
         <Circle
-          y={55}
           x={0}
+          y={global.functionWidth*3/5}
           opacity={
             props.tabs.functionsOpen? 
               funName==="mistif" ||
@@ -169,7 +169,7 @@ function FuncGroup(props) {
                 1 : 0
               : 0
           }
-          Radius={7}
+          Radius={global.valueWidth/12}
           fill={ funName === "rgb"? "blue" : "#B3B3B3"}
         />
       </Group>

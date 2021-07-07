@@ -225,8 +225,8 @@ export default function FunNode(props) {
             u.to({
               duration: 0.5,
               easing: Konva.Easings.ElasticEaseOut,
-              scaleX: 1.07,
-              scaleY: 1.07,
+              scaleX: 1.1,
+              scaleY: 1.1,
             });
             return 0;
           });
@@ -432,8 +432,8 @@ export default function FunNode(props) {
             
           ))}
           <Circle
-            x={75}
-            y={35}
+            x={functionWidth*1.1}
+            y={functionWidth/2}
             radius={8}
             fill={"#B3B3B3"}
             onDblClick={(e) => {

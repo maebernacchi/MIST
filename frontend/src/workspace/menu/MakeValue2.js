@@ -122,10 +122,10 @@ function ValGroup(props) {
       }}
     >
       <Circle
-        y={35}
-        x={63}
+        y={global.valueWidth/2}
+        x={global.valueWidth*.95}
         opacity={props.tabs.valuesOpen? 1:0}
-        Radius={7}
+        Radius={global.valueWidth/10}
         fill={"#B3B3B3"}
       />
       <Spring
