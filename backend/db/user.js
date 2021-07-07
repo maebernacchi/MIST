@@ -138,23 +138,18 @@ module.exports.changeUserId = (req, callback) => {
  * @param {*} callback
  * @returns a message if the name was successfully updated or an error occurred
  */
-module.exports.changeName = (req, callback) => {
-	User.updateOne(
-		{ _id: req.user._id },
-		{
-			$set: {
-				forename: sanitize(req.body.newFirstName),
-				surname: sanitize(req.body.newLastName),
-			},
-		},
-		{ new: true },
-		(err, doc) => {
-			if (err) {
-				callback(err);
-			} else {
-				callback("Successfully Updated Name");
-			}
-		}
+ module.exports.changeName = (req, callback) => {
+	let user = req.body;
+	const user_exists = pool.query(
+		"select exists (select 1 from users where user_id='$1')",
+		[user.user_id]
+	);
+	if(!user_exists){
+		callback("User does not exist");
+	}
+	pool.query(
+		"update users set fullname = $1 where user_id = $2",
+		[user.newBio, user.user_id]
 	);
 };
 
@@ -165,22 +160,18 @@ module.exports.changeName = (req, callback) => {
  * @param {*} callback
  * @returns a message if the bio was successfully updated or an error occurred
  */
-module.exports.changeBio = (req, callback) => {
-	User.updateOne(
-		{ _id: req.user._id },
-		{
-			$set: {
-				about: sanitize(req.body.newBio),
-			},
-		},
-		{ new: true },
-		(err, doc) => {
-			if (err) {
-				callback(err);
-			} else {
-				callback("Successfully Updated Bio");
-			}
-		}
+module.exports.changeAbout = (req, callback) => {
+	let user = req.body;
+	const user_exists = pool.query(
+		"select exists (select 1 from users where user_id='$1')",
+		[user.user_id]
+	);
+	if(!user_exists){
+		callback("User does not exist");
+	}
+	pool.query(
+		"update users set about = $1 where user_id = $2",
+		[user.newBio, user.user_id]
 	);
 };
 
@@ -192,31 +183,29 @@ module.exports.changeBio = (req, callback) => {
  * Returns a message if the profile picture was succesfully updated or an error occured
  */
 module.exports.changeProfilePic = (req, callback) => {
-	User.updateOne(
-		{ _id: req.user._id },
-		{
-			$set: {
-				profilepic: sanitize(req.body.newProfilePic),
-			},
-		},
-		{ new: true },
-		(err, doc) => {
-			if (err) {
-				callback(err);
-			} else {
-				callback("Successfully Updated Profile Picture");
-			}
-		}
+	let user = req.body;
+	const user_exists = pool.query(
+		"select exists (select 1 from users where user_id='$1')",
+		[user.user_id]
+	);
+	if(!user_exists){
+		callback("User does not exist");
+	}
+	pool.query(
+		"update users set profile_pic = $1 where user_id = $2",
+		[user.newProfilePic, user.user_id]
 	);
 };
 
+// UPDATE: since username is now unique, userId has merged into it and this method is now no longer usable
 // given a userId, returns the username
+/** 
 module.exports.getUsername = (userId, callback) => {
 	User.findById(userId).exec((err, user) => {
 		if (err) callback(null, err);
 		else callback(user.username, null);
 	});
-};
+};*/
 
 /**
  * Deletes the user's account
@@ -225,16 +214,17 @@ module.exports.getUsername = (userId, callback) => {
  */
 
 module.exports.deleteAccount = async (req, callback) => {
+	let user = req.body;
 	const is_active_user = pool.query(
 		"select exists (select 1 from users where user_id='$1')",
-		[req.body.user_id]
+		[user.user_id]
 	);
 	if (!is_active_user) {
 		callback("User does not exist");
 	}
 	const dbPassword = pool.query(
 		"select password from users where user_id='$1'",
-		[req.body.user_id]
+		[user.user_id]
 	);
 
 	bcrypt.compare(req.body.currentPassword, dbPassword, (err, result) => {
@@ -244,7 +234,10 @@ module.exports.deleteAccount = async (req, callback) => {
 		if (!result) {
 			callback("Old Password Does Not Match");
 		} else {
-			pool.query("delete from users where user_id='$1'", [req.body.user_id]);
+			pool.query(
+				"delete from users where user_id='$1'", 
+				[user.user_id]
+			);
 		}
 	});
 };
@@ -307,29 +300,32 @@ module.exports.createUser = async (req, callback) => {
 };
 
 // given a username, returns the userId
-module.exports.getUserIdByUsername = (username, callback) => {
+// UPDATE: since username is now unique, userId has merged into it and this method is now no longer usable
+/**module.exports.getUserIdByUsername = (username, callback) => {
+	const username_exists = pool.query("select exists (select 1 from users where")
+	
 	User.findOne({ username: username }, (err, user) => {
 		if (err) return callback(err, null);
 		else return callback(null, user._id);
 	});
-};
+};**/
 
 // Returns all images and albums for the user's profile
-module.exports.getCompletePersonalProfile = async (userid) => {
-	userid = sanitize(userid);
-	return User.findById(userid)
-		.populate({
-			path: "images",
-			match: { active: true },
-		})
-		.populate({
-			path: "albums",
-			match: { active: true },
-			populate: { path: "images", match: { active: true } },
-		})
-		.select("-password")
-		.exec();
-	//     .select('images albums')
+module.exports.getCompletePersonalProfile = async (req, callback) => {
+	let user = req.body;
+	const is_active_user = pool.query(
+		"select exists (select 1 from users where user_id='$1')",
+		[user.user_id]
+	);
+	if (!is_active_user) {
+		callback("User does not exist");
+	}
+	pool.query(
+		"select code, created_at, likes, comments from posts \
+		inner join users on posts.user_id = users.user_id \
+		where user_id = $1",
+		[user.user_id]
+	);
 };
 
 // Returns all images and albums for viewing another user's profile
