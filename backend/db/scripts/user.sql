@@ -1,20 +1,23 @@
-create table user(
-    user_id  primary varchar(255) not null unique key,
+create table users(
+    user_id varchar(255) not null unique primary key,
     email varchar(255) not null unique,
     password varchar(255) not null, 
     fullname varchar(255),
-    verified boolean default 0,
-    need_tutorial boolean default 1,
-    admin boolean default 0,
+    about varchar(255),
+    verified boolean default false,
+    need_tutorial boolean default true,
+    admin boolean default false,
     profile_pic varchar(255),
 
     created_at timestamptz not null default now(),
-    updated_at timestamptz not null default now(),
+    updated_at timestamptz not null default now()
 
 );
 -- work on blocked user later
+-- work on liked image
+-- work on commented image
 
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON user
+BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
