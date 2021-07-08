@@ -96,10 +96,10 @@ function ValNode(props) {
     return (
       <Image
         image={image}
-        x={nodeDimensions.functionTrashX - valueWidth * 2/3}
+        x={nodeDimensions.functionTrashX-50}
         y={nodeDimensions.functionTrashY}
-        width={valueWidth/3}
-        height={valueWidth/3}
+        width={25}
+        height={25}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
         visible={hovered || !props.draggable}
@@ -189,7 +189,7 @@ function ValNode(props) {
           e.currentTarget.y()
         );
         // Updates the x & y coordinates only when the custom node is being dragged
-        if(rep === '#'){
+        if(rep == '#'){
           props.updateNodePosition(
             index,
             e.currentTarget.x(),
@@ -252,8 +252,8 @@ function ValNode(props) {
               id="form#"
               style={{
                 position: "absolute",
-                left: props.x + valueWidth * 1/3,
-                top: props.y + valueWidth * 4/3,
+                left: props.x + 25,
+                top: props.y + 90,
               }}
               onSubmit={(e) => {
                 e.preventDefault();
@@ -335,7 +335,7 @@ function ValNode(props) {
       <Circle
         x={valueWidth}
         y={valueWidth/2}
-        radius={valueWidth/8}
+        radius={8}
         fill={"#B3B3B3"}
         onDblClick={(e) => {
           // Generates the temporary line when double clicked
