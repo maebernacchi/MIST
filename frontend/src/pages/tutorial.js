@@ -145,8 +145,49 @@ import constantDemo from "./../TutorialImages/constNodeInput.mp4";
 import timeNodeDemo from "./../TutorialImages/timeNodeInput.mp4";
 import mouseNodeDemo from "./../TutorialImages/axisNodeInput.mp4";
 
+const rgbVenn = (
+        "rgb(neg("
+          + "sign("
+          + "sum("
+              + "square(sum(x, neg(mult(0.6, cos(0.66666)))))"
+              + "square(sum(y, neg(mult(0.3, sin(0.66666)))))"
+              + "neg(square(0.6)))))," 
+          + "neg("
+          + "sign("
+          + "sum("
+              + "square(sum(x, neg(mult(0.6, cos(-0.5)))))"
+              + "square(sum(y, neg(mult(0.3, sin(-0.5)))))"
+              + "neg(square(0.6))))),"    
+          + "neg("
+          + "sign("
+          + "sum("
+              + "square(sum(x, neg(mult(0.6, cos(0.33333)))))"
+              + "square(sum(y, neg(mult(0.3, sin(0.33333)))))"
+              + "neg(square(0.6))))))"
+              );
 
-const bodyTextSize = "110%";
+const rgbVennSoft = (
+  "rgb(neg("
+    // + "sign("
+    + "sum(-0.5,"
+        + "square(sum(x, neg(mult(0.6, cos(0.66666)))))"
+        + "square(sum(y, neg(mult(0.3, sin(0.66666)))))"
+        + "neg(square(0.6)))),"//)," 
+    + "neg("
+    // + "sign("
+    + "sum(-0.5,"
+        + "square(sum(x, neg(mult(0.6, cos(-0.5)))))"
+        + "square(sum(y, neg(mult(0.3, sin(-0.5)))))"
+        + "neg(square(0.6)))),"//),"    
+    + "neg("
+    // + "sign("
+    + "sum(-0.5,"
+        + "square(sum(x, neg(mult(0.6, cos(0.33333)))))"
+        + "square(sum(y, neg(mult(0.3, sin(0.33333)))))"
+        + "neg(square(0.6)))))"//)"
+        );
+
+const bodyTextSize = "125%";
 
 
 // workspace Demo, so we can include workspaces in our tutorials easily.
@@ -154,11 +195,11 @@ function WorkSpaceDemo() {
   return (
     <WorkSpace
       width={900}
-      height={580}
+      height={600}
       menuHeight={90}
       funBarHeight={60}
-      functionWidth={40}
-      valueWidth={40}
+      functionWidth={50}
+      valueWidth={55}
     />
   );
 }
@@ -306,8 +347,9 @@ function Tutorials() {
                         {/* Buttons for the text, video, final, and challenges sections */}
                         <Row style={{ marginLeft: "1em", paddingTop: "2vh" }}>
                           <SubsectionButton id={subsection.id} type="text" />
-                          <SubsectionButton id={subsection.id} type="video" />
-                          <SubsectionButton id={subsection.id} type="final" />
+                          {/* <SubsectionButton id={subsection.id} type="video" /> */}
+                          {/* <SubsectionButton id={subsection.id} type="final" /> */}
+                          <SubsectionButton id={subsection.id} type="checkpoint" />
                           <SubsectionButton id={subsection.id} type="challenges" />
                         </Row>
                       </Col>
@@ -646,8 +688,8 @@ function SectionMenu(props) {
     >
       <Col>
         <SubsectionDropdownItem id={props.id} type="text" />
-        <SubsectionDropdownItem id={props.id} type="video" />
-        <SubsectionDropdownItem id={props.id} type="final" />
+        <SubsectionDropdownItem id={props.id} type="checkpoint" />
+        {/* <SubsectionDropdownItem id={props.id} type="final" /> */}
         <SubsectionDropdownItem id={props.id} type="challenges" />
       </Col>
     </DropdownButton>
@@ -738,16 +780,14 @@ const sections = [
               <br/>
               To begin, lets learn to make greyscale images! In greyscale,
                1 corresponds to black, and –1 is white. Any number in between
-                renders a shade of gray. 
-              <br />
-              <br />
-              And anything between -1 and 1 is grey.
+                renders a shade of gray.
               <br />
               <br />
               If we look at the image made with a function of x, the rendered
               shades depend on the value of the x coordinate. This means that
               as x increases, the image gets darker.
-
+              <br />
+              <br />
               <MISTImage code="x" fluid resolution="500"></MISTImage>
               <br />
               <br />
@@ -906,81 +946,81 @@ const sections = [
         //+------------------+----------------------------------------------------------------------------------------------------------------------
         //| The Website      |
         //+------------------+
-        {
-          title: "The Website",
-          ref: "#website",
-          id: "website",
-          keywords: ["graph", "grayscale", "introduction"],
-          image: <MISTImage code="x" resolution="250" />,
-          isAnimated: false,
-          //Text
-          text: (
-            <Container>
-              <br />
-              <br />
-              On this website, you can create images or 
-              explore images other people have made.
-              <br />
-              <br />
-              To open the visual workspace, click the "create" 
-              tab on the top left of the menu bar.
-              <br />
-              <br />
+        // {
+        //   title: "The Website",
+        //   ref: "#website",
+        //   id: "website",
+        //   keywords: ["graph", "grayscale", "introduction"],
+        //   image: <MISTImage code="x" resolution="250" />,
+        //   isAnimated: false,
+        //   //Text
+        //   text: (
+        //     <Container>
+        //       <br />
+        //       <br />
+        //       On this website, you can create images or 
+        //       explore images other people have made.
+        //       <br />
+        //       <br />
+        //       To open the visual workspace, click the "create" 
+        //       tab on the top left of the menu bar.
+        //       <br />
+        //       <br />
               
-              <WorkSpaceDemo/> 
-              On the create page, you can make your own images using the
-              workspace on it.
-              <br />
-              Next is the challenges page, which can also be found by clicking
-              the button beside "create." Here, you can click on a challenge,
-              which is an image that you try to recreate!
-              <br />
-              After this, we're going to go to the tutorial page, which is the
-              page that we're currently on if you're reading this!
-              <br />
-              Next up is the gallery. With the gallery, you can see what other
-              people have created. Here, you can click on images to learn more
-              about it. You can see who created the image, how many favorites it
-              has, you can save or share, or view or add a comment!
-              <br />
-              After this, we can look at the About MIST and development page.
-              This explain what MIST is about!
-              <br />
-              We can also go to the community guidelines page. This explains the
-              guidelines for using MIST and being a respectful of other peoples
-              <br />
-              Next we can go to the FAQ, which is still under the "About" tab.
-              <br />
-              Use the "Sign In/Up" tab to login or sign up for MIST!
-              <br />
-              You can use the search bar in the top right corner to look up
-              users, images, and albums!
-            </Container>
-          ),
+        //       <WorkSpaceDemo/> 
+        //       On the create page, you can make your own images using the
+        //       workspace on it.
+        //       <br />
+        //       Next is the challenges page, which can also be found by clicking
+        //       the button beside "create." Here, you can click on a challenge,
+        //       which is an image that you try to recreate!
+        //       <br />
+        //       After this, we're going to go to the tutorial page, which is the
+        //       page that we're currently on if you're reading this!
+        //       <br />
+        //       Next up is the gallery. With the gallery, you can see what other
+        //       people have created. Here, you can click on images to learn more
+        //       about it. You can see who created the image, how many favorites it
+        //       has, you can save or share, or view or add a comment!
+        //       <br />
+        //       After this, we can look at the About MIST and development page.
+        //       This explain what MIST is about!
+        //       <br />
+        //       We can also go to the community guidelines page. This explains the
+        //       guidelines for using MIST and being a respectful of other peoples
+        //       <br />
+        //       Next we can go to the FAQ, which is still under the "About" tab.
+        //       <br />
+        //       Use the "Sign In/Up" tab to login or sign up for MIST!
+        //       <br />
+        //       You can use the search bar in the top right corner to look up
+        //       users, images, and albums!
+        //     </Container>
+        //   ),
 
-          //Video
-          video: <Container> This is a video </Container>,
+        //   //Video
+        //   video: <Container> This is a video </Container>,
 
-          //Final
-          final: <Container> This is the final image </Container>,
+        //   //Final
+        //   final: <Container> This is the final image </Container>,
 
-          isChallenge: false,
-          //Challenges
-          challenges: [
-            //   {
-            //   question:
-            //     <Container> This is a Challenge 1 </Container>,
-            //   hint:
-            //     <Container> This is a hint 1 </Container>
-            // },
-            // {
-            //   question:
-            //     <Container> There's no challenge for this tutorial! </Container>,
-            //   hint:
-            //     <Container> This is a hint 2</Container>
-            // }
-          ],
-        },
+        //   isChallenge: false,
+        //   //Challenges
+        //   challenges: [
+        //     //   {
+        //     //   question:
+        //     //     <Container> This is a Challenge 1 </Container>,
+        //     //   hint:
+        //     //     <Container> This is a hint 1 </Container>
+        //     // },
+        //     // {
+        //     //   question:
+        //     //     <Container> There's no challenge for this tutorial! </Container>,
+        //     //   hint:
+        //     //     <Container> This is a hint 2</Container>
+        //     // }
+        //   ],
+        // },
 
         //+------------------+----------------------------------------------------------------------------------------------------------------------
         //| The Expert UI    |
@@ -1366,7 +1406,7 @@ const sections = [
             <br />
             <br />
 
-            <WorkSpaceDemo/>
+            {/* <WorkSpaceDemo/> */}
           </Container>),
 
         //Video
@@ -1390,7 +1430,7 @@ const sections = [
             hint: (
               <Container>
                 {" "}
-                What happens when some variables get multipled?{" "}
+                What happens when some values get multipled?{" "}
               </Container>
             ),
           },
@@ -1467,12 +1507,12 @@ const sections = [
             <br />
             <Row>
               <Col>
-                1. Bring a <b>x</b>, <b>y</b>,<b>m.x</b> and <b>m.y</b> variable
+                1. Bring <b>x</b>, <b>y</b>, and <b>m.x</b> blocks
               into the workspace.
               </Col>
               
               <Col>
-                2. Then add a <b>wsum</b> in and connect all 4 variables to it. You
+                2. Then add a <b>mult</b> block in and connect all 3 value blocks to it. You
               should have a simple animation that moves when you hover over it!
               </Col>
 
@@ -1496,14 +1536,15 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="mult(y,sum(x,m.x))" resolution="250" />
+                <MISTImage code="wsum(mult(x,m.x,y),m.y)" resolution="250" />
+                {/* <MISTImage code="mult(y,sum(x,m.x))" resolution="250" /> */}
               </Container>
             ),
-
+            
             hint: (
               <Container>
                 {" "}
-                What happens when you change the inputs to <b>mult</b>?
+                What happens when you feed the checkpoint function into another function?
               </Container>
             ),
           },
@@ -1525,6 +1566,8 @@ const sections = [
                 What happens when you add <b>sin</b> and <b>cos</b>?{" "}
                 <br/>
                 Try using <b>wsum</b> instead of <b>sum</b>
+                <br/>
+                What direction of mouse movements change the image?
               </Container>
             ),
           },
@@ -1554,7 +1597,7 @@ const sections = [
             <br />
             <br />
 
-            <h4><b>sum</b> and <b>wsum</b></h4>
+            <h5><b>sum</b> and <b>wsum</b></h5>
             <br/>
             <Row>
               <Col>
@@ -1585,7 +1628,7 @@ const sections = [
             
             <br />
             <br />
-            <h4><b>mult</b> and <b>avg</b></h4>
+            <h5><b>mult</b> and <b>avg</b></h5>
             <br />
             <Row>
               <Col>
@@ -1640,10 +1683,10 @@ const sections = [
             <br/>
             <Row>
               <Col>
-                1. Adding an <b>x</b> and <b>y</b> variable to the workspace.
+                1. Add an <b>x</b> and <b>y</b> block to the workspace.
               </Col>
               <Col>
-                2. Then add a <b>sum</b> block and a <b>mult</b> block in.
+                2. Add a <b>sum</b> block and a <b>mult</b> block in.
               </Col>
             </Row>
             <br />
@@ -1663,10 +1706,10 @@ const sections = [
         ),
 
         //Video
-        video: <Container> This is a video </Container>,
+        // video: <Container> This is a video </Container>,
 
         //Final
-        final: <Container> This is a final image </Container>,
+        // final: <Container> This is a final image </Container>,
         isChallenge: true,
         //Challenges
         challenges: [
@@ -1680,7 +1723,7 @@ const sections = [
               </Container>
             ),
             hint: (
-              <Container> What variable changes thing horizontally? </Container>
+              <Container> What value changes the image horizontally? </Container>
             ),
           },
           {
@@ -1714,55 +1757,136 @@ const sections = [
         //Text
         text: (
           <Container>
-            Fixed input functions mean that the number of inputs is unchanging.
-            This includes blocks for <b>sqr</b>, <b>neg</b>, <b>sin</b>,{" "}
-            <b>cos</b>, <b>abs</b>, <b>sign</b>, <b>if</b>.
+            Fixed-input functions only accept a certain number of inputs; no more, no less.
+            <br/><br/>
+            These include: <br/>
+            {/* <b>sqr</b>, <b>neg</b>, <b>sin</b>,{" "}
+            <b>cos</b>, <b>abs</b>, <b>sign</b>, <b>if</b>. */}
             <br />
-            <b>Sqr</b> stands for squaring a number or variable. This means that
-            multiplying a variable like x by itself twice is the same as
-            squaring it once.
+            <Row>
+              <Col>
+                <b>Sqr</b> multiplies a value by itself.
+              </Col>
+              <Col>
+                <b>Neg</b> multiplies a value by <b>-1</b>
+              </Col>
+              <Col>
+                <b>Sin</b> is the trigonometric function sine.
+              </Col>
+            </Row>
+            <br/>
+            <Row>
+              <Col>
+                <MISTImage code="square(x)" resolution="275"/>
+              </Col>
+              <Col>
+                <MISTImage code="neg(x)" resolution="275"/>
+              </Col>
+              <Col>
+                <MISTImage code="sin(x)" resolution="275"/>
+              </Col>
+            </Row>
+            <br/>
+            <br/>
+            <Row >
+              <Col>
+              <b>Sign</b> is used to round values.
+              </Col>
+              <Col>
+                <b>Abs</b> is absolute value. This turns anything that is negative
+              into its positive counterpart
+              </Col>
+              <Col>
+                <b>Cos</b> is the trigonometric function cosine.
+              </Col>
+            </Row>
+            <br/>
+            <br/>
+            <Row>
+              <Col>
+                <MISTImage code="sign(x)" resolution="275"/>
+              </Col>
+              <Col>
+                <MISTImage code="abs(x)" resolution="275"/>
+              </Col>
+              <Col>
+                <MISTImage code="cos(x)" resolution="275"/>                
+              </Col>
+            </Row>
             <br />
-            <b>Neg</b> means negative, this changes the input from positive to
-            negative, or if the input was already negative, it would change it
-            to a positive output.
+            {/* <b>Neg</b> multiplies a value by <b>-1</b> */}
             <br />
-            <b>Sin</b> and <b>cos</b> stand for sine and cosine, which are
+            {/* <b>Sin</b> and <b>cos</b> stand for sine and cosine, which are
             trigonometric functions. To see a difference, drag an <b>x</b> and{" "}
             <b>y</b> variable into the workspace. Next, add a <b>sin</b> and{" "}
             <b>cos</b> block to connect to each. Here, you can see how they
-            differ.
+            differ. */}
             <br />
-            <b>Abs</b> is absolute value. This turns anything that is negative
+            {/* <b>Abs</b> is absolute value. This turns anything that is negative
             or positive into its positive counterpart. For example, the absolute
             value of -1 is one, whereas the absolute value of 1 is also 1.
-            <br />
-            <b>Sign</b> is used to round values. Every value below 0 gets
+            <br /> */}
+            {/* <b>Sign</b> is used to round values. Every value below 0 gets
             rounded to -1 and every value equal to or greater than 0 gets
             rounded to one. This also means that there will be no gray areas in
-            the image you make!
+            the image you make! */}
             <br />
-            <b>If</b> blocks work by taking 3 inputs. To see for yourself:
+
+            <b>If</b> blocks are a little complicated. The first input of an <b>If</b> block is the <b>test</b>.
+            The second input, <b>pos</b> is the output when the test is positive, and the third input, <b>neg</b>, is the output
+            when the test is negative.
+            <br/>
+            <br/>
+            We'll walk you through an example in the Checkpoint section.
+            <br/>
+{/* 
             <br />
-            1. Drag a <b>x</b> and <b>y</b> variable into the workspace along
-            with an <b>if</b> block.
+            
             <br />
-            2. Connect the <b>x</b> to the first two nodes of the <b>if</b>{" "}
-            block.
+            
             <br />
             3. Then, connect the <b>y</b> variable to the third node of the{" "}
             <b>if</b> block. In this example , the test case, which is the first
             input, is <b>x</b>. So while the input is less than 0, the returned
             value is negative, which means that it calls <b>y</b>. When it
             reaches 0 or greater, it returns positive, which in this case is x.
-            This is why the image looks "split" in this case.
+            This is why the image looks "split" in this case. */}
+          </Container>
+        ),
+        isCheckpoint: true,
+
+        checkpoint: (
+          <Container fluid>
+            <Row>
+              <Col>
+                1. Drag <b>x</b> and <b>y</b> blocks into the workspace along
+              with an <b>if</b> block.
+              </Col>
+              <Col>
+                2. Connect the <b>x</b> to the first two 
+              nodes of the <b>if</b> block.
+              </Col>
+              <Col>
+                3. Connect the <b>y</b> block to the third node of the{" "}
+              <b>if</b> block.
+              </Col>
+              {/* <Col>
+              4. Experiment with connecting different values to the nodes. If you get comfortable,
+              try some of the more complex functions.
+              </Col> */}
+            </Row>
+            <br/>
+            Experiment with connecting different values to the nodes. If you get comfortable,
+            try some of the more complex functions.
+            <br/>
           </Container>
         ),
 
         //Video
-        video: <Container> This is a video </Container>,
+        // video: <Container> This is a video </Container>,
 
         //Final
-        final: <Container> This is the final image </Container>,
+        // final: <Container> This is the final image </Container>,
         isChallenge: true,
         //Challenges
         challenges: [
@@ -1779,7 +1903,7 @@ const sections = [
             hint: (
               <Container>
                 {" "}
-                How do you change images from vertical to horizonally?{" "}
+                How do you change images from vertical to horizonal?{" "}
               </Container>
             ),
           },
@@ -1814,40 +1938,155 @@ const sections = [
         //Text
         text: (
           <Container>
-            The <b>RGB</b> function adds color! <b>RGB</b> is defined by three
+            The <b>color</b> function block creates color using the RGB system!
+            {" "}<b>RGB</b> is defined by three
             components: red, green, and blue. These components are the primary
-            colors in a pixel on your screen that can be mixed by varying
-            degrees so that other colors can be made. It helps to think about
-            RGB in terms of mixing light rather than mixing paint colors in that
-            the more you add, the closer you get to white light.
+            colors in a pixel on your screen. It helps to think about
+            RGB in terms of mixing <em>light</em> rather than mixing paint colors: the
+            {" "}more you add, the closer you get to white light.
             <br />
-            To the right is an example of solid red, represented by a 1 in the
-            red component's position and -1 in the green and blue positions.
-            Meaning that the amount of red in the light mixture is at its
-            highest and the amounts of green and blue are at their lowest.
             <br />
-            Together, these all change the color. If the <b>RGB</b> function is
-            given 1, 1 and 1, it will interpret these numbers as pure white
+            <Row>
+              <Col>
+                {/* {rgbVenn} */}
+                <MISTImage code={rgbVenn} resolution="300"/>
+              </Col>
+              <Col>
+                {/* {rgbVennSoft} */}
+                <MISTImage code={rgbVennSoft} resolution="300"/>
+              </Col>
+            </Row>
+            {/* <MISTImage code={rgbVenn} resolution="250"/>
+            <MISTImage code={rgbVennSoft} resolution="250"/> */}
+
+            <br />
+            <br />
+            <Row>
+              <Col>
+                {/* To the right is a */}
+                An example of solid red,
+                 {/* represented by a 1 in the
+              red component's position and -1 in the green and blue positions.
+              Meaning that the amount of red in the light mixture is at its
+              highest and the amounts of green and blue are at their lowest. */}
+              {/* </Col>
+              <Col> */}
+              <br/>
+                <MISTImage code="rgb(1,-1,-1)" resolution="250"/>
+              </Col>
+            {/* </Row> */}
+            {/* <Row> */}
+              <Col>
+                An example of solid green
+              {/* </Col>
+              <Col> */}
+              <br/>
+                <MISTImage code="rgb(-1,1,-1)" resolution="250"/>
+              </Col>
+            {/* </Row> */}
+            {/* <Row> */}
+              <Col>
+                An example of solid blue
+              {/* </Col>
+              <Col> */}
+              <br/>
+                <MISTImage code="rgb(-1,-1,1)" resolution="250"/>
+              </Col>
+            </Row>
+            
+            <br />
+            <br />
+
+            {/* In the checkpoint space below, try making each color, or even combinations of each colors. */}
+            
+            <br />
+            <br />
+            Different amounts of each color component make a unique color.
+            {/* If the <b>color</b> function is
+            given 1, 1 and 1, it will interpret these numbers as solid white
             since in our [-1,1] world these are our highest values. Given -1,-1
-            and -1, <b>RGB</b> would show pitch black. Within the limits of our
+            and -1, <b>RGB</b> would show pitch black. */}
+            <Row>
+              <Col>
+                Here's a sample image where Red = x, Green = y, and Blue = t.s.
+                <br/>
+                <br/>
+                Hover over the image to animate.
+                <br/>
+                <br/>
+
+              </Col>
+              <Col>
+                <MISTImage code="rgb(x,y,t.s)" resolution="300"/>
+              </Col>
+            </Row>
+            <br />
+            <br />
+            {/* <Row>
+              <Col>
+                For example, here is white, where red = 1, green = 1, and blue = 1
+              </Col>
+              <Col>
+                <MISTImage code="rgb(1,1,1)" resolution="250"/>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                For example, here is black, where red = -1, green = 1, and blue = 1
+              </Col>
+              <Col>
+                <MISTImage code="rgb(1,1,1)" resolution="250"/>
+              </Col>
+            </Row> */}
+            
+             {/* Within the limits of our
             world, adding more of any of the three components will change the
-            'amount' of that color in the mixture.
+            'amount' of that color in the mixture. */}
+            
+          </Container>
+        ),
+
+        isCheckpoint: true,
+
+        checkpoint: (
+          <Container>
             <br />
             To make your own colorful image, try this!
             <br />
-            1. Start by adding an <b>x</b>, <b>x</b>, and <b>y</b> to your
-            workspace.
             <br />
-            2. Drag in a <b>mult</b> block and connect y to it twice.
+            <Row>
+              <Col>
+                1. Start by adding an <b>x</b> block, a <b>y</b> block, and a <b>color</b> block to your
+              workspace.
+              </Col>
+              <Col>
+                2. Drag in a <b>mult</b> block and connect y to it twice.
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+                3. Add a <b>sin</b> and connect the <b>x</b> to it.
+              </Col>
+              <Col>
+                4. Connect the <b>mult</b>{" "}
+              block to the red, the x to the green, and sign to the blue.
+              </Col>
+            </Row>
+{/*             
+            <br />
+            <br />
+            
             <br />
             3. Add a <b>sin</b> and connect the <b>x</b> to it.
             <br />
             4. Finally, bring in a <b>RGB</b> block. Connect the <b>mult</b>{" "}
             block to the red, the x to the green, and sign to the blue. Check
-            out your colorful image!
+            out your colorful image! */}
           </Container>
-        ),
 
+
+        ),
         //Video
         video: <Container> This is a video </Container>,
 
@@ -1868,7 +2107,14 @@ const sections = [
             hint: (
               <Container>
                 {" "}
-                Try to think of what variables make the RGB values change!{" "}
+                What primary colors make solid blue?
+                <br/>
+                <br/>
+                What primary colors make yellow in the Red-Green-Blue color system?
+                <br/>
+                <br/>
+                Where are all the colors brightest and darkest?{" "}
+                
               </Container>
             ),
           },
