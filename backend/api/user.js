@@ -1,7 +1,7 @@
 const { handleError } = require("./utilities.js");
 var database = require("../db/database.js");
 const crypto = require("crypto");
-const { createUser } = require("../db/user.js");
+const userDB = require("../db/user.js");
 const nodemailer = require("nodemailer");
 // +------------------+--------------------------------------------------
 // | Users            |
@@ -16,40 +16,15 @@ const userRoute = (req, res, next) => {
 	}
 	if (!action) {
 		handleError(res, "No action specified.");
-		next();
 	}
 	if (userHandlers[action]) {
 		userHandlers[action](req, res);
-		next();
 	} else {
 		handleError(res, `Invalid Action: ${action}`);
-		next();
 	}
 };
 
 var userHandlers = {};
-
-/**
- * Verifies that the email address is correct
- * TODO put this into database
- * @param {*} info
- * @param {*} req
- * @param {*} res
- */
-userHandlers.verifyEmail = function (req, res) {
-	database.User.findOneAndUpdate(
-		{ token: req.body.token },
-		{ $set: { verified: true } },
-		{ new: true },
-		(err, doc) => {
-			if (err) {
-				console.log(err);
-			} else {
-				console.log("Success");
-			}
-		}
-	);
-};
 
 /*
  *   Register user to the database
@@ -58,27 +33,23 @@ userHandlers.verifyEmail = function (req, res) {
 userHandlers.signUp = async function (req, res) {
 	// req.body.token = await crypto.randomBytes(32).toString("hex");
 	const token = crypto.randomBytes(32).toString("hex");
+	req.body.token = token;
 
-	let transporter = nodemailer.createTransport({
-		host: "smtp.ethereal.email",
-		port: 587,
+	const transporter = nodemailer.createTransport({
+		host: "smtp.mailtrap.io",
+		port: 2525,
 		auth: {
-			user: "lucie.breitenberg18@ethereal.email",
-			pass: "MYHZftyPQZhrAFBqPQ",
+			user: "1c313a50587f94",
+			pass: "cd4678221c841c",
 		},
-		// service: "Gmail",
-		// auth: {
-		// 	user: process.env.GMAILID, // generated ethereal user
-		// 	pass: process.env.GMAILPASS, // generated ethereal password
-		// },
 	});
 
-	const PUBLIC_IP = process.env.PUBLIC_IP || "http://localhost:3000";
+	const PUBLIC_IP = process.env.PUBLIC_IP || "http://localhost:8000";
 	let mail = {
-		from: "lucie.breitenberg18@ethereal.email",
+		from: "smtp.mailtrap.io",
 		// from: process.env.GMAILID,
 		to: req.body.email,
-		subject: "Email Verification",
+		subject: "MIST Email Verification",
 		text:
 			"Greetings from MIST!" +
 			"\n\n" +
@@ -87,12 +58,10 @@ userHandlers.signUp = async function (req, res) {
 			`${PUBLIC_IP}/emailVerification/${token}`,
 	};
 
-	createUser(req, (message) => {
-		console.log(message);
+	userDB.createUser(req, (message) => {
 		if (message === "User Created") {
 			transporter.sendMail(mail, (err, data) => {
 				if (err) {
-					console.error(err);
 					res.json(err);
 					return;
 				} else {
@@ -115,7 +84,7 @@ userHandlers.signUp = async function (req, res) {
 // TODO move to database
 userHandlers.signIn = async function (req, res, next) {
 	let emailVerify = false;
-	await database.User.findOne({ username: req.body.username }, (err, user) => {
+	await userDB.User.findOne({ username: req.body.username }, (err, user) => {
 		if (err) {
 			console.log(err);
 		} else if (user) {
@@ -167,7 +136,7 @@ userHandlers.getUser = function (req, res) {
 	else {
 		// we have to search the database for the full user
 		// because passport only stores the username of the person logged in
-		database.User.findOne({ username: req.user.username }, (err, user) => {
+		userDB.User.findOne({ username: req.user.username }, (err, user) => {
 			if (err) fail(res, "no user found");
 			else res.json(user);
 		});
@@ -182,7 +151,7 @@ userHandlers.getAuthenticatedCompletePersonalProfile = async function (
 	try {
 		if (!req.isAuthenticated()) throw "Unauthenticated Guest";
 		const userid = req.user._id;
-		const complete_user = await database.getCompletePersonalProfile(userid);
+		const complete_user = await userDB.getCompletePersonalProfile(userid);
 		res.json({
 			user: complete_user,
 		});
@@ -196,7 +165,7 @@ userHandlers.getAuthenticatedCompleteUserProfile = async function (req, res) {
 	try {
 		if (!req.isAuthenticated()) throw "You need to login to view a profile!";
 		const userid = info.userid;
-		const complete_user = await database.getCompleteUserProfile(userid);
+		const complete_user = await userDB.getCompleteUserProfile(userid);
 		res.json({
 			user: complete_user,
 		});
@@ -211,12 +180,12 @@ userHandlers.getAuthenticatedCompleteUserProfile = async function (req, res) {
 userHandlers.deleteAuthorizationCheck = async function (req, res) {
 	try {
 		const { userId, model, objectId } = info;
-		const updateAuthorization = database.updateAuthorizationCheck(
+		const updateAuthorization = userDB.updateAuthorizationCheck(
 			userId,
 			model,
 			objectId
 		);
-		const adminOrModerator = database.isAdminOrModerator(userId);
+		const adminOrModerator = userDB.isAdminOrModerator(userId);
 		Promise.all([updateAuthorization, adminOrModerator]).then((values) => {
 			res.json({
 				success: true,
@@ -244,7 +213,7 @@ userHandlers.updateAuthorizationCheck = async function (req, res) {
 		try {
 			const { userId, model, objectId } = info;
 			const authorized = Boolean(
-				await database.updateAuthorizationCheck(userId, model, objectId)
+				await userDB.updateAuthorizationCheck(userId, model, objectId)
 			);
 			res.json({
 				success: true,
@@ -260,34 +229,30 @@ userHandlers.updateAuthorizationCheck = async function (req, res) {
 };
 
 userHandlers.changeEmail = function (req, res) {
-	database.changeEmail(req, (message) => res.json(message));
+	userDB.changeEmail(req, (message) => res.json(message));
 };
 
-userHandlers.changeUsername = function (req, res) {
-	database.changeUsername(req, (message) => res.json(message));
+userHandlers.changeUserId = function (req, res) {
+	userDB.changeUserId(req, (message) => res.json(message));
 };
 
 userHandlers.changePassword = function (req, res) {
-	database.changePassword(req, (message) => res.json(message));
+	userDB.changePassword(req, (message) => res.json(message));
 };
 
 userHandlers.deleteAccount = function (req, res) {
-	database.deleteAccount(req, (message) => {
+	userDB.deleteAccount(req, (message) => {
 		req.logout();
 		res.json(message);
 	});
 };
 
-userHandlers.changeName = function (req, res) {
-	database.changeName(req, (message) => res.json(message));
-};
-
 userHandlers.changeBio = function (req, res) {
-	database.changeBio(req, (message) => res.json(message));
+	userDB.changeBio(req, (message) => res.json(message));
 };
 
 userHandlers.changeProfilePic = function (req, res) {
-	database.changeProfilePic(req, (message) => res.json(message));
+	userDB.changeProfilePic(req, (message) => res.json(message));
 };
 
 // https://stackoverflow.com/questions/38820251/how-is-req-isauthenticated-in-passport-js-implemented

@@ -36,20 +36,12 @@ passwordSecurity = (pass) => {
 };
 
 // TODO make it applic`able to email
-const checkUserExists = (user_id) => {
-	pool.query(
+const checkUserExists = async (user_id) => {
+	const result = await pool.query(
 		"select exists (select 1 from users where user_id=$1)",
-		[user_id],
-		(err, result) => {
-			// database error
-			if (err) {
-				console.log(err);
-				callback(err);
-				return;
-			}
-			return result.rows.exists;
-		}
+		[user_id]
 	);
+	return result.rows[0].exists;
 };
 
 /**
@@ -61,7 +53,7 @@ const checkUserExists = (user_id) => {
 module.exports.createUser = async (req, callback) => {
 	let user = req.body;
 	// check userid duplicate
-	if (checkUserExists(user.user_id)) {
+	if (await checkUserExists(user.user_id)) {
 		callback("User ID Already taken");
 		return;
 	}
@@ -87,22 +79,42 @@ module.exports.createUser = async (req, callback) => {
 	}
 	const hashedPassword = await bcrypt.hash(req.body.password, 12);
 	pool.query(
-		"insert into users (user_id, email, password) \
-        values($1, $2, $3)",
-		[user.user_id, user.email, hashedPassword],
+		"insert into users (user_id, email, password, token) \
+        values($1, $2, $3, $4)",
+		[user.user_id, user.email, hashedPassword, user.token],
 		(err, res) => {
 			if (err) {
 				callback(err);
 				console.log(err);
 				return;
 			}
-			console.log(res);
 			callback("User Created");
 			return;
 		}
 	);
 };
 
+/**
+ *
+ * Verify the email by looking up the token.
+ *
+ * @param {*} req
+ * @param {*} callback
+ */
+module.exports.verifyEmail = (req, callback) => {
+	pool.query(
+		"update users set verified=true where token=$1",
+		[req.params.token],
+		(err, res) => {
+			if (err) {
+				console.log(err);
+				callback(err);
+			} else {
+				callback("Email Verified");
+			}
+		}
+	);
+};
 /**
  * Changes the password of the user
  *
@@ -111,14 +123,23 @@ module.exports.createUser = async (req, callback) => {
  */
 module.exports.changePassword = async (req, callback) => {
 	let dbPassword = "";
-	pool.query(
-		"select password from users where user_id='$1'",
-		[req.body.user_id],
-		(err, result) => {
-			if (err) throw err;
-			dbPassword = result;
-		}
+	// await pool.query(
+	// 	"select password from users where user_id=$1",
+	// 	[req.body.user_id],
+	// 	(err, result) => {
+	// 		if (err) {
+	// 			callback(err);
+	// 			return;
+	// 		}
+	// 		console.log(result.rows[0].password);
+	// 		dbPassword = result.rows[0].password;
+	// 	}
+	// );
+	const result = await pool.query(
+		"select password from users where user_id=$1",
+		[req.body.user_id]
 	);
+	dbPassword = result.rows[0].password;
 	bcrypt.compare(req.body.currentPassword, dbPassword, async (err, result) => {
 		if (err) {
 			callback(err);
@@ -132,11 +153,13 @@ module.exports.changePassword = async (req, callback) => {
 			}
 			let newPass = await bcrypt.hash(req.body.newPassword, 12);
 			pool.query(
-				"update users set password='$1' where user_id='$2'",
+				"update users set password=$1 where user_id=$2",
 				[newPass, req.body.user_id],
 				(err, result) => {
-					if (err) throw err;
-					console.log(result);
+					if (err) {
+						callback(err);
+						return;
+					}
 					callback(
 						`Successfully updated password of user: ${req.body.user_id}`
 					);
@@ -155,14 +178,12 @@ module.exports.changePassword = async (req, callback) => {
  * @returns a message if the email was successfully updated or an error occurred
  */
 module.exports.changeEmail = (req, callback) => {
-	// TODO figure out if it's req or req.body
 	let user = req.body;
 	pool.query(
-		"update users set email='$1' where user_id='$2'",
+		"update users set email=$1 where user_id=$2",
 		[user.email, user.user_id],
 		(err, res) => {
 			if (err) throw err;
-			console.log(res);
 			callback(`Successfully Updated Email for user ${user.user_id}`);
 		}
 	);
@@ -183,37 +204,18 @@ module.exports.changeUserId = (req, callback) => {
 			callback("User ID already in use!");
 		} else {
 			pool.query(
-				"update users set user_id='$1' where user_id='$2'",
-				[req.new_user_id, req.user_id],
+				"update users set user_id=$1 where user_id=$2",
+				[req.body.new_user_id, req.body.user_id],
 				(err, res) => {
-					if (err) throw err;
-					console.log(result);
-					callback(`User ID updated successfully`);
+					if (err) {
+						callback(err);
+					} else {
+						callback(`User ID updated successfully`);
+					}
 				}
 			);
 		}
 	}
-};
-
-/**
- * Changes the name of the user in the database
- *
- * @param {*} req
- * @param {*} callback
- * @returns a message if the name was successfully updated or an error occurred
- */
-module.exports.changeFullname = (req, callback) => {
-	let user = req.body;
-	pool.query("select exists (select 1 from users where user_id='$1')", [
-		user.user_id,
-	]);
-	if (!user_exists) {
-		callback("User does not exist");
-	}
-	pool.query("update users set fullname = $1 where user_id = $2", [
-		user.newBio,
-		user.user_id,
-	]);
 };
 
 /**
@@ -295,25 +297,32 @@ module.exports.deleteAccount = async (req, callback) => {
 	if (!checkUserExists(user.user_id)) {
 		callback("User does not exist");
 	}
-	pool.query(
-		"select password from users where user_id='$1'",
-		[user.user_id],
-		(err, res) => {
-			if (err) throw err;
-			dbPassword = res;
-			console.log(res);
-		}
+	// pool.query(
+	// 	"select password from users where user_id=$1",
+	// 	[user.user_id],
+	// 	(err, result) => {
+	// 		if (err) {
+	// 			callback(err);
+	// 			return;
+	// 		}
+	// 		dbPassword = result.rows[0].password;
+	// 	}
+	// );
+	const result = await pool.query(
+		"select password from users where user_id=$1",
+		[req.body.user_id]
 	);
+	dbPassword = result.rows[0].password;
 
-	bcrypt.compare(req.body.currentPassword, dbPassword, (err, result) => {
+	bcrypt.compare(req.body.password, dbPassword, (err, result) => {
 		if (err) {
 			console.log(err);
 		}
-		if (!result) {
-			callback("Old Password Does Not Match");
+		if (result === false) {
+			callback("Password incorrect.");
 		} else {
 			pool.query(
-				"delete from users where user_id='$1'",
+				"delete from users where user_id=$1",
 				[user.user_id],
 				(err, res) => {
 					if (err) throw err;
