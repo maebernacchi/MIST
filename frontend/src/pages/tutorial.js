@@ -2187,9 +2187,19 @@ const sections = [
          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> </Container>,
 
         //Final
-        final: <Container> This is the final image: <br />
+        final: (<Container> This is the final image: <br />
                       <img src={Circle3} alt="Circle Final" style={{height:"75%", width:"75%" }} />
-               </Container>,
+               </Container>),
+        
+        isCheckpoint: true,
+
+        checkpoint: (
+          <Container>
+            Try making a basic circle for yourself, or make a variation:
+            <br />
+            <br />
+          </Container>
+        ),
         isChallenge: true,
         //Challenges
         challenges: [
@@ -2247,6 +2257,16 @@ const sections = [
             <br />
             3. Next, place in a <b>sign</b> block. Now if you click on the
             preview button, you will see that you have a triangle!
+            <br />
+          </Container>
+        ),
+        
+        isCheckpoint: true,
+
+        checkpoint: (
+          <Container>
+            Try making a basic triangle for yourself:
+            <br />
             <br />
           </Container>
         ),
@@ -2376,7 +2396,9 @@ const sections = [
 
         checkpoint: (
           <Container>
-            Try making a basic rhombus for yourself.
+            Try making a basic rhombus for yourself:
+            <br />
+            <br />
           </Container>
         ),
 
