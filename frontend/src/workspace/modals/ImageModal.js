@@ -131,7 +131,11 @@ function ImageModal(props) {
     }
     function DownloadImage() {
       let link = document.createElement('a');
-      link.download = "MISTImage";
+      link.download = (document.getElementsByTagName("div")[23]
+        .getElementsByClassName("modal-content")[0]
+        .getElementsByTagName("div")[1]
+        .getElementsByTagName("input")[0].value 
+        || 'MISTImage') + '.png';
       link.href = document.getElementById("MISTImage").getElementsByTagName("canvas")[0].toDataURL();
       link.click();
   }
