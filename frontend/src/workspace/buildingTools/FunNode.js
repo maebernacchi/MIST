@@ -100,8 +100,8 @@ export default function FunNode(props) {
         image={image}
         x={nodeDimensions.functionTrashX-5}
         y={nodeDimensions.functionTrashY}
-        width={25}
-        height={25}
+        width={functionWidth/3}
+        height={functionWidth/3}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
         visible={hovered || !props.draggable} //Only visible when hovering over node
@@ -434,7 +434,7 @@ export default function FunNode(props) {
           <Circle
             x={functionWidth*1.1}
             y={functionWidth/2}
-            radius={8}
+            radius={functionWidth/8}
             fill={"#B3B3B3"}
             onDblClick={(e) => {
                 // Generates the temporary line when double clicked

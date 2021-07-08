@@ -51,7 +51,7 @@ const Faq = () => {
             What should I do if I have other questions?
           </dt>
           <dd>
-            Send us mail at <a href='mailto:MIST@grinnell.edu'>MIST@grinnell.edu</a>!
+            Send us mail at <a href='mailto:theglimmerlabs@gmail.com'>theglimmerlabs@gmail.com</a>!
           </dd>
           <dt>
             Why are you using a self-signed certificate for https?

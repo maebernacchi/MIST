@@ -20,7 +20,7 @@
  * All the tutorials page content is in an array called sections[].
  *   Sections are the following as of Summer 2020:
  *       - Getting Started
- *       - Varaibles
+ *       - Variables
  *       - Functions
  *       - Shapes
  *       - Customize
@@ -1082,7 +1082,7 @@ const sections = [
             // //Final 
             // final: <Container> This is the final image </Container>, 
 
-            isChallenge: true, 
+            isChallenge: false, 
             //Challenges 
             challenges: [ 
               { 
@@ -2205,7 +2205,7 @@ const sections = [
                 />
               </Container>
             ),
-            hint: <Container> What block inverses images? </Container>,
+            hint: <Container> What block inverts images? </Container>,
           },
 
           {
@@ -2303,8 +2303,10 @@ const sections = [
           <Container>
             For a rhombus, we’re going to add <b>x</b> and <b>y</b> blocks.
             <br />
+            <br />
             1. First, add the variable <b>x</b> and values <b>1</b> and{" "}
             <b>-1</b> to the workspace.
+            <br />
             <br />
             2.Then, bring in an <b>if</b> statement.
             <br />
@@ -2312,48 +2314,69 @@ const sections = [
             the correct order! This is very important. Connect the <b>x</b> to
             the first node of the if statement.
             <br />
+            <br />
             4. Then, connect <b>-1</b> to the second node. This means that if x
             is a positive number or 0, it will return this -1.
+            <br />
             <br />
             5. After that, connect <b>1</b> to the third node. If the input is
             less than 0, it will return 1. This is why when you click the
             preview for if, the right side is white and the left side is black.
             You can see what it should look below!
             <br />
+            <br />
             6. Next, add <b>x</b> and a <b>value</b> block to the workspace. Set
             the value of this block equal to <b>2</b>.
+            <br />
             <br />
             7. Bring in a <b>mult</b> block and connect the <b>x</b>, the{" "}
             <b>2</b>, and the <b>if</b> block to it. If you look at the preview
             now, you can see how it has changed!
+            <br />
             <br />
             8. Now repeat steps 1-7, but this time using <b>y</b> instead of{" "}
             <b>x</b>. This will change the pattern from a vertical split to a
             horizontal one. We'll write the steps below just in case (or jump to
             step 12).
             <br />
+            <br />
             9. Connect a <b>y</b>, <b>-1</b>, and <b>1</b> to an <b>if</b>{" "}
             block, in that order, just like in step 3 to 5. It should look like
             this.
             <br />
+            <br />
             10. Then add another <b>y</b>, <b>2</b>, and <b>mult</b> block.
+            <br />
             <br />
             11. Connect the <b>y</b>, <b>2</b> and previous <b>if</b> block to
             the <b>mult</b> block.
+            <br />
             <br />
             12. After this is completed, let’s add a <b>sum</b> block. Connect
             this to the <b>mult</b> blocks we used with <b>x</b>, and with{" "}
             <b>y</b> to it.
             <br />
+            <br />
             13. We’re also going to add another value block and set it to{" "}
             <b>2</b>. Then, connect it to the sum block. We should now have a
             diamond shaped rhombus outline!
+            <br />
             <br />
             14. To make this image more clear, we’re going to add a <b>
               sign
             </b>{" "}
             block. Connect <b>sum</b> to <b>sign</b> and click the preview; you
             should see a rhombus!
+            <br />
+            <br />
+          </Container>
+        ),
+
+        isCheckpoint: true,
+
+        checkpoint: (
+          <Container>
+            Try making a basic rhombus for yourself.
           </Container>
         ),
 
@@ -2614,41 +2637,53 @@ const sections = [
             need to use the if function. Let’s say you have the following 3
             images:
             <br />
+            <br />
             And you want to make it into the following:
+            <br />
             <br />
             It uses the circle outline, and uses the second picture as the
             inside of the circle and the third picture as the outside of the
             circle. You just need to connect them together with an if function:
             <br />
+            <br />
             Remember what if does? It takes 3 inputs in -- 3 images. It uses the
             second image in all the positive parts of the first image, and the
             third imagery all the negative parts of the image.
+            <br />
             <br />
             In the above example, the second image (y) is being used at the
             positive parts (black parts) of the first image (the circle).
             Whereas the third image (the triangle) is being used at the negative
             parts (white parts) of the first image (the circle).
             <br />
+            <br />
             So how would it look like if the order was the following with the
             following images:
+            <br />
             <br />
             (These are the same images as in the previous one except the circle
             is blended.
             <br />
+            <br />
             It looks the following:
+            <br />
             <br />
             This is because sign changes all negative parts into white, and
             positive parts into black. By adding a sign function on the first
             image input, you will have an easier time seeing through the
             different parts of the image and the exact dividers.
             <br />
+            <br />
             You can also think in quadrants, like in math with graphs and
             coordinates. For example you can use four different images to make
             the following:
             <br />
+            <br />
             It makes up of the following four images:
             <br />
+            <br />
             1. Make each of these shapes:
+            <br />
             <br />
             2. Then connect the upper 2 together with an <b>if</b> function, and
             the bottom 2 together with an <b>if</b> function, while using{" "}
@@ -2657,10 +2692,13 @@ const sections = [
             is made up of the bottom two images. They are also being divided up
             horizontally in the middle. This is how it would look like:
             <br />
+            <br />
             3. Now, we can connect these two images together based on the{" "}
             <b>x</b> image. Since the <b>x</b> function divides the image up
             vertically in the middle, it uses the first image’s right part, and
             the second image’s left part.
+            <br />
+            <br />
           </Container>
         ),
 
@@ -2724,27 +2762,35 @@ const sections = [
             Here is an example of a colorful image using many of the skills you
             just learned!
             <br />
+            <br />
             1. To start, add an <b>x</b>, <b>y</b>, and <b>t.s</b> variable to
             the workspace.
+            <br />
             <br />
             2. After this, bring in a <b>sin</b> and <b>cos</b> block. Connect
             the <b>x</b> to <b>cos</b> first then <b>sin</b>. If we click on the
             previews for <b>sin</b> and <b>cos</b>, we can see how the
             differences in how they look!
             <br />
+            <br />
             3. Now, let’s add another <b>sin</b> block and connect the{" "}
             <b>sin</b> from the previous step to it.
+            <br />
             <br />
             4. Next, we’re going to drag in a <b>mult</b> block. Let’s connect
             the <b>sin</b> block and the <b>y</b> variable to it!
             <br />
+            <br />
             5. Add a <b>wsum</b> block. We’re going to connect <b>t.s</b> and{" "}
             <b>y</b> to this.
+            <br />
             <br />
             6. Finally, connect this to an <b>rgb</b> block. We’ll start at the
             top, with <b>sin</b> being red, the <b>mult</b> block going to
             green, and <b>wsum</b> connecting to blue. Now look at this colorful
             animation you just made!
+            <br />
+            <br />
           </Container>
         ),
 
@@ -2817,27 +2863,36 @@ const sections = [
             image. It incorporates many aspects from the previous tutorials. To
             begin:
             <br />
+            <br />
             1. Start by adding an <b>x</b> and a <b>y</b> variable.
+            <br />
             <br />
             2. Next, add a <b>sqr</b>, <b>mult</b>, and <b>neg</b>. Connect the
             <b>x</b> to the <b>sqr</b> and <b>mult</b> and the <b>y</b> to the{" "}
             <b>mult</b> and <b>neg</b>.
             <br />
+            <br />
             3. Then bring in another <b>neg</b> block and connect the <b>sqr</b>{" "}
             to this.
             <br />
+            <br />
             4. Add a <b>t.s</b>, <b>m.x</b>, and <b>m.y</b>.
+            <br />
             <br />
             5. Connect the <b>t.s</b> and <b>m.y</b> to the new <b>mult</b>{" "}
             block in the workspace. and it.
+            <br />
             <br />
             6. On their own, the images look simple, but now it's time to put it
             all together. Start by adding a<b>wsum</b>. From there, connect both
             of the <b>neg</b> blocks and <b>mult</b> blocks. Additionally,
             connect the <b>m.x</b> block to the <b>wsum</b> block as well.
             <br />
+            <br />
             7. Finally, connect the <b>wsum</b> to a new <b>sin</b> block and
             check out the final image!
+            <br />
+            <br />
           </Container>
         ),
 
