@@ -10,8 +10,3 @@ create table posts(
     created_at timestamptz not null default now()
 );
 -- work on comments/featured?
-
-CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON users
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();

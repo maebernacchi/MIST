@@ -1,5 +1,5 @@
 create table comments(
-    comment_id varchar(255) not null
+    comment_id varchar(255) not null,
     contents varchar(255) not null,
     user_id varchar(255) not null,
     post_id varchar(255) not null,
