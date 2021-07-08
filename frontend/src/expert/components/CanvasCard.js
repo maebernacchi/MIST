@@ -132,7 +132,7 @@ class CanvasCard extends Component {
      */
     downloadImage() {
         let link = document.createElement('a');
-        link.download = (this.props.getFormState().name || 'untitled') + '.png';
+        link.download = (this.props.getFormState().name || 'MISTImage') + '.png';
         link.href = this.canvas.current.toDataURL();
         link.click();
     } // downloadImage()
