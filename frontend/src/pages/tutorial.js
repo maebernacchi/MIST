@@ -18,12 +18,12 @@
 
 /**
  * All the tutorials page content is in an array called sections[].
- *   Sections are the following as of Summer 2020:
+ *   Sections are the following as of Summer 2021:
  *       - Getting Started
  *       - Variables
  *       - Functions
  *       - Shapes
- *       - Customize
+ *       - Transformations & Combinations
  *       - Interesting Images
  *
  *   Each SECTIONS have the following fields:
@@ -80,9 +80,9 @@
  *                 + and goes to that subsection
  *           | Help Modal
  *                 + the overlay modal that comes up when someone needs help in challenges
- *           | Text Tutorial
- *           | Video Tutorial
- *           | Final
+ *           | Introduction
+ *           | Checkpoint
+ *           | Challenge
  * 3. Sections array
  *
  * Both the *Table of Contents* and the *Tutorials contents*
@@ -2492,7 +2492,7 @@ const sections = [
   //| The Customize    |
   //+------------------+
   {
-    title: "Customize",
+    title: "Transformations & Combinations",
     subsections: [
       /* Flipping */
       {
