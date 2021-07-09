@@ -23,11 +23,9 @@ handler.
 // | Required Libraries |
 // +--------------------+
 require("dotenv").config();
-const passport = require("passport");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { handleError } = require("./utilities");
-const signUp = require("./authentication");
 
 // +--------------------+--------------------------------------------
 // | Exported Functions |

@@ -1,3 +1,4 @@
+const passport = require("passport");
 const { handleError } = require("./utilities.js");
 var database = require("../db/database.js");
 const crypto = require("crypto");
@@ -83,38 +84,29 @@ userHandlers.signUp = async function (req, res) {
  */
 // TODO move to database
 userHandlers.signIn = async function (req, res, next) {
-	let emailVerify = false;
-	await userDB.User.findOne({ username: req.body.username }, (err, user) => {
-		if (err) {
-			console.log(err);
-		} else if (user) {
-			emailVerify = user.verified;
-			if (!emailVerify) {
-				res.json("Please Verify Email");
-			} else {
-				try {
-					passport.authenticate("local", (err, user, info) => {
-						if (err) {
-							throw err;
-						}
-						if (!user) {
-							res.json("No User Exists");
-						} else {
-							req.logIn(user, (err) => {
-								if (err) throw err;
-								var message = "Success";
-								res.json(message);
-							});
-						}
-					})(req, res, next);
-				} catch (error) {
-					console.log(error);
+	const emailVerified = await userDB.checkEmailVerified(req);
+	if (!emailVerified) {
+		res.json("Please verify email");
+	} else {
+		try {
+			passport.authenticate("local", (err, user, info) => {
+				if (err) {
+					throw err;
 				}
-			}
-		} else {
-			res.json("No User Exists");
+				if (!user) {
+					res.json("Log in failed.");
+				} else {
+					req.logIn(user, (err) => {
+						if (err) throw err;
+						const message = "Log in successful!";
+						res.json(message);
+					});
+				}
+			})(req, res, next);
+		} catch (error) {
+			console.log(error);
 		}
-	});
+	}
 };
 
 /*
@@ -132,15 +124,12 @@ userHandlers.signOut = function (req, res) {
  */
 // TODO move to database
 userHandlers.getUser = function (req, res) {
-	if (!req.user) res.json(null);
-	else {
-		// we have to search the database for the full user
-		// because passport only stores the username of the person logged in
-		userDB.User.findOne({ username: req.user.username }, (err, user) => {
-			if (err) fail(res, "no user found");
-			else res.json(user);
-		});
+	// user not signed in
+	if (!req.user) {
+		return res.json(null);
 	}
+
+	res.json(req.user);
 };
 
 /** */
@@ -247,27 +236,29 @@ userHandlers.deleteAccount = function (req, res) {
 	});
 };
 
+//later zaen & evelyn
 userHandlers.changeBio = function (req, res) {
 	userDB.changeBio(req, (message) => res.json(message));
 };
 
+//later - zaen & evelyn
 userHandlers.changeProfilePic = function (req, res) {
 	userDB.changeProfilePic(req, (message) => res.json(message));
 };
 
 // https://stackoverflow.com/questions/38820251/how-is-req-isauthenticated-in-passport-js-implemented
-function checkAuthentication(request, response, next) {
-	if (request.isAuthenticated()) {
+module.exports = function checkAuthentication(req, res, next) {
+	if (req.isAuthenticated()) {
 		//req.isAuthenticated() will return true if user is logged in
 		next();
 	} else {
-		// This is the jsend response status for rejected API call
-		const responseStatus = "fail";
-		// This is the unauthorized/unauthenticated HTTP response status code
-		const responseStatusCode = 401;
+		// This is the jsend res status for rejected API call
+		const resStatus = "fail";
+		// This is the unauthorized/unauthenticated HTTP res status code
+		const resStatusCode = 401;
 		const data = { Authentication: "You need to be logged in!" };
-		dispatchResponse(response, responseStatus, responseStatusCode, data);
+		dispatchResponse(res, resStatus, resStatusCode, data);
 	}
-}
+};
 
 module.exports = userRoute;

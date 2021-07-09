@@ -115,6 +115,25 @@ module.exports.verifyEmail = (req, callback) => {
 		}
 	);
 };
+
+/**
+ *
+ * Check if user's email is verified
+ *
+ * @param {*} req
+ * @param {*} callback
+ */
+module.exports.checkEmailVerified = async (req) => {
+	if (!checkUserExists(req.body.user_id)) {
+		callback("User ID does not exist!");
+	}
+	const result = await pool.query(
+		"select verified from users where user_id=$1",
+		[req.body.user_id]
+	);
+	return result.rows[0].verified;
+};
+
 /**
  * Changes the password of the user
  *
@@ -297,17 +316,6 @@ module.exports.deleteAccount = async (req, callback) => {
 	if (!checkUserExists(user.user_id)) {
 		callback("User does not exist");
 	}
-	// pool.query(
-	// 	"select password from users where user_id=$1",
-	// 	[user.user_id],
-	// 	(err, result) => {
-	// 		if (err) {
-	// 			callback(err);
-	// 			return;
-	// 		}
-	// 		dbPassword = result.rows[0].password;
-	// 	}
-	// );
 	const result = await pool.query(
 		"select password from users where user_id=$1",
 		[req.body.user_id]
