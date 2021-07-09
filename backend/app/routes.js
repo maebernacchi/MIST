@@ -2,6 +2,7 @@ const pool = require("../db/dbconfig");
 const api = require("../api/api");
 const database = require("./database");
 const users = require("../api/user.js");
+const { verifyEmail } = require("../db/user");
 
 module.exports = (app) => {
 	app.use("/api/users", users);
@@ -231,7 +232,30 @@ module.exports = (app) => {
 		res.json(userInfo);
 	});
 
-	app.post("/api/emailVerification/:username", (req, res) => {
-		console.log(req.params.username);
+	// app.post("/api/emailVerification/:username", (req, res) => {
+	// 	console.log(req.params.username);
+	// });
+	app.get("/emailVerification/:token", (req, res) => {
+		console.log(req.params.token);
+		verifyEmail(req, (message) => {
+			if (message == "Email Verified") {
+				console.log("Email verification success!");
+				res.json(message);
+			} else {
+				console.log("Email Verification Failed!");
+				console.error(message);
+				res.json(message);
+			}
+		});
 	});
+
+	/**
+	 * Verifies that the email address is correct
+	 * @param {*} info
+	 * @param {*} req
+	 * @param {*} res
+	 */
+	// userHandlers.verifyEmail = function (req, res) {
+		
+	// };
 };

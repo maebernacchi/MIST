@@ -9,6 +9,8 @@ create table users(
     admin boolean default false,
     profile_pic varchar(255),
 
+    token varchar(255),
+
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
 
