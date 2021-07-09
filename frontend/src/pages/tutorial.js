@@ -248,11 +248,14 @@ function Tutorial() {
           alignItems: "flex-start",
         }}
       >
-        <Col xs="3" style={{alignItems: "flex-start", position: "sticky", top: "2rem" }}>
+        <Col xs="3" style={{alignItems: "flex-start", 
+                              // position: "sticky",
+                              // overflowY: "scroll",
+                              top: "2rem" }}>
           {/* Table of Contents */}
           <TableContents/>
           <Card className="text-center" bg="info" text="white" style={{marginTop: "2vh", marginBottom: "2vh"}}>
-            <Card.Header as="h4" style={{paddingTop: "10vh", paddingBottom: "10vh"}}>
+            <Card.Header as="h4" style={{paddingTop: "5vh", paddingBottom: "5vh"}}>
               Scroll down for the tutorial workspace!
             </Card.Header>
           </Card>
