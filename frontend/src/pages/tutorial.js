@@ -104,6 +104,8 @@ import {
   Col,
   Jumbotron,
   Modal,
+  Popover,
+  OverlayTrigger,
   DropdownButton,
   Dropdown,
 } from "react-bootstrap";
@@ -193,14 +195,33 @@ const bodyTextSize = "125%";
 // workspace Demo, so we can include workspaces in our tutorials easily.
 function WorkSpaceDemo() {
   return (
-    <WorkSpace
-      width={900}
-      height={600}
-      menuHeight={90}
-      funBarHeight={60}
-      functionWidth={50}
-      valueWidth={55}
-    />
+    // <Popover id="popover-basic">
+    //   <Popover.Title as="h6">Try out code here!</Popover.Title>
+    //     <Popover.Content>
+    //       <Container>
+          //   <WorkSpace
+          //   width={2000}
+          //   height={1400}
+          //   menuHeight={90}
+          //   funBarHeight={60}
+          //   functionWidth={50}
+          //   valueWidth={55}
+          // />
+          <WorkSpace
+                  width={document.documentElement.clientWidth}
+                  height={document.documentElement.clientHeight * 0.81}
+                  menuHeight={document.documentElement.clientWidth * 0.08}
+                  funBarHeight={document.documentElement.clientHeight * 0.1}
+                  functionWidth={document.documentElement.clientWidth * 0.047}
+                  valueWidth={document.documentElement.clientWidth * 0.047}
+                  offset={0}
+                  formOffsetX={0}
+                  formOffsetY={document.documentElement.clientHeight * 0.96}
+                />
+    //   </Container>
+    //   </Popover.Content>
+    // </Popover>
+    
   );
 }
 
@@ -212,28 +233,42 @@ function Tutorial() {
     <Container
       fluid
       style={{
+        // overflowY: "scroll",
+        // height: "100vh",
         marginTop: "2vh",
         marginBottom: "0",
         paddingBottom: "7.5rem",
       }}
     >
       <Row
+        // className="mr-auto"
         style={{
           marginLeft: "1em",
           marginRight: "1em",
           alignItems: "flex-start",
         }}
       >
-        <Col xs="3" style={{ position: "sticky", top: "2rem" }}>
+        <Col xs="3" style={{alignItems: "flex-start", position: "sticky", top: "2rem" }}>
           {/* Table of Contents */}
-          <TableContents />
+          <TableContents/>
+          <Card className="text-center" bg="info" text="white" style={{marginTop: "2vh", marginBottom: "2vh"}}>
+            <Card.Header as="h4" style={{paddingTop: "10vh", paddingBottom: "10vh"}}>
+              Scroll down for the tutorial workspace!
+            </Card.Header>
+          </Card>
         </Col>
         <Col xs="9">
           {/* Tutorials */}
           <Tutorials />
         </Col>
       </Row>
+      <Row
+      //  style={{overflow: "scroll"}}
+       >
+        <WorkSpaceDemo/>
+      </Row>
     </Container>
+
   );
 }
 
@@ -245,7 +280,7 @@ function TableContents() {
   return (
     <Card>
       {/* Title -- Table of Contents */}
-      <Card.Header style={{ marginTop: "2vh" }}>
+      <Card.Header style={{ paddingTop: "2vh" }}>
         <h3 style={{ fontSize: "170%" }}>Table of Contents</h3>
       </Card.Header>
       {/* All the sections and subsections */}
@@ -301,7 +336,7 @@ function TableContents() {
 
 function Tutorials() {
   return (
-    <Container style={{ margin: "2vh" }}>
+      <Container style={{height: "90vh", margin: "2vh", overflowY: "scroll", scrollBehavior: "smooth"}}>
       {/* Maps each sections */}
       {sections.map((section, idx) => (
         <div>
@@ -401,6 +436,7 @@ function Tutorials() {
   );
 }
 
+
 /**
  * Button on the Jumbotron that is the text
  */
@@ -488,7 +524,7 @@ function CheckPoint(props) {
             {/* <Container><h4>Checkpoint</h4></Container> */}
             {props.checkpoint}
             
-            <WorkSpaceDemo/>
+            {/* <WorkSpaceDemo/> */}
             
           </Col>
           {/* <Col xs="1">
@@ -623,7 +659,8 @@ function Challenges(props) {
               />
             ))}
             <br/><br/>
-            <WorkSpaceDemo/> 
+            
+            {/* <WorkSpaceDemo/>  */}
           </Container>
         </Row>
       </Card.Body>

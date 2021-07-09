@@ -252,8 +252,8 @@ function ValNode(props) {
               id="form#"
               style={{
                 position: "absolute",
-                left: props.x + 25,
-                top: props.y + 90,
+                left: props.x + 25 + props.formOffsetX,
+                top: props.y + 90 + props.formOffsetY,
               }}
               onSubmit={(e) => {
                 e.preventDefault();
