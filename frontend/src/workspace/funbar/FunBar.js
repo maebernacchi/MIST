@@ -4,6 +4,9 @@ import "../../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { funBarContext } from "../globals/globals-funbar-dimensions";
 import { fontContext } from "../globals/globals-fonts";
+import ReactDOM from 'react-dom';
+import { Html } from 'react-konva-utils';
+import { Redirect } from "react-router-dom";
 
 function FunBar(props) {
   const funBarDimensions = useContext(funBarContext);
@@ -36,6 +39,7 @@ function FunBar(props) {
           shadowOpacity={0.5}
           opacity={renderFunction.isRenderable ? 1 : 0.95}
         />
+
         <Text // Render function text display
           text={props.renderFunction.renderFunction}
           x={funBarDimensions.margin}
@@ -46,7 +50,36 @@ function FunBar(props) {
           fill={props.functionTextColor}
           fontFamily={"Courier New"}
           fontSize={funBarRFFontSize}
-        />
+        /> 
+
+        <Html
+          transform={true} //setting transform to false makes box disappear?
+          groupProps={{
+            position: {
+              x: 25, //not sure how to get these to be funBarDimensions.margin
+              y: 25,
+            },
+          }}
+          divProps={{
+            width: 1000,
+            style: {
+              width: 10000,
+            },
+          }}
+          width={1000}
+          x={funBarDimensions.margin}
+          y={funBarDimensions.margin}
+          width={funBarDimensions.rfTextAreaWidth}
+          height={funBarDimensions.rfTextAreaHeight}
+          verticalAlign={"middle"}
+          fill={props.functionTextColor}
+          fontFamily={"Courier New"}
+          fontSize={funBarRFFontSize}
+          >
+          <input placeholder="Enter a MIST expression" />
+        </Html>
+
+
       </Group>
     );
   }
@@ -54,7 +87,7 @@ function FunBar(props) {
   
 
   function ImageButton(props) {
-    const imageButtonColor = "#f7a731";
+    const imageButtonColor = "#f7a731"; //change this because it doesn't match the new theme colors the way it is now
 
     return (
       <Group // Image Button on blue bar
