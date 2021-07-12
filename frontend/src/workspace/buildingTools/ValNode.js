@@ -287,6 +287,70 @@ function ValNode(props) {
             </form>
             <div></div>
           </Portal>
+          
+          // referenced heavily for the editable text:
+          // https://konvajs.org/docs/sandbox/Editable_Text.html
+          // This was just an experiment. Turns out it still requires 
+          // knowing where konva stage is located. Unless we want to hide
+          // the entry form, but that seems like a /bad/ idea.
+          //
+          // <Text
+          //   text={formValue? formValue : renderFunction}
+          //   fill={"gray"}
+          //   fontSize={fonts.valueFontSize * 2 / 3}
+          //   x={0}
+          //   y={0} 
+          //   width={valueWidth}
+          //   height={valueWidth}
+          //   align={"center"}
+          //   verticalAlign={"middle"}
+          //   onClick={(e) => {
+          //     var textarea = document.createElement('textarea'); // these two lines taken from
+          //     document.body.appendChild(textarea);              //  the Konva article
+          //     // textarea.value = this.text();
+          //     textarea.style.position = 'absolute';
+          //     textarea.style.top = 50 + "vh";
+          //     textarea.style.left = 50 + 'vw';
+          //     // textarea.style.backgroundColor = "transparent";
+          //     textarea.style.border = "none";
+          //     textarea.style.outline = "none";
+
+          //     // textarea.style.col = "transparent";
+          //     textarea.style.color = "transparent";
+
+
+
+          //     textarea.focus();
+          //     textarea.addEventListener("focusout", function(e) {
+          //       // remove when focus lost
+          //       document.body.removeChild(textarea);
+          //     });
+              
+          //     textarea.addEventListener('keyup', function (e) {
+          //       // hide on enter
+          //       if (e.keyCode === 13) {
+          //         textarea.blur();
+          //       }
+          //       else {
+          //         setFormValue(textarea.value);
+          //       }
+          //       if (parseFloat(formValue) !== null) {
+          //         setRenderFunction(formValue);
+          //         props.updateHashValue(index, formValue);
+          //         //setSubmitted(true);
+          //       } else {
+          //         console.log("Invalid Number");
+          //         setFormValue(" ");
+          //       }
+          
+                
+          //     });
+              
+
+          //   }}
+          //   _useStrictMode
+          // />
+
         ) : (
           <Text
             text={renderFunction}
