@@ -9,12 +9,17 @@ module.exports = (app) => {
 	// Our stuff
 	// ROUTES
 	// create
+
+	/*
+		Users post request
+		Inserts new user data into the table
+	*/
 	app.post("/users", async (req, res) => {
 		try {
-			const { user_id, email, password } = req.body;
+			const { user_id, email, password } = req.body; // pulling values from the request body
 			const newUser = await pool.query(
 				"insert into users(user_id, email, password) values ($1, $2, $3)",
-				[user_id, email, password]
+				[user_id, email, password] // plugging those values into the database
 			);
 			res.json(newUser);
 		} catch (error) {
@@ -23,11 +28,16 @@ module.exports = (app) => {
 	});
 
 	// read
+
+	/*
+		Users get request
+		Retrieves all user data from the table
+	*/
 	app.get("/users", async (req, res) => {
 		try {
 			// const allUsers = await pool.query("select * from users");
 			// res.json(allUsers.rows);
-			pool.query("select * from users", (err, result) => {
+			pool.query("select * from users", (err, result) => { // select all data from users
 				if (err) throw err;
 				res.json(result.rows);
 			});
@@ -36,9 +46,12 @@ module.exports = (app) => {
 		}
 	});
 
+	/*
+		Retrieves specific user data from the table
+	*/
 	app.get("/users/:user_id", async (req, res) => {
 		try {
-			const { user_id } = req.params; // {user_id: "evelyn"}
+			const { user_id } = req.params; // user id taken from request body
 			const user = await pool.query("select * from users where user_id = $1", [
 				user_id,
 			]);
@@ -49,10 +62,15 @@ module.exports = (app) => {
 	});
 
 	// update
+
+	/*
+		Users put request
+		Updates user data
+	*/
 	app.put("/users/:id", async (req, res) => {
 		try {
-			const { id } = req.params;
-			const { user_id, email, password } = req.body;
+			const { id } = req.params; // current user id
+			const { user_id, email, password } = req.body; // new user info
 			const updateUser = await pool.query(
 				"update users set (user_id, email, password)=($1, $2, $3) where user_id=$4",
 				[user_id, email, password, id]
@@ -64,9 +82,14 @@ module.exports = (app) => {
 	});
 
 	// delete
+
+	/*
+		Users delete request
+		Deletes user data from the table
+	*/
 	app.delete("/users/:user_id", async (req, res) => {
 		try {
-			const { user_id } = req.params;
+			const { user_id } = req.params; // user to delete
 			const deleteUser = await pool.query(
 				"delete from users where user_id=$1",
 				[user_id]
@@ -235,8 +258,14 @@ module.exports = (app) => {
 	// app.post("/api/emailVerification/:username", (req, res) => {
 	// 	console.log(req.params.username);
 	// });
+
+
+	/*
+		Email Verification Route
+		Runs when user clicks the link sent to their email
+		The user's token is sent to verifyEmail and checked
+	*/
 	app.get("/emailVerification/:token", (req, res) => {
-		console.log(req.params.token);
 		verifyEmail(req, (message) => {
 			if (message == "Email Verified") {
 				console.log("Email verification success!");

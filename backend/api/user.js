@@ -8,6 +8,9 @@ const nodemailer = require("nodemailer");
 // | Users            |
 // +------------------+
 
+// Checks for requests to determine which route to use
+// Depending on the type of request (req.method), the specified action will be stored
+// in a different place. (body, query, etc.)
 const userRoute = (req, res, next) => {
 	let action;
 	if (req.method == "POST") {
@@ -33,9 +36,10 @@ var userHandlers = {};
  */
 userHandlers.signUp = async function (req, res) {
 	// req.body.token = await crypto.randomBytes(32).toString("hex");
-	const token = crypto.randomBytes(32).toString("hex");
+	const token = crypto.randomBytes(32).toString("hex"); // Generates token used for email verification
 	req.body.token = token;
-
+	
+	// Set up the automated verification email
 	const transporter = nodemailer.createTransport({
 		host: "smtp.mailtrap.io",
 		port: 2525,
@@ -46,6 +50,7 @@ userHandlers.signUp = async function (req, res) {
 	});
 
 	const PUBLIC_IP = process.env.PUBLIC_IP || "http://localhost:8000";
+	// Create the contents of the email
 	let mail = {
 		from: "smtp.mailtrap.io",
 		// from: process.env.GMAILID,
@@ -59,6 +64,7 @@ userHandlers.signUp = async function (req, res) {
 			`${PUBLIC_IP}/emailVerification/${token}`,
 	};
 
+	// After user is created, the verification email is sent
 	userDB.createUser(req, (message) => {
 		if (message === "User Created") {
 			transporter.sendMail(mail, (err, data) => {
@@ -132,7 +138,12 @@ userHandlers.getUser = function (req, res) {
 	res.json(req.user);
 };
 
-/** */
+/** 
+ * Displays personal profile (only if user is logged in)
+ * NOTE: If getCompleteUserProfile is changed to check for if the user is
+ * looking at their personal profile (ie the two functions are merged) this function
+ * should be truncated, as the next function accounts for it
+*/
 userHandlers.getAuthenticatedCompletePersonalProfile = async function (
 	req,
 	res
@@ -149,7 +160,9 @@ userHandlers.getAuthenticatedCompletePersonalProfile = async function (
 	}
 };
 
-/** */
+/** 
+ * Displays another user's profile (only if user is logged in)
+*/
 userHandlers.getAuthenticatedCompleteUserProfile = async function (req, res) {
 	try {
 		if (!req.isAuthenticated()) throw "You need to login to view a profile!";

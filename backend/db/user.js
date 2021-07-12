@@ -1,6 +1,6 @@
-const User = require("../Models/User");
-const pool = require("./dbconfig");
-const bcrypt = require("bcrypt");
+const User = require("../Models/User"); 
+const pool = require("./dbconfig"); // Used for database queries
+const bcrypt = require("bcrypt"); // Used for password hashing
 // +------------+-------------------------------------------------
 // |    Users   |
 // +------------+
@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
  * Checks if the password is secure enough when the user is signing up
  */
 passwordSecurity = (pass) => {
+	// These variables determine the conditions for digits and special characters
 	let digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 	let checkNumber = false;
 	let checkSpecial = false;
@@ -35,7 +36,9 @@ passwordSecurity = (pass) => {
 	}
 };
 
-// TODO make it applic`able to email
+// Determines if a user exists, given their username (user_id)
+// Returns a boolean value
+// TODO make it applicable to email
 const checkUserExists = async (user_id) => {
 	const result = await pool.query(
 		"select exists (select 1 from users where user_id=$1)",
@@ -72,16 +75,16 @@ module.exports.createUser = async (req, callback) => {
 			}
 		}
 	);
-	let passwordMessage = passwordSecurity(user.password);
+	let passwordMessage = passwordSecurity(user.password); // Checks how secure the new password is
 	if (passwordMessage !== "Success") {
 		callback(passwordMessage);
 		return;
 	}
-	const hashedPassword = await bcrypt.hash(req.body.password, 12);
+	const hashedPassword = await bcrypt.hash(req.body.password, 12); // Hashes password
 	pool.query(
 		"insert into users (user_id, email, password, token) \
         values($1, $2, $3, $4)",
-		[user.user_id, user.email, hashedPassword, user.token],
+		[user.user_id, user.email, hashedPassword, user.token], // New data is put into the table
 		(err, res) => {
 			if (err) {
 				callback(err);
@@ -103,7 +106,7 @@ module.exports.createUser = async (req, callback) => {
  */
 module.exports.verifyEmail = (req, callback) => {
 	pool.query(
-		"update users set verified=true where token=$1",
+		"update users set verified=true where token=$1", // If token matches, set user to verified
 		[req.params.token],
 		(err, res) => {
 			if (err) {
@@ -158,22 +161,22 @@ module.exports.changePassword = async (req, callback) => {
 		"select password from users where user_id=$1",
 		[req.body.user_id]
 	);
-	dbPassword = result.rows[0].password;
-	bcrypt.compare(req.body.currentPassword, dbPassword, async (err, result) => {
+	dbPassword = result.rows[0].password; // retrieve the hash of the current password
+	bcrypt.compare(req.body.currentPassword, dbPassword, async (err, result) => { // compare the hash with the given password
 		if (err) {
 			callback(err);
 		}
 		if (result === false) {
 			callback("Old Password Does Not Match");
 		} else {
-			let message = passwordSecurity(req.body.newPassword);
+			let message = passwordSecurity(req.body.newPassword); // check security level of the new password
 			if (message !== "Success") {
 				callback(passwordSecurity(req.body.newPassword));
 			}
-			let newPass = await bcrypt.hash(req.body.newPassword, 12);
+			let newPass = await bcrypt.hash(req.body.newPassword, 12); // hashes new password
 			pool.query(
 				"update users set password=$1 where user_id=$2",
-				[newPass, req.body.user_id],
+				[newPass, req.body.user_id], // new password stored in database
 				(err, result) => {
 					if (err) {
 						callback(err);
@@ -218,7 +221,7 @@ module.exports.changeEmail = (req, callback) => {
 module.exports.changeUserId = (req, callback) => {
 	if (req.body.new_user_id === "") callback("Username cannot be blank");
 	else {
-		if (checkUserExists(req.body.new_user_id)) {
+		if (checkUserExists(req.body.new_user_id)) { // Checks if the username is already in use
 			console.log("duplicate user_id");
 			callback("User ID already in use!");
 		} else {
@@ -247,16 +250,9 @@ module.exports.changeUserId = (req, callback) => {
 module.exports.changeAbout = (req, callback) => {
 	let user = req.body;
 	let user_exists;
-	pool.query(
-		"select exists (select 1 from users where user_id='$1')",
-		[user.user_id],
-		(err, res) => {
-			if (err) throw err;
-			user_exists = res;
-		}
-	);
-	if (!user_exists) {
+	if (!checkUserExists(user.user_id)) {
 		callback("User does not exist");
+		return;
 	}
 	pool.query(
 		"update users set about = '$1' where user_id = '$2'",
@@ -320,9 +316,9 @@ module.exports.deleteAccount = async (req, callback) => {
 		"select password from users where user_id=$1",
 		[req.body.user_id]
 	);
-	dbPassword = result.rows[0].password;
+	dbPassword = result.rows[0].password; // retrieves current password hash
 
-	bcrypt.compare(req.body.password, dbPassword, (err, result) => {
+	bcrypt.compare(req.body.password, dbPassword, (err, result) => { // checks password before deleting
 		if (err) {
 			console.log(err);
 		}
@@ -353,8 +349,10 @@ module.exports.deleteAccount = async (req, callback) => {
 	});
 };**/
 
-// Returns all images and albums for the user's profile
-module.exports.getCompletePersonalProfile = async (req, callback) => {
+// Returns all images for the user's own profile
+// TODO: have it check for user_id so it can be used for personal profile and other profiles
+// 		  (only difference is other profiles only retrieve public images)
+module.exports.getCompleteUserProfile = async (req, callback) => {
 	let user = req.body;
 	const is_active_user = pool.query(
 		"select exists (select 1 from users where user_id='$1')",
@@ -371,31 +369,35 @@ module.exports.getCompletePersonalProfile = async (req, callback) => {
 	);
 };
 
+
+// TODO: Make a second function like the one above but for retrieving all collections from a user
+
+// NOTE: Unneccessary Function, likely to be truncated later
 // Returns all images and albums for viewing another user's profile
-module.exports.getCompleteUserProfile = async (userid) => {
-	userid = sanitize(userid);
-	return User.findById(userid)
-		.populate({
-			path: "images",
-			match: {
-				active: true,
-				public: true,
-			},
-		})
-		.populate({
-			path: "albums",
-			match: {
-				active: true,
-				public: true,
-			},
-			populate: {
-				path: "images",
-				match: {
-					active: true,
-					public: true,
-				},
-			},
-		})
-		.select("-password")
-		.exec();
-};
+// module.exports.getCompleteUserProfile = async (userid) => {
+// 	userid = sanitize(userid);
+// 	return User.findById(userid)
+// 		.populate({
+// 			path: "images",
+// 			match: {
+// 				active: true,
+// 				public: true,
+// 			},
+// 		})
+// 		.populate({
+// 			path: "albums",
+// 			match: {
+// 				active: true,
+// 				public: true,
+// 			},
+// 			populate: {
+// 				path: "images",
+// 				match: {
+// 					active: true,
+// 					public: true,
+// 				},
+// 			},
+// 		})
+// 		.select("-password")
+// 		.exec();
+// };
