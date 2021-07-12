@@ -6,7 +6,7 @@ import { funBarContext } from "../globals/globals-funbar-dimensions";
 import { fontContext } from "../globals/globals-fonts";
 import ReactDOM from 'react-dom';
 import { Html } from 'react-konva-utils';
-import { Redirect } from "react-router-dom";
+
 
 function FunBar(props) {
   const funBarDimensions = useContext(funBarContext);
@@ -56,17 +56,15 @@ function FunBar(props) {
           transform={true} //setting transform to false makes box disappear?
           groupProps={{
             position: {
-              x: 25, //not sure how to get these to be funBarDimensions.margin
-              y: 25,
+              x: 30, //not sure how to get these to be funBarDimensions.margin
+              y: 30,
             },
           }}
           divProps={{
-            width: 1000,
+            
             style: {
-              width: 10000,
             },
           }}
-          width={1000}
           x={funBarDimensions.margin}
           y={funBarDimensions.margin}
           width={funBarDimensions.rfTextAreaWidth}
