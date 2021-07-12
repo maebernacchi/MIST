@@ -818,8 +818,8 @@ const sections = [
               {/* <MISTImage code="x" resolution="250"/> */}
               <br/>
               <br/>
-              Up next in this tutorial, we will introduce how you can utilize the variable
-              and function blocks to create your own amazaing images!!!
+              Now you will explore the variable and function blocks 
+             so you can create your own amazing images!!!
               <br />
               {/* To begin, let's learn to make greyscale images! In greyscale,
                1 corresponds to black, and –1 is white. Any number in between
@@ -1070,10 +1070,10 @@ const sections = [
             //Text 
             text: <Container>
               In addition to the Graphical Workspace, we have 
-              a workspace that takes in the code itself.
+              a workspace that takes in the code itself without using any of the nodes.
               <br/>
               <br/>
-              You can type code in the “create image” tab and click the play button to 
+              You can type code into the “create image” tab and click the play button to 
               generate the image.
               <br/>
               <br/>
@@ -1086,8 +1086,8 @@ const sections = [
               </Container> 
               <br/>
               <br/>
-              If you find that your code makes a really cool image,
-              you can save it in the “create function” tab and use 
+              If you find you've made an image you like,
+              you can save it as a custom function in the “create function” tab and use 
               it in other images later. 
               <br/>
               <br/>
@@ -1100,7 +1100,7 @@ const sections = [
               </Container> 
               <br/>
               <br/>
-              If you want to share your image, you can publish it 
+              If you want to share your image, you can publish it to the gallery
               or download it as a .png file. We currently don’t have
               support for downloading .gif files, but we’re working
               on it!
@@ -1177,8 +1177,8 @@ const sections = [
         //Text
         text: (
           <Container>
-            There are many expressions that can be used as inputs in MIST. The most 
-            basic building building block are the values, shown here: 
+            There are many values you can use as inputs in MIST. The 
+            basic building building blocks are the values, shown here: 
             
             {/* <b>X</b>, <b>Y</b> and <b>constants</b> are values in MIST that are
             inputted into functions or even used on their own. Here's a demonstration of them: */}
@@ -1212,7 +1212,8 @@ const sections = [
                 <MISTImage code="y" resolution="300" />
                 <br/>
                 <br/>
-                As <b>Y</b> increases, the image gets darker.
+                As <b>Y</b> increases, the image gets darker. <b>Remember:</b> in MIST the Y axis increases
+                from top to bottom.
               </Col>
             </Row>
             
@@ -1224,8 +1225,8 @@ const sections = [
             comes from y-values changing hoizontally. */}
             <br />
             A constant is a value that doesn't change, hence the name
-            constant. For example, if we had the value <b>2</b>, it would always
-            remain as <b>2</b>.
+            constant. For example, if we set a constant equal to <b>2</b>, the value will
+            always be <b>2</b>.
             <br />
             <br />
             <Row>
@@ -1266,8 +1267,8 @@ const sections = [
             flat--their light/dark values don't depend on any inputs from the canvas.
             <br/>
             <br/>
-            In the Code Workspace, you can simply use a number. In the Graphical Workspace, you drag
-            a constant node into the panel and enter a number (shown on the right of the workspace):
+            In the Code Workspace, you can simply type numbers for constants. In the Graphical Workspace, you drag
+            a constant node into the panel and enter a number to set it (shown on the right of the workspace):
             <br/>
             <br/>
             <Container fluid> 
@@ -1390,8 +1391,9 @@ const sections = [
             time passes, it changes the input and therefore changes the image. */}
             {/* <br />
             <br /> */}
-            Time and animations can be really powerful as you experiment with them. You can multiply
-            them, add them, or feed them into other functions. This speeds up, slows down, or offsets the resulting animation.
+            As you experiment with time nodes you will see how powerful they are. Try multiplying,
+            adding, and feeding time nodes into other functions. With time nodes you can speed up, slow down, or offset 
+            the animations you create.
             {/* <br />
             <br /> */}
 {/*                       
