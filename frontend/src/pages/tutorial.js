@@ -117,7 +117,7 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import { Link } from "react-router-dom";
 import { BsQuestionCircle, BsClock } from "react-icons/bs";
-import { RiMenu2Line } from "react-icons/ri";
+import { RiMenu2Line, RiTruckLine } from "react-icons/ri";
 
 import MISTImage from "./components/MISTImageGallery";
 
@@ -780,8 +780,7 @@ const sections = [
           //Text
           text: (
             <Container>
-              Welcome to MIST, the Mathematical Image Synthesis Toolkit!
-             
+              Welcome to MIST, the Mathematical Image Synthesis Toolkit!             
               {/* In this video we will go over the basic ideas of MIST! */}
               {/* <br /><br /> */}
               
@@ -790,14 +789,15 @@ const sections = [
               can create with MIST. */}
               <br />
               <br />
-              Images in MIST are drawn on a square canvas.
+              Each image in MIST are drawn on a square canvas.
               {/* <br />
               <br /> */}
               {/* We have an x and a y axis, just like in math class! */}
               <br />
               <br />
-              On our canvas we have an x and y axis. X values range 
-              from –1 to 1 (left to right).  
+              On our canvas, there is a horizontal axis - <b>x</b> - and a vertical axis - <b>y</b>. 
+              <br />
+              X values range from –1 to 1 (left to right).  
               {/* X values range from -1 at the left to 1 at the right. */}
               <Image src={arrowX} fluid></Image>
               
@@ -809,16 +809,19 @@ const sections = [
               <Image src={arrowY} fluid></Image>
               <br />
               <br />
-              Y values are likely 
-              different than the ones you’ve seen before. The values
-               range from –1 at the top of the canvas to 1 at the bottom.
+              (Note that our y-axis is likely 
+              different from the ones you’ve seen before. The values increase
+              from the top to the bottom)
               <br />
               <br />
               <Image src={arrowXandY} fluid></Image>
               {/* <MISTImage code="x" resolution="250"/> */}
               <br/>
               <br/>
-              To begin, lets learn to make greyscale images! In greyscale,
+              Up next in this tutorial, we will introduce how you can utilize the variable
+              and function blocks to create your own amazaing images!!!
+              <br />
+              {/* To begin, let's learn to make greyscale images! In greyscale,
                1 corresponds to black, and –1 is white. Any number in between
                 renders a shade of gray.
               <br />
@@ -831,20 +834,12 @@ const sections = [
               <MISTImage code="x" fluid resolution="500"></MISTImage>
               <br />
               <br />
-              {/* We can apply mathematical operations, too. Here's what happens
-              when we multiply x times y. (Don't worry about how we're writing
-              it; you'll use a graphical user interface to build images.) You've
-              learned the basics of the MIST world. It's time to start making
-              your own images. */}
-              To manipulate images, we can apply Mathematical operations to our
-              variables, such as multiplying together x and y.
-              <br />
-              <br />
+               
               <MISTImage code="mult(x,y)" fluid resolution="500"></MISTImage>
               <br />
               <br />
               Notice that when one variable is negative and the other is positive, the 
-              image is lighter--negative values produce less "ink"!
+              image is lighter--negative values produce less "ink"! */}
             </Container>
           ),
 
@@ -881,7 +876,7 @@ const sections = [
           title: "The Workspace",
           id: "workspace",
           keywords: ["graph", "grayscale", "general"],
-          image: <MISTImage code="x" resolution="250" />,
+          image: <MISTImage code="x" resolution="200" />,
           isAnimated: false,
           //Text
           text: (
@@ -902,7 +897,7 @@ const sections = [
               <br/>
               <br/>
               Here you can click
-               on different nodes and drag them to the center panel.
+               on different blocks and drag them to the center panel.
               <br/>
               <br/>
                {/* <Image src={nodeDragGif} fluid></Image>  */}
@@ -916,8 +911,8 @@ const sections = [
                {/* //gif of moving the nodes!!! */}
                <br/>
               <br/>
-               By <b>double-clicking</b> on variables and dragging away from 
-               the node, you can connect them to function blocks.
+               By <b>double-clicking</b> on blocks and dragging away from 
+               them, you can connect them to the left side of other blocks. 
                <br/>
                <br/>
                <Container fluid>
@@ -941,9 +936,9 @@ const sections = [
               </Container>
                <br/>
                <br/>
-               Always drag from an input to a function.
+              {/* Always drag from an input to a function.
               <br/>
-              <br/>
+              <br/> */}
               
               {/* <Image src={GUIgif} fluid></Image> */}
               {/* <br/>
@@ -1070,7 +1065,7 @@ const sections = [
             title: "The Expert UI", 
             id: "expert-ui", 
             keywords: ["graph", "grayscale", "axis"], 
-            image: <MISTImage code="x" resolution="250" />, 
+            image: <MISTImage code="x" resolution="200" />, 
             isAnimated: false, 
             //Text 
             text: <Container>
@@ -1109,9 +1104,6 @@ const sections = [
               or download it as a .png file. We currently don’t have
               support for downloading .gif files, but we’re working
               on it!
-              <br/>
-              <br/>
-              VIDEO
               <br/>
               <br/>
             </Container>,
@@ -1180,7 +1172,7 @@ const sections = [
         title: "X, Y, and Constants",
         id: "x-y-constants",
         keywords: ["introduction", "grayscale", "MIST"],
-        image: <MISTImage code="x" resolution="250" />,
+        image: <MISTImage code="x" resolution="200" />,
         isAnimated: false,
         //Text
         text: (
@@ -1210,14 +1202,14 @@ const sections = [
             <Row fluid >
               <Col>
                 <b>Code:</b> x
-                <MISTImage code="x" resolution="400" />
+                <MISTImage code="x" resolution="300" />
                 <br/>
                 <br/>
                 As <b>X</b> increases, the image gets darker.
               </Col>
               <Col>
                 <b>Code:</b> y
-                <MISTImage code="y" resolution="400" />
+                <MISTImage code="y" resolution="300" />
                 <br/>
                 <br/>
                 As <b>Y</b> increases, the image gets darker.
@@ -1238,31 +1230,31 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage code="neg(1)" resolution="150" />
+                <MISTImage code="neg(1)" resolution="100" />
                 {/* <br/> */}
                 <br/>
                 <b>Code:</b> -1
               </Col>
               <Col>
-                <MISTImage code="neg(0.5)" resolution="150" />
+                <MISTImage code="neg(0.5)" resolution="100" />
                 {/* <br/> */}
                 <br/>
                 <b>Code:</b> -0.5
               </Col>
               <Col>
-                <MISTImage code="0" resolution="150" />
+                <MISTImage code="0" resolution="100" />
                 {/* <br/> */}
                 <br/>
                 <b>Code:</b> 0
               </Col>
               <Col>
-                <MISTImage code="0.5" resolution="150" />
+                <MISTImage code="0.5" resolution="100" />
                 {/* <br/> */}
                 <br/>
                 <b>Code:</b> 0.5
               </Col>
               <Col>
-                <MISTImage code="1" resolution="150" />
+                <MISTImage code="1" resolution="100" />
                 {/* <br/> */}
                 <br/>
                 <b>Code:</b> 1
@@ -1296,10 +1288,9 @@ const sections = [
 
         // //Final
         // final: <Container> This is the final image </Container>,
-        isCheckpoint: true,
-        CheckPoint: (
-          <Container> Try combining different values and functions:</Container>
-        ),
+        isCheckpoint: false,
+        CheckPoint: [
+        ],
         
         isChallenge: false,
         //Challenges
@@ -1331,8 +1322,6 @@ const sections = [
         //Text
         text: (
           <Container>
-            <br />
-            <br />
             Functions can also take time as an input, resulting in an animation.
             In MIST, we've used:
             <br/>
