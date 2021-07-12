@@ -1,6 +1,5 @@
 const passport = require("passport");
 const { handleError } = require("./utilities.js");
-var database = require("../db/database.js");
 const crypto = require("crypto");
 const userDB = require("../db/user.js");
 const nodemailer = require("nodemailer");
