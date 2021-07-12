@@ -1,6 +1,9 @@
-const User = require("../Models/User"); 
+const User = require("../Models/User");
 const pool = require("./dbconfig"); // Used for database queries
 const bcrypt = require("bcrypt"); // Used for password hashing
+const { passwordStrength } = require("check-password-strength");
+// https://www.npmjs.com/package/check-password-strength
+
 // +------------+-------------------------------------------------
 // |    Users   |
 // +------------+
@@ -8,43 +11,21 @@ const bcrypt = require("bcrypt"); // Used for password hashing
 /**
  * Checks if the password is secure enough when the user is signing up
  */
-passwordSecurity = (pass) => {
-	// These variables determine the conditions for digits and special characters
-	let digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
-	let checkNumber = false;
-	let checkSpecial = false;
-	let Special = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
-	if (pass.length < 8) {
-		return "Required: At least 8 characters";
-	}
-	for (let i = 0; i < Special.length; i++) {
-		if (pass.includes(Special[i])) {
-			checkSpecial = true;
-		}
-	}
-	for (let i = 0; i < digits.length; i++) {
-		if (pass.includes(digits[i])) {
-			checkNumber = true;
-		}
-	}
-	if (!checkSpecial) {
-		return "Required: At least one special character";
-	} else if (!checkNumber) {
-		return "Required: At least one digit";
-	} else {
-		return "Success";
-	}
-};
+const user_column = "user_id";
+const email_column = "email";
 
 // Determines if a user exists, given their username (user_id)
 // Returns a boolean value
-// TODO make it applicable to email
-const checkUserExists = async (user_id) => {
-	const result = await pool.query(
-		"select exists (select 1 from users where user_id=$1)",
-		[user_id]
-	);
-	return result.rows[0].exists;
+const checkRowExists = (column, value) => {
+	pool
+		.query("select exists (select 1 from users where $1=$2)", [column, value])
+		.then((res) => {
+			return res.rows[0].exists;
+		})
+		.catch((err) => {
+			console.log(err);
+			return false;
+		});
 };
 
 /**
@@ -56,45 +37,39 @@ const checkUserExists = async (user_id) => {
 module.exports.createUser = async (req, callback) => {
 	let user = req.body;
 	// check userid duplicate
-	if (await checkUserExists(user.user_id)) {
-		callback("User ID Already taken");
+	if (checkRowExists(user_column, user.user_id)) {
+		callback("User ID Already taken.");
 		return;
 	}
 	// check email duplicate
-	pool.query(
-		"select exists(select 1 from users where email=$1)",
-		[user.email],
-		(err, res) => {
-			if (err) {
-				callback(err);
-				return;
-			}
-			if (res.rows.exists) {
-				callback("Email already registered.");
-				return;
-			}
-		}
-	);
-	let passwordMessage = passwordSecurity(user.password); // Checks how secure the new password is
-	if (passwordMessage !== "Success") {
-		callback(passwordMessage);
+	if (checkRowExists(email_column, user.email)) {
+		callback("Email already registered.");
+		return;
+	}
+
+	const passwdStrength = passwordStrength(user.password);
+	// 0 = Too weak
+	// 1 = Weak
+	// 2 = Medium
+	// 3 = Strong
+	if (passwdStrength.id <= 2) {
+		callback(passwdStrength.value);
 		return;
 	}
 	const hashedPassword = await bcrypt.hash(req.body.password, 12); // Hashes password
-	pool.query(
-		"insert into users (user_id, email, password, token) \
+	pool
+		.query(
+			"insert into users (user_id, email, password, token) \
         values($1, $2, $3, $4)",
-		[user.user_id, user.email, hashedPassword, user.token], // New data is put into the table
-		(err, res) => {
-			if (err) {
-				callback(err);
-				console.log(err);
-				return;
-			}
-			callback("User Created");
+			[user.user_id, user.email, hashedPassword, user.token]
+		)
+		.then((res) => {
+			callback(`User created with ID: ${user.user_id}`);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
 			return;
-		}
-	);
+		});
 };
 
 /**
@@ -105,18 +80,18 @@ module.exports.createUser = async (req, callback) => {
  * @param {*} callback
  */
 module.exports.verifyEmail = (req, callback) => {
-	pool.query(
-		"update users set verified=true where token=$1", // If token matches, set user to verified
-		[req.params.token],
-		(err, res) => {
-			if (err) {
-				console.log(err);
-				callback(err);
-			} else {
-				callback("Email Verified");
-			}
-		}
-	);
+	pool
+		.query(
+			"update users set verified=true where token=$1", // If token matches, set user to verified
+			[req.params.token]
+		)
+		.then((res) => {
+			callback(`Email verified for user: ${user.user_id}`);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 };
 
 /**
@@ -127,14 +102,18 @@ module.exports.verifyEmail = (req, callback) => {
  * @param {*} callback
  */
 module.exports.checkEmailVerified = async (req) => {
-	if (!checkUserExists(req.body.user_id)) {
+	if (!checkRowExists(req.body.user_id)) {
 		callback("User ID does not exist!");
 	}
-	const result = await pool.query(
-		"select verified from users where user_id=$1",
-		[req.body.user_id]
-	);
-	return result.rows[0].verified;
+	pool
+		.query("select verified from users where user_id=$1", [req.body.user_id])
+		.then((res) => {
+			return result.rows[0].verified;
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 };
 
 /**
@@ -144,50 +123,38 @@ module.exports.checkEmailVerified = async (req) => {
  * @param {*} callback
  */
 module.exports.changePassword = async (req, callback) => {
+	const user = req.body;
 	let dbPassword = "";
-	// await pool.query(
-	// 	"select password from users where user_id=$1",
-	// 	[req.body.user_id],
-	// 	(err, result) => {
-	// 		if (err) {
-	// 			callback(err);
-	// 			return;
-	// 		}
-	// 		console.log(result.rows[0].password);
-	// 		dbPassword = result.rows[0].password;
-	// 	}
-	// );
 	const result = await pool.query(
 		"select password from users where user_id=$1",
-		[req.body.user_id]
+		[user.user_id]
 	);
 	dbPassword = result.rows[0].password; // retrieve the hash of the current password
-	bcrypt.compare(req.body.currentPassword, dbPassword, async (err, result) => { // compare the hash with the given password
+	bcrypt.compare(user.currentPassword, dbPassword, async (err, result) => {
+		// compare the hash with the given password
 		if (err) {
 			callback(err);
 		}
 		if (result === false) {
 			callback("Old Password Does Not Match");
 		} else {
-			let message = passwordSecurity(req.body.newPassword); // check security level of the new password
+			let message = passwordSecurity(user.newPassword); // check security level of the new password
 			if (message !== "Success") {
-				callback(passwordSecurity(req.body.newPassword));
+				callback(passwordSecurity(user.newPassword));
 			}
-			let newPass = await bcrypt.hash(req.body.newPassword, 12); // hashes new password
-			pool.query(
-				"update users set password=$1 where user_id=$2",
-				[newPass, req.body.user_id], // new password stored in database
-				(err, result) => {
-					if (err) {
-						callback(err);
-						return;
-					}
-					callback(
-						`Successfully updated password of user: ${req.body.user_id}`
-					);
-				}
-			);
-			// TODO error handling
+			let newPass = await bcrypt.hash(user.newPassword, 12); // hashes new password
+			pool
+				.query("update users set password=$1 where user_id=$2", [
+					newPass,
+					user.user_id,
+				])
+				.then((res) => {
+					callback(`Successfully updated password for user: ${user.user_id}`);
+				})
+				.catch((err) => {
+					handleDBError(err, callback);
+					return;
+				});
 		}
 	});
 };
@@ -201,14 +168,18 @@ module.exports.changePassword = async (req, callback) => {
  */
 module.exports.changeEmail = (req, callback) => {
 	let user = req.body;
-	pool.query(
-		"update users set email=$1 where user_id=$2",
-		[user.email, user.user_id],
-		(err, res) => {
-			if (err) throw err;
-			callback(`Successfully Updated Email for user ${user.user_id}`);
-		}
-	);
+	pool
+		.query("update users set email=$1 where user_id=$2", [
+			user.email,
+			user.user_id,
+		])
+		.then((res) => {
+			callback(`Successfully updated email for user: ${user.user_id}`);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 };
 
 /**
@@ -221,21 +192,23 @@ module.exports.changeEmail = (req, callback) => {
 module.exports.changeUserId = (req, callback) => {
 	if (req.body.new_user_id === "") callback("Username cannot be blank");
 	else {
-		if (checkUserExists(req.body.new_user_id)) { // Checks if the username is already in use
-			console.log("duplicate user_id");
+		if (checkRowExists(user_column, req.body.new_user_id)) {
+			// Checks if the username is already in use
+			console.log("Duplicate User ID");
 			callback("User ID already in use!");
 		} else {
-			pool.query(
-				"update users set user_id=$1 where user_id=$2",
-				[req.body.new_user_id, req.body.user_id],
-				(err, res) => {
-					if (err) {
-						callback(err);
-					} else {
-						callback(`User ID updated successfully`);
-					}
-				}
-			);
+			pool
+				.query("update users set user_id=$1 where user_id=$2", [
+					req.body.new_user_id,
+					req.body.user_id,
+				])
+				.then((res) => {
+					callback("User ID updated successfully.");
+				})
+				.catch((err) => {
+					handleDBError(err, callback);
+					return;
+				});
 		}
 	}
 };
@@ -250,19 +223,22 @@ module.exports.changeUserId = (req, callback) => {
 module.exports.changeAbout = (req, callback) => {
 	let user = req.body;
 	let user_exists;
-	if (!checkUserExists(user.user_id)) {
-		callback("User does not exist");
+	if (!checkRowExists(user_column, user.user_id)) {
+		callback("User does not exist.");
 		return;
 	}
-	pool.query(
-		"update users set about = '$1' where user_id = '$2'",
-		[user.newBio, user.user_id],
-		(err, res) => {
-			if (err) throw err;
-			console.log(res);
-			callback(`Updated the about description for user: ${user.user_id}`);
-		}
-	);
+	pool
+		.query("update users set about = '$1' where user_id = '$2'", [
+			user.newBio,
+			user.user_id,
+		])
+		.then((res) => {
+			callback(`Updated about description for user: ${user.user_id}`);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 };
 
 /**
@@ -275,32 +251,26 @@ module.exports.changeAbout = (req, callback) => {
 module.exports.changeProfilePic = (req, callback) => {
 	let user = req.body;
 	let user_exists;
-	if (!checkUserExists(user.user_id)) {
-		callback("User does not exist");
+	if (!checkRowExists(user_column, user.user_id)) {
+		callback("User does not exist.");
 		return;
 	}
-	pool.query(
-		"update users set profile_pic = $1 where user_id = $2",
-		[user.newProfilePic, user.user_id],
-		(err, res) => {
-			if (err) throw err;
-			console.log(res);
+	pool
+		.query("update users set profile_pic = $1 where user_id = $2", [
+			user.newProfilePic,
+			user.user_id,
+		])
+		.then((res) => {
 			callback(`Updated profile picture for user: ${user.user_id}`);
-		}
-	);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 };
 
-// UPDATE: since username is now unique, userId has merged into it and this method is now no longer usable
-// given a userId, returns the username
-/** 
-module.exports.getUsername = (userId, callback) => {
-	User.findById(userId).exec((err, user) => {
-		if (err) callback(null, err);
-		else callback(user.username, null);
-	});
-};*/
-
 /**
+ *
  * Deletes the user's account
  * @param {*} req
  * @param {*} callback
@@ -309,66 +279,74 @@ module.exports.getUsername = (userId, callback) => {
 module.exports.deleteAccount = async (req, callback) => {
 	let user = req.body;
 	let dbPassword = "";
-	if (!checkUserExists(user.user_id)) {
-		callback("User does not exist");
+	if (!checkRowExists(user_column, user.user_id)) {
+		callback("User does not exist.");
+		return;
 	}
-	const result = await pool.query(
-		"select password from users where user_id=$1",
-		[req.body.user_id]
-	);
-	dbPassword = result.rows[0].password; // retrieves current password hash
+	const result = await pool
+		.query("select password from users where user_id=$1", [req.body.user_id])
+		.then((res) => {
+			dbPassword = res.rows[0].password;
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 
-	bcrypt.compare(req.body.password, dbPassword, (err, result) => { // checks password before deleting
+	bcrypt.compare(req.body.password, dbPassword, (err, result) => {
+		// checks password before deleting
 		if (err) {
 			console.log(err);
 		}
 		if (result === false) {
 			callback("Password incorrect.");
 		} else {
-			pool.query(
-				"delete from users where user_id=$1",
-				[user.user_id],
-				(err, res) => {
-					if (err) throw err;
-					console.log(res);
-					callback(`Deleted user!`);
-				}
-			);
+			pool
+				.query("delete from users where user_id=$1", [user.user_id])
+				.then((res) => {
+					callback("Deleted user.");
+				})
+				.catch((err) => {
+					handleDBError(err, callback);
+					return;
+				});
 		}
 	});
 };
-
-// given a username, returns the userId
-// UPDATE: since username is now unique, userId has merged into it and this method is now no longer usable
-/**module.exports.getUserIdByUsername = (username, callback) => {
-	const username_exists = pool.query("select exists (select 1 from users where")
-	
-	User.findOne({ username: username }, (err, user) => {
-		if (err) return callback(err, null);
-		else return callback(null, user._id);
-	});
-};**/
 
 // Returns all images for the user's own profile
 // TODO: have it check for user_id so it can be used for personal profile and other profiles
 // 		  (only difference is other profiles only retrieve public images)
 module.exports.getCompleteUserProfile = async (req, callback) => {
 	let user = req.body;
-	const is_active_user = pool.query(
-		"select exists (select 1 from users where user_id='$1')",
-		[user.user_id]
-	);
+	let is_active_user;
+	pool
+		.query("select exists (select 1 from users where user_id=$1)", [
+			user.user_id,
+		])
+		.then((res) => (is_active_user = res.rows[0].exists))
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 	if (!is_active_user) {
-		callback("User does not exist");
+		callback("User does not exist.");
 	}
-	pool.query(
-		"select code, created_at, likes, comments from posts \
+	pool
+		.query(
+			"select code, created_at, likes, comments from posts \
 		inner join users on posts.user_id = users.user_id \
 		where user_id = $1",
-		[user.user_id]
-	);
+			[user.user_id]
+		)
+		.then((res) => {
+			return res.rows[0];
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 };
-
 
 // TODO: Make a second function like the one above but for retrieving all collections from a user
 
@@ -400,4 +378,26 @@ module.exports.getCompleteUserProfile = async (req, callback) => {
 // 		})
 // 		.select("-password")
 // 		.exec();
+// };
+
+// TODO In the future, parse the error code.
+const handleDBError = (err, callback) => {
+	console.error(err);
+	callback("Unknown Database error.");
+	return;
+};
+// //https://www.reddit.com/r/node/comments/ku7rji/is_there_a_better_way_to_handle_postgres_database/giqvi3h?utm_source=share&utm_medium=web2x&context=3
+// const handleDBError = (err, callback) => {
+// 	console.error(err);
+// 	const errors = {
+// 		UniqueViolationError: {
+// 			code: 23505,
+// 			message: (field) => `${field} already exists.`,
+// 		},
+// 	};
+// 	if (err.code === errors.UniqueViolationError.code) {
+// 		callback(errors.UniqueViolationError.message(err.internalQuery));
+// 		return;
+// 	}
+// 	callback(message);
 // };
