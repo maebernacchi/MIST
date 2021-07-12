@@ -108,10 +108,10 @@ module.exports.checkEmailVerified = async (req) => {
 	pool
 		.query("select verified from users where user_id=$1", [user.user_id])
 		.then((res) => {
-			return result.rows[0].verified;
+			return res.rows[0].verified;
 		})
 		.catch((err) => {
-			handleDBError(err, callback);
+			handleDBError(err, () => {});
 			return;
 		});
 };
