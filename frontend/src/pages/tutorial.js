@@ -209,7 +209,7 @@ function WorkSpaceDemo() {
           // />
           <WorkSpace
                   width={document.documentElement.clientWidth}
-                  height={document.documentElement.clientHeight * 0.81}
+                  height={document.documentElement.clientHeight * 0.5}
                   menuHeight={document.documentElement.clientWidth * 0.08}
                   funBarHeight={document.documentElement.clientHeight * 0.1}
                   functionWidth={document.documentElement.clientWidth * 0.047}
@@ -297,7 +297,7 @@ function TableContents() {
                 as={Button}
                 variant="link"
                 eventKey={idx + 1}
-                style={{ color: "black" }}
+                style={{ color: "black" , textAlign: "left"}}
               >
                 {section.title}
               </Accordion.Toggle>
@@ -447,7 +447,7 @@ function SubsectionButton(props) {
   return (
     <Button
       variant="outline-dark"
-      style={{ marginRight: "1em" }}
+      style={{ marginRight: "1em"}}
       href={"#" + props.id + "-" + props.type}
     >
       {props.type}
@@ -1322,8 +1322,8 @@ const sections = [
         //Text
         text: (
           <Container>
-            Functions can also take time as an input, resulting in an animation.
-            In MIST, we've used:
+            Functions can also take time as an input, resulting in an animation. If you want to see how it works, 
+            slide your mouse over these images! In MIST, we've used:
             <br/>
             <br/>            
             {/* In order to get an animation, you'll have to connect a time variable
