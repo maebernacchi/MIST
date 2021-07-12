@@ -38,7 +38,7 @@ userHandlers.signUp = async function (req, res) {
 	// req.body.token = await crypto.randomBytes(32).toString("hex");
 	const token = crypto.randomBytes(32).toString("hex"); // Generates token used for email verification
 	req.body.token = token;
-	
+
 	// Set up the automated verification email
 	const transporter = nodemailer.createTransport({
 		host: "smtp.mailtrap.io",
@@ -91,8 +91,10 @@ userHandlers.signUp = async function (req, res) {
 // TODO move to database
 userHandlers.signIn = async function (req, res, next) {
 	const emailVerified = await userDB.checkEmailVerified(req);
+	const message = "";
 	if (!emailVerified) {
-		res.json("Please verify email");
+		message = "You need to verify email first!";
+		res.json(message);
 	} else {
 		try {
 			passport.authenticate("local", (err, user, info) => {
@@ -100,7 +102,8 @@ userHandlers.signIn = async function (req, res, next) {
 					throw err;
 				}
 				if (!user) {
-					res.json("Log in failed.");
+					message = "Log in failed.";
+					res.json(message);
 				} else {
 					req.logIn(user, (err) => {
 						if (err) throw err;
@@ -121,7 +124,8 @@ userHandlers.signIn = async function (req, res, next) {
  */
 userHandlers.signOut = function (req, res) {
 	req.logout();
-	res.json("Success");
+	const message = "Log out successful!";
+	res.json(message);
 };
 
 /*
@@ -138,12 +142,12 @@ userHandlers.getUser = function (req, res) {
 	res.json(req.user);
 };
 
-/** 
+/**
  * Displays personal profile (only if user is logged in)
  * NOTE: If getCompleteUserProfile is changed to check for if the user is
  * looking at their personal profile (ie the two functions are merged) this function
  * should be truncated, as the next function accounts for it
-*/
+ */
 userHandlers.getAuthenticatedCompletePersonalProfile = async function (
 	req,
 	res
@@ -160,9 +164,9 @@ userHandlers.getAuthenticatedCompletePersonalProfile = async function (
 	}
 };
 
-/** 
+/**
  * Displays another user's profile (only if user is logged in)
-*/
+ */
 userHandlers.getAuthenticatedCompleteUserProfile = async function (req, res) {
 	try {
 		if (!req.isAuthenticated()) throw "You need to login to view a profile!";
