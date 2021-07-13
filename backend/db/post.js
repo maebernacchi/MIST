@@ -49,6 +49,7 @@ module.exports.imageExists = async (user_id, title, callback) => {
                             values ($1, $2, $3, $4, $5)", 
                             [title, caption, code, user_id, visibility]);
     
+                            
     //build image
     let image = Image({
       userId: sanitize(userId),
