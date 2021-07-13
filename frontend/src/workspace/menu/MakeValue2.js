@@ -67,6 +67,8 @@ function ValGroup(props) {
   const global = useContext(globalContext);
   const valName = props.valName;
   const nodeDimensions = useContext(nodeContext);
+  const width = useContext(globalContext).width;
+  const height = useContext(globalContext).height;
   const fonts = useContext(fontContext);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -119,6 +121,10 @@ function ValGroup(props) {
         if (pos.y > global.height - global.funBarHeight - global.valueWidth) {
           pos.y = global.height - global.funBarHeight - global.valueWidth;
         }
+        if (pos.x > width - 270 - global.valueWidth &&
+          pos.y > height-nodeDimensions.renderSideLength-45 - global.valueWidth){
+            pos.x = width - 270 - global.valueWidth
+          }
         return pos;
       }}
       onMouseOver={function (props) {

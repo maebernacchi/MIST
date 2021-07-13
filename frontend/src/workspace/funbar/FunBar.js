@@ -4,6 +4,8 @@ import "../../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { funBarContext } from "../globals/globals-funbar-dimensions";
 import { fontContext } from "../globals/globals-fonts";
+import {nodeContext} from "../globals/globals-nodes-dimensions.js";
+import { globalContext } from "../globals/global-context";
 
 function FunBar(props) {
   const funBarDimensions = useContext(funBarContext);
@@ -12,12 +14,15 @@ function FunBar(props) {
   // only here because props isn't recognized from Spring
   const renderFunction = props.renderFunction;
   const [imageButtonHovered, setImageButtonHovered] = useState(false);
+  const nodeDimensions = useContext(nodeContext);
+  const height = useContext(globalContext).height;
 
   return (
     <Group y={funBarDimensions.funbarY}>
       <BarBase {...props} />
       
       <ImageButton {...props} />
+      <ImagePlaceholder {...props} />
     </Group>
   );
 
@@ -87,7 +92,7 @@ function FunBar(props) {
           )}
         </Spring>
         <Text
-          text={"Image"}
+          text={"Image Options"}
           width={funBarDimensions.imageButtonWidth}
           height={funBarDimensions.imageButtonHeight}
           align={"center"}
@@ -112,6 +117,50 @@ function FunBar(props) {
           onMouseOut={() => {
             setImageButtonHovered(false);
           }}
+        />
+      </Group>
+    );
+  }
+
+  function ImagePlaceholder(props) {
+    const ImagePlaceholderColor = "#f7a731";
+
+    return (
+      <Group // Image Button on blue bar
+        x={funBarDimensions.imagePlaceX}
+        y={height-nodeDimensions.renderSideLength-535}
+      >
+        <Spring // animates image button fill
+          native
+          from={{
+            fill: ImagePlaceholderColor,
+          }}
+          to={{
+            fill:ImagePlaceholderColor,
+          }}
+        >
+          {(props) => (
+            <animated.Rect // function button
+              {...props}
+              width={funBarDimensions.imageButtonWidth}
+              height={funBarDimensions.imageButtonWidth}
+              cornerRadius={8}
+              shadowBlur={5}
+              shadowOffset={{ x: 2, y: 3 }}
+              shadowOpacity={0.5}
+              opacity={renderFunction.isRenderable ? .8 : .6}
+            />
+          )}
+        </Spring>
+        <Text
+          text={"Click a node for it's image to appear here"}
+          x={20}
+          width={funBarDimensions.imageButtonWidth-40}
+          height={funBarDimensions.imageButtonHeight+70}
+          align={"center"}
+          verticalAlign={"bottom"}
+          fill={"gray"}
+          fontSize={funBarFontSize}
         />
       </Group>
     );
