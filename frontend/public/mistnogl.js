@@ -1337,6 +1337,7 @@ MIST.expToGL = (function() {
     "t.d": "t.w",
     "m.x": "m.x",
     "m.y": "m.y"
+    
   };
 
   function func(name, limit) {
@@ -1514,8 +1515,7 @@ MIST.builtins.functions = new MIST.Collection();
 //   BUILTIN = MIST.builtins.functions.addBuiltinFun
 // But that seems to be illegal.
 function BUILTIN() {
-  MIST.builtins.functions.addBuiltinFun.apply(MIST.builtins.functions, 
-    arguments);
+  MIST.builtins.functions.addBuiltinFun.apply(MIST.builtins.functions, arguments);
 }
 
 // +-----------+-----------------------------------------------------
@@ -1558,7 +1558,22 @@ function wrap(val)
   else
     return val;
 } // wrap
-MIST.wrap = wrap;
+
+// alternate function for if we want to use a wrap function
+// with functions that grow rapidly close to 0 (such as div(1,x))
+// function wrapTwo(val){
+//   // for (let i = 0; i < 10000; i++){
+//   for (let i = 0; i < 15; i++){
+//     if (val < -1){
+//       val+= 2;
+//     }
+//     else if (val > 1){
+//       val-= 2;
+//     }
+//     else return val;
+//   }
+// }
+// MIST.wrapTwo = wrapTwo;
  
 // +-------------------+---------------------------------------------
 // | Builtin Functions |
@@ -1644,6 +1659,7 @@ BUILTIN("signz", "signz",
 var sine = function(a) {
     return Math.sin(Math.PI * a);
 };
+
 var sin = sine;
 MIST.sine = sine;
 MIST.sin = sine;
@@ -1666,7 +1682,7 @@ MIST.sum = sum;
 BUILTIN("sum", "sum", "Sum 2 or more values.  If the sum would exceed 1, has the value 1.  If the sum would be less than -1, has the value -1", "...", 2, 20, "GENERAL");
 
 var wrapsum = function() {
-    return wrap(sum.apply(this, arguments));
+    return wrapTwo(sum.apply(this, arguments));
 };
 var wsum = wrapsum;
 MIST.wrapsum = wrapsum;
@@ -1680,7 +1696,9 @@ var mistif = function(test, pos, neg) {
     return neg;
 };
 BUILTIN("mistif", "if", "if test is greater than or equal to zero, return pos, if test is less than zero, return neg", "test, pos, neg", 3, 3, "GENERAL");/**
- * mist-layout.js
+
+
+* mist-layout.js
  *   Information on the layout of a MIST editing session.
  */
 
@@ -2066,6 +2084,7 @@ function c2r(c)
 {
   return (c/127.5) - 1.0;
 } // c2r
+
 
 
 // +-------------------+---------------------------------------------

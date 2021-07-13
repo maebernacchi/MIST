@@ -96,10 +96,10 @@ function ValNode(props) {
     return (
       <Image
         image={image}
-        x={nodeDimensions.functionTrashX - valueWidth * 2/3}
+        x={nodeDimensions.functionTrashX-50}
         y={nodeDimensions.functionTrashY}
-        width={valueWidth/3}
-        height={valueWidth/3}
+        width={25}
+        height={25}
         shadowColor={trashHovered ? "red" : "cyan"}
         shadowBlur={5}
         visible={hovered || !props.draggable}
@@ -189,7 +189,7 @@ function ValNode(props) {
           e.currentTarget.y()
         );
         // Updates the x & y coordinates only when the custom node is being dragged
-        if(rep === '#'){
+        if(rep == '#'){
           props.updateNodePosition(
             index,
             e.currentTarget.x(),
@@ -252,8 +252,8 @@ function ValNode(props) {
               id="form#"
               style={{
                 position: "absolute",
-                left: props.x + valueWidth * 1/3,
-                top: props.y + valueWidth * 4/3,
+                left: props.x + 25 + props.formOffsetX,
+                top: props.y + 90 + props.formOffsetY,
               }}
               onSubmit={(e) => {
                 e.preventDefault();
@@ -287,6 +287,70 @@ function ValNode(props) {
             </form>
             <div></div>
           </Portal>
+          
+          // referenced heavily for the editable text:
+          // https://konvajs.org/docs/sandbox/Editable_Text.html
+          // This was just an experiment. Turns out it still requires 
+          // knowing where konva stage is located. Unless we want to hide
+          // the entry form, but that seems like a /bad/ idea.
+          //
+          // <Text
+          //   text={formValue? formValue : renderFunction}
+          //   fill={"gray"}
+          //   fontSize={fonts.valueFontSize * 2 / 3}
+          //   x={0}
+          //   y={0} 
+          //   width={valueWidth}
+          //   height={valueWidth}
+          //   align={"center"}
+          //   verticalAlign={"middle"}
+          //   onClick={(e) => {
+          //     var textarea = document.createElement('textarea'); // these two lines taken from
+          //     document.body.appendChild(textarea);              //  the Konva article
+          //     // textarea.value = this.text();
+          //     textarea.style.position = 'absolute';
+          //     textarea.style.top = 50 + "vh";
+          //     textarea.style.left = 50 + 'vw';
+          //     // textarea.style.backgroundColor = "transparent";
+          //     textarea.style.border = "none";
+          //     textarea.style.outline = "none";
+
+          //     // textarea.style.col = "transparent";
+          //     textarea.style.color = "transparent";
+
+
+
+          //     textarea.focus();
+          //     textarea.addEventListener("focusout", function(e) {
+          //       // remove when focus lost
+          //       document.body.removeChild(textarea);
+          //     });
+              
+          //     textarea.addEventListener('keyup', function (e) {
+          //       // hide on enter
+          //       if (e.keyCode === 13) {
+          //         textarea.blur();
+          //       }
+          //       else {
+          //         setFormValue(textarea.value);
+          //       }
+          //       if (parseFloat(formValue) !== null) {
+          //         setRenderFunction(formValue);
+          //         props.updateHashValue(index, formValue);
+          //         //setSubmitted(true);
+          //       } else {
+          //         console.log("Invalid Number");
+          //         setFormValue(" ");
+          //       }
+          
+                
+          //     });
+              
+
+          //   }}
+          //   _useStrictMode
+          // />
+
         ) : (
           <Text
             text={renderFunction}
@@ -335,7 +399,7 @@ function ValNode(props) {
       <Circle
         x={valueWidth}
         y={valueWidth/2}
-        radius={valueWidth/8}
+        radius={8}
         fill={"#B3B3B3"}
         onDblClick={(e) => {
           // Generates the temporary line when double clicked

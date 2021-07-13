@@ -6,7 +6,7 @@
 const workspaceBackground = {
   classic: "#FAFBFF",
   dusk: "#edf2fd",
-  dark: "black",
+  dark: "#525252",
 };
 
 // +-------------+---------------------------------------------------
@@ -37,13 +37,13 @@ const nodeHoverShadow = {
 const menuBackground = {
     classic: 'white',
     dusk: 'white',
-    dark: '#1c170f',
+    dark: '#adadad',
 }
 
 // FOR NOW: Color of the value node on the menu value button.
 const valueMenuColor1 = "#F2937C";
 const valueMenuColor2 = "#ffa931";
-const valueMenuColor3 = "#ffa931";
+const valueMenuColor3 = "#463f36";
 
 
 // Color of the reset/open/save buttons on the menu.
@@ -91,7 +91,7 @@ const menuSettingsTab = {
 const funBarBackground = {
     classic: '#7FA7E7',
     dusk: '#111d5e',
-    dark: '#1c170f',
+    dark: '#525252',
 }
 
 // +---------+-------------------------------------------------------
