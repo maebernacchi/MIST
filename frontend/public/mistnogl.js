@@ -1365,10 +1365,6 @@ MIST.expToGL = (function() {
     square: func("SQUARE", 1),
     wrap: func("WRAP", 1),
     mistif: func("MISTIF", 3),
-    sqrt: func("SQRT", 1),
-    tan: func("TAN", 1),
-    div: func("DIV", 2),
-    atan: func("ATAN", 1),
 
     abs: func("abs"),
     signz: func("sign"),
