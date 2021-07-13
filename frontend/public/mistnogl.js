@@ -1365,10 +1365,9 @@ MIST.expToGL = (function() {
     square: func("SQUARE", 1),
     wrap: func("WRAP", 1),
     mistif: func("MISTIF", 3),
-    sqrt: func("SQRT", 1),
+/*     sqrt: func("SQRT", 1),
     tan: func("TAN", 1),
-    div: func("DIV", 2),
-    atan: func("ATAN", 1),
+    div: func("DIV", 2), */
 
     abs: func("abs"),
     signz: func("sign"),
@@ -1562,7 +1561,6 @@ function wrap(val)
   else
     return val;
 } // wrap
-MIST.wrap = wrap;
  
 // +-------------------+---------------------------------------------
 // | Builtin Functions |
@@ -1655,38 +1653,10 @@ MIST.sin = sine;
 BUILTIN("sine", "sin", "The sine of pi*a", "a",
   1, 1, "GENERAL");
 
-var tan = function(a) {
-  return Math.tan(Math.PI * a);
-};
-MIST.tan = tan;
-BUILTIN("tangent", "tan", "The tangent of pi*a", "a",
-  1, 1, "GENERAL");
-
-var arctan = function(a) {
-  return Math.atan(1 * a) *2 / Math.PI ;
-};
-//
-var atan = arctan;
-MIST.arctan = arctan;
-MIST.atan = arctan;
-BUILTIN("arctan", "atan", "The inverse tangent of a", "a", 1, 1, "GENERAL");
-
 var square = function(i) {
   return i*i;
 } // square
 BUILTIN("square", "square", "Square i", "i", 1, 1, "GENERAL");
-
-var sqrt = function(i) {
-  return Math.sqrt(i);
-} // sqrt
-MIST.sqrt = sqrt;
-BUILTIN("sqrt", "sqrt", "Square root of i", "i", 1, 1, "GENERAL");
-
-var div = function(n, d) {
-  return n / d;
-} // div
-MIST.div = div;
-BUILTIN("div", "div", "divides the first value by the second", "any", 2, 2, "GENERAL");
 
 var sum = function() {
   var sum = 0;
@@ -1699,7 +1669,7 @@ MIST.sum = sum;
 BUILTIN("sum", "sum", "Sum 2 or more values.  If the sum would exceed 1, has the value 1.  If the sum would be less than -1, has the value -1", "...", 2, 20, "GENERAL");
 
 var wrapsum = function() {
-    return wrap(sum.apply(this, arguments));
+    return wrapTwo(sum.apply(this, arguments));
 };
 var wsum = wrapsum;
 MIST.wrapsum = wrapsum;
