@@ -4,10 +4,7 @@ import "../../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { funBarContext } from "../globals/globals-funbar-dimensions";
 import { fontContext } from "../globals/globals-fonts";
-import ReactDOM from 'react-dom';
 import { Html } from 'react-konva-utils';
-import { nodeContext } from "../globals/globals-nodes-dimensions";
-import { globalContext } from "../globals/global-context";
 
 
 function FunBar(props) {
