@@ -114,6 +114,9 @@ function FuncGroup(props) {
         if (pos.x > global.width - global.functionWidth) {
           pos.x = global.width - global.functionWidth;
         }
+        if (pos.x > global.width - global.functionWidth) {
+          pos.x = global.width - global.functionWidth;
+        }
         if (pos.y < 0) {
           pos.y = 0;
         }
@@ -174,14 +177,14 @@ function FuncGroup(props) {
           y={global.functionWidth*3/5}
           opacity={
             props.tabs.functionsOpen? 
-              funName==="mistif" || funName==="rgb" 
-                ? 1 : 
+              funName==="mistif" || funName==="rgb"
+              ? 1 : 
                 funName === "add" ||
                 funName === "multiply" ||
                 funName === "average" ||
                 funName === "wrapsum" ?
                 .5 : 0
-              : 0
+                : 0
           }
           Radius={global.valueWidth/12}
           fill={ funName === "rgb"? "blue" : "#B3B3B3"}
