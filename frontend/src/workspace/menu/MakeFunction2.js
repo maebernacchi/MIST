@@ -163,10 +163,13 @@ function FuncGroup(props) {
           y={global.functionWidth*3/5}
           opacity={
             props.tabs.functionsOpen? 
-              funName==="mistif" ||
-              funName==="rgb"
-              ?
-                1 : 0
+              funName==="mistif" || funName==="rgb" 
+                ? 1 : 
+                funName === "add" ||
+                funName === "multiply" ||
+                funName === "average" ||
+                funName === "wrapsum" ?
+                .5 : 0
               : 0
           }
           Radius={global.valueWidth/12}
