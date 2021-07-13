@@ -1,13 +1,17 @@
+const postDB = require("../db/post.js");
+
 // +----------------+--------------------------------------------------
 // | Image Handlers |
 // +----------------+
+
+var postHandlers = {};
 
 /**
  * Check if an image exists (should be imagetitleexists)
  *   info.action: imageexists
  *   info.title: The title of the image
  */
-handlers.imageExists = function (info, req, res) {
+postHandlers.imageExists = function (info, req, res) {
 	const next = () => {
 		database.imageExists(req.user.username, info.title, (err, response) => {
 			if (err) {
@@ -28,18 +32,12 @@ handlers.imageExists = function (info, req, res) {
  *   info.action: saveimage
  *   info.title: The title of the image
  */
-handlers.saveImage = function (info, req, res) {
-	const next = () => {
-		const { title, code } = info;
-		database
-			.saveImage(req.user._id, title, code)
-			.then(() => dispatchResponse(res, "success", undefined, null))
-			.catch((error) =>
-				dispatchResponse(res, "error", 500, undefined, `Error: ${error}`)
-			);
-	};
-	// The user must be authenticated in order to save an image
-	checkAuthentication(req, res, next);
+postHandlers.saveImage = function (req, res) {
+
+	const post = req.body;
+	
+	postDB.saveImage(post.title, post.caption, post.code, post.user_id, post.visibility);
+
 };
 
 
