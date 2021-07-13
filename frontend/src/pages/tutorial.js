@@ -209,7 +209,7 @@ function WorkSpaceDemo() {
           // />
           <WorkSpace
                   width={document.documentElement.clientWidth}
-                  height={document.documentElement.clientHeight * 0.5}
+                  height={document.documentElement.clientHeight * 0.81}
                   menuHeight={document.documentElement.clientWidth * 0.08}
                   funBarHeight={document.documentElement.clientHeight * 0.1}
                   functionWidth={document.documentElement.clientWidth * 0.047}
@@ -297,7 +297,7 @@ function TableContents() {
                 as={Button}
                 variant="link"
                 eventKey={idx + 1}
-                style={{ color: "black" , textAlign: "left"}}
+                style={{ color: "black", textAlign: "left" }}
               >
                 {section.title}
               </Accordion.Toggle>
@@ -447,7 +447,7 @@ function SubsectionButton(props) {
   return (
     <Button
       variant="outline-dark"
-      style={{ marginRight: "1em"}}
+      style={{ marginRight: "1em" }}
       href={"#" + props.id + "-" + props.type}
     >
       {props.type}
@@ -789,7 +789,7 @@ const sections = [
               can create with MIST. */}
               <br />
               <br />
-              Each image in MIST are drawn on a square canvas.
+              Each image in MIST is drawn on a square canvas.
               {/* <br />
               <br /> */}
               {/* We have an x and a y axis, just like in math class! */}
@@ -1323,8 +1323,8 @@ const sections = [
         //Text
         text: (
           <Container>
-            Functions can also take time as an input, resulting in an animation. If you want to see how it works, 
-            slide your mouse over these images! In MIST, we've used:
+            Functions can also take time as an input, resulting in an animation.
+            In MIST, we've used:
             <br/>
             <br/>            
             {/* In order to get an animation, you'll have to connect a time variable
@@ -1622,8 +1622,8 @@ const sections = [
         //Text
         text: (
           <Container>
-            Multiple-input functions are functions that must have at least 2
-            inputs and can have up to 20. These functions include <b>sum</b>,{" "}
+            Multiple-input functions are functions that take 2 or more
+            inputs (up to 20). These functions include <b>sum</b>,{" "}
             <b>wsum</b>, <b>mult</b>, and <b>avg</b>.
             <br />
             <br />
@@ -1633,13 +1633,14 @@ const sections = [
             <Row>
               <Col>
                 The <b>sum</b> function adds numbers together. If the result is greater than 1, the function
-              outputs 1. If the result is less than 1, the function outputs -1. 
-              or less than -1, the function outputs the minimum/maximum. Here's <b>sum(x,y)</b>.
+              will treat the value as 1. Similarly, if the result is less than -1, the function outputs -1. 
+              This is because MIST caps maximum values at 1 and minimum values at -1.
               <br/><br/>
               </Col>
               <Col>
                 The <b>wsum</b> (wrap sum) function "wraps" the values around if they're outside{" "}
-              the normal range of output. 
+              the normal range of output. This means that values greater than 1 will be rendered as -1,
+              and values less than -1 will be rendered as 1.
               </Col>
             </Row>
             <br/>
@@ -1667,8 +1668,8 @@ const sections = [
             together. Take the example of <b>mult(x,y)</b>.
               </Col>
               <Col>
-                The <b>wsum</b> (wrap sum) function "wraps" the values around if they're outside{" "}
-              the normal range of output.
+                The <b>avg</b> (average) function averages the values of two or more inputs. 
+                See the example of <b>avg(x,y)</b> below.
               </Col>
             </Row>
             <br/>
@@ -1709,7 +1710,7 @@ const sections = [
 
         checkpoint: (
           <Container>
-            To use this yourself try:
+            To try out these functions:
             <br/>
             <br/>
             <Row>
