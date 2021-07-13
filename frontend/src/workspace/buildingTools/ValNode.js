@@ -88,7 +88,7 @@ function ValNode(props) {
   const menuHeight = useContext(globalContext).menuHeight;
   const valueWidth = useContext(globalContext).valueWidth;
   const fonts = useContext(fontContext);
-
+  const [focused, setFocused] = useState(false);
   // +----------------------------+------------------------------------
   // | Trashcan                   |
   // +----------------------------+
@@ -253,8 +253,8 @@ function ValNode(props) {
           transform={true}
           groupProps={{
             position: {
-              x: (nodeDimensions.valueOffset /1.5) - props.x,
-              y: (nodeDimensions.valueOffset /1.5) - props.y,
+              x: (nodeDimensions.valueOffset /1.5) - props.x, // I know that it looks weird to have this be undoing the form's
+              y: (nodeDimensions.valueOffset /1.5) - props.y, // position values but I swear, the form won't move otherwise.
             },
           }}
         >
@@ -262,8 +262,8 @@ function ValNode(props) {
             id="form#"
             style={{
               position: "absolute",
-              left: props.x,
-              top: props.y,
+              left: props.x, // again, I know it's counterintuitive but if you're going
+              top: props.y,  // to try and fix this, make sure you have it tracked!!
             }}
             onSubmit={(e) => {
               e.preventDefault();
@@ -283,11 +283,19 @@ function ValNode(props) {
               <input
                 type="text"
                 placeholder="#"
+                onFocus={() => {setFocused(true)}}
+                onBlur={() => {
+                  setFocused(false);
+                }}
+                onSubmit={() => {setFocused(false)}} // for use when it's an <input> component.
                 style={{
-                  width: 0.33 * valueWidth,
-                  height: 0.29 * valueWidth,
-                  backgroundColor: gui.valueConstantColor, 
-                  border: "none"
+                  // resize: "none",              // these were for experimenting with a textarea input
+                  // overflow: "auto",
+                  // overflowWrap: "break-word",
+                  width: focused? "auto" : 0.33 * valueWidth, //(formValue.length < 2) ? (0.33 * valueWidth) : (focused? "auto" : 0.66 * valueWidth),
+                  height: (focused? "auto" : 0.29 * valueWidth),
+                  backgroundColor: gui.valueConstantColor,
+                  border: "none",
                 }}
                 onChange={(e) => {
                   setFormValue(e.target.value);
