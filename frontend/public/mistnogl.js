@@ -1669,7 +1669,7 @@ MIST.sum = sum;
 BUILTIN("sum", "sum", "Sum 2 or more values.  If the sum would exceed 1, has the value 1.  If the sum would be less than -1, has the value -1", "...", 2, 20, "GENERAL");
 
 var wrapsum = function() {
-    return wrapTwo(sum.apply(this, arguments));
+    return wrap(sum.apply(this, arguments));
 };
 var wsum = wrapsum;
 MIST.wrapsum = wrapsum;
