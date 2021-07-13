@@ -53,8 +53,8 @@ function Menu2(props) {
   // | States |
   // +--------+
 
-  const [valuesOpen, setValuesOpen] = useState(true);
-  const [functionsOpen, setFunctionsOpen] = useState(false);
+  const [valuesOpen, setValuesOpen] = useState(false);
+  const [functionsOpen, setFunctionsOpen] = useState(true);
   const [customOpen, setCustomOpen] = useState(false);
   const [savedOpen, setSavedOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -260,13 +260,13 @@ function Menu2(props) {
             shadowOpacity={0.3}
             shadowOffsetY={-1.5}
             shadowEnabled={u.open}
-          /* onMouseEnter={() => {
+          onMouseEnter={() => {
             setValuesOpen(u.text === "Values");
             setFunctionsOpen(u.text === "Functions");
             setCustomOpen(u.text === "Custom");
             setSavedOpen(u.text === "Saved");
             setSettingsOpen(u.text === "Settings");
-          }} */
+          }} 
           />
           <Text
             width={global.width / 5}
