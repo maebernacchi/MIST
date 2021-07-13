@@ -32,11 +32,14 @@ postHandlers.imageExists = function (info, req, res) {
  *   info.action: saveimage
  *   info.title: The title of the image
  */
-postHandlers.saveImage = function (req, res) {
+postHandlers.saveImage = async function (req, res) {
 
 	const post = req.body;
 	
-	postDB.saveImage(post.title, post.caption, post.code, post.user_id, post.visibility);
+	postDB.saveImage(req, (message) => {
+		res.json(message);
+		return;
+	});
 
 };
 

@@ -1,3 +1,6 @@
+const pool = require("./dbconfig"); // Used for database queries
+const bcrypt = require("bcrypt"); // Used for password hashing
+
 // +----------------+-------------------------------------------------
 // |    Comments    |
 // +----------------+
