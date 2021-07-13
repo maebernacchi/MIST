@@ -64,7 +64,6 @@ import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions.js";
 import { globalContext } from "../globals/global-context";
 import { fontContext } from "../globals/globals-fonts";
-import { FunBarDimensions } from "../globals/globals-funbar-dimensions";
 
 // +----------------------------+
 // | All dependent files        |
@@ -149,13 +148,6 @@ export default function FunNode(props) {
         if (pos.y > height - funBarHeight - functionWidth) {
           pos.y = height - funBarHeight - functionWidth;
         }
-        if (pos.x > FunBarDimensions.imagePlaceX){
-            pos.x = FunBarDimensions.imagePlaceX;
-          }
-        if (pos.x > width - 270 - functionWidth &&
-            pos.y > height-nodeDimensions.renderSideLength-45 - functionWidth){
-            pos.x = width - 270 - functionWidth
-          }
         return pos;
       }}
       onDragStart={(e) => {
@@ -170,7 +162,7 @@ export default function FunNode(props) {
           scaleY: 1.1,
         });
         if (props.renderFunction && props.imageShowing) {
-          props.onBox();
+          props.toggleBox();
           setOnDrag(true);
         }
       }}
@@ -182,7 +174,7 @@ export default function FunNode(props) {
           scaleY: 1,
         });
         if (props.renderFunction && onDrag) {
-          props.onBox();
+          props.toggleBox();
         }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
@@ -199,7 +191,6 @@ export default function FunNode(props) {
           e.currentTarget.x(),
           e.currentTarget.y()
         );
-        props.onBox()
       }}
       onClick={(e) => {
         if (e.target.attrs.name) {
@@ -207,21 +198,16 @@ export default function FunNode(props) {
             index,
             parseInt(e.target.attrs.name.substring(6)) - 1
           );
-          props.onBox()
         } else {
           props.funClicked(index);
         }
-        props.onBox()
       }}
       onDblClick={() => {
         // Generates the temporary line when double clicked
         props.dblClickHandler(index);
-        props.onBox()
       }}
-      onTap={() => {
-        props.tapHandler(index)
-        props.onBox()
-      }}
+
+      onTap={() => props.tapHandler(index)}
       onTouchEnd={(e) => {
         if (e.target.attrs.name) {
           props.outletClicked(
@@ -231,7 +217,6 @@ export default function FunNode(props) {
         } else {
           props.funClicked(index);
         }
-        props.onBox()
       }}
     >
       <Group
@@ -300,6 +285,35 @@ export default function FunNode(props) {
         />
         <Trashcan />
       </Group>
+      <Rect
+        onTap={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
+        onClick={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
+        name={"imageBox"}
+        x={nodeDimensions.functionImageBoxOffset}
+        y={
+          props.numOutlets <= 3
+            ? nodeDimensions.functionImageBoxOffset
+            : nodeDimensions.functionImageBoxOffset +
+              (props.numOutlets - 3) * nodeDimensions.outletYOffset
+        }
+        width={nodeDimensions.imageBoxSideLength}
+        height={nodeDimensions.imageBoxSideLength}
+        fill={gui.imageBoxColor}
+        shadowColor={"gray"}
+        shadowBlur={2}
+        shadowOffsetX={1}
+        shadowOffsetY={1}
+        expanded={false}
+        visible={typeof props.renderFunction === "string"}
+      />
       {name === "rgb"
         ? ["red", "green", "blue"].map((u, i) => (
             <Shape

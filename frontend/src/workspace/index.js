@@ -128,7 +128,7 @@ class WorkspaceComponent extends Component {
       isDeleteWorkspaceModalOpen: false,
       menuTabs: {
         valuesOpen: false,
-        functionsOpen: false,
+        functionsOpen: true,
         customOpen: false,
         savedOpen: false,
         settingsOpen: false,
@@ -1170,19 +1170,9 @@ class WorkspaceComponent extends Component {
                               colors.nodeHoverShadow[this.state.theme]
                             }
                             imageShowing={node.imageShowing}
-                            onBox={() => {
+                            toggleBox={() => {
                               const newNodes = this.state.nodes;
-                              for(let i=0; i<newNodes.length; i++){
-                                if(newNodes[i].imageShowing) newNodes[i].imageShowing = false;
-                              }
-                              newNodes[index].imageShowing = true;
-                              this.setState({
-                                nodes: newNodes,
-                              });
-                            }}
-                            offBox={() => {
-                              const newNodes = this.state.nodes;
-                              newNodes[index].imageShowing = !newNodes[index].imageShowing;
+                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
                               this.setState({
                                 nodes: newNodes,
                               });
@@ -1226,19 +1216,9 @@ class WorkspaceComponent extends Component {
                             removeNode={this.removeNode.bind(this)}
                             updateHashValue={this.updateHashValue.bind(this)}
                             imageShowing={node.imageShowing}
-                            onBox={() => {
+                            toggleBox={() => {
                               const newNodes = this.state.nodes;
-                              for(let i=0; i<newNodes.length; i++){
-                                if(newNodes[i].imageShowing) newNodes[i].imageShowing = false;
-                              }
-                              newNodes[index].imageShowing = true;
-                              this.setState({
-                                nodes: newNodes,
-                              });
-                            }}
-                            offBox={() => {
-                              const newNodes = this.state.nodes;
-                              newNodes[index].imageShowing = !newNodes[index].imageShowing;
+                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
                               this.setState({
                                 nodes: newNodes,
                               });
@@ -1452,19 +1432,9 @@ class WorkspaceComponent extends Component {
                   y={node.y}
                   type={node.type}
                   renderFunction={node.renderFunction.renderFunction}
-                  onBox={() => {
+                  toggleBox={() => {
                     const newNodes = this.state.nodes;
-                    for(let i=0; i<newNodes.length; i++){
-                      if(newNodes[i].imageShowing) newNodes[i].imageShowing = false;
-                    }
-                    newNodes[index].imageShowing = true;
-                    this.setState({
-                      nodes: newNodes,
-                    });
-                  }}
-                  offBox={() => {
-                    const newNodes = this.state.nodes;
-                    newNodes[index].imageShowing = !newNodes[index].imageShowing;
+                    newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
                     this.setState({
                       nodes: newNodes,
                     });

@@ -146,10 +146,6 @@ function ValNode(props) {
         if (pos.y > height - funBarHeight - valueWidth) {
           pos.y = height - funBarHeight - valueWidth;
         }
-        if (pos.x > width - 270 - valueWidth &&
-          pos.y > height-nodeDimensions.renderSideLength-45 - valueWidth){
-          pos.x = width - 270 - valueWidth
-        }
         return pos;
       }}
       onDragStart={(e) => {
@@ -162,7 +158,7 @@ function ValNode(props) {
           scaleY: 1.1,
         });
         if (props.renderFunction && props.imageShowing) {
-          props.onBox();
+          props.toggleBox();
         }
       }}
       onDragEnd={(e) => {
@@ -175,7 +171,7 @@ function ValNode(props) {
           shadowOffsetY: 5,
         });
         if (props.renderFunction && props.imageShowing) {
-          props.onBox();
+          props.toggleBox();
         }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
@@ -203,16 +199,9 @@ function ValNode(props) {
       }}
       onClick={(e) => {
         props.clickHandler(index);
-        props.onBox();
       }}
-      onTap={() => { 
-        props.tapHandler(index);
-        props.onBox();
-      }}
-      onDblTap={() => { 
-        props.removeNode(index);
-        props.onBox();
-      }}
+      onTap={() => { props.tapHandler(index); }}
+      onDblTap={() => { props.removeNode(index)}}
     >
       <Group
         onMouseEnter={(e) => {
@@ -379,6 +368,34 @@ function ValNode(props) {
         )}
         <Trashcan />
       </Group>
+      <Rect
+        onTap={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
+        onClick={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
+        OnMouseEnter={() => {
+          if (props.renderFunction) {
+            props.toggleBox();
+          }
+        }}
+        name={"imageBox"}
+        x={nodeDimensions.valueImageBoxOffset}
+        y={nodeDimensions.valueImageBoxOffset}
+        width={nodeDimensions.imageBoxSideLength}
+        height={nodeDimensions.imageBoxSideLength}
+        fill={gui.imageBoxColor}
+        expanded={false}
+        shadowColor={"gray"}
+        shadowBlur={2}
+        shadowOffsetX={1}
+        shadowOffsetY={1}
+      />
       <Circle
         x={valueWidth}
         y={valueWidth/2}
@@ -387,7 +404,6 @@ function ValNode(props) {
         onDblClick={(e) => {
           // Generates the temporary line when double clicked
           props.dblClickHandler(index);
-          props.onBox()
         }}
         shadowColor={
           hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
