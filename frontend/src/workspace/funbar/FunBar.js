@@ -6,6 +6,8 @@ import { funBarContext } from "../globals/globals-funbar-dimensions";
 import { fontContext } from "../globals/globals-fonts";
 import ReactDOM from 'react-dom';
 import { Html } from 'react-konva-utils';
+import { nodeContext } from "../globals/globals-nodes-dimensions";
+import { globalContext } from "../globals/global-context";
 
 
 function FunBar(props) {
@@ -27,6 +29,7 @@ function FunBar(props) {
   function BarBase(props) {
     return (
       <Group>
+        
         <Rect // Render function white background
           x={funBarDimensions.margin}
           y={funBarDimensions.margin}
@@ -39,42 +42,30 @@ function FunBar(props) {
           shadowOpacity={0.5}
           opacity={renderFunction.isRenderable ? 1 : 0.95}
         />
-
-        <Text // Render function text display
-          text={props.renderFunction.renderFunction}
-          x={funBarDimensions.margin}
-          y={funBarDimensions.margin}
-          width={funBarDimensions.rfTextAreaWidth}
-          height={funBarDimensions.rfTextAreaHeight}
-          verticalAlign={"middle"}
-          fill={props.functionTextColor}
-          fontFamily={"Courier New"}
-          fontSize={funBarRFFontSize}
-        /> 
-
+        
         <Html
-          transform={true} //setting transform to false makes box disappear?
+          transform={true}
           groupProps={{
             position: {
-              x: 30, //not sure how to get these to be funBarDimensions.margin
-              y: 30,
+              x: funBarDimensions.margin,
+              y: funBarDimensions.margin,
             },
           }}
-          divProps={{
-            
-            style: {
-            },
-          }}
-          x={funBarDimensions.margin}
-          y={funBarDimensions.margin}
-          width={funBarDimensions.rfTextAreaWidth}
-          height={funBarDimensions.rfTextAreaHeight}
-          verticalAlign={"middle"}
-          fill={props.functionTextColor}
-          fontFamily={"Courier New"}
-          fontSize={funBarRFFontSize}
           >
-          <input placeholder="Enter a MIST expression" />
+          <input
+          autocomplete="off"
+          type="text"
+          id="funbar"
+          value={props.renderFunction.renderFunction}
+          style={{
+            width: funBarDimensions.rfTextAreaWidth,
+            height: funBarDimensions.rfTextAreaHeight,
+            fontFamily: "Trebuchet MS", //not 100% satisfied with this, but we like it better than Courier
+            fontSize: funBarRFFontSize,
+            border:"none",
+            backgroundColor: "transparent",
+          }}
+          />
         </Html>
 
 
@@ -148,5 +139,7 @@ function FunBar(props) {
     );
   }
 }
+
+//ReactDOM.render(<FunBar />, document.getElementById('root'));
 
 export default FunBar;
