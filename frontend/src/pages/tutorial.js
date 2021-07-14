@@ -249,7 +249,8 @@ function Tutorial() {
         </Col>
         <Col xs="9">
           {/* Tutorials */}
-          <TutorialSlideShow sectionNum={0} subsectionNum={0} stage={0} />
+          <Tutorial />
+          {/* <TutorialSlideShow sectionNum={0} subsectionNum={0} stage={0} /> */}
         </Col>
       </Row>
       <Row
@@ -439,8 +440,7 @@ function Tutorials() {
                   /> 
                  ) : (
                   ""
-                )} 
-                {/* <Button>Next</Button> */}
+                )}
               </Container>
             </section>
           ))}
