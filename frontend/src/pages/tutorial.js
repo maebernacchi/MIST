@@ -147,8 +147,6 @@ import constantDemo from "./../TutorialImages/constNodeInput.mp4";
 import timeNodeDemo from "./../TutorialImages/timeNodeInput.mp4";
 import mouseNodeDemo from "./../TutorialImages/axisNodeInput.mp4";
 
-import TutorialSlideShow from "./tutorialSlideshow";
-
 const rgbVenn = (
         "rgb(neg("
           + "sign("
@@ -249,8 +247,7 @@ function Tutorial() {
         </Col>
         <Col xs="9">
           {/* Tutorials */}
-          <Tutorial />
-          {/* <TutorialSlideShow sectionNum={0} subsectionNum={0} stage={0} /> */}
+          <Tutorials />
         </Col>
       </Row>
       <Row
@@ -321,29 +318,6 @@ function TableContents() {
   );
 }
 
-// +-------------------------------+----------------------------------
-// | Stage Body (Conditionals)     |
-// +------------------------------ +
-
-// function StageBody(props) {
-//   const sectID= props.id;
-//   const = [stage, setStage] = useState(0);
-//   const numStages = 3;
-//   function iterateStage() {
-//     setStage(stage + 1);
-//     if (stage >= numStages) {
-//       setStage(0);
-//     }
-//   }
-
-//   return (
-//     <Container>
-//       {/* {(stage == 0) ? } */}
-//       <Button onClick={iterateStage()}> </Button>
-//     </Container>
-//   )
-// }
-
 // +----------------------------+----------------------------------------
 // | Tutorial Contents          |
 // +--------------------------- +
@@ -379,6 +353,7 @@ function Tutorials() {
                             to={"#" + subsection.id}
                             style={{ color: "gray" }}
                           >
+                        
                           </Link>
                         </h1>
                         <hr />
@@ -425,7 +400,7 @@ function Tutorials() {
                 {/* END OF "HEADER" OF SUBSECTION! */}
 
                 {/* Text, Video, Final, Challenges sections */}
-                <TutorialText text={subsection.text} id={subsection.id} />
+                <Text text={subsection.text} id={subsection.id} />
                 {/* <Video video={subsection.video} id={subsection.id} />
                 <Final final={subsection.final} id={subsection.id} /> */}
                 {subsection.isCheckpoint ? (
@@ -440,7 +415,7 @@ function Tutorials() {
                   /> 
                  ) : (
                   ""
-                )}
+                )} 
               </Container>
             </section>
           ))}
@@ -469,7 +444,7 @@ function SubsectionButton(props) {
 /**
  * Text section
  */
-function TutorialText(props) {
+function Text(props) {
   return (
     <Card
       id={props.id + "-text"}
