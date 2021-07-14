@@ -54,15 +54,25 @@ module.exports.collectionExists = async (user_id, title, callback) => {
    */
 
   //TODO: if image already is saved, override it?
-  module.exports.saveImage = async (title, caption, code, user_id, visibility, callback) => {
-    if (await imageExists(user_id, title, callback)) {
+  module.exports.saveImage = async (req, callback) => {
+    if (await imageExists(req.body.user_id, req.body.title, callback)) {
       callback("Image already exists!");
       return;
     }
 
-    pool.query("insert into posts (title, caption, code, user_id, public) \
-                            values ($1, $2, $3, $4, $5)", 
-                            [title, caption, code, user_id, visibility]);
+    pool
+        .query(
+            "insert into posts (title, caption, code, user_id, public) \
+        values ($1, $2, $3, $4, $5)", 
+            [req.body.title, req.caption, req.code, req.user_id, req.public]
+        )
+        .then((res) => {
+            callback(`Image ${req.body.title} has been created`);
+        })
+        .catch((err) => {
+            handleDBError(err, callback);
+            return;
+        });
   };
   
   /**
@@ -70,26 +80,57 @@ module.exports.collectionExists = async (user_id, title, callback) => {
    * @param {String} albumId 
    * @param {String} imageId 
    */
-  module.exports.addToCollection = async (user_id, collection_title, image_title, image_author) => {
-    if (!(await collectionExists(user_id, collection_title, callback))) {
+  module.exports.addToCollection = async (req, callback) => {
+    let post_id = 0;
+    let collection_id = 0;
+
+    if (!(await collectionExists(req.body.user_id, req.body.collection_title, callback))) {
       callback("Collection does not exist!");
       return;
     }
-    if (!(await imageExists(image_author, image_title, callback))) {
+    if (!(await imageExists(req.body.image_author, req.body.image_title, callback))) {
       callback("Image does not exist!");
       return;
     }
 
-    let collection_contents = pool.query("select * from collections where (user_id=$1 and title=$2)",
-                                          [user_id, collection_title]);
-    
-    const collection_length = collection_contents[0].length;
+    pool
+        .query(
+            "select post_id from posts where (user_id=$1 and title=$2)",
+            [req.body.image_author, req.body.image_title]
+        )
+        .then((res) => {
+            post_id = res.rows[0].post_id;
+        })
+        .catch((err) => {
+            handleDBError(err, callback);
+            return;
+        });
 
-    collection_contents[0][collection_length] = image_title;
-    collection_contents[1][collection_length] = image_author;
-    
-    pool.query("update collections set contents=$1 where (title=$2 and user_id=$3)",
-                [collection_contents, collection_title, user_id]);
+    pool
+        .query(
+            "select collection_id from collections where (user_id=$1 and title=$2)",
+            [req.body.user_id, req.body.collection_title]
+        )
+        .then((res) => {
+            collection_id = res.rows[0].collection_id;
+        })
+        .catch((err) => {
+            handleDBError(err, callback);
+            return;
+        });
+            
+    pool
+        .query(
+            "insert into collection-images (post_id, collection_id) values ($1, $2)",
+            [post_id, collection_id]
+        )
+        .then((res) => {
+            callback("Image inserted into collection successfully!");
+        })
+        .catch((err) => {
+            handleDBError(err, callback);
+            return;
+        });
   };
   
  

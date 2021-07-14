@@ -1,5 +1,5 @@
 create table posts(
-    post_id varchar(255) not null primary key,
+    post_id varchar(255) not null serial primary key,
     title varchar(255) not null,
     caption varchar(255),
     code varchar(255) not null,
