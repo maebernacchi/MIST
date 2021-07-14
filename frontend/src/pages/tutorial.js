@@ -147,6 +147,8 @@ import constantDemo from "./../TutorialImages/constNodeInput.mp4";
 import timeNodeDemo from "./../TutorialImages/timeNodeInput.mp4";
 import mouseNodeDemo from "./../TutorialImages/axisNodeInput.mp4";
 
+import TutorialSlideShow from "./tutorialSlideshow";
+
 const rgbVenn = (
         "rgb(neg("
           + "sign("
@@ -195,18 +197,7 @@ const bodyTextSize = "125%";
 // workspace Demo, so we can include workspaces in our tutorials easily.
 function WorkSpaceDemo() {
   return (
-    // <Popover id="popover-basic">
-    //   <Popover.Title as="h6">Try out code here!</Popover.Title>
-    //     <Popover.Content>
-    //       <Container>
-          //   <WorkSpace
-          //   width={2000}
-          //   height={1400}
-          //   menuHeight={90}
-          //   funBarHeight={60}
-          //   functionWidth={50}
-          //   valueWidth={55}
-          // />
+ 
           <WorkSpace
                   width={document.documentElement.clientWidth}
                   height={document.documentElement.clientHeight * 0.81}
@@ -218,10 +209,6 @@ function WorkSpaceDemo() {
                   formOffsetX={0}
                   formOffsetY={document.documentElement.clientHeight * 0.96}
                 />
-    //   </Container>
-    //   </Popover.Content>
-    // </Popover>
-    
   );
 }
 
@@ -262,7 +249,7 @@ function Tutorial() {
         </Col>
         <Col xs="9">
           {/* Tutorials */}
-          <Tutorials />
+          <TutorialSlideShow sectionNum={0} subsectionNum={0} stage={0} />
         </Col>
       </Row>
       <Row
@@ -333,11 +320,35 @@ function TableContents() {
   );
 }
 
+// +-------------------------------+----------------------------------
+// | Stage Body (Conditionals)     |
+// +------------------------------ +
+
+// function StageBody(props) {
+//   const sectID= props.id;
+//   const = [stage, setStage] = useState(0);
+//   const numStages = 3;
+//   function iterateStage() {
+//     setStage(stage + 1);
+//     if (stage >= numStages) {
+//       setStage(0);
+//     }
+//   }
+
+//   return (
+//     <Container>
+//       {/* {(stage == 0) ? } */}
+//       <Button onClick={iterateStage()}> </Button>
+//     </Container>
+//   )
+// }
+
 // +----------------------------+----------------------------------------
 // | Tutorial Contents          |
 // +--------------------------- +
 
 function Tutorials() {
+  
   return (
       <Container style={{height: "90vh", margin: "2vh", overflowY: "scroll", scrollBehavior: "smooth"}}>
       {/* Maps each sections */}
@@ -367,7 +378,6 @@ function Tutorials() {
                             to={"#" + subsection.id}
                             style={{ color: "gray" }}
                           >
-                            #
                           </Link>
                         </h1>
                         <hr />
@@ -414,7 +424,7 @@ function Tutorials() {
                 {/* END OF "HEADER" OF SUBSECTION! */}
 
                 {/* Text, Video, Final, Challenges sections */}
-                <Text text={subsection.text} id={subsection.id} />
+                <TutorialText text={subsection.text} id={subsection.id} />
                 {/* <Video video={subsection.video} id={subsection.id} />
                 <Final final={subsection.final} id={subsection.id} /> */}
                 {subsection.isCheckpoint ? (
@@ -430,6 +440,7 @@ function Tutorials() {
                  ) : (
                   ""
                 )} 
+                {/* <Button>Next</Button> */}
               </Container>
             </section>
           ))}
@@ -458,7 +469,7 @@ function SubsectionButton(props) {
 /**
  * Text section
  */
-function Text(props) {
+function TutorialText(props) {
   return (
     <Card
       id={props.id + "-text"}
