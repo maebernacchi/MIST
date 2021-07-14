@@ -5,63 +5,41 @@ const bcrypt = require("bcrypt"); // Used for password hashing
 // |    Comments    |
 // +----------------+
 
+
 /**
  * saves the comment in the comments collection,
  * the user's comment array, and to image's comment array
  */
- module.exports.saveComment = function (req, res) {
-    // build the comment
-    //let userID = req.user._id;
-    let userID = req.body.userId;
-    //let imageID = sanitize(req.params.imageid)
-    let imageID = req.body.imageId;
-    let comment = Comment({
-      userId: userID,
-      //body: sanitize(req.body.newComment),
-      body: req.body.body,
-      active: req.body.active,
-      imageId: imageID,
-      flags: req.body.flags,
-    });
-  
-    //save comment
-    comment
-      .save()
-      .then((comment) => {
-        //push comment to user's comment array
-        User.updateOne(
-          { _id: mongoose.Types.ObjectId(userID) },
-          { $push: { comments: comment._id } }
-        )
-          .exec()
-          .then((writeOpResult) => {
-            if (writeOpResult.nModified === 0) {
-              console.log("Failed to insert comment into user's array");
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-            res.end(JSON.stringify(error));
-          });
-        //push comment to image's comment array
-        Image.updateOne({ _id: imageID }, { $push: { comments: comment._id } })
-          .exec()
-          .then((writeOpResult) => {
-            if (writeOpResult.nModified === 0) {
-              console.log("Failed to insert comment into image's array");
-            } else console.log("Inserted Comment");
-          })
-          .catch((err) => {
-            console.error(err);
-            res.end(JSON.stringify(error));
-          });
-        res.redirect("back");
-      })
-      .catch((err) => {
-        console.error(err);
-        res.end(JSON.stringify(error));
-      });
-  };
+ module.exports.saveComment = async (req, res) => {
+  let post_id = 0
+  pool.query("select post_id from posts where (user_id=$1 and title=$2)",
+        [req.body.post_author, req.body.post_title]
+  )
+    .then((res) => {
+      let post_id = res.rows[0].post_id
+    })
+    .catch((err) => {
+      handleDBError(err, callback);
+      return;
+  });
+
+  pool
+    .query(
+      "insert into comments (content, user_id, post_id, parent_comment) \
+  values ($1, $2, $3, $4)", 
+      [req.body.content, req.body.user_id, post_id, req.body.parent_comment]
+  )
+  .then((res) => {
+      callback(`Comment has been created`);
+  })
+  .catch((err) => {
+      handleDBError(err, callback);
+      return;
+  });
+
+ }
+
+ 
   
   //NOTE: This does not check if the comments are hidden from the user
   // the commented out commentInfo does
@@ -71,35 +49,26 @@ const bcrypt = require("bcrypt"); // Used for password hashing
    * @param imageid
    * @param callback
    */
-  module.exports.getCommentsLoggedOut = (imageid, callback) => {
-    imageid = sanitize(imageid);
-  
-    // search the comments collection for documents that with imageid that match image._id
-    Comment.find({
-      imageId: mongoose.Types.ObjectId(imageid),
-      active: true,
+  module.exports.getCommentsLoggedOut = async(imageid, callback) => {
+    let post_id = 0
+  pool.query("select post_id from posts where (user_id=$1 and title=$2)",
+        [req.body.post_author, req.body.post_title]
+  )
+    .then((res) => {
+      let post_id = res.rows[0].post_id
     })
-      .populate("userId")
-      .exec((err, comments) => {
-        if (err) {
-          console.log(err);
-          callback(null, err);
-        } else {
-          callback(comments, null);
-        }
+    .catch((err) => {
+      handleDBError(err, callback);
+      return;
+  });
+
+  pool.query("select * from commnents where post_id=$1",
+      [post_id])
+      .then((res) => {
+        callback(res)
       });
-  };
-  
-  /**
-   * grab comment information
-   * only returns active not-hidden comments
-   * @param userid 
-   * @param imageid 
-   * @param callback 
-   */
-  module.exports.getCommentsLoggedIn = (userid, imageid, callback) => {
-    imageid = sanitize(imageid);
-    userid = sanitize(userid);
+    }
+
   
     module.exports.getHiddenAndBlockedIDs(userid, "comment", (contentIds, blockedUsers, err) => {
       if (err)
@@ -127,4 +96,3 @@ const bcrypt = require("bcrypt"); // Used for password hashing
           });
       }
     })
-  };
