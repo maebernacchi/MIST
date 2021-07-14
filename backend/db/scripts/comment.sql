@@ -1,8 +1,8 @@
 create table comments(
-    comment_id varchar(255) not null,
-    contents varchar(255) not null,
-    user_id varchar(255) not null,
-    post_id varchar(255) not null,
+    comment_id varchar(255) not null serial primary key,
+    contents text not null,
+    user_id varchar(255) not null foreign key,
+    post_id varchar(255) not null foreign key,
     parent_comment varchar(255),
     likes int default 0,
 
