@@ -89,6 +89,7 @@ class WorkspaceComponent extends Component {
     let layout1 = new MIST.Layout();
 
     this.themes = ["classic", "dusk", "dark"];
+    this.reps = ["Words" , "Symbols"];
 
     this.width = props.width;
     this.height = props.height;
@@ -118,6 +119,8 @@ class WorkspaceComponent extends Component {
       layouts: [layout1],
       themeIndex: 1,
       theme: "dusk", //changes default theme
+      repIndex: 0,
+      rep: "Words",
       pos1: { x: 100, y: 200 },
       pos2: { x: 0, y: 100 },
       isImageModalOpen: false,
@@ -1146,6 +1149,7 @@ class WorkspaceComponent extends Component {
                             draggable={node.draggable}
                             toggleDraggable={this.toggleDraggable.bind(this)}
                             name={node.name}
+                            rep={this.state.rep}
                             key={index} // just to silence a warning message
                             index={index}
                             x={node.x}
@@ -1280,6 +1284,14 @@ class WorkspaceComponent extends Component {
                         this.setState({
                           themeIndex: i,
                           theme: this.themes[i],
+                        });
+                      }
+                      }
+                      toggleRep={() => {
+                        let i = (this.state.repIndex + 1) % this.reps.length;
+                        this.setState({
+                          repIndex: i,
+                          rep: this.reps[i],
                         });
                       }
                       }

@@ -74,7 +74,18 @@ export default function FunNode(props) {
   const index = props.index;
   const x = props.x;
   const y = props.y;
-  const rep = gui.functions[name].rep;
+  const rep = props.rep;
+  const tempRep = props.rep;
+  switch (tempRep) {
+    case "Words": 
+      rep = gui.functions[name].wordRep;
+      break;
+    case "Symbols":
+      rep = gui.functions[name].symbolRep;
+      break;
+    default:
+      Error("Error: not a valid representation");
+      break;}
   const numOutlets = props.numOutlets;
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
