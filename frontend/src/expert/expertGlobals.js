@@ -53,6 +53,16 @@ export const MIST_builtin_functions = {
         "maxarity": 1,
         "type": "GENERAL"
     },
+    "mult": {
+        "class": "MIST.FunInfo",
+        "name": "multiply",
+        "display": "mult",
+        "about": "Multiply 2 or more values",
+        "params": "...",
+        "minarity": 2,
+        "maxarity": 20,
+        "type": "GENERAL"
+    },
     "neg": {
         "class": "MIST.FunInfo",
         "name": "negate",

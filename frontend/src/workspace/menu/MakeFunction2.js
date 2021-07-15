@@ -46,13 +46,14 @@
 // | All dependent files        |
 // +----------------------------+
 
-import React, {useContext, useEffect} from "react";
-import { Group, Circle } from "react-konva";
+import React, {useContext, useEffect, useState} from "react";
+import { Group, Circle, Text, Rect} from "react-konva";
 import Konva from "konva";
 import gui from "../globals/mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { globalContext } from "../globals/global-context.js";
 import { fontContext} from '../globals/globals-fonts';
+import globals from "../globals/globals";
 
 // +----------------------------+
 // | All dependent files        |
@@ -65,8 +66,10 @@ import { fontContext} from '../globals/globals-fonts';
 function FuncGroup(props) {
   const global = useContext(globalContext);
   const funName = props.funName;
+  const description = "Testing Description"
   const fonts = useContext(fontContext);
-
+  const [isHovered, setIsHovered] = useState(false);
+  // const tips = props.descript + "\n" + props.usage;
   useEffect(() => {
     //console.log("props:"+props);
   }, [props])
@@ -74,6 +77,7 @@ function FuncGroup(props) {
   return (
     <Group
       name={funName}
+      description={description}
       key={props.index}
       x={props.x*1.15+15}
       y={props.y}
@@ -121,6 +125,13 @@ function FuncGroup(props) {
         }
         return pos;
       }}
+      onMouseOver={function (props) {
+        setIsHovered(true);
+      }}
+      onMouseLeave={function (props) {
+        setIsHovered(false);
+      }}
+      
     >
       <Circle
         x={global.functionWidth}
@@ -163,10 +174,13 @@ function FuncGroup(props) {
           y={global.functionWidth*3/5}
           opacity={
             props.tabs.functionsOpen? 
-              funName==="mistif" ||
-              funName==="rgb"
-              ?
-                1 : 0
+              funName==="mistif" || funName==="rgb" 
+                ? 1 : 
+                funName === "add" ||
+                funName === "multiply" ||
+                funName === "average" ||
+                funName === "wrapsum" ?
+                .5 : 0
               : 0
           }
           Radius={global.valueWidth/12}
@@ -235,8 +249,36 @@ function FuncGroup(props) {
             align={"center"}
             verticalAlign={"middle"}
           />
+          // <animated.Text 
+          // />
         )}
       </Spring>
+    {isHovered? 
+      <Group>
+        <Rect
+          // {...props}
+          y={global.functionWidth}
+          width={global.functionWidth * 4}
+          height={global.functionWidth*3/2}
+          fill={"gray"}
+          opacity={isHovered? 0.75 : 0}
+          cornerRadius={[0, 20, 20, 20]}
+        />
+        <Text
+          text={(gui.functions[funName].descript + "\n\n" + gui.functions[funName].usage)}
+          fill={"white"}
+          fontSize={(fonts.functionFontSize * 2 / 3)}
+          padding={7}
+          y={global.functionWidth}
+          width={global.functionWidth * 4}
+          height={global.functionWidth*3/2}
+          align={"center"}
+          verticalAlign={"middle"}
+          opacity={isHovered? 0.85 : 0}
+        />
+      </Group>
+      : <Group/>
+      }
     </Group>
   );
   // +----------------------------------------+

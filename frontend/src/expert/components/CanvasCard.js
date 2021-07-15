@@ -215,9 +215,8 @@ class CanvasCard extends Component {
                         as="canvas"
                         id="expert-canvas-image"
                         ref={this.canvas}
-                        width={200}
-                        height={200} />
-
+                        width={500}
+                        height={500} />
                 </Card.Body>
             </Card>
         )
