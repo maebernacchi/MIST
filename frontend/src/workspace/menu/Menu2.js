@@ -203,7 +203,7 @@ function Menu2(props) {
 
   function Settings(props) {
 
-    return [props.theme, "Save", "Delete", "Reset Workspace"].map((u, i) => {
+    return [props.theme, "Words", "Save", "Delete", "Reset Workspace"].map((u, i) => {
       return (
         <SettingsItem
           key={u}
