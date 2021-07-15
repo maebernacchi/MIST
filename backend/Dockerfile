@@ -10,9 +10,7 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
-CMD cd backend
-
 RUN yarn install
 
-CMD yarn server
+CMD ["yarn", "server"]
 
