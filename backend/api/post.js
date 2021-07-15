@@ -1,4 +1,5 @@
 const postDB = require("../db/post.js");
+const commentDB = require("../db/comments.js");
 
 // +----------------+--------------------------------------------------
 // | Image Handlers |
@@ -46,8 +47,8 @@ postHandlers.saveImage = async function (req, res) {
  *   info.action: postComment
  */
 
-handlers.postComment = function (info, req, res) {
-	database.saveComment(req, res);
+postHandlers.postComment = function (req, res) {
+	commentDB.saveComment(req, res);
 };
 
 /**
@@ -55,31 +56,21 @@ handlers.postComment = function (info, req, res) {
  *  info.action = getComments
  */
 
-handlers.getImageComments = function (info, req, res) {
-	let loginStatus = false;
-	if (req.isAuthenticated()) loginStatus = true;
+postHandlers.getImageComments = function (req, res) {
+	let retrievedComments = commentDB.getComments(req, (message) => {res.json(message);});
 
-	if (loginStatus) {
-		database.getCommentsLoggedIn(
-			req.user._id,
-			req.query.id,
-			(comments, error) => {
-				if (error) {
-					console.log(error);
-					res.json([]);
-				} else if (!comments) res.json([]);
-				else res.json(comments);
-			}
-		);
-	} else {
-		database.getCommentsLoggedOut(req.query.id, (comments, error) => {
-			if (error) {
-				console.log(error);
-				res.json([]);
-			} else if (!comments) res.json([]);
-			else res.json(comments);
+	if(req.isAuthenticated()){
+		let blockedUsers = reportDB.getBlockedUsers(req, (message) => {res.json(message);});
+		retrievedComments.forEach(comment => {	
+			blockedUsers.forEach(blocked_user => {
+				if(blockedUsers.user_id === comment.user_id){
+					comment.contents = "**BLOCKED**"; //marking as blocked - may be a better way
+				}
+			});
 		});
 	}
+
+	return retrievedComments.rows;
 };
 
 

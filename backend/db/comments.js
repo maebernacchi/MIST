@@ -10,7 +10,7 @@ const bcrypt = require("bcrypt"); // Used for password hashing
  * saves the comment in the comments collection,
  * the user's comment array, and to image's comment array
  */
- module.exports.saveComment = async (req, res) => {
+ module.exports.saveComment = async (req, callback) => {
   let post_id = 0
   pool.query("select post_id from posts where (user_id=$1 and title=$2)",
         [req.body.post_author, req.body.post_title]
@@ -49,7 +49,7 @@ const bcrypt = require("bcrypt"); // Used for password hashing
    * @param imageid
    * @param callback
    */
-  module.exports.getCommentsLoggedOut = async(imageid, callback) => {
+  module.exports.getComments = async(imageid, callback) => {
     let post_id = 0
   pool.query("select post_id from posts where (user_id=$1 and title=$2)",
         [req.body.post_author, req.body.post_title]
@@ -62,11 +62,13 @@ const bcrypt = require("bcrypt"); // Used for password hashing
       return;
   });
 
-  pool.query("select * from commnents where post_id=$1",
-      [post_id])
-      .then((res) => {
-        callback(res)
-      });
+    pool.query("select * from comments where post_id=$1",
+    [post_id])
+    .then((res) => {
+      return res;
+    });
+
+  
     }
 
   
