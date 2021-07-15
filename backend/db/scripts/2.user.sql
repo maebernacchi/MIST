@@ -15,9 +15,9 @@ create table users(
     updated_at timestamptz not null default now()
 
 );
--- work on blocked user later
--- work on liked image
--- work on commented image
+-- TODO work on blocked user later
+-- TODO work on liked image
+-- TODO work on commented image
 
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON users

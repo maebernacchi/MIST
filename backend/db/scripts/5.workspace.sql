@@ -7,7 +7,7 @@ create table workspaces(
                                    --where startNode and endNode are numbers corresponding to the index numbers of the array above
                                    --and i is the input of the node the line is pointing to
                                    --ex: "(0, 1, 0), (etc.)"
-    user_id varchar(255) not null,
+    user_id varchar(255) not null references users(user_id),
 
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
