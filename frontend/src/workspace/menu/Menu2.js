@@ -53,8 +53,8 @@ function Menu2(props) {
   // | States |
   // +--------+
 
-  const [valuesOpen, setValuesOpen] = useState(false);
-  const [functionsOpen, setFunctionsOpen] = useState(true);
+  const [valuesOpen, setValuesOpen] = useState(true);
+  const [functionsOpen, setFunctionsOpen] = useState(false);
   const [customOpen, setCustomOpen] = useState(false);
   const [savedOpen, setSavedOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
