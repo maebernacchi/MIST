@@ -5,49 +5,35 @@ const bcrypt = require("bcrypt"); // Used for password hashing
 // | Albums |
 // +--------+
 
-// create Album
-module.exports.createAlbum = async (userid, name, caption) => {
-    userid = sanitize(userid);
-    name = sanitize(name);
-    caption = sanitize(caption)
-    let album = new Album({
-      name: name,
-      userId: userid,
-      public: false,
-      active: true,
-      flag: false,
-      caption: caption,
-    }) // create album document object 
-    try {
-      //save the album object
-      const albumObject = await album.save();
-      if (albumObject) {
-        return (
-          User
-            .updateOne({ _id: userid }, { $push: { albums: albumObject._id } })
-            .exec()
-            .then(writeOpResult => writeOpResult.nModified)
-            .catch(error => { throw error })
-        );
-      } else {
-        throw 'Failed to safe for Unknown reason'
-      }
-    } catch (error) {
-      throw error;
-    }
-  }; // createAlbum
+// create Collection
+module.exports.createCollection = async (req, res) => {
+  pool.query("insert into collections (user_id, title, caption, collection_id) \
+values ($1, $2, $3, $4)",
+    [req.body.user_id, req.body.title, req.body.caption, collection_id]
+)
+    .then((res) => {
+      callback(`Collection has been created`);
+  })
+  .catch((err) => {
+      handleDBError(err, callback);
+      return;
+  });
+
+ }
   
   /**
-  * deletes an album
+  * deletes a collection
   * DANGEROUS DOES NOT CHECK FOR AUTHORIZATION
-  * @param userId: the object ID for the user
-  * @param albumId: the object ID for the album
   */
-  module.exports.deleteAlbum = async (albumId) => {
-    // sanitize ID's
-    //albumId = sanitize(albumId);
-    return await Album.deleteOne({ _id: albumId })
-      .catch(error => { throw error })
+  module.exports.deleteAlbum = async (req, callback) => {
+    pool.query("delete from collections where (user_id=req.body.user_id and title = req.bod.title)")
+      .then((res) => {
+          callback(`Collection has been deleted`);
+      })
+      catch((err) => {
+        handleDBError(err, callback);
+        return;
+      });
   }
   
   // remove image from album
