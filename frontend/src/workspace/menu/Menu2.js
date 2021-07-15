@@ -40,6 +40,7 @@ function Menu2(props) {
   const global = useContext(globalContext);
   const menuDimensions = useContext(menuContext);
   const fonts = useContext(fontContext);
+  const rep = props.rep;
 
   //button names
   const button1 = "Values";
@@ -154,6 +155,7 @@ function Menu2(props) {
       <FuncGroup
         addNode={props.addNode}
         funName={name}
+        rep={props.rep}
         x={
           menuDimensions.functionMargin +
           index * (menuDimensions.functionMargin + global.functionWidth)

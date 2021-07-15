@@ -74,8 +74,8 @@ export default function FunNode(props) {
   const index = props.index;
   const x = props.x;
   const y = props.y;
-  const rep = props.rep;
-  const tempRep = props.rep;
+  let rep = props.rep;
+  let tempRep = props.rep;
   switch (tempRep) {
     case "Words": 
       rep = gui.functions[name].wordRep;
