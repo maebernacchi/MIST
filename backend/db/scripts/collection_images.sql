@@ -1,6 +1,6 @@
 create table collections_images(
-    post_id varchar(255) not null references posts(post_id),
-    collection_id varchar(255) not null references collections(collection_id)
+    post_id integer not null references posts(post_id),
+    collection_id integer not null references collections(collection_id)
 );
 
 -- this table is meant to connect the posts and collections tables, by linking post ids to collection ids
