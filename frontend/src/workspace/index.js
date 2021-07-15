@@ -127,8 +127,8 @@ class WorkspaceComponent extends Component {
       confirmationOnClickCallback: () => { console.log('STUB Confirmation'); },
       isDeleteWorkspaceModalOpen: false,
       menuTabs: {
-        valuesOpen: false,
-        functionsOpen: true,
+        valuesOpen: true,
+        functionsOpen: false,
         customOpen: false,
         savedOpen: false,
         settingsOpen: false,
