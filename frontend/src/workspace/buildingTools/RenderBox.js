@@ -1,22 +1,25 @@
 import MISTImage from "./MISTImage";
 import {nodeContext} from "../globals/globals-nodes-dimensions.js";
-import { globalContext } from "../globals/global-context";
 import React, { useContext } from "react";
 
 function RenderBox(props) {
   const nodeDimensions = useContext(nodeContext);
-  const width = useContext(globalContext).width;
-  const height = useContext(globalContext).height;
   
   return (
-      <MISTImage //Mini image that can be seen at the bottom right of the screen
-      x={width*.829}
-      y={height-nodeDimensions.renderSideLength-35}
-      width={nodeDimensions.renderSideLength}
-      height={nodeDimensions.renderSideLength}
-      renderFunction={props.renderFunction}
-      automated={true}
-    />
+      <MISTImage //Mini image that can be seen at the bottom right of the node
+        x={(props.type === "val")?
+          props.x+nodeDimensions.valueImageBoxOffset+nodeDimensions.imageBoxSideLength/1.5
+          : props.x+nodeDimensions.functionImageBoxOffset+nodeDimensions.imageBoxSideLength/1.5
+        }
+        y={(props.type === "val")?
+          props.y+nodeDimensions.valueImageBoxOffset+nodeDimensions.imageBoxSideLength/1.5
+          : props.y+nodeDimensions.functionImageBoxOffset+nodeDimensions.imageBoxSideLength/1.5
+        }
+        width={nodeDimensions.renderSideLength}
+        height={nodeDimensions.renderSideLength}
+        renderFunction={props.renderFunction}
+        automated={true}
+      />
   );
 }
 

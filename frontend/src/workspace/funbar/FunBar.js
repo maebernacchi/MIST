@@ -14,8 +14,8 @@ function FunBar(props) {
   // only here because props isn't recognized from Spring
   const renderFunction = props.renderFunction;
   const [imageButtonHovered, setImageButtonHovered] = useState(false);
-  const nodeDimensions = useContext(nodeContext);
   const height = useContext(globalContext).height;
+  const width = useContext(globalContext).width;
 
   return (
     <Group y={funBarDimensions.funbarY}>
@@ -127,8 +127,8 @@ function FunBar(props) {
 
     return (
       <Group // Image Button on blue bar
-        x={funBarDimensions.imagePlaceX}
-        y={height-nodeDimensions.renderSideLength-535}
+      x={width*.82}
+      y={width/-8.6} //Doesn't work properly for window size changing
       >
         <Spring // animates image button fill
           native

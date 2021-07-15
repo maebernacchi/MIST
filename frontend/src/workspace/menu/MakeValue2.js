@@ -120,9 +120,9 @@ function ValGroup(props) {
         if (pos.y > global.height - global.funBarHeight - global.valueWidth) {
           pos.y = global.height - global.funBarHeight - global.valueWidth;
         }
-        if (pos.x > width - 270 - global.valueWidth &&
-          pos.y > height-nodeDimensions.renderSideLength-45 - global.valueWidth){
-            pos.x = width - 270 - global.valueWidth
+        if (pos.x > global.width - 270 - global.functionWidth &&
+          pos.y > global.height-global.width/7-45 - global.functionWidth){
+            pos.x = global.width - 270 - global.functionWidth
           }
         return pos;
       }}

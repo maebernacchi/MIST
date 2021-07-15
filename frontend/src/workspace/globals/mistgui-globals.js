@@ -44,14 +44,14 @@ const funNames = [
 const functions = {
   add: { 
     rep: "+", 
-    max: 20, min: 2, 
+    max: 20, min: 1, 
     prefix: "sum", 
     color: functionMultColor,
   },
   multiply: {
     rep: "*",
     max: 20,
-    min: 2,
+    min: 1,
     prefix: "mult",
     color: functionMultColor,
   },
@@ -93,7 +93,7 @@ const functions = {
   average: {
     rep: "avg",
     max: 20,
-    min: 2,
+    min: 1,
     prefix: "avg",
     color: functionMultColor,
   },
@@ -107,7 +107,7 @@ const functions = {
   wrapsum: {
     rep: "wrap",
     max: 20,
-    min: 2,
+    min: 1,
     prefix: "wsum",
     color: functionMultColor,
   },
@@ -181,7 +181,7 @@ const imageBoxSideLength = width / 80;
 const imageBoxColor = "white";
 const functionImageBoxOffset = width / 300;
 const valueImageBoxOffset = width / 34;
-const renderSideLength = width / 18;
+const renderSideLength = width / 24;
 
 const editableTextWidth = width / 15;
 const editableTextHeight = width / 30;

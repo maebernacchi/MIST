@@ -147,9 +147,9 @@ function ValNode(props) {
           pos.y = height - funBarHeight - valueWidth;
         }
         if (pos.x > width - 270 - valueWidth &&
-          pos.y > height-nodeDimensions.renderSideLength-45 - valueWidth){
-          pos.x = width - 270 - valueWidth
-        }
+          pos.y > height-width/7-45 - valueWidth){
+            pos.x = width - 270 - valueWidth
+          }
         return pos;
       }}
       onDragStart={(e) => {
@@ -161,9 +161,7 @@ function ValNode(props) {
           scaleX: 1.1,
           scaleY: 1.1,
         });
-        if (props.renderFunction && props.imageShowing) {
-          props.onBox();
-        }
+        props.offRenderBox();
       }}
       onDragEnd={(e) => {
         e.target.to({
@@ -174,9 +172,6 @@ function ValNode(props) {
           shadowOffsetX: 5,
           shadowOffsetY: 5,
         });
-        if (props.renderFunction && props.imageShowing) {
-          props.onBox();
-        }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
           index,
@@ -203,15 +198,15 @@ function ValNode(props) {
       }}
       onClick={(e) => {
         props.clickHandler(index);
-        props.onBox();
+        props.onImageBox();
       }}
       onTap={() => { 
         props.tapHandler(index);
-        props.onBox();
+        props.onImageBox();
       }}
       onDblTap={() => { 
         props.removeNode(index);
-        props.onBox();
+        props.onImageBox();
       }}
     >
       <Group
@@ -251,10 +246,10 @@ function ValNode(props) {
           rotation={45}
           stroke={props.draggable ? gui.values[name].color : 'black'}
           strokeWidth={nodeDimensions.functionStrokeWidth}
-          shadowColor={"gray"}
+          shadowColor={props.imageShowing? "purple":"gray"}
           shadowBlur={2}
-          shadowOffsetX={1}
-          shadowOffsetY={1}
+          shadowOffsetX={props.imageShowing? 3:1}
+          shadowOffsetY={props.imageShowing? 3:1}
           _useStrictMode
         />
         {rep === "#" ?  (
@@ -315,6 +310,26 @@ function ValNode(props) {
         )}
         <Trashcan />
       </Group>
+      <Rect
+        onTap={() => {
+          props.toggleRenderBox();
+        }}
+        onClick={() => {
+          props.toggleRenderBox();
+        }}
+        name={"renderBox"}
+        x={nodeDimensions.valueImageBoxOffset}
+        y={nodeDimensions.valueImageBoxOffset}
+        width={nodeDimensions.imageBoxSideLength}
+        height={nodeDimensions.imageBoxSideLength}
+        fill={props.renderBoxOn? "red" : gui.imageBoxColor}
+        shadowColor={"gray"}
+        shadowBlur={2}
+        shadowOffsetX={1}
+        shadowOffsetY={1}
+        expanded={false}
+        visible={typeof props.renderFunction === "string"}
+      />
       <Circle
         x={valueWidth}
         y={valueWidth/2}
@@ -323,7 +338,6 @@ function ValNode(props) {
         onDblClick={(e) => {
           // Generates the temporary line when double clicked
           props.dblClickHandler(index);
-          props.onBox()
         }}
         shadowColor={
           hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"

@@ -23,7 +23,7 @@ export function NodeContextProvider(props) {
   const outletStartY = (props.functionWidth - 2 * outletYOffset) / 2;
 
   // Offset of the image render box in relation to the function group (Konva <Group/>).
-  const functionImageBoxOffset = (props.functionWidth * 6) / 7;
+  const functionImageBoxOffset = props.functionWidth * .9;
 
   // +-------------+---------------------------------------------------
   // | Value Nodes |
@@ -38,7 +38,7 @@ export function NodeContextProvider(props) {
   const valueTrashY = (props.valueWidth * 1) / 7;
 
   // Offset of the image render box in relation to the value group.
-  const valueImageBoxOffset = (props.valueWidth * 2) / 3;
+  const valueImageBoxOffset = props.valueWidth * .7;
 
   // +-----------+-----------------------------------------------------
   // | All Nodes |
@@ -48,7 +48,7 @@ export function NodeContextProvider(props) {
   const imageBoxSideLength = props.width / 80;
 
   // side length of the image render box when expanded
-  const renderSideLength = props.width / 7;
+  const renderSideLength = props.width / 24;
 
   return (
     <nodeContext.Provider

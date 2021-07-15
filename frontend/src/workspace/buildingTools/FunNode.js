@@ -153,7 +153,7 @@ export default function FunNode(props) {
             pos.x = FunBarDimensions.imagePlaceX;
           }
         if (pos.x > width - 270 - functionWidth &&
-            pos.y > height-nodeDimensions.renderSideLength-45 - functionWidth){
+            pos.y > height-global.width/7-45 - functionWidth){
             pos.x = width - 270 - functionWidth
           }
         return pos;
@@ -170,9 +170,9 @@ export default function FunNode(props) {
           scaleY: 1.1,
         });
         if (props.renderFunction && props.imageShowing) {
-          props.onBox();
           setOnDrag(true);
         }
+        props.offRenderBox();
       }}
       onDragEnd={(e) => {
         e.target.to({
@@ -182,7 +182,7 @@ export default function FunNode(props) {
           scaleY: 1,
         });
         if (props.renderFunction && onDrag) {
-          props.onBox();
+          
         }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
@@ -199,7 +199,6 @@ export default function FunNode(props) {
           e.currentTarget.x(),
           e.currentTarget.y()
         );
-        props.onBox()
       }}
       onClick={(e) => {
         if (e.target.attrs.name) {
@@ -207,20 +206,18 @@ export default function FunNode(props) {
             index,
             parseInt(e.target.attrs.name.substring(6)) - 1
           );
-          props.onBox()
         } else {
           props.funClicked(index);
         }
-        props.onBox()
+        props.onImageBox();
       }}
       onDblClick={() => {
         // Generates the temporary line when double clicked
         props.dblClickHandler(index);
-        props.onBox()
       }}
       onTap={() => {
-        props.tapHandler(index)
-        props.onBox()
+        props.tapHandler(index);
+        props.onImageBox();
       }}
       onTouchEnd={(e) => {
         if (e.target.attrs.name) {
@@ -231,7 +228,7 @@ export default function FunNode(props) {
         } else {
           props.funClicked(index);
         }
-        props.onBox()
+        props.onImageBox();
       }}
     >
       <Group
@@ -275,8 +272,10 @@ export default function FunNode(props) {
           shadowColor={
             hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
           }
-          shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
-          shadowBlur={3}
+          shadowColor={props.imageShowing? "purple":"gray"}
+          shadowBlur={2}
+          shadowOffsetX={props.imageShowing? 3:1}
+          shadowOffsetY={props.imageShowing? 3:1}
           _useStrictMode
           stroke={props.draggable ? gui.functions[name].color : 'black'}
         />
@@ -300,6 +299,26 @@ export default function FunNode(props) {
         />
         <Trashcan />
       </Group>
+      <Rect
+        onTap={() => {
+          props.toggleRenderBox();
+        }}
+        onClick={() => {
+          props.toggleRenderBox();
+        }}
+        name={"renderBox"}
+        x={nodeDimensions.functionImageBoxOffset+3}
+        y={nodeDimensions.functionImageBoxOffset+3}
+        width={nodeDimensions.imageBoxSideLength}
+        height={nodeDimensions.imageBoxSideLength}
+        fill={props.renderBoxOn? "red" : gui.imageBoxColor}
+        shadowColor={"gray"}
+        shadowBlur={2}
+        shadowOffsetX={1}
+        shadowOffsetY={1}
+        expanded={false}
+        visible={typeof props.renderFunction === "string"}
+      />
       {name === "rgb"
         ? ["red", "green", "blue"].map((u, i) => (
             <Shape
