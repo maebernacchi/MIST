@@ -19,6 +19,7 @@ const userRoute = (req, res, next) => {
 	}
 	if (!action) {
 		handleError(res, "No action specified.");
+		return;
 	}
 	if (userHandlers[action]) {
 		userHandlers[action](req, res);
