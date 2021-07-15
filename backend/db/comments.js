@@ -49,7 +49,7 @@ const bcrypt = require("bcrypt"); // Used for password hashing
    * @param imageid
    * @param callback
    */
-  module.exports.getComments = async(imageid, callback) => {
+  module.exports.getComments = async(req, callback) => {
     let post_id = 0
   pool.query("select post_id from posts where (user_id=$1 and title=$2)",
         [req.body.post_author, req.body.post_title]

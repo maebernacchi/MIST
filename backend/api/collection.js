@@ -5,8 +5,8 @@ var collectionHandlers = {};
  * imageId : String
  * albumId : String
  */
-handlers.addToAlbum = async function (info, req, res) {
-
+collectionHandlers.addToAlbum = async function (info, req, res) {
+	
 
 	if (!req.isAuthenticated()) {
 		res.json({
