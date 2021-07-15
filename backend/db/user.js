@@ -100,7 +100,7 @@ module.exports.verifyEmail = (req, callback) => {
  * @param {*} req
  * @param {*} callback
  */
-module.exports.checkEmailVerified = async (req) => {
+module.exports.checkEmailVerified = async (req, callback) => {
 	const user = req.body;
 	if (!(await checkUserExists(user_column, user.user_id))) {
 		callback("User ID does not exist!");
