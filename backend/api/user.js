@@ -90,8 +90,8 @@ userHandlers.signUp = async function (req, res) {
  */
 // TODO move to database
 userHandlers.signIn = async function (req, res, next) {
-	const emailVerified = await userDB.checkEmailVerified(req);
-	const message = "";
+	const emailVerified = await userDB.checkEmailVerified(req, (mes) => {message = mes});
+	let message = "";
 	if (!emailVerified) {
 		message = "You need to verify email first!";
 		res.json(message);

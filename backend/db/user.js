@@ -104,8 +104,9 @@ module.exports.checkEmailVerified = async (req) => {
 	const user = req.body;
 	if (!(await checkUserExists(user_column, user.user_id))) {
 		callback("User ID does not exist!");
+		return false;
 	}
-	pool
+	return pool
 		.query("select verified from users where user_id=$1", [user.user_id])
 		.then((res) => {
 			return result.rows[0].verified;
