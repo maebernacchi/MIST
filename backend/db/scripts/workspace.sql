@@ -9,6 +9,6 @@ create table workspaces(
 -- what type is workspace data??
 
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON users
+BEFORE UPDATE ON workspaces
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
