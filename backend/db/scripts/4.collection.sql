@@ -6,7 +6,7 @@ create table collections(
     user_id varchar(255) not null references users(user_id),
     likes int default 0,
 
-    publish_date timestamptz not null default now()
+    created_at timestamptz not null default now()
 );
 
 --what type is contents??

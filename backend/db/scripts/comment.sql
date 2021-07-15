@@ -6,7 +6,7 @@ create table comments(
     parent_comment_id integer references comments(comment_id),
     likes int default 0,
 
-    publish_date timestamptz not null default now()
+    created_at timestamptz not null default now()
 );
 
 --parent_comment: used for replies to other comments. if null, the comment is not a reply
