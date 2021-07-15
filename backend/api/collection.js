@@ -1,10 +1,13 @@
-const handlers = require("./api");
+var collectionHandlers = {};
+
 /**
  * We expect info to have both an
  * imageId : String
  * albumId : String
  */
 handlers.addToAlbum = async function (info, req, res) {
+
+
 	if (!req.isAuthenticated()) {
 		res.json({
 			success: false,

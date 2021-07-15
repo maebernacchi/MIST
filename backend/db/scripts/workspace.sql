@@ -20,6 +20,6 @@ create table workspaces(
 -- the nodes would have to be rebuilt first and then placed into an array for the edges to be added
 
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON users
+BEFORE UPDATE ON workspaces
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
