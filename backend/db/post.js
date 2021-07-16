@@ -12,7 +12,6 @@ const checkUserExists = async (column, value) => {
 		`select exists (select 1 from users where ${column} = $1)`,
 		[value]
 	);
-	console.log(result);
 	return result.rows[0].exists;
 };
 
