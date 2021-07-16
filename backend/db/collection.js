@@ -2,7 +2,7 @@ const pool = require("./dbconfig"); // Used for database queries
 const bcrypt = require("bcrypt"); // Used for password hashing 
 
 // +--------+----------------------------------------------------------
-// | Albums |
+// | Collection |
 // +--------+
 
 // create Collection
@@ -24,19 +24,25 @@ values ($1, $2, $3, $4)",
   /**
   * deletes a collection
   * DANGEROUS DOES NOT CHECK FOR AUTHORIZATION
+  * @param userId: the object ID for the user
+  * @param albumId: the object ID for the album
   */
-  module.exports.deleteAlbum = async (req, callback) => {
-    pool.query("delete from collections where (user_id=req.body.user_id and title = req.bod.title)")
+  module.exports.deleteCollection = async (req, callback) => {
+    pool
+      .query("delete from collections where (user_id=$1 and title=$2)"
+        [req.body.user_id, req.bod.title]
+      )
+
       .then((res) => {
           callback(`Collection has been deleted`);
       })
-      catch((err) => {
+      .catch((err) => {
         handleDBError(err, callback);
         return;
       });
   }
   
-  // remove image from album
+  // remove image from collection
   module.exports.removeImageFromAlbum = async (imageId, albumId) => {
     return Album.updateOne({ _id: sanitize(albumId) }, { $pull: { "images": sanitize(imageId) }, updatedAt: Date.now() }).exec();
   }
