@@ -88,46 +88,77 @@
     }
   }
   
-  
-  /**
+// Determines if an userid exists in  blocked_users
+// Returns a boolean value
+const checkUseridExists = async (column, value) => {
+	const result = await pool.query(
+		`select exists (select 1 from blocked_users where ${column} = $1)`,
+		[value]
+	);
+	console.log(result);
+	return result.rows[0].exists;
+};
+
+ /**
    * returns whether a user has blocked the user in question
-   * @param userid: the user's id 
-   * @param blockedid: the user in question of being blocked's id 
+   * @param user_id: the user's id 
+   * @param blocked_user_id: the user in question of being blocked's id 
    * @param callback: returns true if the user is blocked, false otherwise 
    */
-  module.exports.isBlocked = (userid, blockedid, callback) => {
-    User.findOne({ _id: userid, blockedUsers: { $in: [blockedid] } },
-      (err, user) => {
-        if (user)
-          callback(true)
-        else
-          callback(false)
-      })
-  }
+  module.exports.isBlocked = (user_id, blocked_user_id, callback) => {
+      if (!(await checkUseridExists(user_column, user_id))) {
+        callback("User ID does not exist!");
+      }
+      return pool.query(
+        "select exists (select * from posts where (user_id=$1 and blocked_user_id=$2))",
+        [user_id, blocked_user_id]
+      );
+    };
   
   /**
    * blocks a user
-   * @param userid: the objectId of the user who wants to block a user 
-   * @param contentid: the objectId of the user to be blocked 
+   * @param userid: the ID of the user who wants to block a user 
+   * @param blockedid: the ID of the user to be blocked 
    * @param callback: message to be displayed (failed or success)
    * returns true if successfull, false otherwise
    */
   module.exports.blockUser = async (userid, blockedid, callback) => {
-    return await User.updateOne({ _id: userid }, { $push: { blockedUsers: blockedid } }).exec()
-      .then(writeOpResult => (Boolean)(writeOpResult.nModified))
-      .then(callback("Successfully blocked user"))
-      .catch(error => { callback("Uh-oh something went wrong, we could not block this user at this time.") })
+    if (!(await checkUseridExists(user_column, user_id))) {
+      callback("User ID does not exist!");
+      return;
+    }
+    pool
+      .query(
+        "insert into blocked_users (user_id, block_user_id) \
+        values ($1, $2)",
+        [userid, blockedid]
+      )
+      .then((res) => {
+        callback(`Successfully blocked user`);
+      })
+      .catch((err) => {
+        handleDBError(err, callback);
+        return;
+      })
   }
   
   /**
    * unblocks a user
    * @param userid: the objectId of the user who wants to block a user 
-   * @param contentid: the objectId of the user to be blocked 
-   * @returns true if successful, false otherwise
-   */
-  module.exports.unblockUser = async (userid, contentid) => {
-    return await User.updateOne({ _id: userid }, { $pull: { blockedUsers: contentid } }).exec()
-      .then(writeOpResult => (Boolean)(writeOpResult.nModified))
-      .catch(error => { throw error })
+   * @param blockedid: the objectId of the user to be blocked 
+     */
+   module.exports.blockUser = async (userid, blockedid, callback) => {
+    pool
+      .query("delete from collections where (user_id=$1 and blocked_user_id=$2)"
+        [userid, blockedid]
+        )
+      .then((res) => {
+          callback(`Successfully unblock user`);
+      })
+      .catch((err) => {
+        handleDBError(err, callback);
+        return;
+      });
   }
+  
   
