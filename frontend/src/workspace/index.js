@@ -1261,6 +1261,7 @@ class WorkspaceComponent extends Component {
                       savedTabColor={colors.menuSavedTab[this.state.theme]}
                       settingsTabColor={colors.menuSettingsTab[this.state.theme]}
                       theme={this.state.theme}
+                      rep={this.state.rep}
                       setMenuTabs={(
                         valuesOpen,
                         functionsOpen,
