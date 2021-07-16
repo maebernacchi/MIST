@@ -65,7 +65,7 @@ module.exports.createUser = async (req, callback) => {
 			[user.user_id, user.email, hashedPassword, user.token]
 		)
 		.then((res) => {
-			callback(`User created with ID: ${user.user_id}`);
+			callback(`User created!`);
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
