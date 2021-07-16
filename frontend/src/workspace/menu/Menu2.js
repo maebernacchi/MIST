@@ -205,7 +205,7 @@ function Menu2(props) {
 
   function Settings(props) {
 
-    return [props.theme, "Reps", "Save", "Delete", "Reset Workspace"].map((u, i) => {
+    return [props.theme, props.rep, "Save", "Delete", "Reset Workspace"].map((u, i) => {
       return (
         <SettingsItem
           key={u}
@@ -228,7 +228,7 @@ function Menu2(props) {
                 ? props.openDeleteWorkspaceModal
                 : u === "Reset Workspace"
                 ? props.clearWorkspace
-                : u === "Reps"
+                : (u === "Words" || u === "Symbols" )
                 ? props.toggleRep 
                 : props.toggleTheme
       }
