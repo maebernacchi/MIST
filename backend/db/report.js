@@ -95,7 +95,6 @@ const checkUseridExists = async (column, value) => {
 		`select exists (select 1 from blocked_users where ${column} = $1)`,
 		[value]
 	);
-	console.log(result);
 	return result.rows[0].exists;
 };
 
