@@ -88,7 +88,7 @@ class WorkspaceComponent extends Component {
 
     let layout1 = new MIST.Layout();
 
-    this.themes = ["classic", "dusk", "dark"];
+    this.themes = ["Classic", "Dusk", "Dark"]; //is this where we should capitalize?
     this.reps = ["Words" , "Symbols"];
 
     this.width = props.width;
@@ -118,7 +118,7 @@ class WorkspaceComponent extends Component {
       currentNode: null,
       layouts: [layout1],
       themeIndex: 1,
-      theme: "dusk", //changes default theme
+      theme: "Dusk", //changes default theme
       repIndex: 0,
       rep: "Words",
       pos1: { x: 100, y: 200 },
@@ -1250,10 +1250,10 @@ class WorkspaceComponent extends Component {
                       bgColor={colors.menuBackground[this.state.theme]}
                       wsButtonColor={colors.workspaceButton[this.state.theme]}
                       valueMenuColor={
-                        (this.state.theme === "classic" &&
+                        (this.state.theme === "Classic" &&
                           colors.valueMenuColor1) ||
-                        (this.state.theme === "dusk" && colors.valueMenuColor2) ||
-                        (this.state.theme === "dark" && colors.valueMenuColor3)
+                        (this.state.theme === "Dusk" && colors.valueMenuColor2) ||
+                        (this.state.theme === "Dark" && colors.valueMenuColor3)
                       }
                       funTabColor={colors.menuFunTab[this.state.theme]}
                       valTabColor={colors.menuValTab[this.state.theme]}
@@ -1332,10 +1332,10 @@ class WorkspaceComponent extends Component {
                         this.toggleTheme()
                       }}
                       functionBoxBg={
-                        this.state.theme === "dark" ? "darkgray" : "white"
+                        this.state.theme === "Dark" ? "darkgray" : "white"
                       }
                       functionTextColor={
-                        this.state.theme === "dark" ? "black" : "black"
+                        this.state.theme === "Dark" ? "black" : "black"
                       }
                       openPopupCanvas={() => {
                         this.setState({

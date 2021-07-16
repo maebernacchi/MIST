@@ -283,7 +283,7 @@ function Menu2(props) {
                 u.text === "Settings") &&
                 u.open
                 ? "black" //is this really where it is?! this changes all of them
-                : props.theme === "dark"
+                : props.theme === "Dark"
                   ? "white"
                   : "black"
             }
