@@ -17,12 +17,15 @@ const email_column = "email";
 // Determines if a user exists, given their username (user_id)
 // Returns a boolean value
 const checkUserExists = async (column, value) => {
-	const result = await pool.query(
-		`select exists (select 1 from users where ${column} = $1)`,
-		[value]
-	);
-	console.log(result);
-	return result.rows[0].exists;
+	return pool
+		.query(`select exists (select 1 from users where ${column} = $1)`, [value])
+		.then((res) => {
+			return res.rows[0].exists;
+		})
+		.catch((err) => {
+			handleDBError(err, (_) => {});
+			throw err;
+		});
 };
 
 /**
@@ -55,7 +58,7 @@ module.exports.createUser = async (req, callback) => {
 		return;
 	}
 	const hashedPassword = await bcrypt.hash(user.password, 12); // Hashes password
-	pool
+	return pool
 		.query(
 			"insert into users (user_id, email, password, token) \
         values($1, $2, $3, $4)",
@@ -66,7 +69,7 @@ module.exports.createUser = async (req, callback) => {
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
-			return;
+			throw err;
 		});
 };
 
@@ -77,19 +80,19 @@ module.exports.createUser = async (req, callback) => {
  * @param {*} req
  * @param {*} callback
  */
-module.exports.verifyEmail = (req, callback) => {
+module.exports.verifyEmail = async (req, callback) => {
 	const user = req.body;
-	pool
+	return pool
 		.query(
 			"update users set verified=true where token=$1", // If token matches, set user to verified
 			[req.params.token]
 		)
 		.then((res) => {
-			callback(`Email verified for user: ${user.user_id}`);
+			callback(`Email verified`);
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
-			return;
+			throw err;
 		});
 };
 
@@ -109,7 +112,7 @@ module.exports.checkEmailVerified = async (req, callback) => {
 	return pool
 		.query("select verified from users where user_id=$1", [user.user_id])
 		.then((res) => {
-			return result.rows[0].verified;
+			return res.rows[0].verified;
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
@@ -126,46 +129,48 @@ module.exports.checkEmailVerified = async (req, callback) => {
 module.exports.changePassword = async (req, callback) => {
 	const user = req.body;
 	let dbPassword = "";
-	pool
+	return pool
 		.query("select password from users where user_id=$1", [user.user_id])
 		.then((res) => {
+			bcrypt.compare(user.currentPassword, dbPassword, async (err, result) => {
+				// compare the hash with the given password
+				if (err) {
+					callback(err);
+				}
+				if (result === false) {
+					callback("Old Password Does Not Match");
+				} else {
+					const passwdStrength = passwordStrength(user.newPassword);
+					// 0 = Too weak
+					// 1 = Weak
+					// 2 = Medium
+					// 3 = Strong
+					if (passwdStrength.id <= 1) {
+						callback(passwdStrength.value);
+						return;
+					}
+					let newPass = await bcrypt.hash(user.newPassword, 12); // hashes new password
+					return pool
+						.query("update users set password=$1 where user_id=$2", [
+							newPass,
+							user.user_id,
+						])
+						.then((res) => {
+							callback(
+								`Successfully updated password for user: ${user.user_id}`
+							);
+						})
+						.catch((err) => {
+							handleDBError(err, callback);
+							return;
+						});
+				}
+			});
 			dbPassword = res.rows[0].password;
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
 		});
-	bcrypt.compare(user.currentPassword, dbPassword, async (err, result) => {
-		// compare the hash with the given password
-		if (err) {
-			callback(err);
-		}
-		if (result === false) {
-			callback("Old Password Does Not Match");
-		} else {
-			const passwdStrength = passwordStrength(user.newPassword);
-			// 0 = Too weak
-			// 1 = Weak
-			// 2 = Medium
-			// 3 = Strong
-			if (passwdStrength.id <= 1) {
-				callback(passwdStrength.value);
-				return;
-			}
-			let newPass = await bcrypt.hash(user.newPassword, 12); // hashes new password
-			pool
-				.query("update users set password=$1 where user_id=$2", [
-					newPass,
-					user.user_id,
-				])
-				.then((res) => {
-					callback(`Successfully updated password for user: ${user.user_id}`);
-				})
-				.catch((err) => {
-					handleDBError(err, callback);
-					return;
-				});
-		}
-	});
 };
 
 /**
@@ -177,7 +182,7 @@ module.exports.changePassword = async (req, callback) => {
  */
 module.exports.changeEmail = (req, callback) => {
 	let user = req.body;
-	pool
+	return pool
 		.query("update users set email=$1 where user_id=$2", [
 			user.email,
 			user.user_id,
@@ -187,7 +192,7 @@ module.exports.changeEmail = (req, callback) => {
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
-			return;
+			throw err;
 		});
 };
 
@@ -202,12 +207,12 @@ module.exports.changeUserId = async (req, callback) => {
 	const user = req.body;
 	if (user.new_user_id === "") callback("Username cannot be blank");
 	else {
-		if (checkUserExists(user_column, user.new_user_id)) {
+		if (await checkUserExists(user_column, user.new_user_id)) {
 			// Checks if the username is already in use
 			console.log("Duplicate User ID");
 			callback("User ID already in use!");
 		} else {
-			pool
+			return pool
 				.query("update users set user_id=$1 where user_id=$2", [
 					user.new_user_id,
 					user.user_id,
@@ -217,7 +222,7 @@ module.exports.changeUserId = async (req, callback) => {
 				})
 				.catch((err) => {
 					handleDBError(err, callback);
-					return;
+					throw err;
 				});
 		}
 	}
@@ -236,7 +241,7 @@ module.exports.changeAbout = async (req, callback) => {
 		callback("User does not exist.");
 		return;
 	}
-	pool
+	return pool
 		.query("update users set about = '$1' where user_id = '$2'", [
 			user.newBio,
 			user.user_id,
@@ -246,7 +251,7 @@ module.exports.changeAbout = async (req, callback) => {
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
-			return;
+			throw err;
 		});
 };
 
@@ -264,7 +269,7 @@ module.exports.changeProfilePic = async (req, callback) => {
 		callback("User does not exist.");
 		return;
 	}
-	pool
+	return pool
 		.query("update users set profile_pic = $1 where user_id = $2", [
 			user.newProfilePic,
 			user.user_id,
@@ -274,7 +279,7 @@ module.exports.changeProfilePic = async (req, callback) => {
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
-			return;
+			throw err;
 		});
 };
 
@@ -292,35 +297,34 @@ module.exports.deleteAccount = async (req, callback) => {
 		callback("User does not exist.");
 		return;
 	}
-	pool
+	return pool
 		.query("select password from users where user_id=$1", [user.user_id])
 		.then((res) => {
 			dbPassword = res.rows[0].password;
+			bcrypt.compare(user.password, dbPassword, async (err, result) => {
+				// checks password before deleting
+				if (err) {
+					console.log(err);
+				}
+				if (result === false) {
+					callback("Password incorrect.");
+				} else {
+					return pool
+						.query("delete from users where user_id=$1", [user.user_id])
+						.then((res) => {
+							callback("Deleted user.");
+						})
+						.catch((err) => {
+							handleDBError(err, callback);
+							throw err;
+						});
+				}
+			});
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
-			return;
+			throw err;
 		});
-
-	bcrypt.compare(user.password, dbPassword, (err, result) => {
-		// checks password before deleting
-		if (err) {
-			console.log(err);
-		}
-		if (result === false) {
-			callback("Password incorrect.");
-		} else {
-			pool
-				.query("delete from users where user_id=$1", [user.user_id])
-				.then((res) => {
-					callback("Deleted user.");
-				})
-				.catch((err) => {
-					handleDBError(err, callback);
-					return;
-				});
-		}
-	});
 };
 
 // Returns all images for the user's own profile
@@ -328,32 +332,32 @@ module.exports.deleteAccount = async (req, callback) => {
 // 		  (only difference is other profiles only retrieve public images)
 module.exports.getCompleteUserProfile = async (req, callback) => {
 	let user = req.body;
-	let is_active_user;
-	pool
+	return pool
 		.query("select exists (select 1 from users where user_id=$1)", [
 			user.user_id,
 		])
-		.then((res) => (is_active_user = res.rows[0].exists))
-		.catch((err) => {
-			handleDBError(err, callback);
-			return;
-		});
-	if (!is_active_user) {
-		callback("User does not exist.");
-	}
-	pool
-		.query(
-			"select code, created_at, likes, comments from posts \
+		.then((res) => {
+			if (res.rows[0].exists) {
+				callback("User does not exist.");
+			}
+			pool
+				.query(
+					"select code, created_at, likes, comments from posts \
 		inner join users on posts.user_id = users.user_id \
 		where user_id = $1",
-			[user.user_id]
-		)
-		.then((res) => {
-			return res.rows[0];
+					[user.user_id]
+				)
+				.then((res) => {
+					return res.rows[0]; //return the user object
+				})
+				.catch((err) => {
+					handleDBError(err, callback);
+					throw err;
+				});
 		})
 		.catch((err) => {
 			handleDBError(err, callback);
-			return;
+			throw err;
 		});
 };
 
