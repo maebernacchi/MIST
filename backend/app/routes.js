@@ -271,7 +271,6 @@ module.exports = (app) => {
 				console.log("Email verification success!");
 				res.json(message);
 			} else {
-				console.log("Email Verification Failed!");
 				console.error(message);
 				res.json(message);
 			}
