@@ -69,6 +69,11 @@ function ValGroup(props) {
   const nodeDimensions = useContext(nodeContext);
   const fonts = useContext(fontContext);
   const [isHovered, setIsHovered] = useState(false);
+  const valueWidth = global.valueWidth;
+  const valueSide = nodeDimensions.valueSideLength;
+  const isTime = gui.values[valName].rep.includes("t.");
+  const isMouse = gui.values[valName].rep.includes("m.");
+  const isConst = gui.values[valName].rep === "#";
 
   return (
     <Group
@@ -110,14 +115,14 @@ function ValGroup(props) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > global.width - global.valueWidth) {
-          pos.x = global.width - global.valueWidth;
+        if (pos.x > global.width - valueWidth) {
+          pos.x = global.width - valueWidth;
         }
         if (pos.y < 0) {
           pos.y = 0;
         }
-        if (pos.y > global.height - global.funBarHeight - global.valueWidth) {
-          pos.y = global.height - global.funBarHeight - global.valueWidth;
+        if (pos.y > global.height - global.funBarHeight - valueWidth) {
+          pos.y = global.height - global.funBarHeight - valueWidth;
         }
         return pos;
       }}
@@ -129,9 +134,10 @@ function ValGroup(props) {
       }}
     >
       <Circle
-        y={global.valueWidth/2}
-        x={global.valueWidth*.95}
-        Radius={props.tabs.valuesOpen ? global.valueWidth/10 : 0} // if values is not open, circles have radius of 0, therefore hiding them
+        y={valueWidth/2}
+        x={valueWidth*.95}
+        opacity={props.tabs.valuesOpen? 1:0}
+        Radius={valueWidth/10}
         fill={"#B3B3B3"}
       />
       <Spring
@@ -163,11 +169,14 @@ function ValGroup(props) {
           <animated.Rect
             {...props}
             y={0}
-            width={nodeDimensions.valueSideLength}
-            height={nodeDimensions.valueSideLength}
+            width={valueSide}
+            height={valueSide}
             fill={gui.values[valName].color}
             cornerRadius={10}
             rotation={45}
+            stroke={isConst || isTime || isMouse ? "black" : gui.values[valName].color}
+            strokeWidth={isConst ? valueSide / 30 : isTime ? valueSide / 20 : isMouse ? valueSide / 20 : 0}
+            dash={isConst ? [valueSide /1, 0] : isTime ? [valueSide / 5, valueSide / 5] : isMouse ? [valueSide / 10, valueSide / 10] : [valueSide/1,0]}
           />
         )}
       </Spring>
@@ -204,8 +213,8 @@ function ValGroup(props) {
             fontSize={fonts.valueFontSize}
             fill={"black"}
             y={0}
-            width={global.valueWidth}
-            height={global.valueWidth}
+            width={valueWidth}
+            height={valueWidth}
             align={"center"}
             verticalAlign={"middle"}
           />
@@ -215,9 +224,9 @@ function ValGroup(props) {
       <Group>
         <Rect
           // {...props}
-          y={global.valueWidth}
-          width={global.valueWidth * 4}
-          height={global.valueWidth / 2}
+          y={valueWidth}
+          width={valueWidth * 4}
+          height={valueWidth / 2}
           fill={"gray"}
           opacity={0.75}
           cornerRadius={[0, 20, 20, 20]}
@@ -227,9 +236,9 @@ function ValGroup(props) {
           fill={"white"}
           fontSize={(fonts.valueFontSize * 2 / 3)}
           padding={7}
-          y={global.valueWidth}
-          width={global.valueWidth * 4}
-          height={global.valueWidth / 2}
+          y={valueWidth}
+          width={valueWidth * 4}
+          height={valueWidth / 2}
           align={"center"}
           verticalAlign={"middle"}
           opacity={0.85}
