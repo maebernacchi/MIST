@@ -1,4 +1,4 @@
-const routeGenerator = require("../routes");
+const routeGenerator = require("../routeGenerator");
 
 const galleryRoute = routeGenerator(galleryHandlers);
 

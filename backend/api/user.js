@@ -1,5 +1,5 @@
 const passport = require("passport");
-const routeGenerator = require("../routes");
+const routeGenerator = require("../routeGenerator");
 const { handleError } = require("./utilities");
 const crypto = require("crypto");
 const userDB = require("../db/user");

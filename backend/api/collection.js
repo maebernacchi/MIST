@@ -1,7 +1,7 @@
-const routeGenerator = require("../routes");
+const routeGenerator = require("../routeGenerator");
 
 const collectionRoute = routeGenerator(collectionHandlers);
-const collectionDB = require("../db/collection.js");
+const collectionDB = require("../db/collection");
 
 var collectionHandlers = {};
 

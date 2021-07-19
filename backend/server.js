@@ -40,6 +40,9 @@ app.use(cookieParser(process.env.SECRET));
 app.use(passport.initialize());
 app.use(passport.session());
 
+//=================== Routes ==============================
+require("./routes")(app);
+
 //=================== Serving Static Files ==================
 //app.use(express.static("public"));
 
