@@ -8,6 +8,7 @@ create table users(
     need_tutorial boolean default true,
     admin boolean default false,
     profile_pic varchar(255),
+    is_demo_user boolean default false,
     report_flags int default 0,
 
     token varchar(255),
