@@ -27,6 +27,7 @@ const checkUserExists = async (column, value) => {
 		});
 };
 
+// CREATE
 /**
  * creates a new user in the database
  * @param req the request, must contain a user object
@@ -72,29 +73,7 @@ module.exports.createUser = async (req, callback) => {
 		});
 };
 
-/**
- *
- * Verify the email by looking up the token.
- *
- * @param {*} req
- * @param {*} callback
- */
-module.exports.verifyEmail = async (req, callback) => {
-	const user = req.body;
-	return pool
-		.query(
-			"update users set verified=true where token=$1", // If token matches, set user to verified
-			[req.params.token]
-		)
-		.then((res) => {
-			callback(`Email verified`);
-		})
-		.catch((err) => {
-			handleDBError(err, callback);
-			throw err;
-		});
-};
-
+// READ
 /**
  *
  * Check if user's email is verified
@@ -118,7 +97,42 @@ module.exports.checkEmailVerified = async (req, callback) => {
 			return;
 		});
 };
+module.exports.getDemoUsers = async () => {
+	return pool
+		.query("select * from users where is_demo_user=true")
+		.then((res) => {
+			return res.rows;
+		})
+		.catch((err) => {
+			console.log(err);
+			return;
+		});
+};
 
+// UPDATE
+
+/**
+ *
+ * Verify the email by looking up the token.
+ *
+ * @param {*} req
+ * @param {*} callback
+ */
+module.exports.verifyEmail = async (req, callback) => {
+	const user = req.body;
+	return pool
+		.query(
+			"update users set verified=true where token=$1", // If token matches, set user to verified
+			[req.params.token]
+		)
+		.then((res) => {
+			callback(`Email verified`);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			throw err;
+		});
+};
 /**
  * Changes the password of the user
  *
@@ -253,7 +267,6 @@ module.exports.changeAbout = async (req, callback) => {
 			throw err;
 		});
 };
-
 /**
  *
  * @param {*} req
@@ -282,6 +295,7 @@ module.exports.changeProfilePic = async (req, callback) => {
 		});
 };
 
+// DELETE
 /**
  *
  * Deletes the user's account
