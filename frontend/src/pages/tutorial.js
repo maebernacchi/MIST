@@ -249,9 +249,9 @@ function Tutorial() {
         </Col>
         <Col xs="9">
           {/* Tutorials */}
-          <Tutorials />
+         <Tutorials /> 
           {/* Tutorial Slideshow Experiment */}
-          {/* <TutorialSlideShow sectionNum={0} subsectionNum={0} stageNum={0} /> */}
+          {/*<TutorialSlideShow sectionNum={0} subsectionNum={0} stageNum={0} />  */}
           {/* this is currently just the mockup data that I used in the tutorialSlideShow.js file. 
               I _think_ it will work to adjust it to use this data, since it's coded to depend on
               the length of arrays in the objects. I don't know how to have the different types of
