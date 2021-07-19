@@ -1,6 +1,6 @@
 const postDB = require("../db/post.js");
 const commentDB = require("../db/comments.js");
-const routeGenerator = require("../routeGenerator");
+const routeGenerator = require("./routeGenerator");
 
 // +------------------+--------------------------------------------------
 // | Posts            |

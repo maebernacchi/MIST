@@ -1,7 +1,7 @@
 const pool = require("../db/dbconfig");
 const userDB = require("../db/user");
 const postDB = require("../db/post");
-const routeGenerator = require("../routeGenerator");
+const routeGenerator = require("./routeGenerator");
 
 // I don't know the intentions behind the code but in case we need this
 // also needs to be converted to sql

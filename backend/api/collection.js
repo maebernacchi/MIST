@@ -1,4 +1,4 @@
-const routeGenerator = require("../routeGenerator");
+const routeGenerator = require("./routeGenerator");
 const collectionDB = require("../db/collection");
 
 
