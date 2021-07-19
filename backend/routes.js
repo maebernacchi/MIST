@@ -1,26 +1,22 @@
-const pool = require("../db/dbconfig");
-const api = require("../api/api");
-const database = require("./database");
-const users = require("../api/user.js");
-const { verifyEmail } = require("../db/user");
+const pool = require("./db/dbconfig");
+const api = require("./api/api");
+const database = require("./app/database");
+const { verifyEmail } = require("./db/user");
+const collectionRoute = require("./api/collection");
+const galleryRoute = require("./api/gallery");
+const userRoute = require("./api/user");
+const postRoute = require("./api/post");
+const reportRoute = require("./api/report");
+const workspaceRoute = require("./api/workspace");
 
 module.exports = (app) => {
-	app.use("/api/users", users);
-	// Our stuff
-	// ROUTES
-	// create
-
+	app.use("/api/collections", collectionRoute);
+	app.use("/api/galleries", galleryRoute);
+	app.use("/api/posts", postRoute);
+	app.use("/api/reports", reportRoute);
+	app.use("/api/users", userRoute);
+	app.use("/api/workspaces", workspaceRoute);
 	
-
-	// Path: /api
-	//  Dynamic content distribution - return raw data through Fetch
-
-	app.post("/api", function (req, res) {
-		api.run(req.body, req, res);
-	});
-	app.get("/api", function (req, res) {
-		api.run(req.query, req, res);
-	});
 	//------------------------------------------------
 
 	app.get("/api/profiles/:username", (req, res) => {
@@ -171,7 +167,6 @@ module.exports = (app) => {
 	// 	console.log(req.params.username);
 	// });
 
-
 	/*
 		Email Verification Route
 		Runs when user clicks the link sent to their email
@@ -188,14 +183,4 @@ module.exports = (app) => {
 			}
 		});
 	});
-
-	/**
-	 * Verifies that the email address is correct
-	 * @param {*} info
-	 * @param {*} req
-	 * @param {*} res
-	 */
-	// userHandlers.verifyEmail = function (req, res) {
-		
-	// };
 };
