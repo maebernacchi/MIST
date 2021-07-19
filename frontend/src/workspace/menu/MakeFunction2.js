@@ -53,6 +53,7 @@ import gui from "../globals/mistgui-globals";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { globalContext } from "../globals/global-context.js";
 import { fontContext} from '../globals/globals-fonts';
+import { Menu2 } from "../menu/Menu2.js";
 import globals from "../globals/globals";
 
 // +----------------------------+
@@ -70,6 +71,7 @@ function FuncGroup(props) {
   const fonts = useContext(fontContext);
   const [isHovered, setIsHovered] = useState(false);
   const rep = props.rep;
+  
   // const tips = props.descript + "\n" + props.usage;
   useEffect(() => {
     //console.log("props:"+props);
@@ -127,8 +129,10 @@ function FuncGroup(props) {
         return pos;
       }}
       onMouseOver={function (props) {
+        //if (props.tabs.functionsOpen) {
         setIsHovered(true);
       }}
+    //}
       onMouseLeave={function (props) {
         setIsHovered(false);
       }}
@@ -137,26 +141,22 @@ function FuncGroup(props) {
       <Circle
         x={global.functionWidth}
         y={global.functionWidth/2}
-        opacity={props.tabs.functionsOpen? 
-          funName==="rgb" ? 0:1
-          : 0
-        }
-        Radius={global.valueWidth/10}
+        opacity={funName==="rgb" ? 0:1}
+        Radius={props.tabs.functionsOpen ? global.valueWidth/10 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
         fill={"#B3B3B3"}
       />
       <Group>
         <Circle
           x={0}
           y={global.functionWidth/5}
-          opacity={props.tabs.functionsOpen? 1:0}
-          Radius={global.valueWidth/12}
+          // opacity={props.tabs.functionsOpen? 1:0}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
           fill={ funName === "rgb"? "red" : "#B3B3B3"}
         />
         <Circle
           x={0}
           y={global.functionWidth*2/5}
-          opacity={
-            props.tabs.functionsOpen? 
+          opacity={ 
               funName==="square" ||
               funName==="negate" ||
               funName==="sine" ||
@@ -164,27 +164,24 @@ function FuncGroup(props) {
               funName==="absolute" ||
               funName==="sign"
               ?
-                0 : 1
-              : 0
+                0 : 1 
           }
-          Radius={global.valueWidth/12}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
           fill={ funName === "rgb"? "green" : "#B3B3B3"}
         />
         <Circle
           x={0}
           y={global.functionWidth*3/5}
-          opacity={
-            props.tabs.functionsOpen? 
+          opacity={ 
               funName==="mistif" || funName==="rgb" 
                 ? 1 : 
                 funName === "add" ||
                 funName === "multiply" ||
                 funName === "average" ||
                 funName === "wrapsum" ?
-                .5 : 0
-              : 0
+                .5 : 0 
           }
-          Radius={global.valueWidth/12}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
           fill={ funName === "rgb"? "blue" : "#B3B3B3"}
         />
       </Group>

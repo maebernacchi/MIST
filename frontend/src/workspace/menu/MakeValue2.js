@@ -131,8 +131,7 @@ function ValGroup(props) {
       <Circle
         y={global.valueWidth/2}
         x={global.valueWidth*.95}
-        opacity={props.tabs.valuesOpen? 1:0}
-        Radius={global.valueWidth/10}
+        Radius={props.tabs.valuesOpen ? global.valueWidth/10 : 0} // if values is not open, circles have radius of 0, therefore hiding them
         fill={"#B3B3B3"}
       />
       <Spring
