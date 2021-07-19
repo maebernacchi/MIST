@@ -6,6 +6,7 @@ const pool = require("./dbconfig"); // Used for database queries
 
 // Determines if a user exists, given their username (user_id)
 // Returns a boolean value
+const user_column = "user_id";
 const checkUserExists = async (column, value) => {
 	const result = await pool.query(
 		`select exists (select 1 from users where ${column} = $1)`,
@@ -21,18 +22,27 @@ const checkUserExists = async (column, value) => {
  * @param callback sends the error if there is one, true
  * if the image exists, and false if it does not
  */
-module.exports.imageExists = async (user_id, title, callback) => {
+const imageExists = async (user_id, title, callback) => {
 	if (!(await checkUserExists(user_column, user_id))) {
 		callback("User ID does not exist!");
 	}
 
-	return pool.query(
-		"select exists (select * from posts where (user_id=$1 and title=$2))",
-		[user_id, title]
-	);
+	return pool
+		.query(
+			"select exists (select * from posts where (user_id=$1 and title=$2))",
+			[user_id, title]
+		)
+		.then((res) => {
+			return res.rows[0].exists;
+		})
+		.catch((err) => {
+			console.log(err);
+			throw err;
+			return;
+		});
 };
 
-module.exports.collectionExists = async (user_id, title, callback) => {
+const collectionExists = async (user_id, title, callback) => {
 	if (!(await checkUserExists(user_column, user_id))) {
 		callback("User ID does not exist!");
 	}
@@ -55,17 +65,23 @@ module.exports.collectionExists = async (user_id, title, callback) => {
  */
 
 //TODO: if image already is saved, override it?
-module.exports.saveImage = async (req, callback) => {
+const saveImage = async (req, callback) => {
 	if (await imageExists(req.body.user_id, req.body.title, callback)) {
 		callback("Image already exists!");
 		return;
 	}
 
-	pool
+	return pool
 		.query(
 			"insert into posts (title, caption, code, user_id, public) \
         values ($1, $2, $3, $4, $5)",
-			[req.body.title, req.body.caption, req.body.code, req.body.user_id, req.body.public]
+			[
+				req.body.title,
+				req.body.caption,
+				req.body.code,
+				req.body.user_id,
+				req.body.public,
+			]
 		)
 		.then((res) => {
 			callback(`Image ${req.body.title} has been created`);
@@ -74,4 +90,9 @@ module.exports.saveImage = async (req, callback) => {
 			handleDBError(err, callback);
 			return;
 		});
+};
+module.exports = {
+	imageExists,
+	collectionExists,
+	saveImage,
 };
