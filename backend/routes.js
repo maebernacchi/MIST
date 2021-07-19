@@ -1,4 +1,3 @@
-const database = require("./app/database");
 const { verifyEmail } = require("./db/user");
 const collectionRoute = require("./api/collection");
 const galleryRoute = require("./api/gallery");
