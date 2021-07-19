@@ -2,6 +2,13 @@ const pool = require("../db/dbconfig");
 const userDB = require("../db/user");
 const postDB = require("../db/post");
 const routeGenerator = require("./routeGenerator");
+const {
+	uniqueNamesGenerator,
+	adjectives,
+	colors,
+	animals,
+} = require("unique-names-generator");
+const generator = require("generate-password");
 
 // I don't know the intentions behind the code but in case we need this
 // also needs to be converted to sql
@@ -10,57 +17,64 @@ var populateDataHandler = {};
 
 /**
  *  Populate the app with randomly generated users.
- *  amount: Specify the amount of random users to generate
  *
  */
 populateDataHandler.populateUsers = async function (req, res) {
-	for (let i = 0; i < req.body.amount; i++) {
-		user = {
-			user_id: uniqueNameGenerator({
-				dictionaries: [adjectives, colors, animals],
-				separator: "-",
-			}),
-			email: "example@example.com",
-			password: "",
-			verified: true,
-			is_demo_user: true,
-			about: "I'm a demo user!",
-		};
-		// pass the user object to req.body
-		req.body.user_id = user.user_id;
-		req.body.email = user.email;
-		req.body.password = user.passwork;
-		req.body.verified = user.verified;
-		req.body.is_demo_user = user.is_demo_user;
-		req.body.about = user.about;
+	const random_user_id = uniqueNamesGenerator({
+		dictionaries: [adjectives, colors, animals],
+		separator: "-",
+	});
+	const user = {
+		user_id: random_user_id,
+		email: random_user_id + "@example.com",
+		password: generator.generate({
+			length: 32,
+			numbers: true,
+			symbols: true,
+		}),
+		verified: true,
+		is_demo_user: true,
+		about: "I'm a demo user!",
+	};
+	// pass the user object to req.body
+	req.body.user_id = user.user_id;
+	req.body.email = user.email;
+	req.body.password = user.password;
+	req.body.verified = user.verified;
+	req.body.is_demo_user = user.is_demo_user;
+	req.body.about = user.about;
 
-		userDB.createUser(req, (message) => {
-			if (message === "User Created") {
-				console.log(`Demo user created with id: ${user.user_id}`);
-			} else {
-				console.log(`Failed to create demo user with error: ${message}`);
-			}
-		});
-	}
+	userDB.createUser(req, (message) => {
+		if (message === "User created!") {
+			res.json(`Demo user created with id: ${user.user_id}`);
+		} else {
+			console.log(message);
+			res.json(`Failed to create demo user with error: ${message}`);
+		}
+	});
 };
 /**
  * Populate the app with randomly generated posts.
  * If there's no demo users no images will be generated and it will return an error.
- * amount: Specify the amount of random posts to generate
  */
 populateDataHandler.populatePosts = async function (req, res) {
 	const users = await userDB.getDemoUsers();
-	for (let i = 0; i < req.body.amount; i++) {
-		var randomUser = users[Math.random() * users.length];
-		req.body.title = "Sample";
-		req.body.caption = "A generated sample post";
-		req.body.code = "wsum(sin(x), cos(y))";
-		req.body.user_id = randomUser.user_id;
-		req.body.public = true;
-		postDB.saveImage(req, (message) => {
-			res.json(message);
-		});
+	if (!users.length) {
+		res.json("No demo users! Generate some demo users first.");
+		return;
 	}
+	var randomUser = users[Math.floor(Math.random() * users.length)];
+	req.body.title =
+		uniqueNamesGenerator({
+			dictionaries: [adjectives],
+		}) + " sample";
+	req.body.caption = "A generated sample post";
+	req.body.code = "wsum(sin(x), cos(y))";
+	req.body.user_id = randomUser.user_id;
+	req.body.public = true;
+	postDB.saveImage(req, (message) => {
+		res.json(message);
+	});
 };
 const populateDataRoute = routeGenerator(populateDataHandler);
 module.exports = populateDataRoute;
