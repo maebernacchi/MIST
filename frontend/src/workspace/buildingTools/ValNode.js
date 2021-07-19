@@ -241,7 +241,7 @@ function ValNode(props) {
           width={nodeDimensions.valueSideLength}
           height={nodeDimensions.valueSideLength}
           fill={gui.values[name].color}
-          cornerRadius={10}
+          cornerRadius={props.imageShowing? 30:10}
           lineJoin={"round"}
           rotation={45}
           stroke={props.draggable ? gui.values[name].color : 'black'}
