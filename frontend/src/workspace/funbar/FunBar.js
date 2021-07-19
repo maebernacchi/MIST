@@ -153,7 +153,7 @@ function FunBar(props) {
           )}
         </Spring>
         <Text
-          text={"Click a node for it's image to appear here"}
+          text={"Click a node for its image to appear here"}
           x={20}
           width={funBarDimensions.imageButtonWidth-40}
           height={funBarDimensions.imageButtonHeight+70}
