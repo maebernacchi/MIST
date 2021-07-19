@@ -4,6 +4,25 @@ const pool = require("./dbconfig"); // Used for database queries
 // | Collection |
 // +--------+
 
+/**
+ * Checks if the password is secure enough when the user is signing up
+ */
+ const user_column = "user_id";
+ 
+ // Determines if a user exists, given their username (user_id)
+ // Returns a boolean value
+ const checkUserExists = async (column, value) => {
+	 return pool
+		 .query(`select exists (select 1 from users where ${column} = $1)`, [value])
+		 .then((res) => {
+			 return res.rows[0].exists;
+		 })
+		 .catch((err) => {
+			 handleDBError(err, (_) => {});
+			 throw err;
+		 });
+ };
+
 // create Collection
 module.exports.createCollection = async (req, callback) => {
   pool.query("insert into collections (user_id, title, caption, collection_id) \
@@ -112,7 +131,64 @@ module.exports.addToCollection = async (req, callback) => {
 
   // remove image from collection
   module.exports.removeFromCollection = async (imageId, albumId) => {
-    return Album.updateOne({ _id: sanitize(albumId) }, { $pull: { "images": sanitize(imageId) }, updatedAt: Date.now() }).exec();
+    let post_id = 0;
+	let collection_id = 0;
+
+	if (
+		!(await collectionExists(
+			req.body.user_id,
+			req.body.collection_title,
+			callback
+		))
+	) {
+		callback("Collection does not exist!");
+		return;
+	}
+	if (
+		!(await imageExists(req.body.image_author, req.body.image_title, callback))
+	) {
+		callback("Image does not exist!");
+		return;
+	}
+
+	pool
+		.query("select post_id from posts where (user_id=$1 and title=$2)", [
+			req.body.image_author,
+			req.body.image_title,
+		])
+		.then((res) => {
+			post_id = res.rows[0].post_id;
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+
+	pool
+		.query(
+			"select collection_id from collections where (user_id=$1 and title=$2)",
+			[req.body.user_id, req.body.collection_title]
+		)
+		.then((res) => {
+			collection_id = res.rows[0].collection_id;
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+
+	pool
+		.query(
+			"insert into collection_images (post_id, collection_id) values ($1, $2)",
+			[post_id, collection_id]
+		)
+		.then((res) => {
+			callback("Image inserted into collection successfully!");
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
   }
 
 const collectionExists = async (user_id, title, callback) => {
@@ -120,13 +196,22 @@ const collectionExists = async (user_id, title, callback) => {
           callback("User ID does not exist!");
       }
       
-    return pool.query("select exists (select * from collections where (user_id=$1 and title=$2))",
-                      [user_id, title]);
+    pool
+		.query("select exists (select * from collections where (user_id=$1 and title=$2))",
+                      [user_id, title]
+		)
+		.then((res) => {
+			return res.rows[0].exists;
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
 };
 
  // rename a collection
- module.exports.renameCollection = async (user_id, current_title, new_title, callback) => {
-    if (!(await collectionExists(user_id, current_title, callback))) {
+ module.exports.renameCollection = async (req, callback) => {
+    if (!(await collectionExists(req.body.user_id, req.body.current_title, callback))) {
         callback("Collection does not exist!");
         return;
     }
@@ -136,12 +221,21 @@ const collectionExists = async (user_id, title, callback) => {
   };
   
   // change an album's caption
-  module.exports.changeAlbumCaption = async (user_id, collection_title, new_caption, callback) => {
-    if (!(await collectionExists(user_id, collection_title, callback))) {
+  module.exports.changeAlbumCaption = async (req, callback) => {
+    if (!(await collectionExists(req.body.user_id, req.body.title, callback))) {
         callback("Collection does not exist!");
         return;
     }
 
-    pool.query("update collections set caption=$1 where (user_id=$2 and title=$3)",
-                [new_caption, user_id, collection_title]);
+    pool
+		.query("update collections set caption=$1 where (user_id=$2 and title=$3)",
+                [new_caption, user_id, collection_title]
+		)
+		.then((res) => {
+			callback("Collection caption changed successfully");
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
   };
