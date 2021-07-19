@@ -68,32 +68,4 @@ const pool = require("./dbconfig"); // Used for database queries
     });
 
   
-    }
-
-  
-    module.exports.getHiddenAndBlockedIDs(userid, "comment", (contentIds, blockedUsers, err) => {
-      if (err)
-        callback(null, err)
-      else {
-        // how to return five at time? because rn we are returning all comments
-        // look into aggregation
-        Comment.
-          find({
-            //exclude hidden comments and blocked users
-            _id: { $nin: contentIds },
-            userId: { $nin: blockedUsers },
-            imageId: mongoose.Types.ObjectId(imageid),
-            //include only active comments
-            active: true,
-          }).
-          populate('userId').
-          exec((err, comments) => {
-            if (err) {
-              console.log(err);
-              callback(null, err);
-            } else {
-              callback(comments, null);
-            }
-          });
-      }
-    })
+  }

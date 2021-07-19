@@ -6,6 +6,7 @@ create table posts(
     user_id varchar(255) not null references users(user_id),
     public boolean not null,
     likes int default 0,
+    featured boolean not null default false,
 
     created_at timestamptz not null default now()
 );
