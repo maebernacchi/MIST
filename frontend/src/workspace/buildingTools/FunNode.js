@@ -152,10 +152,10 @@ export default function FunNode(props) {
         if (pos.x > FunBarDimensions.imagePlaceX){
             pos.x = FunBarDimensions.imagePlaceX;
           }
-        if (pos.x > width - 270 - functionWidth &&
-            pos.y > height-global.width/7-45 - functionWidth){
-            pos.x = width - 270 - functionWidth
-          }
+          if (pos.x > width - 270 - functionWidth &&
+            pos.y > height-width/7-45 - functionWidth){
+              pos.x = width - 270 - functionWidth
+            }
         return pos;
       }}
       onDragStart={(e) => {
@@ -268,7 +268,7 @@ export default function FunNode(props) {
                 (props.numOutlets - 3) * nodeDimensions.outletYOffset
           }
           fill={gui.functions[name].color}
-          cornerRadius={10}
+          cornerRadius={props.imageShowing? 30:10}
           shadowColor={
             hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
           }
