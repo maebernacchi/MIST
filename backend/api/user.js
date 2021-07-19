@@ -8,7 +8,6 @@ const nodemailer = require("nodemailer");
 // | Users            |
 // +------------------+
 
-const userRoute = routeGenerator(userHandlers);
 
 var userHandlers = {};
 
@@ -262,4 +261,5 @@ module.exports = function checkAuthentication(req, res, next) {
 	}
 };
 
+const userRoute = routeGenerator(userHandlers);
 module.exports = userRoute;

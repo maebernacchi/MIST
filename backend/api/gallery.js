@@ -1,7 +1,5 @@
 const routeGenerator = require("../routeGenerator");
 
-const galleryRoute = routeGenerator(galleryHandlers);
-
 var galleryHandlers = {};
 // +----------------+--------------------------------------------------
 // | Gallery        |
@@ -137,4 +135,5 @@ galleryHandlers.getRecentImages = function (info, req, res) {
 	}
 };
 
+const galleryRoute = routeGenerator(galleryHandlers);
 module.exports = galleryRoute;

@@ -3,7 +3,8 @@ const routeGenerator = require("../routeGenerator");
 // | Reporting/Hiding/Blocking |
 // +---------------------------+
 
-const reportRoute = routeGenerator(reportHandlers);
+
+var reportHandlers = {};
 /**
  * Info contains the type of content that the user wants to hide as way as the
  * ObjectId of the content in the database.
@@ -129,4 +130,5 @@ reportHandlers.unblockUser = async function (info, req, res) {
 	}
 };
 
+const reportRoute = routeGenerator(reportHandlers);
 module.exports = reportRoute;

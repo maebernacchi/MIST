@@ -1,7 +1,6 @@
 const routeGenerator = require("../routeGenerator");
 const collectionDB = require("../db/collection");
 
-const collectionRoute = routeGenerator(collectionHandlers);
 
 var collectionHandlers = {};
 
@@ -200,4 +199,5 @@ collectionHandlers.removeImageFromAlbum = async function (info, req, res) {
 	}
 };
 
+const collectionRoute = routeGenerator(collectionHandlers);
 module.exports = collectionRoute;

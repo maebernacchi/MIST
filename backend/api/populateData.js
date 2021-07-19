@@ -1,8 +1,8 @@
 const pool = require("../db/dbconfig");
 const userDB = require("../db/user");
 const postDB = require("../db/post");
+const routeGenerator = require("../routeGenerator");
 
-const populateDataRoute = routeGenerator(populateDataHandler);
 // I don't know the intentions behind the code but in case we need this
 // also needs to be converted to sql
 
@@ -62,6 +62,8 @@ populateDataHandler.populatePosts = async function (req, res) {
 		});
 	}
 };
+const populateDataRoute = routeGenerator(populateDataHandler);
+module.exports = populateDataRoute;
 // app.get("/api/profiles/:username", (req, res) => {
 // 	const username = req.params.username;
 // 	const user = database.User.findOne({ username: username });

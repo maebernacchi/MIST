@@ -1,6 +1,5 @@
 const routeGenerator = require("../routeGenerator");
 
-const workspaceRoute = routeGenerator(workspaceHandlers);
 
 var workspaceHandlers = {};
 
@@ -127,4 +126,5 @@ workspaceHandlers.getUserExpertWS = function (info, req, res) {
 	}
 };
 
+const workspaceRoute = routeGenerator(workspaceHandlers);
 module.exports = workspaceRoute;

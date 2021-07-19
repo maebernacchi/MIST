@@ -5,7 +5,6 @@ const routeGenerator = require("../routeGenerator");
 // +------------------+--------------------------------------------------
 // | Posts            |
 // +------------------+
-const postRoute = routeGenerator(postHandlers);
 
 var postHandlers = {};
 
@@ -92,4 +91,5 @@ postHandlers.getImageComments = function (req, res) {
 	return retrievedComments.rows;
 };
 
+const postRoute = routeGenerator(postHandlers);
 module.exports = postRoute;
