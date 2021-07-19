@@ -1,6 +1,8 @@
 const routeGenerator = require("./api");
 
 const collectionRoute = routeGenerator(collectionHandlers);
+const collectionDB = require("../db/collection.js");
+
 var collectionHandlers = {};
 
 /**
@@ -8,67 +10,30 @@ var collectionHandlers = {};
  * imageId : String
  * albumId : String
  */
-collectionHandlers.addToAlbum = async function (info, req, res) {
+collectionHandlers.addToCollection = async function (req, res) {
+	var message = "";
 	if (!req.isAuthenticated()) {
-		res.json({
-			success: false,
-			message: "You need to be logged in to save an image to an album",
-		});
+		message = "You must be logged in to add an image to collection";
+		res.json(message);
 	} else {
 		try {
-			const { albumId, imageId } = info;
-			const success = await database.addToAlbum(albumId, imageId);
-			if (success) {
-				res.json({
-					success: true,
-					message: "Successfully added image to album",
-				});
-			} else {
-				res.json({
-					success: false,
-					message:
-						"Failed to add due to unknown reason, most likely because image already exists in album",
-				});
-			}
-		} catch (error) {
-			res.json({
-				success: false,
-				message: error,
+			const success = await collectionDB.addToCollection(req, (mes) => {
+				message = mes;
 			});
+			res.json(message);
+		} catch (error) {
+			res.json("Error occurred while awaiting addToCollection query");
 		}
 	}
 };
 
-collectionHandlers.addImageToAlbum = async function (info, req, res) {
-	try {
-		const writeOpResult = await database.addToAlbum(
-			req.body.album._id,
-			req.body.imgID
-		);
-		res.json({
-			success: writeOpResult,
-			message: writeOpResult
-				? "Successfully added image!"
-				: "Failed to add image for unknown reason.",
-		});
-	} catch (error) {
-		res.json({
-			message: error,
-		});
-	}
-};
-
-// +--------+------------------------------------------------------
-// | Albums |
-// +--------+
-
 /**
- * Creates an album for a user. We expect info to be of the form:
+ * Creates an collection for a user. We expect info to be of the form:
  * {
  *  name: String
  * }
  */
-collectionHandlers.createAlbum = async function (info, req, res) {
+collectionHandlers.createCollection = async function (info, req, res) {
 	if (!req.isAuthenticated())
 		res.json({ success: false, message: "You need to be logged in" });
 	else {

@@ -36,9 +36,21 @@ postHandlers.imageExists = function (info, req, res) {
  *   info.title: The title of the image
  */
 postHandlers.saveImage = async function (req, res) {
-	postDB.saveImage(req, (message) => {
+	var message = "";
+	if (!req.isAuthenticated()) {
+		message = "You must be logged in to save an image!";
 		res.json(message);
-	});
+	}
+	else {
+		try {
+			const success = await postDB.saveImage(req, (mes) => {
+				message = mes;
+			});
+			res.json(message);
+		} catch (error) {
+			res.json("Error occurred while awaiting saveImage query");
+		}
+	}
 };
 
 // +----------------+--------------------------------------------------
@@ -75,6 +87,9 @@ postHandlers.getImageComments = function (req, res) {
 				}
 			});
 		});
+	}
+	else{
+
 	}
 
 	return retrievedComments.rows;
