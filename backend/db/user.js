@@ -53,16 +53,16 @@ module.exports.createUser = async (req, callback) => {
 	// 1 = Weak
 	// 2 = Medium
 	// 3 = Strong
-	if (passwdStrength.id <= 1) {
-		callback(passwdStrength.value);
+	if (passwdStrength.id < 1) {
+		callback("Password too weak. Try a stronger password.");
 		return;
 	}
 	const hashedPassword = await bcrypt.hash(user.password, 12); // Hashes password
 	return pool
 		.query(
-			"insert into users (user_id, email, password, token) \
-        values($1, $2, $3, $4)",
-			[user.user_id, user.email, hashedPassword, user.token]
+			"insert into users (user_id, email, password, token, is_demo_user) \
+        values($1, $2, $3, $4, $5)",
+			[user.user_id, user.email, hashedPassword, user.token, user.is_demo_user]
 		)
 		.then((res) => {
 			callback(`User created!`);
@@ -158,8 +158,8 @@ module.exports.changePassword = async (req, callback) => {
 					// 1 = Weak
 					// 2 = Medium
 					// 3 = Strong
-					if (passwdStrength.id <= 1) {
-						callback(passwdStrength.value);
+					if (passwdStrength.id < 1) {
+						callback("Weak password. Try a stronger password.");
 						return;
 					}
 					let newPass = await bcrypt.hash(user.newPassword, 12); // hashes new password
