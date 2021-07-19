@@ -20,29 +20,11 @@ collectionHandlers.addToCollection = async function (req, res) {
 			});
 			res.json(message);
 		} catch (error) {
-			res.json("Error occurred while awaiting database query");
+			res.json("Error occurred while awaiting addToCollection query");
 		}
 	}
 };
 
-handlers.addImageToAlbum = async function (info, req, res) {
-	try {
-		const writeOpResult = await database.addToAlbum(
-			req.body.album._id,
-			req.body.imgID
-		);
-		res.json({
-			success: writeOpResult,
-			message: writeOpResult
-				? "Successfully added image!"
-				: "Failed to add image for unknown reason.",
-		});
-	} catch (error) {
-		res.json({
-			message: error,
-		});
-	}
-};
 
 // +--------+------------------------------------------------------
 // | Albums |
@@ -54,7 +36,7 @@ handlers.addImageToAlbum = async function (info, req, res) {
  *  name: String
  * }
  */
-handlers.createAlbum = async function (info, req, res) {
+collectionHandlers.createCollection = async function (info, req, res) {
 	if (!req.isAuthenticated())
 		res.json({ success: false, message: "You need to be logged in" });
 	else {
