@@ -15,7 +15,7 @@ const pool = require("./dbconfig"); // Used for database queries
         [req.body.post_author, req.body.post_title]
   )
     .then((res) => {
-      let post_id = res.rows[0].post_id
+      post_id = res.rows[0].post_id
     })
     .catch((err) => {
       handleDBError(err, callback);
@@ -54,7 +54,7 @@ const pool = require("./dbconfig"); // Used for database queries
         [req.body.post_author, req.body.post_title]
   )
     .then((res) => {
-      let post_id = res.rows[0].post_id
+      post_id = res.rows[0].post_id
     })
     .catch((err) => {
       handleDBError(err, callback);
