@@ -1,6 +1,6 @@
 const postDB = require("../db/post.js");
 const commentDB = require("../db/comments.js");
-const routeGenerator = require("./api");
+const routeGenerator = require("../routes");
 
 // +------------------+--------------------------------------------------
 // | Posts            |
@@ -40,8 +40,7 @@ postHandlers.saveImage = async function (req, res) {
 	if (!req.isAuthenticated()) {
 		message = "You must be logged in to save an image!";
 		res.json(message);
-	}
-	else {
+	} else {
 		try {
 			const success = await postDB.saveImage(req, (mes) => {
 				message = mes;
@@ -87,9 +86,7 @@ postHandlers.getImageComments = function (req, res) {
 				}
 			});
 		});
-	}
-	else{
-
+	} else {
 	}
 
 	return retrievedComments.rows;

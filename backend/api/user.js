@@ -1,8 +1,8 @@
 const passport = require("passport");
-const routeGenerator = require("./api.js");
-const { handleError } = require("./utilities.js");
+const routeGenerator = require("../routes");
+const { handleError } = require("./utilities");
 const crypto = require("crypto");
-const userDB = require("../db/user.js");
+const userDB = require("../db/user");
 const nodemailer = require("nodemailer");
 // +------------------+--------------------------------------------------
 // | Users            |

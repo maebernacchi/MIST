@@ -1,9 +1,9 @@
-const generateRoute = require("./api");
+const routeGenerator = require("../routes");
 // +----------+----------------------------------------------------------
 // | Reporting/Hiding/Blocking |
 // +---------------------------+
 
-const reportRoute = generateRoute(reportHandlers);
+const reportRoute = routeGenerator(reportHandlers);
 /**
  * Info contains the type of content that the user wants to hide as way as the
  * ObjectId of the content in the database.

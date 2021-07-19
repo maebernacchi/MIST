@@ -1,4 +1,4 @@
-const routeGenerator = require("./api");
+const routeGenerator = require("../routes");
 
 const collectionRoute = routeGenerator(collectionHandlers);
 const collectionDB = require("../db/collection.js");
