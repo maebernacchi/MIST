@@ -89,7 +89,35 @@
   }
   
 module.exports.sendReport = async (req, callback) => {
-  
+  pool
+		.query(
+			"insert into reports (user_id, reason, message) \
+        values ($1, $2, $3)",
+			[req.body.user_id, req.body.reason, req.body.message]
+		)
+		.then((res) => {
+			callback(`Report has been sent`);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+}
+
+//Show all the report flags of an user
+module.exports.getReports = async (req, callback) => {
+  pool
+  .query(
+    "select * from reports where user_id=$1",
+    [req.body.user_id]
+  )
+  .then((res) => {
+    return res.rows;
+  })
+  .catch((err) => {
+    handleDBError(err, callback);
+    return;
+  });
 }
 
 // Determines if an userid exists in  blocked_users
