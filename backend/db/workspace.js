@@ -1,67 +1,96 @@
+const pool = require("./dbconfig"); // Used for database queries
+
 // +-----------+-------------------------------------------------
 // | Workspace |
 // +-----------+
-module.exports.saveWorkspace = async (userId, workspace) => {
-    const bulkWriteOpResult = await User.bulkWrite(
-      [
-        {
-          updateOne: {
-            filter: {
-              _id: mongoose.Types.ObjectId(userId),
-              "workspaces.name": workspace.name,
-            },
-            update: { "workspaces.$.data": workspace.data },
-          },
-        },
-        {
-          updateOne: {
-            filter: {
-              _id: mongoose.Types.ObjectId(userId),
-              "workspaces.name": { $ne: workspace.name },
-            },
-            update: { $push: { workspaces: new Workspace(workspace) } },
-          },
-        },
-      ],
-      { ordered: true }
-    );
-    if (bulkWriteOpResult.nMatched === 0) {
-      throw "Error Unknown";
-    }
-    if (bulkWriteOpResult.nModified === 0) {
-      throw "Error Unknown";
-    } 
+const workspaceExists = function (file_name, user_id){
+  pool
+		.query(
+			"select exists (select * from workspaces where (user_id=$1 and file_name=$2)",
+			[user_id, file_name]
+		)
+		.then((res) => {
+			return res.rows[0];
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+}
+
+
+module.exports.saveWorkspace = async (req, callback) => {
+  if(workspaceExists(req.body.file_name, req.body.user_id)){
+    callback(`Workspace with file name ${req.body.file_name} already exists`);
+  }
+  else{
+    pool
+		.query(
+			"insert into workspaces (file_name, workspace_nodes, workspace_lines, user_id) \
+        values ($1, $2, $3, $4)",
+			[req.body.file_name, req.body.workspace_nodes, req.body.workspace_lines, req.body.user_id]
+		)
+		.then((res) => {
+			callback(`Workspace saved`);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+  }
+}
+  
+/**
+ * Retrieves all file_names for a user
+ */
+module.exports.getFileNames = async (req, callback) => {
+  pool
+  .query(
+    "select file_name from workspaces where user_id=$1",
+    [req.body.user_id]
+  )
+  .then((res) => {
+    return res.rows;
+  })
+  .catch((err) => {
+    handleDBError(err, callback);
+    return;
+  });
+}
+
+
+  /**
+   * Retrieves the workspace specified by the given file_name
+   */
+  module.exports.loadWorkspace = async (req, callback) => {
+    pool
+		.query(
+			"select workspace_nodes, workspace_lines from workspaces where (user_id=$1 and file_name=$2)",
+			[req.body.user_id, req.body.file_name]
+		)
+		.then((res) => {
+			return res.rows[0]
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
   }
   
-  /**
-   * Retrieves the workspaces corresponding to userid
-   * We assume that userid corresponds to a user existing in the database
-   */
-  module.exports.getWorkspaces = async (userid) =>
-    User.findById(userid).select("workspaces.data workspaces.name").exec();
-  
-  /**
-   * Checks if the user corresponding to userid has a workspace by the
-   * name wsname. We assume that userid corresponds to an existing and active
-   * user in the database
-   *
-   */
-  module.exports.workspaceExists = async (userid, wsname) => (
-    User.findOne({
-      _id: mongoose.Types.ObjectId(userid),
-      "workspaces.name": wsname,
-    })
-      .countDocuments()
-      .exec()
-  )
-  
-  module.exports.deleteWorkspace = async (userId, workspace_name) => (
-    User.findOne({ _id: mongoose.Types.ObjectId(userId) })
-      .updateOne({
-        $pull: { workspaces: { name: workspace_name } },
-      })
-      .exec()
-  )
+  module.exports.deleteWorkspace = async (req, callback) => {
+    pool
+		.query(
+			"delete from workspaces where (user_id=$1 and file_name=$2)",
+			[req.body.user_id, req.body.file_name]
+		)
+		.then((res) => {
+			callback(`Workspace deleted`);
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+  }
 
 
   // +--------------+-------------------------------------------------

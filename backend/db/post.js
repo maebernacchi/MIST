@@ -65,7 +65,7 @@ module.exports.saveImage = async (req, callback) => {
 		.query(
 			"insert into posts (title, caption, code, user_id, public) \
         values ($1, $2, $3, $4, $5)",
-			[req.body.title, req.caption, req.code, req.user_id, req.public]
+			[req.body.title, req.body.caption, req.body.code, req.body.user_id, req.body.public]
 		)
 		.then((res) => {
 			callback(`Image ${req.body.title} has been created`);
