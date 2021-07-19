@@ -12,10 +12,14 @@ const nodemailer = require("nodemailer");
 // in a different place. (body, query, etc.)
 const userRoute = (req, res, next) => {
 	let action;
-	if (req.method == "POST") {
-		action = req.body.action || req.body.funct;
-	} else if (req.method == "GET") {
+	if (req.method == "GET") {
 		action = req.query.action || req.query.funct;
+	} else if (
+		req.method == "POST" ||
+		req.method == "PUT" ||
+		req.method == "DELETE"
+	) {
+		action = req.body.action || req.body.funct;
 	}
 	if (!action) {
 		handleError(res, "No action specified.");
