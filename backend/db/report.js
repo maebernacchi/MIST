@@ -2,6 +2,8 @@
 // | Reporting/Hiding/Blocking |
 // +---------------------------+
 
+const pool = require("./dbconfig");
+
 /**
  * returns the contentIds for a user's hidden content and their blocked users
  * @param userId: the object id of the user
@@ -95,6 +97,9 @@ module.exports.sendReport = async (req, callback) => {
         values ($1, $2, $3)",
 			[req.body.user_id, req.body.reason, req.body.message]
 		)
+    .query(
+      "update users set reported_flags = reported_flags + 1 wwhere user_id = $1",
+      [req.body.user_id])
 		.then((res) => {
 			callback(`Report has been sent`);
 		})
@@ -118,6 +123,16 @@ module.exports.getReports = async (req, callback) => {
     handleDBError(err, callback);
     return;
   });
+}
+
+//Show 15 users who have most reports
+module.exports.getReportedUsers = async (req, callback) => {
+  let offset = req.body.page * 15;
+    pool
+    .query(
+      "select * from users order by reported_flags desc limit 15 offset $1",
+      [offset]
+    )
 }
 
 // Determines if an userid exists in  blocked_users
