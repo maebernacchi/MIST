@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt"); // Used for password hashing
 // +--------+
 
 // create Collection
-module.exports.createCollection = async (req, res) => {
+module.exports.createCollection = async (req, callback) => {
   pool.query("insert into collections (user_id, title, caption, collection_id) \
 values ($1, $2, $3, $4)",
     [req.body.user_id, req.body.title, req.body.caption, collection_id]
@@ -42,8 +42,77 @@ values ($1, $2, $3, $4)",
       });
   }
   
+  
+/**
+ * Adds an image to a collection
+ * @param {String} albumId
+ * @param {String} imageId
+ */
+module.exports.addToCollection = async (req, callback) => {
+	let post_id = 0;
+	let collection_id = 0;
+
+	if (
+		!(await collectionExists(
+			req.body.user_id,
+			req.body.collection_title,
+			callback
+		))
+	) {
+		callback("Collection does not exist!");
+		return;
+	}
+	if (
+		!(await imageExists(req.body.image_author, req.body.image_title, callback))
+	) {
+		callback("Image does not exist!");
+		return;
+	}
+
+	pool
+		.query("select post_id from posts where (user_id=$1 and title=$2)", [
+			req.body.image_author,
+			req.body.image_title,
+		])
+		.then((res) => {
+			post_id = res.rows[0].post_id;
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+
+	pool
+		.query(
+			"select collection_id from collections where (user_id=$1 and title=$2)",
+			[req.body.user_id, req.body.collection_title]
+		)
+		.then((res) => {
+			collection_id = res.rows[0].collection_id;
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+
+	pool
+		.query(
+			"insert into collection_images (post_id, collection_id) values ($1, $2)",
+			[post_id, collection_id]
+		)
+		.then((res) => {
+			callback("Image inserted into collection successfully!");
+		})
+		.catch((err) => {
+			handleDBError(err, callback);
+			return;
+		});
+};
+
+
+
   // remove image from collection
-  module.exports.removeImageFromAlbum = async (imageId, albumId) => {
+  module.exports.removeFromCollection = async (imageId, albumId) => {
     return Album.updateOne({ _id: sanitize(albumId) }, { $pull: { "images": sanitize(imageId) }, updatedAt: Date.now() }).exec();
   }
 

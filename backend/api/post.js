@@ -69,6 +69,9 @@ postHandlers.getImageComments = function (req, res) {
 			});
 		});
 	}
+	else{
+		
+	}
 
 	return retrievedComments.rows;
 };

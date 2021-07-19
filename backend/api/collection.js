@@ -1,3 +1,5 @@
+const collectionDB = require("../db/collection.js");
+
 var collectionHandlers = {};
 
 /**
@@ -5,35 +7,20 @@ var collectionHandlers = {};
  * imageId : String
  * albumId : String
  */
-collectionHandlers.addToAlbum = async function (info, req, res) {
-	
-
+collectionHandlers.addToCollection = async function (req, res) {
+	var message = "";
 	if (!req.isAuthenticated()) {
-		res.json({
-			success: false,
-			message: "You need to be logged in to save an image to an album",
-		});
-	} else {
+		message = "You must be logged in to add an image to collection";
+		res.json(message);
+	}
+	else {
 		try {
-			const { albumId, imageId } = info;
-			const success = await database.addToAlbum(albumId, imageId);
-			if (success) {
-				res.json({
-					success: true,
-					message: "Successfully added image to album",
-				});
-			} else {
-				res.json({
-					success: false,
-					message:
-						"Failed to add due to unknown reason, most likely because image already exists in album",
-				});
-			}
-		} catch (error) {
-			res.json({
-				success: false,
-				message: error,
+			const success = await collectionDB.addToCollection(req, (mes) => {
+				message = mes;
 			});
+			res.json(message);
+		} catch (error) {
+			res.json("Error occurred while awaiting database query");
 		}
 	}
 };
