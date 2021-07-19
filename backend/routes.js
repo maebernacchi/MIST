@@ -14,12 +14,6 @@ module.exports = (app) => {
 	app.use("/api/reports", reportRoute);
 	app.use("/api/users", userRoute);
 	app.use("/api/workspaces", workspaceRoute);
-	
-	
-
-	// app.post("/api/emailVerification/:username", (req, res) => {
-	// 	console.log(req.params.username);
-	// });
 
 	/*
 		Email Verification Route
