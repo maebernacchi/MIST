@@ -128,7 +128,7 @@ function FunBar(props) {
     return (
       <Group // Image Button on blue bar
       x={width*.82}
-      y={width/-8.6} //Doesn't work properly for window size changing
+      y={funBarDimensions.margin - funBarDimensions.imageButtonWidth + 35}//Doesn't work properly for window size changing
       >
         <Spring // animates image button fill
           native
@@ -140,7 +140,7 @@ function FunBar(props) {
           }}
         >
           {(props) => (
-            <animated.Rect // function button
+            <animated.Rect // Image Box (orange background)
               {...props}
               width={funBarDimensions.imageButtonWidth}
               height={funBarDimensions.imageButtonWidth}
