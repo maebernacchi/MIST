@@ -88,6 +88,10 @@
     }
   }
   
+module.exports.sendReport = async (req, callback) => {
+  
+}
+
 // Determines if an userid exists in  blocked_users
 // Returns a boolean value
 const checkUseridExists = async (column, value) => {
