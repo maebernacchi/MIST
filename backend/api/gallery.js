@@ -1,4 +1,8 @@
-const handlers = require("./api");
+const routeGenerator = require("./api");
+
+const galleryRoute = routeGenerator(galleryHandlers);
+
+var galleryHandlers = {};
 // +----------------+--------------------------------------------------
 // | Gallery        |
 // +----------------+
@@ -7,7 +11,7 @@ const handlers = require("./api");
  *   info.action: getHomeImages
  */
 
-handlers.getHomeImages = function (info, req, res) {
+galleryHandlers.getHomeImages = function (info, req, res) {
 	database.getFeaturedImagesLoggedOut(4, (images, error) => {
 		if (error) {
 			console.log(error);
@@ -17,13 +21,11 @@ handlers.getHomeImages = function (info, req, res) {
 	});
 };
 
-
-
 /**
  *   Get 9 random public images
  *   info.action: getRandomImages
  */
-handlers.getRandomImages = function (info, req, res) {
+galleryHandlers.getRandomImages = function (info, req, res) {
 	let loginStatus = false;
 	if (req.isAuthenticated()) loginStatus = true;
 
@@ -52,7 +54,7 @@ handlers.getRandomImages = function (info, req, res) {
  *   Get 9 top public images
  *   info.action: getTopImages
  */
-handlers.getTopImages = function (info, req, res) {
+galleryHandlers.getTopImages = function (info, req, res) {
 	let loginStatus = false;
 	if (req.isAuthenticated()) loginStatus = true;
 
@@ -81,7 +83,7 @@ handlers.getTopImages = function (info, req, res) {
  *   Get 9 featured public images
  *   info.action: getFeaturedImages
  */
-handlers.getFeaturedImages = function (info, req, res) {
+galleryHandlers.getFeaturedImages = function (info, req, res) {
 	let loginStatus = false;
 	if (req.isAuthenticated()) loginStatus = true;
 
@@ -110,7 +112,7 @@ handlers.getFeaturedImages = function (info, req, res) {
  *   Get 9 recent public images
  *   info.action: getPopularImages
  */
-handlers.getRecentImages = function (info, req, res) {
+galleryHandlers.getRecentImages = function (info, req, res) {
 	let loginStatus = false;
 	if (req.isAuthenticated()) loginStatus = true;
 
@@ -134,3 +136,5 @@ handlers.getRecentImages = function (info, req, res) {
 		});
 	}
 };
+
+module.exports = galleryRoute;

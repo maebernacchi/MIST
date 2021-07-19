@@ -1,4 +1,9 @@
-const handlers = require("./api");
+const routeGenerator = require("./api");
+
+const workspaceRoute = routeGenerator(workspaceHandlers);
+
+var workspaceHandlers = {};
+
 // +--------------------+----------------------------------------------
 // | Workspace Handlers |
 // +--------------------+
@@ -8,7 +13,7 @@ const handlers = require("./api");
  *   info.action: wsexists
  *   info.title: The title of the image
  */
-handlers.workspaceExists = function (info, request, response) {
+workspaceHandlers.workspaceExists = function (info, request, response) {
 	const next = () => {
 		database
 			.workspaceExists(request.user._id, info.name)
@@ -33,7 +38,7 @@ handlers.workspaceExists = function (info, request, response) {
  *  info.action: getws
  *  info.
  */
-handlers.getWorkspaces = function (info, req, res) {
+workspaceHandlers.getWorkspaces = function (info, req, res) {
 	const next = () => {
 		database
 			.getWorkspaces(req.user._id)
@@ -54,7 +59,7 @@ handlers.getWorkspaces = function (info, req, res) {
  * Precondition:
  * The user does not already own a workspace by the same name.
  */
-handlers.saveWorkspace = async function (info, req, res) {
+workspaceHandlers.saveWorkspace = async function (info, req, res) {
 	const next = () => {
 		const workspace = info.workspace;
 		database
@@ -65,9 +70,9 @@ handlers.saveWorkspace = async function (info, req, res) {
 			);
 	};
 	checkAuthentication(req, res, next);
-}; // handlers.saveWorkspace
+}; // workspaceHandlers.saveWorkspace
 
-handlers.deleteWorkspace = async function (info, req, res) {
+workspaceHandlers.deleteWorkspace = async function (info, req, res) {
 	const next = () => {
 		database
 			.deleteWorkspace(req.user._id, info.name)
@@ -79,12 +84,11 @@ handlers.deleteWorkspace = async function (info, req, res) {
 	checkAuthentication(req, res, next);
 };
 
-
 // +-----------+------------------------------------------------------
 // | Expert UI |
 // +-----------+
 
-handlers.expertwsexists = function (info, req, res) {
+workspaceHandlers.expertwsexists = function (info, req, res) {
 	if (!req.isAuthenticated())
 		res.json({ success: false, message: "You need to be logged in!" });
 	else {
@@ -94,7 +98,7 @@ handlers.expertwsexists = function (info, req, res) {
 	}
 };
 
-handlers.saveexpertws = function (info, req, res) {
+workspaceHandlers.saveexpertws = function (info, req, res) {
 	if (!req.isAuthenticated())
 		res.json({ success: false, message: "You need to be logged in!" });
 	else {
@@ -104,7 +108,7 @@ handlers.saveexpertws = function (info, req, res) {
 	}
 };
 
-handlers.deleteexpertws = function (info, req, res) {
+workspaceHandlers.deleteexpertws = function (info, req, res) {
 	if (!req.isAuthenticated())
 		res.json({ success: false, message: "You need to be logged in!" });
 	else {
@@ -114,7 +118,7 @@ handlers.deleteexpertws = function (info, req, res) {
 	}
 };
 
-handlers.getUserExpertWS = function (info, req, res) {
+workspaceHandlers.getUserExpertWS = function (info, req, res) {
 	if (!req.isAuthenticated())
 		res.json({ success: false, message: "You need to be logged in!" });
 	else {
@@ -122,3 +126,5 @@ handlers.getUserExpertWS = function (info, req, res) {
 		database.getUserExpertWS(userId, res);
 	}
 };
+
+module.exports = workspaceRoute;

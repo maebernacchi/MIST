@@ -1,9 +1,11 @@
 const postDB = require("../db/post.js");
 const commentDB = require("../db/comments.js");
+const routeGenerator = require("./api");
 
-// +----------------+--------------------------------------------------
-// | Image Handlers |
-// +----------------+
+// +------------------+--------------------------------------------------
+// | Posts            |
+// +------------------+
+const postRoute = routeGenerator(postHandlers);
 
 var postHandlers = {};
 
@@ -34,9 +36,10 @@ postHandlers.imageExists = function (info, req, res) {
  *   info.title: The title of the image
  */
 postHandlers.saveImage = async function (req, res) {
-	postDB.saveImage(req, (message) => {res.json(message);});
+	postDB.saveImage(req, (message) => {
+		res.json(message);
+	});
 };
-
 
 // +----------------+--------------------------------------------------
 // | Comments       |
@@ -57,13 +60,17 @@ postHandlers.postComment = function (req, res) {
  */
 
 postHandlers.getImageComments = function (req, res) {
-	let retrievedComments = commentDB.getComments(req, (message) => {res.json(message);});
+	let retrievedComments = commentDB.getComments(req, (message) => {
+		res.json(message);
+	});
 
-	if(req.isAuthenticated()){
-		let blockedUsers = reportDB.getBlockedUsers(req, (message) => {res.json(message);});
-		retrievedComments.forEach(comment => {	
-			blockedUsers.forEach(blocked_user => {
-				if(blockedUsers.user_id === comment.user_id){
+	if (req.isAuthenticated()) {
+		let blockedUsers = reportDB.getBlockedUsers(req, (message) => {
+			res.json(message);
+		});
+		retrievedComments.forEach((comment) => {
+			blockedUsers.forEach((blocked_user) => {
+				if (blockedUsers.user_id === comment.user_id) {
 					comment.contents = "**BLOCKED**"; //marking as blocked - may be a better way
 				}
 			});
@@ -73,4 +80,4 @@ postHandlers.getImageComments = function (req, res) {
 	return retrievedComments.rows;
 };
 
-
+module.exports = postRoute;

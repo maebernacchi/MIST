@@ -1,7 +1,9 @@
+const generateRoute = require("./api");
 // +----------+----------------------------------------------------------
 // | Reporting/Hiding/Blocking |
 // +---------------------------+
 
+const reportRoute = generateRoute(reportHandlers);
 /**
  * Info contains the type of content that the user wants to hide as way as the
  * ObjectId of the content in the database.
@@ -10,7 +12,7 @@
  *  contentid: STRING,
  * }
  */
-handlers.hideContent = async function (info, req, res) {
+reportHandlers.hideContent = async function (info, req, res) {
 	if (!req.isAuthenticated())
 		fail(res, "You need to be logged in to hide content!");
 	else {
@@ -41,7 +43,7 @@ handlers.hideContent = async function (info, req, res) {
  *  contentid: STRING,
  * }
  */
-handlers.unhideContent = async function (info, req, res) {
+reportHandlers.unhideContent = async function (info, req, res) {
 	if (!req.isAuthenticated())
 		fail(res, "You need to be logged in to hide content!");
 	else {
@@ -71,7 +73,7 @@ handlers.unhideContent = async function (info, req, res) {
  *  blockedid: STRING,
  * }
  */
-handlers.getBlockedStatus = function (info, req, res) {
+reportHandlers.getBlockedStatus = function (info, req, res) {
 	if (!req.user) res.json(null);
 	else {
 		database.isBlocked(req.user._id, info.blockedid, (status) => {
@@ -87,7 +89,7 @@ handlers.getBlockedStatus = function (info, req, res) {
  *  blockedid: STRING,
  * }
  */
-handlers.blockUser = function (info, req, res) {
+reportHandlers.blockUser = function (info, req, res) {
 	if (!req.isAuthenticated()) throw "You have to be logged in to block a user";
 	else
 		database.blockUser(req.user._id, req.body.blockedid, (message) =>
@@ -102,7 +104,7 @@ handlers.blockUser = function (info, req, res) {
  *  contentid: STRING,
  * }
  */
-handlers.unblockUser = async function (info, req, res) {
+reportHandlers.unblockUser = async function (info, req, res) {
 	if (!req.isAuthenticated())
 		res.json({
 			success: false,
@@ -126,3 +128,5 @@ handlers.unblockUser = async function (info, req, res) {
 		}
 	}
 };
+
+module.exports = reportRoute;

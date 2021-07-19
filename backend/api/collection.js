@@ -1,3 +1,6 @@
+const routeGenerator = require("./api");
+
+const collectionRoute = routeGenerator(collectionHandlers);
 var collectionHandlers = {};
 
 /**
@@ -6,8 +9,6 @@ var collectionHandlers = {};
  * albumId : String
  */
 collectionHandlers.addToAlbum = async function (info, req, res) {
-	
-
 	if (!req.isAuthenticated()) {
 		res.json({
 			success: false,
@@ -38,7 +39,7 @@ collectionHandlers.addToAlbum = async function (info, req, res) {
 	}
 };
 
-handlers.addImageToAlbum = async function (info, req, res) {
+collectionHandlers.addImageToAlbum = async function (info, req, res) {
 	try {
 		const writeOpResult = await database.addToAlbum(
 			req.body.album._id,
@@ -67,7 +68,7 @@ handlers.addImageToAlbum = async function (info, req, res) {
  *  name: String
  * }
  */
-handlers.createAlbum = async function (info, req, res) {
+collectionHandlers.createAlbum = async function (info, req, res) {
 	if (!req.isAuthenticated())
 		res.json({ success: false, message: "You need to be logged in" });
 	else {
@@ -100,7 +101,7 @@ handlers.createAlbum = async function (info, req, res) {
  *
  * DANGEROUS : DOES NOT CHECK FOR AUTHORIZATION
  */
-handlers.deleteAlbum = async function (info, req, res) {
+collectionHandlers.deleteAlbum = async function (info, req, res) {
 	if (!req.isAuthenticated()) {
 		res.json({
 			message: "Failed because you have not been authenticated",
@@ -136,7 +137,7 @@ handlers.deleteAlbum = async function (info, req, res) {
  *  newName : String,
  * }
  */
-handlers.renameAlbum = async function (info, req, res) {
+collectionHandlers.renameAlbum = async function (info, req, res) {
 	if (!req.isAuthenticated()) {
 		res.json({
 			success: false,
@@ -166,7 +167,7 @@ handlers.renameAlbum = async function (info, req, res) {
 	}
 };
 // changes the albums caption
-handlers.changeAlbumCaption = async function (info, req, res) {
+collectionHandlers.changeAlbumCaption = async function (info, req, res) {
 	if (!req.isAuthenticated()) {
 		res.json({
 			success: false,
@@ -196,7 +197,7 @@ handlers.changeAlbumCaption = async function (info, req, res) {
 	}
 };
 
-handlers.removeImageFromAlbum = async function (info, req, res) {
+collectionHandlers.removeImageFromAlbum = async function (info, req, res) {
 	if (!req.isAuthenticated()) {
 		res.json({
 			success: false,
@@ -233,3 +234,5 @@ handlers.removeImageFromAlbum = async function (info, req, res) {
 		}
 	}
 };
+
+module.exports = collectionRoute;

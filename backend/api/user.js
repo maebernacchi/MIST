@@ -1,4 +1,5 @@
 const passport = require("passport");
+const routeGenerator = require("./api.js");
 const { handleError } = require("./utilities.js");
 const crypto = require("crypto");
 const userDB = require("../db/user.js");
@@ -7,30 +8,7 @@ const nodemailer = require("nodemailer");
 // | Users            |
 // +------------------+
 
-// Checks for requests to determine which route to use
-// Depending on the type of request (req.method), the specified action will be stored
-// in a different place. (body, query, etc.)
-const userRoute = (req, res, next) => {
-	let action;
-	if (req.method == "GET") {
-		action = req.query.action || req.query.funct;
-	} else if (
-		req.method == "POST" ||
-		req.method == "PUT" ||
-		req.method == "DELETE"
-	) {
-		action = req.body.action || req.body.funct;
-	}
-	if (!action) {
-		handleError(res, "No action specified.");
-		return;
-	}
-	if (userHandlers[action]) {
-		userHandlers[action](req, res);
-	} else {
-		handleError(res, `Invalid Action: ${action}`);
-	}
-};
+const userRoute = routeGenerator(userHandlers);
 
 var userHandlers = {};
 

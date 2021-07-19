@@ -1,11 +1,7 @@
-/**
- * api.js
- *   Functions for handling requests to the API.
- */
-
-// +-------+-----------------------------------------------------------
-// | Notes |
-// +-------+
+require("dotenv").config();
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const { handleError } = require("./utilities");
 
 /*
 The API looks for actions specified by "funct" or "action" in
@@ -18,50 +14,31 @@ handlers.action (see the section about Handlers).  That way,
 we can add another action to the API just by adding another
 handler.
 */
-
-// +--------------------+--------------------------------------------
-// | Required Libraries |
-// +--------------------+
-require("dotenv").config();
-const nodemailer = require("nodemailer");
-const crypto = require("crypto");
-const { handleError } = require("./utilities");
-
-// +--------------------+--------------------------------------------
-// | Exported Functions |
-// +--------------------+
-
-/**
- * Run the API.
- */
-module.exports.run = function (info, req, res) {
-	// Support both Sam's and Alex's model of specifying what to do
-	var action = info.action || info.funct;
-
-	// Make sure that there's an action
-	if (!action) {
-		fail(res, "No action specified.");
-	} // if there's no action
-
-	// Deal with actions with a handler.
-	else if (handlers[action]) {
-		handlers[action](info, req, res);
-	} // if (handlers[action])
-
-	// Everything else is undefined
-	else {
-		handleError(res, "Invalid action: " + action);
-	} // invalid action
-}; // run
-
-// +----------+--------------------------------------------------------
-// | Handlers |
-// +----------+
-
-/**
- * The collection of handlers.
- */
-
-// Note: Each handler should have parameters (info, req, res).
-
-// Please keep each set of handlers in alphabetical order.
+const routeGenerator = (handler) => {
+	const route = (req, res, next) => {
+		let action;
+		// Checks for requests to determine which route to use
+		// Depending on the type of request (req.method), the specified action will be stored
+		// in a different place. (body, query, etc.)
+		if (req.method == "GET") {
+			action = req.query.action || req.query.funct;
+		} else if (
+			req.method == "POST" ||
+			req.method == "PUT" ||
+			req.method == "DELETE"
+		) {
+			action = req.body.action || req.body.funct;
+		}
+		if (!action) {
+			handleError(res, "No action specified.");
+			return;
+		}
+		if (handler[action]) {
+			handler[action](req, res);
+		} else {
+			handleError(res, `Invalid Action: ${action}`);
+		}
+	};
+	return route;
+};
+module.exports = routeGenerator;
