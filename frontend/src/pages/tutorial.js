@@ -95,6 +95,7 @@
 import React from "react";
 import {
   Nav,
+  NavDropdown,
   Image,
   Accordion,
   Card,
@@ -197,14 +198,13 @@ const bodyTextSize = "125%";
 // workspace Demo, so we can include workspaces in our tutorials easily.
 function WorkSpaceDemo() {
   return (
-
     <WorkSpace
-      width={document.documentElement.clientWidth}
-      height={document.documentElement.clientHeight * 0.81}
-      menuHeight={document.documentElement.clientWidth * 0.08}
+      width={document.documentElement.clientWidth * .45}
+      height={document.documentElement.clientHeight * 0.8}
+      menuHeight={document.documentElement.clientWidth * 0.07}
       funBarHeight={document.documentElement.clientHeight * 0.1}
-      functionWidth={document.documentElement.clientWidth * 0.047}
-      valueWidth={document.documentElement.clientWidth * 0.047}
+      functionWidth={document.documentElement.clientWidth * 0.025}
+      valueWidth={document.documentElement.clientWidth * 0.03}
       offset={0}
     />
   );
@@ -220,54 +220,34 @@ function Tutorial() {
       style={{
         // overflowY: "scroll",
         // height: "100vh",
-        marginTop: "2vh",
+        marginTop: "1vh",
         marginBottom: "0",
-        paddingBottom: "7.5rem",
+        paddingBottom: "5rem",
       }}
     >
+      {/* Table of Contents */}
+      <TableContents />
       <Row
         // className="mr-auto"
         style={{
-          marginLeft: "1em",
-          marginRight: "1em",
+          marginLeft: "0em",
+          marginRight: "0em",
           alignItems: "flex-start",
         }}
       >
-        <Col xs="3" style={{
-          alignItems: "flex-start",
-          // position: "sticky",
-          // overflowY: "scroll",
+        <Col xs="6" style={{
+          alignItems: "stretch",
           top: "2rem"
         }}>
-          {/* Table of Contents */}
-          <TableContents />
-          <Card className="text-center" bg="info" text="white" style={{ marginTop: "2vh", marginBottom: "2vh" }}>
-            <Card.Header as="h4" style={{ paddingTop: "5vh", paddingBottom: "5vh" }}>
-              Scroll down for the tutorial workspace!
-            </Card.Header>
-          </Card>
-        </Col>
-        <Col xs="9">
           {/* Tutorials */}
          <Tutorials /> 
-          {/* Tutorial Slideshow Experiment */}
-          {/*<TutorialSlideShow sectionNum={0} subsectionNum={0} stageNum={0} />  */}
-          {/* this is currently just the mockup data that I used in the tutorialSlideShow.js file. 
-              I _think_ it will work to adjust it to use this data, since it's coded to depend on
-              the length of arrays in the objects. I don't know how to have the different types of
-              tutorials in a click-through style, unless we converted the sections array to hold 
-              the react components and just have the display cycle through the tutorial stages.
-              
-              Absent that, we could also use tabs to separate the introduction, checkpoint, and 
-              challenges stages. I imagine this would be similar to the 
-              "Create Function"/"Create Image" tabs in the Code UI.*/}
-
         </Col>
-      </Row>
-      <Row
-      //  style={{overflow: "scroll"}}
-      >
+        <Col xs="6" style={{
+          alignItems: "stretch",
+          top: "2rem"
+        }}>
         <WorkSpaceDemo />
+        </Col>
       </Row>
     </Container>
 
@@ -281,36 +261,20 @@ function Tutorial() {
 function TableContents() {
   return (
     <Card>
-      {/* Title -- Table of Contents */}
-      <Card.Header style={{ paddingTop: "2vh" }}>
-        <h3 style={{ fontSize: "170%" }}>Table of Contents</h3>
-      </Card.Header>
       {/* All the sections and subsections */}
-      <Accordion>
+      <Nav>
+      <Card.Header 
+        style={{border: "none"}}
+      >Table of Contents:</Card.Header>
         {/* Maps each sections  */}
         {sections.map((section, idx) => (
-          <Card>
-            <Card.Header>
+            <Nav>
               {/* Displays the title of the section */}
-              <Accordion.Toggle
-                as={Button}
-                variant="link"
-                eventKey={idx + 1}
-                style={{ color: "black", textAlign: "left" }}
-              >
-                {section.title}
-              </Accordion.Toggle>
-            </Card.Header>
-
-            {/* On eventkey, it opens the Buttons with the same eventkey */}
-            <Accordion.Collapse eventKey={idx + 1}>
-              <Card.Body>
-                <Nav className="flex-column">
-                  {/* Maps each subsections */}
-                  {section.subsections.map((subsection) => (
+              <NavDropdown title={section.title}>
+                {section.subsections.map((subsection) => (
                     //The button in the Table of Contents with the subsection title
-                    <Button
-                      offset="10"
+                    <NavDropdown.Item
+                    data-toggle="dropdown"
                       href={"#" + subsection.id}
                       style={{
                         color: "black",
@@ -320,14 +284,12 @@ function TableContents() {
                       }}
                     >
                       {subsection.title}
-                    </Button>
+                    </NavDropdown.Item>
                   ))}
-                </Nav>
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
+              </NavDropdown>
+            </Nav>
         ))}
-      </Accordion>
+      </Nav>
     </Card>
   );
 }
@@ -337,9 +299,8 @@ function TableContents() {
 // +--------------------------- +
 
 function Tutorials() {
-
   return (
-    <Container style={{ height: "90vh", margin: "2vh", overflowY: "scroll", scrollBehavior: "smooth" }}>
+    <Container style={{ height: "75vh", width:"50vw", margin: "0vh", overflowY: "scroll", overflowX: "hidden", scrollBehavior: "smooth" }}>
       {/* Maps each sections */}
       {sections.map((section, idx) => (
         <div>
@@ -474,11 +435,11 @@ function Text(props) {
     >
       <Card.Body>
         <Row>
-          <Col xs="11">
+          <Col xs="4">
             <Container><h4>Introduction</h4></Container>
             {/* {props.text} */}
           </Col>
-          <Col xs="1">
+          <Col xs="4">
             <SectionMenu id={props.id} />
           </Col>
         </Row>
@@ -775,7 +736,7 @@ const sections = [
           title: "Introduction to MIST",
           id: "intro-to-mist",
           keywords: ["introduction", "MIST", "general"],
-          image: <MISTImage code="sum(x,y)" resolution="250" />,
+          image: <MISTImage height="200" width="200" code="sum(x,y)" resolution="250" />,
           isAnimated: false,
           //Text
           text: (
@@ -876,7 +837,7 @@ const sections = [
           title: "The Workspace",
           id: "workspace",
           keywords: ["graph", "grayscale", "general"],
-          image: <MISTImage code="x" resolution="200" />,
+          image: <MISTImage height="200" width="200" code="x" resolution="200" />,
           isAnimated: false,
           //Text
           text: (
@@ -1065,7 +1026,7 @@ const sections = [
           title: "The Expert UI",
           id: "expert-ui",
           keywords: ["graph", "grayscale", "axis"],
-          image: <MISTImage code="x" resolution="200" />,
+          image: <MISTImage height="200" width="200" code="x" resolution="200" />,
           isAnimated: false,
           //Text 
           text: <Container>
@@ -1172,7 +1133,7 @@ const sections = [
         title: "X, Y, and Constants",
         id: "x-y-constants",
         keywords: ["introduction", "grayscale", "MIST"],
-        image: <MISTImage code="x" resolution="200" />,
+        image: <MISTImage height="200" width="200" code="x" resolution="200" />,
         isAnimated: false,
         //Text
         text: (
@@ -1202,14 +1163,14 @@ const sections = [
             <Row fluid >
               <Col>
                 <b>Code:</b> x
-                <MISTImage code="x" resolution="300" />
+                <MISTImage height="200" width="200" code="x" resolution="300" />
                 <br />
                 <br />
                 As <b>X</b> increases, the image gets darker.
               </Col>
               <Col>
                 <b>Code:</b> y
-                <MISTImage code="y" resolution="300" />
+                <MISTImage height="200" width="200" code="y" resolution="300" />
                 <br />
                 <br />
                 As <b>Y</b> increases, the image gets darker. <b>Remember:</b> in MIST the Y axis increases
@@ -1231,31 +1192,31 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage code="neg(1)" resolution="100" />
+                <MISTImage height="200" width="200" code="neg(1)" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> -1
               </Col>
               <Col>
-                <MISTImage code="neg(0.5)" resolution="100" />
+                <MISTImage height="200" width="200" code="neg(0.5)" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> -0.5
               </Col>
               <Col>
-                <MISTImage code="0" resolution="100" />
+                <MISTImage height="200" width="200" code="0" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> 0
               </Col>
               <Col>
-                <MISTImage code="0.5" resolution="100" />
+                <MISTImage height="200" width="200" code="0.5" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> 0.5
               </Col>
               <Col>
-                <MISTImage code="1" resolution="100" />
+                <MISTImage height="200" width="200" code="1" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> 1
@@ -1318,7 +1279,7 @@ const sections = [
         title: "Time and Animations",
         id: "time-animations",
         keywords: ["animation", "grayscale", "time"],
-        image: <MISTImage code="mult(x,t.s,2)" resolution="250" />,
+        image: <MISTImage height="200" width="200" code="mult(x,t.s,2)" resolution="250" />,
         isAnimated: true,
         //Text
         text: (
@@ -1340,28 +1301,28 @@ const sections = [
             <br/> */}
             <Row>
               <Col>
-                <MISTImage code="t.s" resolution="200" />
+                <MISTImage height="200" width="200" code="t.s" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.s
                 <br /> Time in seconds
               </Col>
               <Col>
-                <MISTImage code="t.m" resolution="200" />
+                <MISTImage height="200" width="200" code="t.m" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.m
                 <br /> Time in minutes
               </Col>
               <Col>
-                <MISTImage code="t.h" resolution="200" />
+                <MISTImage height="200" width="200" code="t.h" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.h
                 <br /> Time in hours
               </Col>
               <Col>
-                <MISTImage code="t.d" resolution="200" />
+                <MISTImage height="200" width="200" code="t.d" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.d
@@ -1454,7 +1415,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br /><br />
                 </p1>
-                <MISTImage code="mult(x,y,t.s)" resolution="250" />
+                <MISTImage height="200" width="200" code="mult(x,y,t.s)" resolution="250" />
               </Container>
             ),
 
@@ -1471,7 +1432,7 @@ const sections = [
                 <p1>
                   Now try making this image: <br /> <br />
                 </p1>
-                <MISTImage code="wsum(sin(x),y,t.s)" resolution="250"></MISTImage>
+                <MISTImage height="200" width="200" code="wsum(sin(x),y,t.s)" resolution="250"></MISTImage>
               </Container>
             ),
             hint: <Container>
@@ -1489,7 +1450,7 @@ const sections = [
         title: "Moving with the Mouse",
         id: "moving-with-mouse",
         keywords: ["animation", "grayscale", "mouse"],
-        image: <MISTImage code="wsum(x,y,m.x,m.y)" resolution="250" />,
+        image: <MISTImage height="200" width="200" code="wsum(x,y,m.x,m.y)" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -1499,14 +1460,14 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage code="m.x" resolution="300" />
+                <MISTImage height="200" width="200" code="m.x" resolution="300" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> m.x
                 <br /> The mouse's <b>x</b> value
               </Col>
               <Col>
-                <MISTImage code="m.y" resolution="300" />
+                <MISTImage height="200" width="200" code="m.y" resolution="300" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> m.x
@@ -1586,6 +1547,7 @@ const sections = [
                   For a harder image, try this: <br />
                 </p1>
                 <MISTImage
+                  height="200" width="200"
                   code="wsum(sin(x),cos(y),m.y,m.x)"
                   resolution="250"
                 />
@@ -1617,7 +1579,7 @@ const sections = [
         title: "Multiple Inputs",
         id: "multiple-input",
         keywords: ["inputs", "grayscale", "image"],
-        image: <MISTImage code="avg(sum(x,x),mult(y,y))" resolution="250" />,
+        image: <MISTImage height="200" width="200" code="avg(sum(x,x),mult(y,y))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -1648,13 +1610,13 @@ const sections = [
               <Col>
                 Here's <b>sum(x,y)</b>.
                 <br />
-                <MISTImage code="sum(x,y)" resolution="300" />
+                <MISTImage height="200" width="200" code="sum(x,y)" resolution="300" />
               </Col>
               <Col>
 
                 Here's <b>wsum(x,y)</b>.
                 <br />
-                <MISTImage code="wsum(x,y)" resolution="300" />
+                <MISTImage height="200" width="200" code="wsum(x,y)" resolution="300" />
               </Col>
             </Row>
 
@@ -1677,12 +1639,12 @@ const sections = [
               <Col>
                 Here's <b>mult(x,y)</b>.
                 <br />
-                <MISTImage code="mult(x,y)" resolution="300" />
+                <MISTImage height="200" width="200" code="mult(x,y)" resolution="300" />
               </Col>
               <Col>
                 Here's <b>avg(x,y)</b>.
                 <br />
-                <MISTImage code="avg(x,y)" resolution="300" />
+                <MISTImage height="200" width="200" code="avg(x,y)" resolution="300" />
               </Col>
             </Row>
             <br /><br />
@@ -1751,7 +1713,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="sum(x,x,y)" resolution="250" />
+                <MISTImage height="200" width="200" code="sum(x,x,y)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -1764,7 +1726,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="avg(mult(x,x)y)" resolution="250" />
+                <MISTImage height="200" width="200" code="avg(mult(x,x)y)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -1784,7 +1746,7 @@ const sections = [
         title: "Fixed Inputs",
         id: "fixed-input",
         keywords: ["inputs", "grayscale", "image"],
-        image: <MISTImage code="mistif(x,x,y)" resolution="250" />,
+        image: <MISTImage height="200" width="200" code="mistif(x,x,y)" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -1809,13 +1771,13 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage code="square(x)" resolution="275" />
+                <MISTImage height="200" width="200" code="square(x)" resolution="275" />
               </Col>
               <Col>
-                <MISTImage code="neg(x)" resolution="275" />
+                <MISTImage height="200" width="200" code="neg(x)" resolution="275" />
               </Col>
               <Col>
-                <MISTImage code="sin(x)" resolution="275" />
+                <MISTImage height="200" width="200" code="sin(x)" resolution="275" />
               </Col>
             </Row>
             <br />
@@ -1836,13 +1798,13 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage code="sign(x)" resolution="275" />
+                <MISTImage height="200" width="200" code="sign(x)" resolution="275" />
               </Col>
               <Col>
-                <MISTImage code="abs(x)" resolution="275" />
+                <MISTImage height="200" width="200" code="abs(x)" resolution="275" />
               </Col>
               <Col>
-                <MISTImage code="cos(x)" resolution="275" />
+                <MISTImage height="200" width="200" code="cos(x)" resolution="275" />
               </Col>
             </Row>
             <br />
@@ -1928,7 +1890,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="mistif(y,y,x)" resolution="250" />
+                <MISTImage height="200" width="200" code="mistif(y,y,x)" resolution="250" />
               </Container>
             ),
 
@@ -1945,7 +1907,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="cos(sin(x))" resolution="250" />
+                <MISTImage height="200" width="200" code="cos(sin(x))" resolution="250" />
               </Container>
             ),
             hint: (
@@ -1965,7 +1927,7 @@ const sections = [
         title: "Adding Color",
         id: "adding-color",
         keywords: ["graph", "color", "image"],
-        image: <MISTImage code="rgb(mult(y,y),x,square(x))" resolution="250" />,
+        image: <MISTImage height="200" width="200" code="rgb(mult(y,y),x,square(x))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -1981,14 +1943,14 @@ const sections = [
             <Row>
               <Col>
                 {/* {rgbVenn} */}
-                <MISTImage code={rgbVenn} resolution="300" />
+                <MISTImage height="200" width="200" code={rgbVenn} resolution="300" />
               </Col>
               <Col>
                 {/* {rgbVennSoft} */}
-                <MISTImage code={rgbVennSoft} resolution="300" />
+                <MISTImage height="200" width="200" code={rgbVennSoft} resolution="300" />
               </Col>
             </Row>
-            {/* <MISTImage code={rgbVenn} resolution="250"/>
+            {/* <MISTImage height="200" width="200" code={rgbVenn} resolution="250"/>
             <MISTImage code={rgbVennSoft} resolution="250"/> */}
 
             <br />
@@ -2004,7 +1966,7 @@ const sections = [
                 {/* </Col>
               <Col> */}
                 <br />
-                <MISTImage code="rgb(1,-1,-1)" resolution="250" />
+                <MISTImage height="200" width="200" code="rgb(1,-1,-1)" resolution="250" />
               </Col>
               {/* </Row> */}
               {/* <Row> */}
@@ -2013,7 +1975,7 @@ const sections = [
                 {/* </Col>
               <Col> */}
                 <br />
-                <MISTImage code="rgb(-1,1,-1)" resolution="250" />
+                <MISTImage height="200" width="200" code="rgb(-1,1,-1)" resolution="250" />
               </Col>
               {/* </Row> */}
               {/* <Row> */}
@@ -2022,7 +1984,7 @@ const sections = [
                 {/* </Col>
               <Col> */}
                 <br />
-                <MISTImage code="rgb(-1,-1,1)" resolution="250" />
+                <MISTImage height="200" width="200" code="rgb(-1,-1,1)" resolution="250" />
               </Col>
             </Row>
 
@@ -2049,7 +2011,7 @@ const sections = [
 
               </Col>
               <Col>
-                <MISTImage code="rgb(x,y,t.s)" resolution="300" />
+                <MISTImage height="200" width="200" code="rgb(x,y,t.s)" resolution="300" />
               </Col>
             </Row>
             <br />
@@ -2133,7 +2095,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="rgb(x,x,y)" resolution="250" />
+                <MISTImage height="200" width="200" code="rgb(x,x,y)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -2156,7 +2118,7 @@ const sections = [
                 <p1>
                   For a harder challenge, try making this image: <br />{" "}
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="rgb(cos(y),sum(cos(y),x),x)"
                   resolution="250"
                 />
@@ -2185,7 +2147,7 @@ const sections = [
         id: "circle",
         keywords: ["shape", "grayscale", "image"],
         image: (
-          <MISTImage code="sign(wsum(square(x),square(y)))" resolution="250" />
+          <MISTImage height="200" width="200" code="sign(wsum(square(x),square(y)))" resolution="250" />
         ),
         isAnimated: false,
         //Text
@@ -2241,7 +2203,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="neg(sign(wsum(square(x),square(y))))"
                   resolution="250"
                 />
@@ -2256,7 +2218,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="wsum(sum(mult(x,x),mult(y,y),t.s),t.s)"
                   resolution="250"
                 />
@@ -2274,7 +2236,7 @@ const sections = [
         title: "Triangle",
         id: "triangle",
         keywords: ["shape", "grayscale", "image"],
-        image: <MISTImage code="sign(sum(x,y))" resolution="250" />,
+        image: <MISTImage height="200" width="200" code="sign(sum(x,y))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -2317,7 +2279,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="sign(sum(x,negate(y)))" resolution="250" />
+                <MISTImage height="200" width="200" code="sign(sum(x,negate(y)))" resolution="250" />
               </Container>
             ),
             hint: <Container> What inverts colors? </Container>,
@@ -2328,7 +2290,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="wsum(x,y,t.s)" resolution="250" />
+                <MISTImage height="200" width="200" code="wsum(x,y,t.s)" resolution="250" />
               </Container>
             ),
             hint: <Container> How do you get it to move? </Container>,
@@ -2344,7 +2306,7 @@ const sections = [
         id: "rhombus",
         keywords: ["shape", "grayscale", "image"],
         image: (
-          <MISTImage
+          <MISTImage height="200" width="200"
             code="sign(sum(mult(2, x, mistif(x, -1, 1)), mult(2, y, mistif(y, -1, 1)), 2))"
             resolution="250"
           />
@@ -2449,7 +2411,7 @@ const sections = [
                   {" "}
                   Try making a rhombus using a different equation: <br />
                 </p1>
-                <MISTImage code="sign(wsum(abs(y),abs(x)))" resolution="250" />
+                <MISTImage height="200" width="200" code="sign(wsum(abs(y),abs(x)))" resolution="250" />
               </Container>
             ),
             hint: <Container> This is a hint 1 </Container>,
@@ -2461,7 +2423,7 @@ const sections = [
                   {" "}
                   Try making a rhombus using a different equation: <br />
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="neg(sign(wsum(abs(y),abs(x),0.5)))"
                   resolution="250"
                 />
@@ -2491,7 +2453,7 @@ const sections = [
         title: "Flipping",
         id: "flipping",
         keywords: ["shape", "grayscale", "image"],
-        image: <MISTImage code="sign(neg(sum(x,y)))" resolution="250" />,
+        image: <MISTImage height="200" width="200" code="sign(neg(sum(x,y)))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -2527,7 +2489,7 @@ const sections = [
                   {" "}
                   Try making a rhombus using a different equation: <br />
                 </p1>
-                <MISTImage code="sum(sin(x),sin(y),-0.5)" resolution="250" />
+                <MISTImage height="200" width="200" code="sum(sin(x),sin(y),-0.5)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -2548,7 +2510,7 @@ const sections = [
         title: "Resizing",
         id: "resizing",
         keywords: ["size", "shape", "grayscale"],
-        image: <MISTImage code="sign(sum(x,y,-0.5))" resolution="250" />,
+        image: <MISTImage height="200" width="200" code="sign(sum(x,y,-0.5))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -2585,7 +2547,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="sign(wsum(square(x),square(y),0.5))"
                   resolution="250"
                 />
@@ -2609,7 +2571,7 @@ const sections = [
         id: "moving-around",
         keywords: ["shape", "grayscale", "image"],
         image: (
-          <MISTImage
+          <MISTImage height="200" width="200"
             code="wsum(square(sum(x,0.5)),square(y))"
             resolution="250"
           />
@@ -2652,7 +2614,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="sum(sign(sum(x,0.5)),sign(sum(y,0.5)))"
                   resolution="250"
                 />
@@ -2677,7 +2639,7 @@ const sections = [
         id: "assemble",
         keywords: ["graph", "grayscale", "axis"],
         image: (
-          <MISTImage
+          <MISTImage height="200" width="200"
             code="mistif(sign(wsum(square(x),square(y))),y,sign(sum(x,y)))"
             resolution="250"
           />
@@ -2771,7 +2733,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="mistif(x,mistif(y,cos(sin(x)),sign(sum(x,y))),mistif(y,wsum(square(x),square(y)),y))"
                   resolution="250"
                 />{" "}
@@ -2804,7 +2766,7 @@ const sections = [
         id: "colorful-image",
         keywords: ["color", "animation", "interesting"],
         image: (
-          <MISTImage
+          <MISTImage height="200" width="200"
             code="rgb(sin(sin(cos(x))),mult(sin(sin(cos(x))),y),wsum(y,t.s))"
             resolution="250"
           />
@@ -2862,7 +2824,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="rgb(sin(x),cos(y),t.s)" resolution="250" />
+                <MISTImage height="200" width="200" code="rgb(sin(x),cos(y),t.s)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -2879,7 +2841,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="rgb(cos(sin(sin(x))),sum(cos(sin(sin(x))),y),y)"
                   resolution="250"
                 />{" "}
@@ -2904,7 +2866,7 @@ const sections = [
         id: "moving-image",
         keywords: ["animation", "grayscale", "interesting"],
         image: (
-          <MISTImage
+          <MISTImage height="200" width="200"
             code="sin(wsum(neg(square(x)),neg(y),mult(t.s,m.y),m.x,mult(x,y)))"
             resolution="250"
           />
@@ -2964,7 +2926,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="sin(sin(sum(m.x,x)))" resolution="250" />
+                <MISTImage height="200" width="200" code="sin(sin(sum(m.x,x)))" resolution="250" />
               </Container>
             ),
 
@@ -2976,7 +2938,7 @@ const sections = [
                 <p1>
                   For a super challenge, try this image: <br />
                 </p1>
-                <MISTImage
+                <MISTImage height="200" width="200"
                   code="wsum(cos(mult(x,x,x)),cos(mult(x,x,x)),cos(mult(x,x,x)))"
                   resolution="250"
                 />
