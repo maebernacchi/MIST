@@ -137,7 +137,7 @@ function Menu(props) {
                     />
                 </Form>
                 <OverlayTrigger
-                    placement='top'
+                    placement='top' //might be good to change to 'bottom;
                     overlay={<Tooltip>Publish your final image</Tooltip>}
                 >
                     <Button className='menu-btn'
@@ -223,9 +223,9 @@ Menu.propTypes = {
  * Button for the user to toggle fullscreen
  */
 function FullscreenButton(props) {
-    const [fullscreen, setFullscreen] = useState(document.fullscreen);
+    const [fullscreen, setFullscreen] = useState(document.requestFullscreen);
     useEffect(() => {
-        const listener = () => setFullscreen(document.fullscreen);
+        const listener = () => setFullscreen(document.requestFullscreen);
         document.addEventListener('fullscreenchange', listener);
         return () => {
             document.removeEventListener('fullscreenchange', listener);
@@ -237,7 +237,7 @@ function FullscreenButton(props) {
             <Button
                 className='menu-btn'
                 onClick={props.exitFullscreen}
-                variant='outline'><BsFullscreenExit /></Button>
+                variant='outline-light'><BsFullscreenExit /></Button>
         );
     } else {
         return (
