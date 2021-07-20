@@ -406,14 +406,19 @@ function Expert(props) {
                 resetWorkspace={resetWorkspace}
 
                 requestFullscreen={() => {
-                    if (elem.requestFullscreen) {
-                        try{elem.requestFullscreen();}catch{}
-                    } else if (elem.webkitRequestFullscreen) { /* Safari */
-                        try{elem.webkitRequestFullscreen();}catch{}
-                    } else if (elem.msRequestFullscreen) { /* IE11 */
-                        try{elem.msRequestFullscreen();}catch{}
+                    try{
+                        elem.requestFullscreen();
+                    }catch{
+                        try {
+                            elem.webkitRequestFullscreen();
+                        }catch{
+                            try{
+                                elem.msRequestFullscreen();
+                            }catch{}
+                        }
                     }
-                }}
+                }
+            }
                 exitFullscreen={() => {
                     if (document.fullscreenElement) {
                         document.exitFullscreen()
