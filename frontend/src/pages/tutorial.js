@@ -274,7 +274,6 @@ function TableContents() {
                 {section.subsections.map((subsection) => (
                     //The button in the Table of Contents with the subsection title
                     <NavDropdown.Item
-                    data-toggle="dropdown"
                       href={"#" + subsection.id}
                       style={{
                         color: "black",
