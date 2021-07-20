@@ -29,8 +29,6 @@ import "./../design/styleSheets/signInUp.css";
 const SignUp = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
-	const [firstname, setFirstname] = useState("");
-	const [lastname, setLastname] = useState("");
 	const [email, setEmail] = useState("");
 	const [passwordInfo, setPasswordInfo] = useState(false);
 
