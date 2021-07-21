@@ -77,7 +77,6 @@ import { UserContext } from "../pages/components/Contexts/UserContext";
 import PropTypes from "prop-types";
 import { LinkContainer } from "react-router-bootstrap";
 import { FunBarDimensions } from "./globals/globals-funbar-dimensions";
-import MISTImage from "./buildingTools/MISTImage";
 
 // +----------------------------+
 // | All dependent files        |
@@ -89,7 +88,8 @@ class WorkspaceComponent extends Component {
 
     let layout1 = new MIST.Layout();
 
-    this.themes = ["classic", "dusk", "dark"];
+    this.themes = ["Classic", "Dusk", "Dark"]; //is this where we should capitalize?
+    this.reps = ["Words" , "Symbols"];
 
     this.width = props.width;
     this.height = props.height;
@@ -118,7 +118,9 @@ class WorkspaceComponent extends Component {
       currentNode: null,
       layouts: [layout1],
       themeIndex: 1,
-      theme: "dusk", //changes default theme
+      theme: "Dusk", //changes default theme
+      repIndex: 0,
+      rep: "Words",
       pos1: { x: 100, y: 200 },
       pos2: { x: 0, y: 100 },
       isImageModalOpen: false,
@@ -190,7 +192,6 @@ class WorkspaceComponent extends Component {
         ).fill(false),
         parentNodes: [],
         imageShowing: false,
-        renderBoxOn: false,
         draggable: true,
       };
       console.log("pushed operation " + outermost.name);
@@ -216,7 +217,6 @@ class WorkspaceComponent extends Component {
         activeOutlets: null,
         parentNodes: [],
         imageShowing: false,
-        renderBoxOn: false,
         draggable: true,
       };
       newNodes.push(val);
@@ -277,7 +277,6 @@ class WorkspaceComponent extends Component {
             ).fill(false),
             parentNodes: [],
             imageShowing: false,
-            renderBoxOn: false,
           };
           evalFrom.bind(this)(sourceIndex, operands[i].operands, pX, pY);
           newNodes.push(sourceNode);
@@ -331,7 +330,6 @@ class WorkspaceComponent extends Component {
             activeOutlets: [],
             parentNodes: [],
             imageShowing: false,
-            renderBoxOn: false,
             draggable: true,
           };
           newNodes.push(sourceNode);
@@ -416,7 +414,6 @@ class WorkspaceComponent extends Component {
           : null,
       parentNodes: [],
       imageShowing: false,
-      renderBoxOn: false,
       draggable: true,
     };
     this.setState((state, props) => {
@@ -1152,6 +1149,7 @@ class WorkspaceComponent extends Component {
                             draggable={node.draggable}
                             toggleDraggable={this.toggleDraggable.bind(this)}
                             name={node.name}
+                            rep={this.state.rep}
                             key={index} // just to silence a warning message
                             index={index}
                             x={node.x}
@@ -1288,10 +1286,10 @@ class WorkspaceComponent extends Component {
                       bgColor={colors.menuBackground[this.state.theme]}
                       wsButtonColor={colors.workspaceButton[this.state.theme]}
                       valueMenuColor={
-                        (this.state.theme === "classic" &&
+                        (this.state.theme === "Classic" &&
                           colors.valueMenuColor1) ||
-                        (this.state.theme === "dusk" && colors.valueMenuColor2) ||
-                        (this.state.theme === "dark" && colors.valueMenuColor3)
+                        (this.state.theme === "Dusk" && colors.valueMenuColor2) ||
+                        (this.state.theme === "Dark" && colors.valueMenuColor3)
                       }
                       funTabColor={colors.menuFunTab[this.state.theme]}
                       valTabColor={colors.menuValTab[this.state.theme]}
@@ -1299,6 +1297,7 @@ class WorkspaceComponent extends Component {
                       savedTabColor={colors.menuSavedTab[this.state.theme]}
                       settingsTabColor={colors.menuSettingsTab[this.state.theme]}
                       theme={this.state.theme}
+                      rep={this.state.rep}
                       setMenuTabs={(
                         valuesOpen,
                         functionsOpen,
@@ -1322,6 +1321,14 @@ class WorkspaceComponent extends Component {
                         this.setState({
                           themeIndex: i,
                           theme: this.themes[i],
+                        });
+                      }
+                      }
+                      toggleRep={() => {
+                        let i = (this.state.repIndex + 1) % this.reps.length;
+                        this.setState({
+                          repIndex: i,
+                          rep: this.reps[i],
                         });
                       }
                       }
@@ -1361,10 +1368,10 @@ class WorkspaceComponent extends Component {
                         this.toggleTheme()
                       }}
                       functionBoxBg={
-                        this.state.theme === "dark" ? "darkgray" : "white"
+                        this.state.theme === "Dark" ? "darkgray" : "white"
                       }
                       functionTextColor={
-                        this.state.theme === "dark" ? "black" : "black"
+                        this.state.theme === "Dark" ? "black" : "black"
                       }
                       openPopupCanvas={() => {
                         this.setState({
@@ -1459,8 +1466,8 @@ class WorkspaceComponent extends Component {
         {this.state.nodes.map(
           (node, index) =>
             node &&
-            node.renderFunction.isRenderable && 
-            node.renderBoxOn && (
+            node.renderFunction.isRenderable &&
+            node.imageShowing && (
               <ContextProvider
                 width={this.width}
                 height={this.height}

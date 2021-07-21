@@ -45,7 +45,8 @@ const funNames = [
 
 const functions = {
   add: { 
-    rep: "+", 
+    wordRep: "sum", 
+    symbolRep: "+",
     max: 20,
     min: 1, 
     prefix: "sum",
@@ -54,16 +55,18 @@ const functions = {
     color: functionMultColor,
   },
   multiply: {
-    rep: "*",
+    wordRep: "mult",
+    symbolRep: "*",
     max: 20,
-    min: 1,
+    min: 2,
     prefix: "mult",
     descript: "Multiply 2 or more values",
     usage: "mult(...)",
     color: functionMultColor,
   },
   square: {
-    rep: "^2",
+    wordRep: "sqr",
+    symbolRep: "^2",
     max: 1,
     min: 1,
     prefix: "square",
@@ -72,7 +75,8 @@ const functions = {
     color: functionSingleColor,
   },
   negate: {
-    rep: "neg",
+    wordRep: "neg",
+    symbolRep: "-",
     max: 1,
     min: 1,
     prefix: "neg",
@@ -81,7 +85,8 @@ const functions = {
     color: functionSingleColor,
   },
   sine: {
-    rep: "sin",
+    wordRep: "sin",
+    symbolRep: "wave",
     max: 1,
     min: 1,
     prefix: "sin",
@@ -90,7 +95,8 @@ const functions = {
     color: functionSingleColor,
   },
   cosine: {
-    rep: "cos",
+    wordRep: "cos",
+    symbolRep: "arch",
     max: 1,
     min: 1,
     prefix: "cos",
@@ -99,7 +105,8 @@ const functions = {
     color: functionSingleColor,
   },
   absolute: {
-    rep: "abs",
+    wordRep: "abs",
+    symbolRep: "| |",
     max: 1,
     min: 1,
     prefix: "abs",
@@ -108,16 +115,18 @@ const functions = {
     color: functionSingleColor,
   },
   average: {
-    rep: "avg",
+    wordRep: "avg",
+    symbolRep: "mid",
     max: 20,
-    min: 1,
+    min: 2,
     prefix: "avg",
     descript: "Average 2 or more values",
     usage: "avg(...)",
     color: functionMultColor,
   },
   sign: {
-    rep: "+/-",
+    wordRep: "sign",
+    symbolRep: "+/-",
     max: 1,
     min: 1,
     prefix: "sign",
@@ -126,16 +135,18 @@ const functions = {
     color: functionSingleColor,
   },
   wrapsum: {
-    rep: "wrap",
+    wordRep: "wsum",
+    symbolRep: "wrap",
     max: 20,
-    min: 1,
+    min: 2,
     prefix: "wsum",
     descript: "Sum of 2 or more values, wrapping around from 1 to -1 (or vice versa) if the sum is too large or too small",
     usage: "sign(i)",
     color: functionMultColor,
   },
   rgb: { 
-    rep: "rgb", 
+    wordRep: "rgb", 
+    symbolRep: "color",
     max: 3, 
     min: 3, 
     prefix: "rgb", 
@@ -144,7 +155,8 @@ const functions = {
     color: functionRGBcolor 
   },
   mistif: {
-    rep: "if",
+    wordRep: "if",
+    symbolRep: "mistif",
     max: 3,
     min: 3,
     prefix: "mistif",
@@ -244,7 +256,7 @@ const imageBoxSideLength = width / 80;
 const imageBoxColor = "white";
 const functionImageBoxOffset = width / 300;
 const valueImageBoxOffset = width / 34;
-const renderSideLength = width / 24;
+const renderSideLength = width / 18;
 
 const editableTextWidth = width / 15;
 const editableTextHeight = width / 30;

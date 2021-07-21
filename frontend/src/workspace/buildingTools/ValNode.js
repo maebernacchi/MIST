@@ -248,10 +248,10 @@ function ValNode(props) {
           rotation={45}
           stroke={props.draggable ? gui.values[name].color : 'black'}
           strokeWidth={nodeDimensions.functionStrokeWidth}
-          shadowColor={props.imageShowing? "purple":"gray"}
+          shadowColor={"gray"}
           shadowBlur={2}
-          shadowOffsetX={props.imageShowing? 3:1}
-          shadowOffsetY={props.imageShowing? 3:1}
+          shadowOffsetX={1}
+          shadowOffsetY={1}
           _useStrictMode
         />
         {rep === "#" ?  (
@@ -388,7 +388,7 @@ function ValNode(props) {
         y={nodeDimensions.valueImageBoxOffset}
         width={nodeDimensions.imageBoxSideLength}
         height={nodeDimensions.imageBoxSideLength}
-        fill={props.renderBoxOn? "red" : gui.imageBoxColor}
+        fill={props.renderBoxOn? "white" : gui.imageBoxColor}
         shadowColor={"gray"}
         shadowBlur={2}
         shadowOffsetX={1}

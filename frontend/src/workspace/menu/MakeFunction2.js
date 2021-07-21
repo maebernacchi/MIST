@@ -70,7 +70,8 @@ function FuncGroup(props) {
   const description = "Testing Description"
   const fonts = useContext(fontContext);
   const [isHovered, setIsHovered] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const rep = props.rep;
+  
   // const tips = props.descript + "\n" + props.usage;
   useEffect(() => {
     //console.log("props:"+props);
@@ -125,10 +126,6 @@ function FuncGroup(props) {
         ) {
           pos.y = global.height - global.funBarHeight - global.functionWidth;
         }
-        if (pos.x > global.width - 270 - global.functionWidth &&
-          pos.y > global.height-global.width/7-45 - global.functionWidth){
-            pos.x = global.width - 270 - global.functionWidth
-          }
         return pos;
       }}
       onMouseOver={function (props) {
@@ -240,7 +237,7 @@ function FuncGroup(props) {
         {(props) => (
           <animated.Text
             {...props}
-            text={gui.functions[funName].rep}
+            text={rep == "Words" ? gui.functions[funName].wordRep : gui.functions[funName].symbolRep}
             fontFamily={gui.globalFont}
             fontSize={fonts.functionFontSize}
             fill={"white"}

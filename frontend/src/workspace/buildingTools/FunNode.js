@@ -64,6 +64,8 @@ import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions.js";
 import { globalContext } from "../globals/global-context";
 import { fontContext } from "../globals/globals-fonts";
+import { FunBarDimensions } from "../globals/globals-funbar-dimensions";
+
 
 // +----------------------------+
 // | All dependent files        |
@@ -74,7 +76,18 @@ export default function FunNode(props) {
   const index = props.index;
   const x = props.x;
   const y = props.y;
-  const rep = gui.functions[name].rep;
+  let rep = props.rep;
+  let tempRep = props.rep;
+  switch (tempRep) {
+    case "Words": 
+      rep = gui.functions[name].wordRep;
+      break;
+    case "Symbols":
+      rep = gui.functions[name].symbolRep;
+      break;
+    default:
+      Error("Error: not a valid representation");
+      break;}
   const numOutlets = props.numOutlets;
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
@@ -171,7 +184,6 @@ export default function FunNode(props) {
         if (props.renderFunction && props.imageShowing) {
           setOnDrag(true);
         }
-        props.offRenderBox();
       }}
       onDragEnd={(e) => {
         e.target.to({
@@ -272,10 +284,8 @@ export default function FunNode(props) {
           shadowColor={
             hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
           }
-          shadowColor={props.imageShowing? "purple":"gray"}
-          shadowBlur={2}
-          shadowOffsetX={props.imageShowing? 3:1}
-          shadowOffsetY={props.imageShowing? 3:1}
+          shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
+          shadowBlur={3}
           _useStrictMode
           stroke={props.draggable ? gui.functions[name].color : 'black'}
         />
