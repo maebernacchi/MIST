@@ -1,6 +1,6 @@
+import React, {useContext} from "react";
 import MISTImage from "./MISTImage";
 import {nodeContext} from "../globals/globals-nodes-dimensions.js";
-import React, { useContext } from "react";
 
 function RenderBox(props) {
   const nodeDimensions = useContext(nodeContext);

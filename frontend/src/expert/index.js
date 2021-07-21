@@ -280,7 +280,7 @@ function Expert(props) {
             .catch(error => alert('We failed to save because of Error: ' + error))
     }
 
-    /**
+    /*
      * Wrapper that checks the if the user already has an expert workspace
      * of the given name and triggers a popup that asks for overwrite 
      * confirmation.

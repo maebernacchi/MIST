@@ -261,11 +261,11 @@ function Menu2(props) {
             shadowOffsetY={-1.5}
             shadowEnabled={u.open}
           onMouseEnter={() => {
-            setValuesOpen(u.text === button1);
-            setFunctionsOpen(u.text === button2);
-            setCustomOpen(u.text === button3);
-            setSavedOpen(u.text === button4);
-            setSettingsOpen(u.text === button5);
+            setValuesOpen(u.text === "Values");
+            setFunctionsOpen(u.text === "Functions");
+            setCustomOpen(u.text === "Custom");
+            setSavedOpen(u.text === "Saved");
+            setSettingsOpen(u.text === "Settings");
           }} 
           />
           <Text
@@ -273,9 +273,9 @@ function Menu2(props) {
             height={menuDimensions.menuTabHeight}
             text={u.text}
             fill={
-              (u.text === button2 ||
-                u.text === button3 ||
-                u.text === button5) &&
+              (u.text === "Functions" ||
+                u.text === "Custom" ||
+                u.text === "Settings") &&
                 u.open
                 ? "black" //is this really where it is?! this changes all of them
                 : props.theme === "dark"

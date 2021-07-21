@@ -1364,7 +1364,7 @@ MIST.expToGL = (function() {
     square: func("SQUARE", 1),
     wrap: func("WRAP", 1),
     mistif: func("MISTIF", 3),
-
+    
     abs: func("abs"),
     signz: func("sign"),
 
@@ -1679,7 +1679,8 @@ var mistif = function(test, pos, neg) {
   else
     return neg;
 };
-BUILTIN("mistif", "if", "if test is greater than or equal to zero, return pos, if test is less than zero, return neg", "test, pos, neg", 3, 3, "GENERAL");/**
+BUILTIN("mistif", "if", "if test is greater than or equal to zero, return pos, if test is less than zero, return neg", "test, pos, neg", 3, 3, "GENERAL");
+/**
  * mist-layout.js
  *   Information on the layout of a MIST editing session.
  */

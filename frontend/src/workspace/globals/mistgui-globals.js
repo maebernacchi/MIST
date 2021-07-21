@@ -21,7 +21,7 @@ const valueSideLength = functionTotalSideLength / 1.8; //1.414;
 const valueXYColor = "#f97162";
 const valueTimeColor = "#f9bc62";
 const valueMouseColor = "#f9e262";
-const valueConstantColor = "#f9ee62";
+const valueConstantColor = "#fff192";
 
 const menuFontSize = width / 75; //12 when width = 900
 const nodeFontSize = width / 56.25; //16 when width = 900
@@ -33,6 +33,7 @@ const funNames = [
   "average",
   "wrapsum",
   "square",
+  // "sqrt",
   "negate",
   "sine",
   "cosine",
@@ -41,11 +42,15 @@ const funNames = [
   "mistif",
   "rgb"
 ];
+
 const functions = {
   add: { 
     rep: "+", 
-    max: 20, min: 1, 
-    prefix: "sum", 
+    max: 20,
+    min: 1, 
+    prefix: "sum",
+    descript: "Sum 2 or more values. If the sum > 1, it gives 1. If the sum < -1, it gives -1",
+    usage: "sum(...)",
     color: functionMultColor,
   },
   multiply: {
@@ -53,6 +58,8 @@ const functions = {
     max: 20,
     min: 1,
     prefix: "mult",
+    descript: "Multiply 2 or more values",
+    usage: "mult(...)",
     color: functionMultColor,
   },
   square: {
@@ -60,13 +67,17 @@ const functions = {
     max: 1,
     min: 1,
     prefix: "square",
+    descript: "Multiply a by itself",
+    usage: "square(a)",
     color: functionSingleColor,
   },
   negate: {
-    rep: "-",
+    rep: "neg",
     max: 1,
     min: 1,
     prefix: "neg",
+    descript: "Negates value",
+    usage: "neg(a)",
     color: functionSingleColor,
   },
   sine: {
@@ -74,6 +85,8 @@ const functions = {
     max: 1,
     min: 1,
     prefix: "sin",
+    descript: "The sine of pi*a",
+    usage: "sin(a)",
     color: functionSingleColor,
   },
   cosine: {
@@ -81,6 +94,8 @@ const functions = {
     max: 1,
     min: 1,
     prefix: "cos",
+    descript: "The cosine of pi*a",
+    usage: "cos(a)",
     color: functionSingleColor,
   },
   absolute: {
@@ -88,6 +103,8 @@ const functions = {
     max: 1,
     min: 1,
     prefix: "abs",
+    descript: "The absolute value of i",
+    usage: "abs(i)",
     color: functionSingleColor,
   },
   average: {
@@ -95,6 +112,8 @@ const functions = {
     max: 20,
     min: 1,
     prefix: "avg",
+    descript: "Average 2 or more values",
+    usage: "avg(...)",
     color: functionMultColor,
   },
   sign: {
@@ -102,6 +121,8 @@ const functions = {
     max: 1,
     min: 1,
     prefix: "sign",
+    descript: "Rounds the value to -1 and 1 (if i < 0, returns -1; if i >= 0, returns 1).",
+    usage: "sign(i)",
     color: functionSingleColor,
   },
   wrapsum: {
@@ -109,13 +130,17 @@ const functions = {
     max: 20,
     min: 1,
     prefix: "wsum",
+    descript: "Sum of 2 or more values, wrapping around from 1 to -1 (or vice versa) if the sum is too large or too small",
+    usage: "sign(i)",
     color: functionMultColor,
   },
   rgb: { 
-    rep: "color", 
+    rep: "rgb", 
     max: 3, 
     min: 3, 
     prefix: "rgb", 
+    descript: "Generate a color from red, green, and blue expressions",
+    usage: "rgb(r,g,b)",
     color: functionRGBcolor 
   },
   mistif: {
@@ -123,6 +148,8 @@ const functions = {
     max: 3,
     min: 3,
     prefix: "mistif",
+    descript: "If test >= 0, returns the pos expression. Otherwise, it returns the neg expression.",
+    usage: "mistif(test,pos,neg)",
     color: functionSingleColor,
   },
 };
@@ -166,15 +193,51 @@ const valNames = [
   "constant",
 ];
 const values = {
-  x: { rep: "x", color: valueXYColor },
-  y: { rep: "y", color: valueXYColor },
-  second: { rep: "t.s", color: valueTimeColor },
-  minute: { rep: "t.m", color: valueTimeColor },
-  hour: { rep: "t.h", color: valueTimeColor },
-  day: { rep: "t.d", color: valueTimeColor },
-  constant: { rep: "#", color: valueConstantColor },
-  mouseX: { rep: "m.x", color: valueMouseColor },
-  mouseY: { rep: "m.y", color: valueMouseColor },
+  x: {
+    rep: "x",
+    color: valueXYColor,
+    descript: "Values in the horizontal direction" 
+  },
+  y: {
+    rep: "y",
+    color: valueXYColor,
+    descript: "Values in the vertical direction" 
+  },
+  second: {
+    rep: "t.s",
+    color: valueTimeColor,
+    descript: "Time in seconds" 
+  },
+  minute: {
+    rep: "t.m",
+    color: valueTimeColor,
+    descript: "Time in minutes" 
+  },
+  hour: {
+    rep: "t.h",
+    color: valueTimeColor,
+    descript: "Time in hours" 
+  },
+  day: {
+     rep: "t.d",
+     color: valueTimeColor,
+     descript: "Time in days" 
+  },
+  constant: {
+    rep: "#",
+    color: valueConstantColor,
+    descript: "Constant value: enter a number" 
+  },
+  mouseX: {
+    rep: "m.x",
+    color: valueMouseColor,
+    descript: "Mouse's X position" 
+  },
+  mouseY: {
+    rep: "m.y",
+    color: valueMouseColor,
+    descript: "Mouse's Y position" 
+  },
 };
 
 const imageBoxSideLength = width / 80;

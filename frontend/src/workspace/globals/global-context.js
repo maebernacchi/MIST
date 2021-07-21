@@ -3,7 +3,6 @@ import React, { createContext } from "react";
 export const globalContext = createContext();
 
 export function GlobalContextProvider(props) {
-    
 
     return (
       <globalContext.Provider

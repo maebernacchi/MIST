@@ -64,7 +64,6 @@ import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions.js";
 import { globalContext } from "../globals/global-context";
 import { fontContext } from "../globals/globals-fonts";
-import { FunBarDimensions } from "../globals/globals-funbar-dimensions";
 
 // +----------------------------+
 // | All dependent files        |
@@ -182,7 +181,6 @@ export default function FunNode(props) {
           scaleY: 1,
         });
         if (props.renderFunction && onDrag) {
-          
         }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
@@ -219,6 +217,8 @@ export default function FunNode(props) {
         props.tapHandler(index);
         props.onImageBox();
       }}
+
+      onTap={() => props.tapHandler(index)}
       onTouchEnd={(e) => {
         if (e.target.attrs.name) {
           props.outletClicked(
