@@ -64,6 +64,8 @@ import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions.js";
 import { globalContext } from "../globals/global-context";
 import { fontContext } from "../globals/globals-fonts";
+import { FunBarDimensions } from "../globals/globals-funbar-dimensions";
+
 
 // +----------------------------+
 // | All dependent files        |
