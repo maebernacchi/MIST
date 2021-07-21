@@ -77,6 +77,7 @@ import { UserContext } from "../pages/components/Contexts/UserContext";
 import PropTypes from "prop-types";
 import { LinkContainer } from "react-router-bootstrap";
 import { FunBarDimensions } from "./globals/globals-funbar-dimensions";
+import MISTImage from "./buildingTools/MISTImage.js";
 
 // +----------------------------+
 // | All dependent files        |
