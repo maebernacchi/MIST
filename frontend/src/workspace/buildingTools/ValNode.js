@@ -146,6 +146,10 @@ function ValNode(props) {
         if (pos.y > height - funBarHeight - valueWidth) {
           pos.y = height - funBarHeight - valueWidth;
         }
+        if (pos.x > width - 270 - valueWidth &&
+          pos.y > height-width/7-45 - valueWidth){
+            pos.x = width - 270 - valueWidth
+          }
         return pos;
       }}
       onDragStart={(e) => {
@@ -157,9 +161,7 @@ function ValNode(props) {
           scaleX: 1.1,
           scaleY: 1.1,
         });
-        if (props.renderFunction && props.imageShowing) {
-          props.toggleBox();
-        }
+        props.offRenderBox();
       }}
       onDragEnd={(e) => {
         e.target.to({
@@ -170,9 +172,6 @@ function ValNode(props) {
           shadowOffsetX: 5,
           shadowOffsetY: 5,
         });
-        if (props.renderFunction && props.imageShowing) {
-          props.toggleBox();
-        }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
           index,
@@ -199,6 +198,15 @@ function ValNode(props) {
       }}
       onClick={(e) => {
         props.clickHandler(index);
+        props.onImageBox();
+      }}
+      onTap={() => { 
+        props.tapHandler(index);
+        props.onImageBox();
+      }}
+      onDblTap={() => { 
+        props.removeNode(index);
+        props.onImageBox();
       }}
       onTap={() => { props.tapHandler(index); }}
       onDblTap={() => { props.removeNode(index)}}
@@ -235,15 +243,15 @@ function ValNode(props) {
           width={nodeDimensions.valueSideLength}
           height={nodeDimensions.valueSideLength}
           fill={gui.values[name].color}
-          cornerRadius={10}
+          cornerRadius={props.imageShowing? 30:10}
           lineJoin={"round"}
           rotation={45}
           stroke={props.draggable ? gui.values[name].color : 'black'}
           strokeWidth={nodeDimensions.functionStrokeWidth}
-          shadowColor={"gray"}
+          shadowColor={props.imageShowing? "purple":"gray"}
           shadowBlur={2}
-          shadowOffsetX={1}
-          shadowOffsetY={1}
+          shadowOffsetX={props.imageShowing? 3:1}
+          shadowOffsetY={props.imageShowing? 3:1}
           _useStrictMode
         />
         {rep === "#" ?  (
@@ -370,31 +378,23 @@ function ValNode(props) {
       </Group>
       <Rect
         onTap={() => {
-          if (props.renderFunction) {
-            props.toggleBox();
-          }
+          props.toggleRenderBox();
         }}
         onClick={() => {
-          if (props.renderFunction) {
-            props.toggleBox();
-          }
+          props.toggleRenderBox();
         }}
-        OnMouseEnter={() => {
-          if (props.renderFunction) {
-            props.toggleBox();
-          }
-        }}
-        name={"imageBox"}
+        name={"renderBox"}
         x={nodeDimensions.valueImageBoxOffset}
         y={nodeDimensions.valueImageBoxOffset}
         width={nodeDimensions.imageBoxSideLength}
         height={nodeDimensions.imageBoxSideLength}
-        fill={gui.imageBoxColor}
-        expanded={false}
+        fill={props.renderBoxOn? "red" : gui.imageBoxColor}
         shadowColor={"gray"}
         shadowBlur={2}
         shadowOffsetX={1}
         shadowOffsetY={1}
+        expanded={false}
+        visible={typeof props.renderFunction === "string"} //double check this after merge
       />
       <Circle
         x={valueWidth}

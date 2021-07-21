@@ -77,6 +77,7 @@ import { UserContext } from "../pages/components/Contexts/UserContext";
 import PropTypes from "prop-types";
 import { LinkContainer } from "react-router-bootstrap";
 import { FunBarDimensions } from "./globals/globals-funbar-dimensions";
+import MISTImage from "./buildingTools/MISTImage";
 
 // +----------------------------+
 // | All dependent files        |
@@ -189,6 +190,7 @@ class WorkspaceComponent extends Component {
         ).fill(false),
         parentNodes: [],
         imageShowing: false,
+        renderBoxOn: false,
         draggable: true,
       };
       console.log("pushed operation " + outermost.name);
@@ -214,6 +216,7 @@ class WorkspaceComponent extends Component {
         activeOutlets: null,
         parentNodes: [],
         imageShowing: false,
+        renderBoxOn: false,
         draggable: true,
       };
       newNodes.push(val);
@@ -274,6 +277,7 @@ class WorkspaceComponent extends Component {
             ).fill(false),
             parentNodes: [],
             imageShowing: false,
+            renderBoxOn: false,
           };
           evalFrom.bind(this)(sourceIndex, operands[i].operands, pX, pY);
           newNodes.push(sourceNode);
@@ -327,6 +331,7 @@ class WorkspaceComponent extends Component {
             activeOutlets: [],
             parentNodes: [],
             imageShowing: false,
+            renderBoxOn: false,
             draggable: true,
           };
           newNodes.push(sourceNode);
@@ -411,6 +416,7 @@ class WorkspaceComponent extends Component {
           : null,
       parentNodes: [],
       imageShowing: false,
+      renderBoxOn: false,
       draggable: true,
     };
     this.setState((state, props) => {
@@ -1170,9 +1176,27 @@ class WorkspaceComponent extends Component {
                               colors.nodeHoverShadow[this.state.theme]
                             }
                             imageShowing={node.imageShowing}
-                            toggleBox={() => {
+                            renderBoxOn={node.renderBoxOn}
+                            onImageBox={() => {
                               const newNodes = this.state.nodes;
-                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                              for(let i=0; i<newNodes.length; i++){
+                                if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                              }
+                              newNodes[index].imageShowing = true;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            toggleRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            offRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = false;
                               this.setState({
                                 nodes: newNodes,
                               });
@@ -1216,9 +1240,27 @@ class WorkspaceComponent extends Component {
                             removeNode={this.removeNode.bind(this)}
                             updateHashValue={this.updateHashValue.bind(this)}
                             imageShowing={node.imageShowing}
-                            toggleBox={() => {
+                            renderBoxOn={node.renderBoxOn}
+                            onImageBox={() => {
                               const newNodes = this.state.nodes;
-                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                              for(let i=0; i<newNodes.length; i++){
+                                if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                              }
+                              newNodes[index].imageShowing = true;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            toggleRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            offRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = false;
                               this.setState({
                                 nodes: newNodes,
                               });
@@ -1417,8 +1459,8 @@ class WorkspaceComponent extends Component {
         {this.state.nodes.map(
           (node, index) =>
             node &&
-            node.renderFunction.isRenderable &&
-            node.imageShowing && (
+            node.renderFunction.isRenderable && 
+            node.renderBoxOn && (
               <ContextProvider
                 width={this.width}
                 height={this.height}
@@ -1432,13 +1474,55 @@ class WorkspaceComponent extends Component {
                   y={node.y}
                   type={node.type}
                   renderFunction={node.renderFunction.renderFunction}
-                  toggleBox={() => {
+                  onImageBox={() => {
                     const newNodes = this.state.nodes;
-                    newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                    for(let i=0; i<newNodes.length; i++){
+                      if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                    }
+                    newNodes[index].imageShowing = true;
                     this.setState({
                       nodes: newNodes,
                     });
                   }}
+                  toggleRenderBox={() => {
+                    const newNodes = this.state.nodes;
+                    newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                    this.setState({
+                      nodes: newNodes,
+                    });
+                  }}
+                  offRenderBox={() => {
+                    const newNodes = this.state.nodes;
+                    newNodes[index].renderBoxOn = false;
+                    this.setState({
+                      nodes: newNodes,
+                    });
+                  }}
+                />
+              </ContextProvider>
+            )
+        )}
+
+{this.state.nodes.map(
+          (node, index) =>
+            node &&
+            node.renderFunction.isRenderable &&
+            node.imageShowing && (
+              <ContextProvider
+                width={this.width}
+                height={this.height}
+                menuHeight={this.menuHeight}
+                funBarHeight={this.funBarHeight}
+                functionWidth={this.functionWidth}
+                valueWidth={this.valueWidth}
+              >
+                <MISTImage
+                  x={this.width*.829}
+                  y={this.height-this.width/7-35}
+                  height={this.width/7}
+                  type={node.type}
+                  renderFunction={node.renderFunction.renderFunction}
+                  automated={true}
                 />
               </ContextProvider>
             )

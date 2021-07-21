@@ -125,6 +125,10 @@ function FuncGroup(props) {
         ) {
           pos.y = global.height - global.funBarHeight - global.functionWidth;
         }
+        if (pos.x > global.width - 270 - global.functionWidth &&
+          pos.y > global.height-global.width/7-45 - global.functionWidth){
+            pos.x = global.width - 270 - global.functionWidth
+          }
         return pos;
       }}
       onMouseOver={function (props) {

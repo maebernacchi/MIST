@@ -47,7 +47,7 @@ const functions = {
   add: { 
     rep: "+", 
     max: 20,
-    min: 2, 
+    min: 1, 
     prefix: "sum",
     descript: "Sum 2 or more values. If the sum > 1, it gives 1. If the sum < -1, it gives -1",
     usage: "sum(...)",
@@ -56,7 +56,7 @@ const functions = {
   multiply: {
     rep: "*",
     max: 20,
-    min: 2,
+    min: 1,
     prefix: "mult",
     descript: "Multiply 2 or more values",
     usage: "mult(...)",
@@ -110,7 +110,7 @@ const functions = {
   average: {
     rep: "avg",
     max: 20,
-    min: 2,
+    min: 1,
     prefix: "avg",
     descript: "Average 2 or more values",
     usage: "avg(...)",
@@ -128,7 +128,7 @@ const functions = {
   wrapsum: {
     rep: "wrap",
     max: 20,
-    min: 2,
+    min: 1,
     prefix: "wsum",
     descript: "Sum of 2 or more values, wrapping around from 1 to -1 (or vice versa) if the sum is too large or too small",
     usage: "sign(i)",
@@ -244,7 +244,7 @@ const imageBoxSideLength = width / 80;
 const imageBoxColor = "white";
 const functionImageBoxOffset = width / 300;
 const valueImageBoxOffset = width / 34;
-const renderSideLength = width / 18;
+const renderSideLength = width / 24;
 
 const editableTextWidth = width / 15;
 const editableTextHeight = width / 30;

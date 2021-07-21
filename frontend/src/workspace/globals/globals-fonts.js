@@ -10,7 +10,7 @@ export function FontGlobals(props) {
   const menuFont = "Trebuchet MS";
   const funBarFontSize = props.funBarHeight * 0.25;
   const menuTabFontSize = props.width * 0.013;
-  const functionFontSize = props.functionWidth * 0.36;
+  const functionFontSize = props.functionWidth * 0.34;
   const valueFontSize = props.valueWidth * 0.37;
   const funBarRFFontSize = props.funBarHeight * 0.32;
 
