@@ -97,7 +97,6 @@ import {
   Nav,
   NavDropdown,
   Image,
-  Accordion,
   Card,
   Button,
   Container,
@@ -105,22 +104,12 @@ import {
   Col,
   Jumbotron,
   Modal,
-  Popover,
-  OverlayTrigger,
-  DropdownButton,
-  Dropdown,
 } from "react-bootstrap";
-
-import TutorialSlideShow from "./tutorialSlideshow";
-
-import ResponsiveEmbed from 'react-bootstrap/ResponsiveEmbed';
-
 
 import "bootstrap/dist/css/bootstrap.css";
 
 import { Link } from "react-router-dom";
 import { BsQuestionCircle, BsClock } from "react-icons/bs";
-import { RiMenu2Line, RiTruckLine } from "react-icons/ri";
 
 import MISTImage from "./components/MISTImageGallery";
 
@@ -130,25 +119,17 @@ import Circle from "./../TutorialImages/CircleImages/circle.png";
 import Circle1 from "./../TutorialImages/CircleImages/circle1.png";
 import Circle2 from "./../TutorialImages/CircleImages/circle2.png";
 import Circle3 from "./../TutorialImages/CircleImages/circle3.png";
-import xImage from "./../TutorialImages/(x).png";
-import GUIgif from "./../TutorialImages/GraphicUI.gif";
 import arrowX from "./../TutorialImages/arrowShowingX.png";
 import arrowY from "./../TutorialImages/arrowShowingY.png";
 import arrowXandY from "./../TutorialImages/arrowsShowingXandY.png";
-import nodeDragGif from "./../TutorialImages/nodeDragGif.gif";
-// import funcConnectVideo from "./../TutorialImages/funcConnectVideo.mp4";
 import workspaceConnect from "./../TutorialImages/workspaceConnect.mp4";
 import workspaceDrag from "./../TutorialImages/workspaceDrag.mp4";
 import funcConnectVideo from "./../TutorialImages/workspaceFuncConnectAndPreview.mp4";
 import workspaceIntro from "./../TutorialImages/workspaceIntro.mp4";
 import codeIntro from "./../TutorialImages/codeIntro.mp4";
 import savingFunction from "./../TutorialImages/savingFunction.mp4";
-// import savingFunction2 from "./../TutorialImages/savingFunction2.mp4";
-import usingParams from "./../TutorialImages/usingParams.mp4";
 import allVars from "./../TutorialImages/allVariables.mp4";
 import constantDemo from "./../TutorialImages/constNodeInput.mp4";
-import timeNodeDemo from "./../TutorialImages/timeNodeInput.mp4";
-import mouseNodeDemo from "./../TutorialImages/axisNodeInput.mp4";
 
 const rgbVenn = (
   "rgb(neg("
@@ -199,12 +180,12 @@ const bodyTextSize = "125%";
 function WorkSpaceDemo() {
   return (
     <WorkSpace
-      width={document.documentElement.clientWidth * .45}
+      width={document.documentElement.clientWidth * .52}
       height={document.documentElement.clientHeight * 0.8}
       menuHeight={document.documentElement.clientWidth * 0.07}
       funBarHeight={document.documentElement.clientHeight * 0.1}
-      functionWidth={document.documentElement.clientWidth * 0.025}
-      valueWidth={document.documentElement.clientWidth * 0.03}
+      functionWidth={document.documentElement.clientWidth * 0.033}
+      valueWidth={document.documentElement.clientWidth * 0.035}
       offset={0}
     />
   );
@@ -222,7 +203,7 @@ function Tutorial() {
         // height: "100vh",
         marginTop: "1vh",
         marginBottom: "0",
-        paddingBottom: "5rem",
+        paddingBottom: "4rem",
       }}
     >
       {/* Table of Contents */}
@@ -237,16 +218,17 @@ function Tutorial() {
       >
         <Col xs="6" style={{
           alignItems: "stretch",
-          top: "2rem"
+          top: "0rem"
+        }}>
+        <WorkSpaceDemo />
+        </Col>
+        <Col xs="5" style={{
+          alignItems: "stretch",
+          top: "1vh",
+          marginLeft: "20px",
         }}>
           {/* Tutorials */}
          <Tutorials /> 
-        </Col>
-        <Col xs="6" style={{
-          alignItems: "stretch",
-          top: "2rem"
-        }}>
-        <WorkSpaceDemo />
         </Col>
       </Row>
     </Container>
@@ -299,7 +281,7 @@ function TableContents() {
 
 function Tutorials() {
   return (
-    <Container style={{ height: "75vh", width:"50vw", margin: "0vh", overflowY: "scroll", overflowX: "hidden", scrollBehavior: "smooth" }}>
+    <Container style={{ height: "75vh", width:"48vw", margin: "0vh", overflowY: "scroll", overflowX: "hidden", scrollBehavior: "smooth" }}>
       {/* Maps each sections */}
       {sections.map((section, idx) => (
         <div>
@@ -316,6 +298,7 @@ function Tutorials() {
                     border: "solid",
                     borderWidth: "1px",
                     borderColor: "gray",
+                    marginLeft: "0vh",
                   }}
                 >
                   <Container>
@@ -333,7 +316,7 @@ function Tutorials() {
                         <hr />
 
                         {/* keywords */}
-                        <Row style={{ marginLeft: "1vh" }}>
+                        <Row style={{ marginLeft: "0vh" }}>
                           {subsection.keywords.map((keyword) => (
                             <p1 style={{ margin: "1vh" }}>
                               {" "}
@@ -343,7 +326,7 @@ function Tutorials() {
                         </Row>
 
                         {/* Buttons for the text, video, final, and challenges sections */}
-                        <Row style={{ marginLeft: "1em", paddingTop: "2vh" }}>
+                        <Row style={{ marginLeft: "0em", paddingTop: "2vh" }}>
                           <SubsectionButton id={subsection.id} type="text" />
                           {/* <SubsectionButton id={subsection.id} type="video" /> */}
                           {/* <SubsectionButton id={subsection.id} type="final" /> */}
@@ -426,7 +409,7 @@ function Text(props) {
         borderRadius: "15px",
         backgroundColor: "aliceblue",
         borderWidth: "1px",
-        margin: "1vh",
+        margin: "0vh",
         textAlign: "left",
         fontSize: { bodyTextSize }
 
@@ -438,14 +421,11 @@ function Text(props) {
             <Container><h4>Introduction</h4></Container>
             {/* {props.text} */}
           </Col>
-          <Col xs="4">
-            <SectionMenu id={props.id} />
-          </Col>
         </Row>
         <br />
         <br />
         <Row>
-          <Col xs="auto">
+          <Col xs="0">
             {/* <Container><h4>Introduction</h4></Container> */}
             {props.text}
           </Col>
@@ -463,7 +443,7 @@ function CheckPoint(props) {
         borderRadius: "15px",
         backgroundColor: "aliceblue",
         borderWidth: "1px",
-        margin: "1vh",
+        margin: "0vh",
         textAlign: "left",
         fontSize: { bodyTextSize }
 
@@ -471,103 +451,21 @@ function CheckPoint(props) {
     >
       <Card.Body>
         <Row>
-          <Col xs="11">
+          <Col xs="0">
             <Container><h4>Checkpoint</h4></Container>
             {/* {props.checkpoint} */}
 
-          </Col>
-          <Col xs="1">
-            <SectionMenu id={props.id} />
           </Col>
         </Row>
         <br />
         <br />
         <Row>
-          <Col xs="auto">
+          <Col xs="0">
             {/* <Container><h4>Checkpoint</h4></Container> */}
             {props.checkpoint}
 
             {/* <WorkSpaceDemo/> */}
 
-          </Col>
-          {/* <Col xs="1">
-            <SectionMenu id={props.id} />
-          </Col> */}
-        </Row>
-      </Card.Body>
-    </Card>
-  );
-}
-
-
-/**
- * Video section
- */
-function Video(props) {
-  return (
-    <Card
-      id={props.id + "-video"}
-      style={{
-        borderRadius: "15px",
-        backgroundColor: "aliceblue",
-        borderWidth: "1px",
-        margin: "1vh",
-        fontSize: { bodyTextSize }
-      }}
-    >
-      <Card.Body>
-        <Row>
-          <Col xs="11">
-            <Container>Video </Container>
-            {/* {props.video} */}
-          </Col>
-          <Col xs="1">
-            <SectionMenu id={props.id} />
-          </Col>
-        </Row>
-        <br />
-        <br />
-        <Row>
-          <Col xs="auto">
-            {/* <Container><h4>Introduction</h4></Container> */}
-            {props.video}
-          </Col>
-        </Row>
-      </Card.Body>
-    </Card>
-  );
-}
-
-/**
- * Final section
- */
-function Final(props) {
-  return (
-    <Card
-      id={props.id + "-final"}
-      style={{
-        borderRadius: "15px",
-        backgroundColor: "aliceblue",
-        borderWidth: "1px",
-        margin: "1vh",
-      }}
-    >
-      <Card.Body>
-        <Row>
-          <Col xs="11">
-            <Container> Final </Container>
-            {props.final}
-          </Col>
-          <Col xs="1">
-            <SectionMenu id={props.id} />
-          </Col>
-        </Row>
-        <br />
-        <br />
-        <Row>
-          <Col xs="auto">
-            {/* <Container><h4>Introduction</h4></Container> */}
-            {props.final}
           </Col>
         </Row>
       </Card.Body>
@@ -584,13 +482,13 @@ function Challenges(props) {
         borderRadius: "15px",
         backgroundColor: "aliceblue",
         borderWidth: "1px",
-        margin: "1vh",
+        margin: "0vh",
         fontSize: { bodyTextSize }
       }}
     >
       <Card.Body>
         <Row>
-          <Col xs="11">
+          <Col xs="0">
             <Container><h4>Challenges</h4></Container>
             {/* <Container>
               {// Maps each challenges }
@@ -606,9 +504,6 @@ function Challenges(props) {
           </Col>
 
           {/* each section's small menu icon on the right side */}
-          <Col xs="1">
-            <SectionMenu id={props.id} />
-          </Col>
         </Row>
         <br />
         <br />
@@ -674,47 +569,6 @@ function HelpModal(props) {
     </Modal>
   );
 }
-/**
- * The dropdown menu and icon on the right side of each smaller sections
- */
-function SectionMenu(props) {
-  return (
-    <DropdownButton
-      variant="secondary-outline"
-      id="dropdown-item-button"
-      title={<RiMenu2Line />}
-      sticky="top"
-      style={{ position: "sticky", top: "2rem" }}
-    >
-      <Col>
-        <SubsectionDropdownItem id={props.id} type="text" />
-        <SubsectionDropdownItem id={props.id} type="checkpoint" />
-        {/* <SubsectionDropdownItem id={props.id} type="final" /> */}
-        <SubsectionDropdownItem id={props.id} type="challenges" />
-      </Col>
-    </DropdownButton>
-  );
-}
-
-/**
- * One item in the menu
- */
-function SubsectionDropdownItem(props) {
-  return (
-    <Dropdown.Item
-      style={{
-        marginRight: "1em",
-        color: "black",
-        background: "none",
-        border: "none",
-      }}
-      href={"#" + props.id + "-" + props.type}
-      variant="secondary"
-    >
-      {props.type}
-    </Dropdown.Item>
-  );
-}
 
 //+---------------------+----------------------------------------------------------------------------------------------------------------------
 //| Section Array    |
@@ -735,7 +589,7 @@ const sections = [
           title: "Introduction to MIST",
           id: "intro-to-mist",
           keywords: ["introduction", "MIST", "general"],
-          image: <MISTImage height="200" width="200" code="sum(x,y)" resolution="250" />,
+          image: <MISTImage height="150" width="150" code="sum(x,y)" resolution="250" />,
           isAnimated: false,
           //Text
           text: (
@@ -836,7 +690,7 @@ const sections = [
           title: "The Workspace",
           id: "workspace",
           keywords: ["graph", "grayscale", "general"],
-          image: <MISTImage height="200" width="200" code="x" resolution="200" />,
+          image: <MISTImage height="150" width="150" code="x" resolution="200" />,
           isAnimated: false,
           //Text
           text: (
@@ -848,7 +702,7 @@ const sections = [
               <br />
               {/* <Image src={GUIgif} fluid></Image> */}
               <Container fluid>
-                <iframe width="560" height="315" src={workspaceIntro}
+                <iframe width="448" height="276" src={workspaceIntro}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -862,7 +716,7 @@ const sections = [
               <br />
               {/* <Image src={nodeDragGif} fluid></Image>  */}
               <Container fluid>
-                <iframe width="560" height="315" src={workspaceDrag}
+                <iframe width="448" height="276" src={workspaceDrag}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -876,7 +730,7 @@ const sections = [
               <br />
               <br />
               <Container fluid>
-                <iframe width="560" height="315" src={workspaceConnect}
+                <iframe width="448" height="276" src={workspaceConnect}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -888,7 +742,7 @@ const sections = [
               <br />
               <br />
               <Container fluid>
-                <iframe width="560" height="315" src={funcConnectVideo}
+                <iframe width="448" height="276" src={funcConnectVideo}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -896,126 +750,9 @@ const sections = [
               </Container>
               <br />
               <br />
-              {/* Always drag from an input to a function.
-              <br/>
-              <br/> */}
-
-              {/* <Image src={GUIgif} fluid></Image> */}
-              {/* <br/>
-              <br/> */}
-              {/* Here, you are able to choose from a variety of values and
-              functions that allow the images to be made and are connected
-              through lines. */}
-              {/* <br /> */}
-              {/* Each image has a range of -1 to 1, where -1 represents white and 1
-              represents black; everything in between is gray until the rbg
-              function is used. X- values range from -1 on the left and 1 on the
-              right, while y-values range from -1 at the top to 1 at the bottom. */}
             </Container>
           ),
-
-          // //Video
-          // video: <Container>This is a video </Container>,
-
-          // //Final
-          // final: <Container> This is the final image </Container>,
-
-          // isChallenge: false,
-          // //Challenges
-          // challenges: [
-          //{
-          //   question:
-          //     <Container> This is a Challenge 1 </Container>,
-          //   hint:
-          //     <Container> This is a hint 1 </Container>
-          // },
-          // {
-          //   question:
-          //     <Container> This is a Challenge 2</Container>,
-          //   hint:
-          //     <Container> This is a hint 2</Container>
-          // }
-          // ],
         },
-
-        //+------------------+----------------------------------------------------------------------------------------------------------------------
-        //| The Website      |
-        //+------------------+
-        // {
-        //   title: "The Website",
-        //   ref: "#website",
-        //   id: "website",
-        //   keywords: ["graph", "grayscale", "introduction"],
-        //   image: <MISTImage code="x" resolution="250" />,
-        //   isAnimated: false,
-        //   //Text
-        //   text: (
-        //     <Container>
-        //       <br />
-        //       <br />
-        //       On this website, you can create images or 
-        //       explore images other people have made.
-        //       <br />
-        //       <br />
-        //       To open the visual workspace, click the "create" 
-        //       tab on the top left of the menu bar.
-        //       <br />
-        //       <br />
-
-        //       <WorkSpaceDemo/> 
-        //       On the create page, you can make your own images using the
-        //       workspace on it.
-        //       <br />
-        //       Next is the challenges page, which can also be found by clicking
-        //       the button beside "create." Here, you can click on a challenge,
-        //       which is an image that you try to recreate!
-        //       <br />
-        //       After this, we're going to go to the tutorial page, which is the
-        //       page that we're currently on if you're reading this!
-        //       <br />
-        //       Next up is the gallery. With the gallery, you can see what other
-        //       people have created. Here, you can click on images to learn more
-        //       about it. You can see who created the image, how many favorites it
-        //       has, you can save or share, or view or add a comment!
-        //       <br />
-        //       After this, we can look at the About MIST and development page.
-        //       This explain what MIST is about!
-        //       <br />
-        //       We can also go to the community guidelines page. This explains the
-        //       guidelines for using MIST and being a respectful of other peoples
-        //       <br />
-        //       Next we can go to the FAQ, which is still under the "About" tab.
-        //       <br />
-        //       Use the "Sign In/Up" tab to login or sign up for MIST!
-        //       <br />
-        //       You can use the search bar in the top right corner to look up
-        //       users, images, and albums!
-        //     </Container>
-        //   ),
-
-        //   //Video
-        //   video: <Container> This is a video </Container>,
-
-        //   //Final
-        //   final: <Container> This is the final image </Container>,
-
-        //   isChallenge: false,
-        //   //Challenges
-        //   challenges: [
-        //     //   {
-        //     //   question:
-        //     //     <Container> This is a Challenge 1 </Container>,
-        //     //   hint:
-        //     //     <Container> This is a hint 1 </Container>
-        //     // },
-        //     // {
-        //     //   question:
-        //     //     <Container> There's no challenge for this tutorial! </Container>,
-        //     //   hint:
-        //     //     <Container> This is a hint 2</Container>
-        //     // }
-        //   ],
-        // },
 
         //+------------------+----------------------------------------------------------------------------------------------------------------------
         //| The Expert UI    |
@@ -1025,7 +762,7 @@ const sections = [
           title: "The Expert UI",
           id: "expert-ui",
           keywords: ["graph", "grayscale", "axis"],
-          image: <MISTImage height="200" width="200" code="x" resolution="200" />,
+          image: <MISTImage height="150" width="150" code="x" resolution="200" />,
           isAnimated: false,
           //Text 
           text: <Container>
@@ -1038,7 +775,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width="560" height="315" src={codeIntro}
+              <iframe width="448" height="276" src={codeIntro}
                 title="code-intro" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -1052,7 +789,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width="560" height="315" src={savingFunction}
+              <iframe width="448" height="276" src={savingFunction}
                 title="using-params" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -1068,12 +805,6 @@ const sections = [
             <br />
           </Container>,
 
-          // //Video 
-          // video: <Container>This is a video </Container>, 
-
-          // //Final 
-          // final: <Container> This is the final image </Container>, 
-
           isChallenge: false,
           //Challenges 
           challenges: [
@@ -1087,38 +818,6 @@ const sections = [
             },
           ],
         },
-
-
-        //+------------------+----------------------------------------------------------------------------------------------------------------------
-        //| Good Practices  |
-        //+------------------+
-        /*{
-        title: "Good Practices", ref: '#good-practices', id: 'good-practices',
-        keywords: ["graph", "grayscale", "axis"],
-        //Text
-        text:
-          <Container>Good practices who?</Container>,
-        //Video
-        video:
-          <Container> This is a video </Container>,
-        //Final
-        final:
-          <Container> This is a video </Container>,
-        //Challenges
-        challenges:
-          [{
-            question:
-              <Container> This is a Challenge 1 </Container>,
-            hint:
-              <Container> This is a hint 1 </Container>
-          },
-          {
-            question:
-              <Container> This is a Challenge 2 </Container>,
-            hint:
-              <Container> This is a hint 2</Container>
-          }]
-      } */
       ],
   },
 
@@ -1132,28 +831,22 @@ const sections = [
         title: "X, Y, and Constants",
         id: "x-y-constants",
         keywords: ["introduction", "grayscale", "MIST"],
-        image: <MISTImage height="200" width="200" code="x" resolution="200" />,
+        image: <MISTImage height="150" width="150" code="x" resolution="200" />,
         isAnimated: false,
         //Text
         text: (
           <Container>
             There are many values you can use as inputs in MIST. The
             basic building building blocks are the values, shown here:
-
-            {/* <b>X</b>, <b>Y</b> and <b>constants</b> are values in MIST that are
-            inputted into functions or even used on their own. Here's a demonstration of them: */}
             <br />
             <br />
             <Container fluid>
-              <iframe width="560" height="315" src={allVars}
+              <iframe width="448" height="276" src={allVars}
                 title="values" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
               </iframe>
             </Container>
-            {/* The <b>X</b> variable ranges from -1 to 1 based on the x-values.
-            This means that from left to right, the colors of this block change
-            white to black. This is because x-values change horizontally. */}
             <br />
             <br />
             Remember that both the <b>X</b> and <b>Y</b> values on the canvas range from -1 to 1.
@@ -1162,27 +855,20 @@ const sections = [
             <Row fluid >
               <Col>
                 <b>Code:</b> x
-                <MISTImage height="200" width="200" code="x" resolution="300" />
+                <MISTImage height="150" width="150" code="x" resolution="300" />
                 <br />
                 <br />
                 As <b>X</b> increases, the image gets darker.
               </Col>
               <Col>
                 <b>Code:</b> y
-                <MISTImage height="200" width="200" code="y" resolution="300" />
+                <MISTImage height="150" width="150" code="y" resolution="300" />
                 <br />
                 <br />
                 As <b>Y</b> increases, the image gets darker. <b>Remember:</b> in MIST the Y axis increases
                 from top to bottom.
               </Col>
             </Row>
-
-
-            {/*             
-            The <b>Y</b> variable ranges from -1 to 1 based on the y-values.
-            Remember that for <b>Y</b>, -1 starts at the top and 1 is at the
-            bottom. Therefore, white is at the top and slowly turns black, which
-            comes from y-values changing hoizontally. */}
             <br />
             A constant is a value that doesn't change, hence the name
             constant. For example, if we set a constant equal to <b>2</b>, the value will
@@ -1191,31 +877,31 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage height="200" width="200" code="neg(1)" resolution="100" />
+                <MISTImage height="100" width="100" code="neg(1)" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> -1
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="neg(0.5)" resolution="100" />
+                <MISTImage height="100" width="100" code="neg(0.5)" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> -0.5
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="0" resolution="100" />
+                <MISTImage height="100" width="100" code="0" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> 0
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="0.5" resolution="100" />
+                <MISTImage height="100" width="100" code="0.5" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> 0.5
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="1" resolution="100" />
+                <MISTImage height="100" width="100" code="1" resolution="100" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> 1
@@ -1232,7 +918,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width="560" height="315" src={constantDemo}
+              <iframe width="448" height="276" src={constantDemo}
                 title="constant-entry" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -1242,13 +928,6 @@ const sections = [
 
           </Container>
         ),
-        //need to add how to change.
-
-        //Video
-        // video: <Container> This is a video </Container>,
-
-        // //Final
-        // final: <Container> This is the final image </Container>,
         isCheckpoint: false,
         CheckPoint: [
         ],
@@ -1256,18 +935,6 @@ const sections = [
         isChallenge: false,
         //Challenges
         challenges: [
-          //   {
-          //   question:
-          //     <Container> This is a Challenge 1 </Container>,
-          //   hint:
-          //     <Container> This is a hint 1 </Container>
-          // },
-          // {
-          //   question:
-          //     <Container> This is a Challenge 2 </Container>,
-          //   hint:
-          //     <Container> This is a hint 2</Container>
-          // }
         ],
       },
 
@@ -1278,7 +945,7 @@ const sections = [
         title: "Time and Animations",
         id: "time-animations",
         keywords: ["animation", "grayscale", "time"],
-        image: <MISTImage height="200" width="200" code="mult(x,t.s,2)" resolution="250" />,
+        image: <MISTImage height="150" width="150" code="mult(x,t.s,2)" resolution="250" />,
         isAnimated: true,
         //Text
         text: (
@@ -1287,41 +954,30 @@ const sections = [
             In MIST, we've used:
             <br />
             <br />
-            {/* In order to get an animation, you'll have to connect a time variable
-            to your workspace! */}
-            {/* <br/>
-            <b>t.s</b> = time in seconds
-            <br/>
-            <b>t.m</b> = time in minutes
-            <br/>
-            <b>t.h</b> = time in hours
-            <br/>
-            <b>t.d</b> = time in days
-            <br/> */}
             <Row>
               <Col>
-                <MISTImage height="200" width="200" code="t.s" resolution="200" />
+                <MISTImage height="150" width="150" code="t.s" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.s
                 <br /> Time in seconds
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="t.m" resolution="200" />
+                <MISTImage height="150" width="150" code="t.m" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.m
                 <br /> Time in minutes
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="t.h" resolution="200" />
+                <MISTImage height="150" width="150" code="t.h" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.h
                 <br /> Time in hours
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="t.d" resolution="200" />
+                <MISTImage height="150" width="150" code="t.d" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.d
@@ -1336,37 +992,9 @@ const sections = [
             because they are much larger units of time.
             <br />
             <br />
-            {/* These are divided by increasing times, with
-            s standing for seconds, m for minutes, h for hours, and d for days.
-            <br /> */}
-
-            {/* <Container fluid> 
-                <iframe width="560" height="315" src={allVars}  
-                        title="values" frameborder="0" 
-                        allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"  
-                        allowfullscreen>
-                </iframe> 
-              </Container>  */}
-            {/* Adding time causes the image to become an animation. This is because
-            time passes, it changes the input and therefore changes the image. */}
-            {/* <br />
-            <br /> */}
             As you experiment with time nodes you will see how powerful they are. Try multiplying,
             adding, and feeding time nodes into other functions. With time nodes you can speed up, slow down, or offset
             the animations you create.
-            {/* <br />
-            <br /> */}
-            {/*                       
-            2. Drag in a <b>mult</b> block and connect the <b>x</b> and{" "}
-            <b>t.s</b> to it. Now you can see time changes what was once a a
-            simple <b>x</b> image.
-            <br />
-            3. To change the speed of the animation, bring in a <b>
-              constant
-            </b>{" "}
-            variable and set it equal to 2. Connect this to the <b>mult</b>{" "}
-            block that is already there and see how the speed changes. It should
-            move much quicker now! */}
           </Container>
         ),
         isCheckpoint: true,
@@ -1388,16 +1016,12 @@ const sections = [
                 3. Bring in a{" "}
                 <b>constant</b> variable and set it equal to 2. Connect this to the{" "}
                 <b>mult</b> block that is already there.
-                {/* and see how the speed changes.
-              It should move much quicker now! */}
               </Col>
 
             </Row>
 
             <br />
             <br />
-
-            {/* <WorkSpaceDemo/> */}
           </Container>),
 
         //Video
@@ -1414,7 +1038,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br /><br />
                 </p1>
-                <MISTImage height="200" width="200" code="mult(x,y,t.s)" resolution="250" />
+                <MISTImage height="150" width="150" code="mult(x,y,t.s)" resolution="250" />
               </Container>
             ),
 
@@ -1431,7 +1055,7 @@ const sections = [
                 <p1>
                   Now try making this image: <br /> <br />
                 </p1>
-                <MISTImage height="200" width="200" code="wsum(sin(x),y,t.s)" resolution="250"></MISTImage>
+                <MISTImage height="150" width="150" code="wsum(sin(x),y,t.s)" resolution="250"></MISTImage>
               </Container>
             ),
             hint: <Container>
@@ -1449,7 +1073,7 @@ const sections = [
         title: "Moving with the Mouse",
         id: "moving-with-mouse",
         keywords: ["animation", "grayscale", "mouse"],
-        image: <MISTImage height="200" width="200" code="wsum(x,y,m.x,m.y)" resolution="250" />,
+        image: <MISTImage height="150" width="150" code="wsum(x,y,m.x,m.y)" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -1459,14 +1083,14 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage height="200" width="200" code="m.x" resolution="300" />
+                <MISTImage height="150" width="150" code="m.x" resolution="300" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> m.x
                 <br /> The mouse's <b>x</b> value
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="m.y" resolution="300" />
+                <MISTImage height="150" width="150" code="m.y" resolution="300" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> m.x
@@ -1476,17 +1100,10 @@ const sections = [
             <br />
             <br />
             The <b>m.x</b> block changes the colors along the x-values.
-
-            {/* You can
-            try it yourself by opening the preview for <b>m.x</b> and moving
-            your mouse from side to side over it! */}
             <br />
             <br />
             The <b>m.y</b> block changes the shades from white to black across
             the y-values.
-
-            {/* This is because the y-values refer to the vertical
-            values in math! */}
           </Container>
         ),
         isCheckpoint: true,
@@ -1509,7 +1126,6 @@ const sections = [
 
             </Row>
             <br />
-            {/* <WorkSpaceDemo/>  */}
           </Container>
         ),
 
@@ -1528,7 +1144,6 @@ const sections = [
                   Try making the following image: <br />
                 </p1>
                 <MISTImage code="wsum(mult(x,m.x,y),m.y)" resolution="250" />
-                {/* <MISTImage code="mult(y,sum(x,m.x))" resolution="250" /> */}
               </Container>
             ),
 
@@ -1578,7 +1193,7 @@ const sections = [
         title: "Multiple Inputs",
         id: "multiple-input",
         keywords: ["inputs", "grayscale", "image"],
-        image: <MISTImage height="200" width="200" code="avg(sum(x,x),mult(y,y))" resolution="250" />,
+        image: <MISTImage height="150" width="150" code="avg(sum(x,x),mult(y,y))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -1609,13 +1224,13 @@ const sections = [
               <Col>
                 Here's <b>sum(x,y)</b>.
                 <br />
-                <MISTImage height="200" width="200" code="sum(x,y)" resolution="300" />
+                <MISTImage height="150" width="150" code="sum(x,y)" resolution="300" />
               </Col>
               <Col>
 
                 Here's <b>wsum(x,y)</b>.
                 <br />
-                <MISTImage height="200" width="200" code="wsum(x,y)" resolution="300" />
+                <MISTImage height="150" width="150" code="wsum(x,y)" resolution="300" />
               </Col>
             </Row>
 
@@ -1638,33 +1253,15 @@ const sections = [
               <Col>
                 Here's <b>mult(x,y)</b>.
                 <br />
-                <MISTImage height="200" width="200" code="mult(x,y)" resolution="300" />
+                <MISTImage height="150" width="150" code="mult(x,y)" resolution="300" />
               </Col>
               <Col>
                 Here's <b>avg(x,y)</b>.
                 <br />
-                <MISTImage height="200" width="200" code="avg(x,y)" resolution="300" />
+                <MISTImage height="150" width="150" code="avg(x,y)" resolution="300" />
               </Col>
             </Row>
-            <br /><br />
-
-            {/* Using the example multiplying x and y together, you can
-            see in the top left corner, that it is black because -1 x -1 is 1.
-            Then, if you look at the bottom left corner, it is black */}
-            {/* <br />
-            The <b>avg</b> function averages together values. For example, the
-            average of -1 and 1 is 0. */}
             <br />
-
-            {/* 1. Adding an <b>x</b> and <b>y</b> variable to the workspace.
-            <br />
-            2. Then add a <b>sum</b> block and a <b>mult</b> block in.
-            <br />
-            3. Connect the <b>x</b> to the <b>sum</b> block twice, and then the{" "}
-            <b>y</b> to the <b>mult</b> twice.
-            <br />
-            4. Then bring in an <b>avg</b> block and connect the <b>sum</b> and{" "}
-            <b>mult</b> block to it! Now take a look at your final image! */}
           </Container>
         ),
         isCheckpoint: true,
@@ -1712,7 +1309,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="sum(x,x,y)" resolution="250" />
+                <MISTImage height="150" width="150" code="sum(x,x,y)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -1725,7 +1322,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="avg(mult(x,x)y)" resolution="250" />
+                <MISTImage height="150" width="150" code="avg(mult(x,x)y)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -1745,7 +1342,7 @@ const sections = [
         title: "Fixed Inputs",
         id: "fixed-input",
         keywords: ["inputs", "grayscale", "image"],
-        image: <MISTImage height="200" width="200" code="mistif(x,x,y)" resolution="250" />,
+        image: <MISTImage height="150" width="150" code="mistif(x,x,y)" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -1753,8 +1350,6 @@ const sections = [
             Fixed-input functions only accept a certain number of inputs; no more, no less.
             <br /><br />
             These include: <br />
-            {/* <b>sqr</b>, <b>neg</b>, <b>sin</b>,{" "}
-            <b>cos</b>, <b>abs</b>, <b>sign</b>, <b>if</b>. */}
             <br />
             <Row>
               <Col>
@@ -1770,13 +1365,13 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage height="200" width="200" code="square(x)" resolution="275" />
+                <MISTImage height="150" width="150" code="square(x)" resolution="275" />
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="neg(x)" resolution="275" />
+                <MISTImage height="150" width="150" code="neg(x)" resolution="275" />
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="sin(x)" resolution="275" />
+                <MISTImage height="150" width="150" code="sin(x)" resolution="275" />
               </Col>
             </Row>
             <br />
@@ -1797,32 +1392,16 @@ const sections = [
             <br />
             <Row>
               <Col>
-                <MISTImage height="200" width="200" code="sign(x)" resolution="275" />
+                <MISTImage height="150" width="150" code="sign(x)" resolution="275" />
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="abs(x)" resolution="275" />
+                <MISTImage height="150" width="150" code="abs(x)" resolution="275" />
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="cos(x)" resolution="275" />
+                <MISTImage height="150" width="150" code="cos(x)" resolution="275" />
               </Col>
             </Row>
             <br />
-            {/* <b>Neg</b> multiplies a value by <b>-1</b> */}
-            <br />
-            {/* <b>Sin</b> and <b>cos</b> stand for sine and cosine, which are
-            trigonometric functions. To see a difference, drag an <b>x</b> and{" "}
-            <b>y</b> variable into the workspace. Next, add a <b>sin</b> and{" "}
-            <b>cos</b> block to connect to each. Here, you can see how they
-            differ. */}
-            <br />
-            {/* <b>Abs</b> is absolute value. This turns anything that is negative
-            or positive into its positive counterpart. For example, the absolute
-            value of -1 is one, whereas the absolute value of 1 is also 1.
-            <br /> */}
-            {/* <b>Sign</b> is used to round values. Every value below 0 gets
-            rounded to -1 and every value equal to or greater than 0 gets
-            rounded to one. This also means that there will be no gray areas in
-            the image you make! */}
             <br />
 
             <b>If</b> blocks are a little complicated. The first input of an <b>If</b> block is the <b>test</b>.
@@ -1832,18 +1411,6 @@ const sections = [
             <br />
             We'll walk you through an example in the Checkpoint section.
             <br />
-            {/* 
-            <br />
-            
-            <br />
-            
-            <br />
-            3. Then, connect the <b>y</b> variable to the third node of the{" "}
-            <b>if</b> block. In this example , the test case, which is the first
-            input, is <b>x</b>. So while the input is less than 0, the returned
-            value is negative, which means that it calls <b>y</b>. When it
-            reaches 0 or greater, it returns positive, which in this case is x.
-            This is why the image looks "split" in this case. */}
           </Container>
         ),
         isCheckpoint: true,
@@ -1863,10 +1430,6 @@ const sections = [
                 3. Connect the <b>y</b> block to the third node of the{" "}
                 <b>if</b> block.
               </Col>
-              {/* <Col>
-              4. Experiment with connecting different values to the nodes. If you get comfortable,
-              try some of the more complex functions.
-              </Col> */}
             </Row>
             <br />
             Experiment with connecting different values to the nodes. If you get comfortable,
@@ -1889,7 +1452,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="mistif(y,y,x)" resolution="250" />
+                <MISTImage height="150" width="150" code="mistif(y,y,x)" resolution="250" />
               </Container>
             ),
 
@@ -1906,7 +1469,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="cos(sin(x))" resolution="250" />
+                <MISTImage height="150" width="150" code="cos(sin(x))" resolution="250" />
               </Container>
             ),
             hint: (
@@ -1926,7 +1489,7 @@ const sections = [
         title: "Adding Color",
         id: "adding-color",
         keywords: ["graph", "color", "image"],
-        image: <MISTImage height="200" width="200" code="rgb(mult(y,y),x,square(x))" resolution="250" />,
+        image: <MISTImage height="150" width="150" code="rgb(mult(y,y),x,square(x))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -1941,64 +1504,33 @@ const sections = [
             <br />
             <Row>
               <Col>
-                {/* {rgbVenn} */}
-                <MISTImage height="200" width="200" code={rgbVenn} resolution="300" />
+                <MISTImage height="150" width="150" code={rgbVenn} resolution="300" />
               </Col>
               <Col>
-                {/* {rgbVennSoft} */}
-                <MISTImage height="200" width="200" code={rgbVennSoft} resolution="300" />
+                <MISTImage height="150" width="150" code={rgbVennSoft} resolution="300" />
               </Col>
             </Row>
-            {/* <MISTImage height="200" width="200" code={rgbVenn} resolution="250"/>
-            <MISTImage code={rgbVennSoft} resolution="250"/> */}
 
             <br />
             <br />
             <Row>
               <Col>
-                {/* To the right is a */}
                 An example of solid red,
-                {/* represented by a 1 in the
-              red component's position and -1 in the green and blue positions.
-              Meaning that the amount of red in the light mixture is at its
-              highest and the amounts of green and blue are at their lowest. */}
-                {/* </Col>
-              <Col> */}
                 <br />
-                <MISTImage height="200" width="200" code="rgb(1,-1,-1)" resolution="250" />
+                <MISTImage height="150" width="150" code="rgb(1,-1,-1)" resolution="250" />
               </Col>
-              {/* </Row> */}
-              {/* <Row> */}
               <Col>
                 An example of solid green
-                {/* </Col>
-              <Col> */}
                 <br />
-                <MISTImage height="200" width="200" code="rgb(-1,1,-1)" resolution="250" />
+                <MISTImage height="150" width="150" code="rgb(-1,1,-1)" resolution="250" />
               </Col>
-              {/* </Row> */}
-              {/* <Row> */}
               <Col>
                 An example of solid blue
-                {/* </Col>
-              <Col> */}
                 <br />
-                <MISTImage height="200" width="200" code="rgb(-1,-1,1)" resolution="250" />
+                <MISTImage height="150" width="150" code="rgb(-1,-1,1)" resolution="250" />
               </Col>
             </Row>
-
-            <br />
-            <br />
-
-            {/* In the checkpoint space below, try making each color, or even combinations of each colors. */}
-
-            <br />
-            <br />
             Different amounts of each color component make a unique color.
-            {/* If the <b>color</b> function is
-            given 1, 1 and 1, it will interpret these numbers as solid white
-            since in our [-1,1] world these are our highest values. Given -1,-1
-            and -1, <b>RGB</b> would show pitch black. */}
             <Row>
               <Col>
                 Here's a sample image where Red = x, Green = y, and Blue = t.s.
@@ -2010,32 +1542,9 @@ const sections = [
 
               </Col>
               <Col>
-                <MISTImage height="200" width="200" code="rgb(x,y,t.s)" resolution="300" />
+                <MISTImage height="150" width="150" code="rgb(x,y,t.s)" resolution="300" />
               </Col>
             </Row>
-            <br />
-            <br />
-            {/* <Row>
-              <Col>
-                For example, here is white, where red = 1, green = 1, and blue = 1
-              </Col>
-              <Col>
-                <MISTImage code="rgb(1,1,1)" resolution="250"/>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                For example, here is black, where red = -1, green = 1, and blue = 1
-              </Col>
-              <Col>
-                <MISTImage code="rgb(1,1,1)" resolution="250"/>
-              </Col>
-            </Row> */}
-
-            {/* Within the limits of our
-            world, adding more of any of the three components will change the
-            'amount' of that color in the mixture. */}
-
           </Container>
         ),
 
@@ -2066,16 +1575,6 @@ const sections = [
                 block to the red, the x to the green, and sign to the blue.
               </Col>
             </Row>
-            {/*             
-            <br />
-            <br />
-            
-            <br />
-            3. Add a <b>sin</b> and connect the <b>x</b> to it.
-            <br />
-            4. Finally, bring in a <b>RGB</b> block. Connect the <b>mult</b>{" "}
-            block to the red, the x to the green, and sign to the blue. Check
-            out your colorful image! */}
           </Container>
 
 
@@ -2094,7 +1593,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="rgb(x,x,y)" resolution="250" />
+                <MISTImage height="150" width="150" code="rgb(x,x,y)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -2117,7 +1616,7 @@ const sections = [
                 <p1>
                   For a harder challenge, try making this image: <br />{" "}
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="rgb(cos(y),sum(cos(y),x),x)"
                   resolution="250"
                 />
@@ -2146,7 +1645,7 @@ const sections = [
         id: "circle",
         keywords: ["shape", "grayscale", "image"],
         image: (
-          <MISTImage height="200" width="200" code="sign(wsum(square(x),square(y)))" resolution="250" />
+          <MISTImage height="150" width="150" code="sign(wsum(square(x),square(y)))" resolution="250" />
         ),
         isAnimated: false,
         //Text
@@ -2176,7 +1675,7 @@ const sections = [
         ),
 
         //Video
-        video: <Container> <iframe width="560" height="315" src="https://www.youtube.com/embed/YQwvc7hdggE" title="circle-tutorial" frameborder="0"
+        video: <Container> <iframe width="448" height="276" src="https://www.youtube.com/embed/YQwvc7hdggE" title="circle-tutorial" frameborder="0"
           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> </Container>,
 
         //Final
@@ -2202,7 +1701,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="neg(sign(wsum(square(x),square(y))))"
                   resolution="250"
                 />
@@ -2217,7 +1716,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="wsum(sum(mult(x,x),mult(y,y),t.s),t.s)"
                   resolution="250"
                 />
@@ -2235,7 +1734,7 @@ const sections = [
         title: "Triangle",
         id: "triangle",
         keywords: ["shape", "grayscale", "image"],
-        image: <MISTImage height="200" width="200" code="sign(sum(x,y))" resolution="250" />,
+        image: <MISTImage height="150" width="150" code="sign(sum(x,y))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -2278,7 +1777,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="sign(sum(x,negate(y)))" resolution="250" />
+                <MISTImage height="150" width="150" code="sign(sum(x,negate(y)))" resolution="250" />
               </Container>
             ),
             hint: <Container> What inverts colors? </Container>,
@@ -2289,7 +1788,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="wsum(x,y,t.s)" resolution="250" />
+                <MISTImage height="150" width="150" code="wsum(x,y,t.s)" resolution="250" />
               </Container>
             ),
             hint: <Container> How do you get it to move? </Container>,
@@ -2305,7 +1804,7 @@ const sections = [
         id: "rhombus",
         keywords: ["shape", "grayscale", "image"],
         image: (
-          <MISTImage height="200" width="200"
+          <MISTImage height="150" width="150"
             code="sign(sum(mult(2, x, mistif(x, -1, 1)), mult(2, y, mistif(y, -1, 1)), 2))"
             resolution="250"
           />
@@ -2410,7 +1909,7 @@ const sections = [
                   {" "}
                   Try making a rhombus using a different equation: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="sign(wsum(abs(y),abs(x)))" resolution="250" />
+                <MISTImage height="150" width="150" code="sign(wsum(abs(y),abs(x)))" resolution="250" />
               </Container>
             ),
             hint: <Container> This is a hint 1 </Container>,
@@ -2422,7 +1921,7 @@ const sections = [
                   {" "}
                   Try making a rhombus using a different equation: <br />
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="neg(sign(wsum(abs(y),abs(x),0.5)))"
                   resolution="250"
                 />
@@ -2452,7 +1951,7 @@ const sections = [
         title: "Flipping",
         id: "flipping",
         keywords: ["shape", "grayscale", "image"],
-        image: <MISTImage height="200" width="200" code="sign(neg(sum(x,y)))" resolution="250" />,
+        image: <MISTImage height="150" width="150" code="sign(neg(sum(x,y)))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -2488,7 +1987,7 @@ const sections = [
                   {" "}
                   Try making a rhombus using a different equation: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="sum(sin(x),sin(y),-0.5)" resolution="250" />
+                <MISTImage height="150" width="150" code="sum(sin(x),sin(y),-0.5)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -2509,7 +2008,7 @@ const sections = [
         title: "Resizing",
         id: "resizing",
         keywords: ["size", "shape", "grayscale"],
-        image: <MISTImage height="200" width="200" code="sign(sum(x,y,-0.5))" resolution="250" />,
+        image: <MISTImage height="150" width="150" code="sign(sum(x,y,-0.5))" resolution="250" />,
         isAnimated: false,
         //Text
         text: (
@@ -2546,7 +2045,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="sign(wsum(square(x),square(y),0.5))"
                   resolution="250"
                 />
@@ -2570,7 +2069,7 @@ const sections = [
         id: "moving-around",
         keywords: ["shape", "grayscale", "image"],
         image: (
-          <MISTImage height="200" width="200"
+          <MISTImage height="150" width="150"
             code="wsum(square(sum(x,0.5)),square(y))"
             resolution="250"
           />
@@ -2613,7 +2112,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="sum(sign(sum(x,0.5)),sign(sum(y,0.5)))"
                   resolution="250"
                 />
@@ -2638,7 +2137,7 @@ const sections = [
         id: "assemble",
         keywords: ["graph", "grayscale", "axis"],
         image: (
-          <MISTImage height="200" width="200"
+          <MISTImage height="150" width="150"
             code="mistif(sign(wsum(square(x),square(y))),y,sign(sum(x,y)))"
             resolution="250"
           />
@@ -2732,7 +2231,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="mistif(x,mistif(y,cos(sin(x)),sign(sum(x,y))),mistif(y,wsum(square(x),square(y)),y))"
                   resolution="250"
                 />{" "}
@@ -2765,7 +2264,7 @@ const sections = [
         id: "colorful-image",
         keywords: ["color", "animation", "interesting"],
         image: (
-          <MISTImage height="200" width="200"
+          <MISTImage height="150" width="150"
             code="rgb(sin(sin(cos(x))),mult(sin(sin(cos(x))),y),wsum(y,t.s))"
             resolution="250"
           />
@@ -2823,7 +2322,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="rgb(sin(x),cos(y),t.s)" resolution="250" />
+                <MISTImage height="150" width="150" code="rgb(sin(x),cos(y),t.s)" resolution="250" />
               </Container>
             ),
             hint: (
@@ -2840,7 +2339,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="rgb(cos(sin(sin(x))),sum(cos(sin(sin(x))),y),y)"
                   resolution="250"
                 />{" "}
@@ -2865,7 +2364,7 @@ const sections = [
         id: "moving-image",
         keywords: ["animation", "grayscale", "interesting"],
         image: (
-          <MISTImage height="200" width="200"
+          <MISTImage height="150" width="150"
             code="sin(wsum(neg(square(x)),neg(y),mult(t.s,m.y),m.x,mult(x,y)))"
             resolution="250"
           />
@@ -2925,7 +2424,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage height="200" width="200" code="sin(sin(sum(m.x,x)))" resolution="250" />
+                <MISTImage height="150" width="150" code="sin(sin(sum(m.x,x)))" resolution="250" />
               </Container>
             ),
 
@@ -2937,7 +2436,7 @@ const sections = [
                 <p1>
                   For a super challenge, try this image: <br />
                 </p1>
-                <MISTImage height="200" width="200"
+                <MISTImage height="150" width="150"
                   code="wsum(cos(mult(x,x,x)),cos(mult(x,x,x)),cos(mult(x,x,x)))"
                   resolution="250"
                 />
@@ -2952,37 +2451,6 @@ const sections = [
           },
         ],
       },
-
-      //+------------------+----------------------------------------------------------------------------------------------------------------------
-      /*//| Adding Color     |
-      //+------------------+
-      {
-        title: "Adding Color", id: 'adding-color',
-        keywords: ["graph", "grayscale", "axis"],
-        //Text
-        text:
-          <Container>hellobello2</Container>,
-        //Video
-        video:
-          <Container> This is a video </Container>,
-        //Final
-        final:
-          <Container> This is a video </Container>,
-        //Challenges
-        challenges:
-          [{
-            question:
-              <Container> This is a Challenge 1 </Container>,
-            hint:
-              <Container> This is a hint 1 </Container>
-          },
-          {
-            question:
-              <Container> This is a Challenge 2 </Container>,
-            hint:
-              <Container> This is a hint 2</Container>
-          }] 
-      }*/
     ],
   },
 ];
