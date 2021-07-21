@@ -1509,6 +1509,21 @@ class WorkspaceComponent extends Component {
               </ContextProvider>
             )
         )}
+        {this.state.nodes.map(
+          (node, index) =>
+            node &&
+            node.renderFunction.isRenderable &&
+            node.imageShowing && (
+                <MISTImage
+                  x={this.width*.8285} //I am so sorry. But it works...
+                  y={(this.width * 0.02) - (this.width - 12 * (this.width * 0.02) - (this.width * 0.6)) + 536} //SO sorry. So sorry. Sorry.
+                  width={(this.width - 12 * this.width * 0.02 - this.width * 0.6) * 0.9}//MISTImages are always squares, so they only need one dimension
+                  type={node.type}
+                  renderFunction={node.renderFunction.renderFunction}
+                  automated={true}
+                />
+            )
+        )}
       </div>
     );
   }
