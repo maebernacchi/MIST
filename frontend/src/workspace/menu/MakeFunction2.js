@@ -140,7 +140,7 @@ function FuncGroup(props) {
           funName==="rgb" ? 0:1
           : 0
         }
-        Radius={global.valueWidth/10}
+        Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
         fill={"#B3B3B3"}
       />
       <Group>
@@ -148,7 +148,7 @@ function FuncGroup(props) {
           x={0}
           y={global.functionWidth/5}
           opacity={props.tabs.functionsOpen? 1:0}
-          Radius={global.valueWidth/12}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "red" : "#B3B3B3"}
         />
         <Circle
@@ -166,7 +166,7 @@ function FuncGroup(props) {
                 0 : 1
               : 0
           }
-          Radius={global.valueWidth/12}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "green" : "#B3B3B3"}
         />
         <Circle
@@ -183,7 +183,7 @@ function FuncGroup(props) {
                 .5 : 0
               : 0
           }
-          Radius={global.valueWidth/12}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "blue" : "#B3B3B3"}
         />
       </Group>
