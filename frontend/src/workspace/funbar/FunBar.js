@@ -1,12 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Rect, Group, Text } from "react-konva";
-import { Html } from "react-konva-utils";
 import "../../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { funBarContext } from "../globals/globals-funbar-dimensions";
 import { fontContext } from "../globals/globals-fonts";
-import { globalContext } from "../globals/global-context"
-
+import {nodeContext} from "../globals/globals-nodes-dimensions.js";
+import { globalContext } from "../globals/global-context";
 
 function FunBar(props) {
   const funBarDimensions = useContext(funBarContext);
@@ -23,13 +22,13 @@ function FunBar(props) {
       <BarBase {...props} />
       
       <ImageButton {...props} />
+      <ImagePlaceholder {...props} />
     </Group>
   );
 
   function BarBase(props) {
     return (
       <Group>
-        
         <Rect // Render function white background
           x={funBarDimensions.margin}
           y={funBarDimensions.margin}
@@ -42,33 +41,17 @@ function FunBar(props) {
           shadowOpacity={0.5}
           opacity={renderFunction.isRenderable ? 1 : 0.95}
         />
-        
-        <Html
-          transform={true}
-          groupProps={{
-            position: {
-              x: funBarDimensions.margin,
-              y: funBarDimensions.margin,
-            },
-          }}
-          >
-          <input
-          autocomplete="off"
-          type="text"
-          id="funbar"
-          value={props.renderFunction.renderFunction}
-          style={{
-            width: funBarDimensions.rfTextAreaWidth,
-            height: funBarDimensions.rfTextAreaHeight,
-            fontFamily: "Trebuchet MS", //not 100% satisfied with this, but we like it better than Courier
-            fontSize: funBarRFFontSize,
-            border:"none",
-            backgroundColor: "transparent",
-          }}
-          />
-        </Html>
-
-
+        <Text // Render function text display
+          text={props.renderFunction.renderFunction}
+          x={funBarDimensions.margin}
+          y={funBarDimensions.margin}
+          width={funBarDimensions.rfTextAreaWidth}
+          height={funBarDimensions.rfTextAreaHeight}
+          verticalAlign={"middle"}
+          fill={props.functionTextColor}
+          fontFamily={"Courier New"}
+          fontSize={funBarRFFontSize}
+        />
       </Group>
     );
   }
@@ -76,7 +59,7 @@ function FunBar(props) {
   
 
   function ImageButton(props) {
-    const imageButtonColor = "#f7a731"; //change this because it doesn't match the new theme colors the way it is now
+    const imageButtonColor = "#f7a731";
 
     return (
       <Group // Image Button on blue bar
@@ -109,7 +92,7 @@ function FunBar(props) {
           )}
         </Spring>
         <Text
-          text={"Image"}
+          text={"Image Options"}
           width={funBarDimensions.imageButtonWidth}
           height={funBarDimensions.imageButtonHeight}
           align={"center"}
@@ -183,7 +166,5 @@ function FunBar(props) {
     );
   }
 }
-
-//ReactDOM.render(<FunBar />, document.getElementById('root'));
 
 export default FunBar;
