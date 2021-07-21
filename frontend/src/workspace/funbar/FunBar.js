@@ -5,7 +5,8 @@ import "../../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { funBarContext } from "../globals/globals-funbar-dimensions";
 import { fontContext } from "../globals/globals-fonts";
-import { globalContext } from "../globals/global-context"
+import { globalContext } from "../globals/global-context";
+import MISTImage from "../buildingTools/MISTImage.js";
 
 
 function FunBar(props) {
@@ -24,6 +25,7 @@ function FunBar(props) {
       <ImageButton {...props} />
       <ImagePlaceholder {...props} />
     </Group>
+    
   );
 
   function BarBase(props) {
@@ -143,9 +145,9 @@ function FunBar(props) {
     const ImagePlaceholderColor = "#f7a731";
 
     return (
-      <Group // Image Button on blue bar
+      <Group // Image Button on funbar
       x={width*.82}
-      y={funBarDimensions.margin - funBarDimensions.imageButtonWidth + 35}//Doesn't work properly for window size changing
+      y={funBarDimensions.margin - funBarDimensions.imageButtonWidth + 35}
       >
         <Spring // animates image button fill
           native
