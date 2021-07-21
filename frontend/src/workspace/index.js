@@ -1170,9 +1170,27 @@ class WorkspaceComponent extends Component {
                               colors.nodeHoverShadow[this.state.theme]
                             }
                             imageShowing={node.imageShowing}
-                            toggleBox={() => {
+                            renderBoxOn={node.renderBoxOn}
+                            onImageBox={() => {
                               const newNodes = this.state.nodes;
-                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                              for(let i=0; i<newNodes.length; i++){
+                                if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                              }
+                              newNodes[index].imageShowing = true;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            toggleRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            offRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = false;
                               this.setState({
                                 nodes: newNodes,
                               });
@@ -1216,9 +1234,27 @@ class WorkspaceComponent extends Component {
                             removeNode={this.removeNode.bind(this)}
                             updateHashValue={this.updateHashValue.bind(this)}
                             imageShowing={node.imageShowing}
-                            toggleBox={() => {
+                            renderBoxOn={node.renderBoxOn}
+                            onImageBox={() => {
                               const newNodes = this.state.nodes;
-                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                              for(let i=0; i<newNodes.length; i++){
+                                if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                              }
+                              newNodes[index].imageShowing = true;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            toggleRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            offRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = false;
                               this.setState({
                                 nodes: newNodes,
                               });
@@ -1432,9 +1468,26 @@ class WorkspaceComponent extends Component {
                   y={node.y}
                   type={node.type}
                   renderFunction={node.renderFunction.renderFunction}
-                  toggleBox={() => {
+                  onImageBox={() => {
                     const newNodes = this.state.nodes;
-                    newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                    for(let i=0; i<newNodes.length; i++){
+                      if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                    }
+                    newNodes[index].imageShowing = true;
+                    this.setState({
+                      nodes: newNodes,
+                    });
+                  }}
+                  toggleRenderBox={() => {
+                    const newNodes = this.state.nodes;
+                    newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                    this.setState({
+                      nodes: newNodes,
+                    });
+                  }}
+                  offRenderBox={() => {
+                    const newNodes = this.state.nodes;
+                    newNodes[index].renderBoxOn = false;
                     this.setState({
                       nodes: newNodes,
                     });

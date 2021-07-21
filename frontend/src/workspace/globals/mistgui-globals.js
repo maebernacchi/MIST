@@ -47,7 +47,7 @@ const functions = {
   add: { 
     rep: "+", 
     max: 20,
-    min: 2, 
+    min: 1, 
     prefix: "sum",
     descript: "Sum 2 or more values. If the sum > 1, it gives 1. If the sum < -1, it gives -1",
     usage: "sum(...)",

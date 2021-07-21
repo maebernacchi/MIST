@@ -148,6 +148,13 @@ export default function FunNode(props) {
         if (pos.y > height - funBarHeight - functionWidth) {
           pos.y = height - funBarHeight - functionWidth;
         }
+        if (pos.x > FunBarDimensions.imagePlaceX){
+            pos.x = FunBarDimensions.imagePlaceX;
+          }
+          if (pos.x > width - 270 - functionWidth &&
+            pos.y > height-width/7-45 - functionWidth){
+              pos.x = width - 270 - functionWidth
+            }
         return pos;
       }}
       onDragStart={(e) => {
@@ -162,7 +169,6 @@ export default function FunNode(props) {
           scaleY: 1.1,
         });
         if (props.renderFunction && props.imageShowing) {
-          props.toggleBox();
           setOnDrag(true);
         }
       }}
@@ -174,7 +180,6 @@ export default function FunNode(props) {
           scaleY: 1,
         });
         if (props.renderFunction && onDrag) {
-          props.toggleBox();
         }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
@@ -201,10 +206,15 @@ export default function FunNode(props) {
         } else {
           props.funClicked(index);
         }
+        props.onImageBox();
       }}
       onDblClick={() => {
         // Generates the temporary line when double clicked
         props.dblClickHandler(index);
+      }}
+      onTap={() => {
+        props.tapHandler(index);
+        props.onImageBox();
       }}
 
       onTap={() => props.tapHandler(index)}
@@ -217,6 +227,7 @@ export default function FunNode(props) {
         } else {
           props.funClicked(index);
         }
+        props.onImageBox();
       }}
     >
       <Group
@@ -256,7 +267,7 @@ export default function FunNode(props) {
                 (props.numOutlets - 3) * nodeDimensions.outletYOffset
           }
           fill={gui.functions[name].color}
-          cornerRadius={10}
+          cornerRadius={props.imageShowing? 30:10}
           shadowColor={
             hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
           }
@@ -287,26 +298,17 @@ export default function FunNode(props) {
       </Group>
       <Rect
         onTap={() => {
-          if (props.renderFunction) {
-            props.toggleBox();
-          }
+          props.toggleRenderBox();
         }}
         onClick={() => {
-          if (props.renderFunction) {
-            props.toggleBox();
-          }
+          props.toggleRenderBox();
         }}
-        name={"imageBox"}
-        x={nodeDimensions.functionImageBoxOffset}
-        y={
-          props.numOutlets <= 3
-            ? nodeDimensions.functionImageBoxOffset
-            : nodeDimensions.functionImageBoxOffset +
-              (props.numOutlets - 3) * nodeDimensions.outletYOffset
-        }
+        name={"renderBox"}
+        x={nodeDimensions.functionImageBoxOffset+3}
+        y={nodeDimensions.functionImageBoxOffset+3}
         width={nodeDimensions.imageBoxSideLength}
         height={nodeDimensions.imageBoxSideLength}
-        fill={gui.imageBoxColor}
+        fill={props.renderBoxOn? "red" : gui.imageBoxColor}
         shadowColor={"gray"}
         shadowBlur={2}
         shadowOffsetX={1}
