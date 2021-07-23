@@ -237,9 +237,9 @@ function FuncGroup(props) {
         {(props) => (
           <animated.Text
             {...props}
-            text={rep == "Words" ? gui.functions[funName].wordRep : gui.functions[funName].symbolRep}
+            text={rep == "Math" ? gui.functions[funName].mathRep : gui.functions[funName].wordRep}
             fontFamily={gui.globalFont}
-            fontSize={rep == "Words" ? fonts.functionFontSize : fonts.functionFontSize *.89}
+            fontSize={rep == "Math" ? fonts.functionFontSize : fonts.functionFontSize *.89}
             fill={"white"}
             y={0}
             width={global.functionWidth}

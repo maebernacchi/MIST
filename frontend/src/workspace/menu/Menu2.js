@@ -228,7 +228,7 @@ function Menu2(props) {
                 ? props.openDeleteWorkspaceModal
                 : u === "Reset Workspace"
                 ? props.clearWorkspace
-                : (u === "Words" || u === "Symbols" )
+                : (u === "Math" || u === "Words" )
                 ? props.toggleRep 
                 : props.toggleTheme
       }

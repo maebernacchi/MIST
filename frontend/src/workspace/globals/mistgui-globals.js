@@ -45,8 +45,8 @@ const funNames = [
 
 const functions = {
   add: { 
-    wordRep: "sum", 
-    symbolRep: "combo",
+    mathRep: "sum", 
+    wordRep: "combo",
     max: 20,
     min: 1, 
     prefix: "sum",
@@ -55,8 +55,8 @@ const functions = {
     color: functionMultColor,
   },
   multiply: {
-    wordRep: "mult",
-    symbolRep: "squish",
+    mathRep: "mult",
+    wordRep: "squish",
     max: 20,
     min: 2,
     prefix: "mult",
@@ -65,8 +65,8 @@ const functions = {
     color: functionMultColor,
   },
   square: {
-    wordRep: "sqr",
-    symbolRep: "mirror",
+    mathRep: "sqr",
+    wordRep: "mirror",
     max: 1,
     min: 1,
     prefix: "square",
@@ -75,8 +75,8 @@ const functions = {
     color: functionSingleColor,
   },
   negate: {
-    wordRep: "neg",
-    symbolRep: "invert",
+    mathRep: "neg",
+    wordRep: "invert",
     max: 1,
     min: 1,
     prefix: "neg",
@@ -85,8 +85,8 @@ const functions = {
     color: functionSingleColor,
   },
   sine: {
-    wordRep: "sin",
-    symbolRep: "stripes",
+    mathRep: "sin",
+    wordRep: "stripes",
     max: 1,
     min: 1,
     prefix: "sin",
@@ -95,8 +95,8 @@ const functions = {
     color: functionSingleColor,
   },
   cosine: {
-    wordRep: "cos",
-    symbolRep: "band",
+    mathRep: "cos",
+    wordRep: "band",
     max: 1,
     min: 1,
     prefix: "cos",
@@ -105,8 +105,8 @@ const functions = {
     color: functionSingleColor,
   },
   absolute: {
-    wordRep: "abs",
-    symbolRep: "darken",
+    mathRep: "abs",
+    wordRep: "darken",
     max: 1,
     min: 1,
     prefix: "abs",
@@ -115,8 +115,8 @@ const functions = {
     color: functionSingleColor,
   },
   average: {
-    wordRep: "avg",
-    symbolRep: "merge",
+    mathRep: "avg",
+    wordRep: "merge",
     max: 20,
     min: 2,
     prefix: "avg",
@@ -125,8 +125,8 @@ const functions = {
     color: functionMultColor,
   },
   sign: {
-    wordRep: "sign",
-    symbolRep: "split",
+    mathRep: "sign",
+    wordRep: "split",
     max: 1,
     min: 1,
     prefix: "sign",
@@ -135,8 +135,8 @@ const functions = {
     color: functionSingleColor,
   },
   wrapsum: {
-    wordRep: "wsum",
-    symbolRep: "repeat",
+    mathRep: "wsum",
+    wordRep: "repeat",
     max: 20,
     min: 2,
     prefix: "wsum",
@@ -145,8 +145,8 @@ const functions = {
     color: functionMultColor,
   },
   rgb: { 
-    wordRep: "rgb", 
-    symbolRep: "color",
+    mathRep: "rgb", 
+    wordRep: "color",
     max: 3, 
     min: 3, 
     prefix: "rgb", 
@@ -155,8 +155,8 @@ const functions = {
     color: functionRGBcolor 
   },
   mistif: {
+    mathRep: "if",
     wordRep: "if",
-    symbolRep: "if",
     max: 3,
     min: 3,
     prefix: "mistif",
