@@ -184,6 +184,7 @@ export default function FunNode(props) {
         if (props.renderFunction && props.imageShowing) {
           setOnDrag(true);
         }
+        props.offRenderBox();
       }}
       onDragEnd={(e) => {
         e.target.to({
