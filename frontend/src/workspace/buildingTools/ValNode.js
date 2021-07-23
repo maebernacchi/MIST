@@ -388,7 +388,7 @@ function ValNode(props) {
         y={nodeDimensions.valueImageBoxOffset}
         width={nodeDimensions.imageBoxSideLength}
         height={nodeDimensions.imageBoxSideLength}
-        fill={props.renderBoxOn? "white" : gui.imageBoxColor}
+        fill={props.renderBoxOn? "red" : gui.imageBoxColor}
         shadowColor={"gray"}
         shadowBlur={2}
         shadowOffsetX={1}

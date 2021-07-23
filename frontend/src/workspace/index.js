@@ -1468,7 +1468,7 @@ class WorkspaceComponent extends Component {
           (node, index) =>
             node &&
             node.renderFunction.isRenderable &&
-            node.imageShowing && (
+            node.renderBoxOn && (
               <ContextProvider
                 width={this.width}
                 height={this.height}
