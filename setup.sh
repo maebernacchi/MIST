@@ -60,10 +60,8 @@ if [ "$do_backend_installation" == "true" ]; then
                     type docker-compose > /dev/null
                     if [[ $? == 0 ]]; then
                         echo "Making sure that there's no MIST instances running..."
-                        docker stop MIST-backend
-                        docker stop MIST-db
-                        docker rm -v MIST-backend
-                        docker rm -v MIST-db
+                        docker rm -v MIST-backend --force
+                        docker rm -v MIST-db --force
                         echo "Setting up Docker for the backend..."
                         (cd backend && docker-compose up --build -d)
                     else
