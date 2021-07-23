@@ -46,7 +46,7 @@ const funNames = [
 const functions = {
   add: { 
     mathRep: "sum", 
-    wordRep: "combo",
+    wordRep: "merge",
     max: 20,
     min: 1, 
     prefix: "sum",
@@ -96,7 +96,7 @@ const functions = {
   },
   cosine: {
     mathRep: "cos",
-    wordRep: "band",
+    wordRep: "streak",
     max: 1,
     min: 1,
     prefix: "cos",
@@ -106,7 +106,7 @@ const functions = {
   },
   absolute: {
     mathRep: "abs",
-    wordRep: "darken",
+    wordRep: "dim",
     max: 1,
     min: 1,
     prefix: "abs",
@@ -116,7 +116,7 @@ const functions = {
   },
   average: {
     mathRep: "avg",
-    wordRep: "merge",
+    wordRep: "blend",
     max: 20,
     min: 2,
     prefix: "avg",
