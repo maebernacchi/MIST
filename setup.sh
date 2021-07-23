@@ -11,7 +11,7 @@ echo "Using npm version: $(npm -v)"
 ## Check if node_modules & package-lock.json already exists
 
 prompt_overwrite(){
-if [ -d "./$1/node_modules" ] || [ -f "./$1/package-lock.json" ] || [ ! "$(docker ps -a | grep MIST-db)" ] || [ ! "$(docker ps -a | grep MIST-backend)" ]
+if [ -d "./$1/node_modules" ] || [ -f "./$1/package-lock.json" ] || [ "$(docker ps -a | grep MIST-db)" ] || [ "$(docker ps -a | grep MIST-backend)" ]
 then
     read -r -p "It appears that project is already set up on the $1. Would you like to re-install? [y/N]" response
     case "$response" in
