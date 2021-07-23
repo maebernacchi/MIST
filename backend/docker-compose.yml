@@ -11,7 +11,7 @@ services:
     image: mist/backend
     container_name: MIST-backend
     volumes:
-      - ./src:/usr/src/app
+      - ./src:/app/src
       - node_modules:/usr/src/app/node_modules
     ports:
       - 8000:8000
@@ -25,7 +25,7 @@ services:
     container_name: MIST-db
     image: postgres:13.3
     volumes:
-      - ./db/scripts:/docker-entrypoint-initdb.d:ro
+      - ./src/db/scripts:/docker-entrypoint-initdb.d:ro
     environment:
       POSTGRES_DB: mist
       TZ: "America/Chiago"
