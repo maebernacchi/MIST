@@ -46,7 +46,7 @@ const funNames = [
 const functions = {
   add: { 
     wordRep: "sum", 
-    symbolRep: "+",
+    symbolRep: "combo",
     max: 20,
     min: 1, 
     prefix: "sum",
@@ -56,7 +56,7 @@ const functions = {
   },
   multiply: {
     wordRep: "mult",
-    symbolRep: "*",
+    symbolRep: "stretch",
     max: 20,
     min: 2,
     prefix: "mult",
@@ -66,7 +66,7 @@ const functions = {
   },
   square: {
     wordRep: "sqr",
-    symbolRep: "^2",
+    symbolRep: "mirror",
     max: 1,
     min: 1,
     prefix: "square",
@@ -76,7 +76,7 @@ const functions = {
   },
   negate: {
     wordRep: "neg",
-    symbolRep: "-",
+    symbolRep: "reverse",
     max: 1,
     min: 1,
     prefix: "neg",
@@ -86,7 +86,7 @@ const functions = {
   },
   sine: {
     wordRep: "sin",
-    symbolRep: "wave",
+    symbolRep: "curve",
     max: 1,
     min: 1,
     prefix: "sin",
@@ -96,7 +96,7 @@ const functions = {
   },
   cosine: {
     wordRep: "cos",
-    symbolRep: "arch",
+    symbolRep: "stripe",
     max: 1,
     min: 1,
     prefix: "cos",
@@ -106,7 +106,7 @@ const functions = {
   },
   absolute: {
     wordRep: "abs",
-    symbolRep: "| |",
+    symbolRep: "darken",
     max: 1,
     min: 1,
     prefix: "abs",
@@ -116,7 +116,7 @@ const functions = {
   },
   average: {
     wordRep: "avg",
-    symbolRep: "mid",
+    symbolRep: "merge",
     max: 20,
     min: 2,
     prefix: "avg",
@@ -126,7 +126,7 @@ const functions = {
   },
   sign: {
     wordRep: "sign",
-    symbolRep: "+/-",
+    symbolRep: "contrast",
     max: 1,
     min: 1,
     prefix: "sign",
@@ -136,7 +136,7 @@ const functions = {
   },
   wrapsum: {
     wordRep: "wsum",
-    symbolRep: "wrap",
+    symbolRep: "repeat",
     max: 20,
     min: 2,
     prefix: "wsum",
@@ -156,7 +156,7 @@ const functions = {
   },
   mistif: {
     wordRep: "if",
-    symbolRep: "mistif",
+    symbolRep: "if",
     max: 3,
     min: 3,
     prefix: "mistif",
