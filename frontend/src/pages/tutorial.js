@@ -199,8 +199,6 @@ function Tutorial() {
     <Container
       fluid
       style={{
-        // overflowY: "scroll",
-        // height: "100vh",
         marginTop: "1vh",
         marginBottom: "0",
         paddingBottom: "4rem",
@@ -211,24 +209,23 @@ function Tutorial() {
       <Row
         // className="mr-auto"
         style={{
-          marginLeft: "0em",
-          marginRight: "0em",
+          marginLeft: "-3em",
+          marginRight: "5em",
           alignItems: "flex-start",
         }}
       >
         <Col xs="6" style={{
           alignItems: "stretch",
-          top: "0rem"
-        }}>
-        <WorkSpaceDemo />
-        </Col>
-        <Col xs="5" style={{
-          alignItems: "stretch",
           top: "1vh",
-          marginLeft: "20px",
         }}>
           {/* Tutorials */}
          <Tutorials /> 
+        </Col>
+        <Col xs="5" style={{
+          alignItems: "stretch",
+          top: "0rem",
+        }}>
+        <WorkSpaceDemo />
         </Col>
       </Row>
     </Container>
@@ -938,133 +935,6 @@ const sections = [
         ],
       },
 
-      //+---------------------+------------------------------------------------------------------------------------------------------------------
-      //| Time and Animations |
-      //+---------------------+
-      {
-        title: "Time and Animations",
-        id: "time-animations",
-        keywords: ["animation", "grayscale", "time"],
-        image: <MISTImage height="150" width="150" code="mult(x,t.s,2)" resolution="250" />,
-        isAnimated: true,
-        //Text
-        text: (
-          <Container>
-            Functions can also take time as an input, resulting in an animation.
-            In MIST, we've used:
-            <br />
-            <br />
-            <Row>
-              <Col>
-                <MISTImage height="150" width="150" code="t.s" resolution="200" />
-                {/* <br/> */}
-                <br />
-                <b>Code:</b> t.s
-                <br /> Time in seconds
-              </Col>
-              <Col>
-                <MISTImage height="150" width="150" code="t.m" resolution="200" />
-                {/* <br/> */}
-                <br />
-                <b>Code:</b> t.m
-                <br /> Time in minutes
-              </Col>
-              <Col>
-                <MISTImage height="150" width="150" code="t.h" resolution="200" />
-                {/* <br/> */}
-                <br />
-                <b>Code:</b> t.h
-                <br /> Time in hours
-              </Col>
-              <Col>
-                <MISTImage height="150" width="150" code="t.d" resolution="200" />
-                {/* <br/> */}
-                <br />
-                <b>Code:</b> t.d
-                <br /> Time in days
-              </Col>
-
-            </Row>
-            <br />
-            <br />
-            You'll notice that t.h and t.d move very slowly. Each time input moves between
-            -1 and 1 over the course of its period. The hour and day inputs move slowest
-            because they are much larger units of time.
-            <br />
-            <br />
-            As you experiment with time nodes you will see how powerful they are. Try multiplying,
-            adding, and feeding time nodes into other functions. With time nodes you can speed up, slow down, or offset
-            the animations you create.
-          </Container>
-        ),
-        isCheckpoint: true,
-        checkpoint: (
-          <Container>
-            Try this:
-            <br />
-            <Row>
-              <Col>
-                1. Add an <b>x</b> and <b>t.s</b> variable to the workspace.
-              </Col>
-
-              <Col>
-                2. Drag in a <b>mult</b> block and connect the <b>x</b> and <b>t.s</b> to it.
-                Now you can see that as <b>t.s</b> changes, so does the <b>x</b> image.
-              </Col>
-
-              <Col>
-                3. Bring in a{" "}
-                <b>constant</b> variable and set it equal to 2. Connect this to the{" "}
-                <b>mult</b> block that is already there.
-              </Col>
-
-            </Row>
-
-            <br />
-            <br />
-          </Container>),
-
-        //Video
-        video: <Container> This is a video </Container>,
-
-        //Final
-        final: <Container> This is the final image </Container>,
-        isChallenge: true,
-        //Challenges
-        challenges: [
-          {
-            question: (
-              <Container>
-                <p1>
-                  Try making the following image: <br /><br />
-                </p1>
-                <MISTImage height="150" width="150" code="mult(x,y,t.s)" resolution="250" />
-              </Container>
-            ),
-
-            hint: (
-              <Container>
-                {" "}
-                What happens when some values get multipled?{" "}
-              </Container>
-            ),
-          },
-          {
-            question: (
-              <Container>
-                <p1>
-                  Now try making this image: <br /> <br />
-                </p1>
-                <MISTImage height="150" width="150" code="wsum(sin(x),y,t.s)" resolution="250"></MISTImage>
-              </Container>
-            ),
-            hint: <Container>
-              What happens when you use <b>wsum</b> with <b>sin</b>? Try a few different values.
-              {/* What happens when you add <b>sin</b> of <b>x</b> and another value? */}
-            </Container>,
-          },
-        ],
-      },
 
       //+------------------------+-------------------------------------------------------------------------------------------------------------------
       //| Moving with the Mouse  |
@@ -1478,6 +1348,134 @@ const sections = [
                 What happens when you combine <b>sin</b> and <b>cos</b>?{" "}
               </Container>
             ),
+          },
+        ],
+      },
+
+      //+---------------------+------------------------------------------------------------------------------------------------------------------
+      //| Time and Animations |
+      //+---------------------+
+      {
+        title: "Time and Animations",
+        id: "time-animations",
+        keywords: ["animation", "grayscale", "time"],
+        image: <MISTImage height="150" width="150" code="mult(x,t.s,2)" resolution="250" />,
+        isAnimated: true,
+        //Text
+        text: (
+          <Container>
+            Functions can also take time as an input, resulting in an animation.
+            In MIST, we've used:
+            <br />
+            <br />
+            <Row>
+              <Col>
+                <MISTImage height="150" width="150" code="t.s" resolution="200" />
+                {/* <br/> */}
+                <br />
+                <b>Code:</b> t.s
+                <br /> Time in seconds
+              </Col>
+              <Col>
+                <MISTImage height="150" width="150" code="t.m" resolution="200" />
+                {/* <br/> */}
+                <br />
+                <b>Code:</b> t.m
+                <br /> Time in minutes
+              </Col>
+              <Col>
+                <MISTImage height="150" width="150" code="t.h" resolution="200" />
+                {/* <br/> */}
+                <br />
+                <b>Code:</b> t.h
+                <br /> Time in hours
+              </Col>
+              <Col>
+                <MISTImage height="150" width="150" code="t.d" resolution="200" />
+                {/* <br/> */}
+                <br />
+                <b>Code:</b> t.d
+                <br /> Time in days
+              </Col>
+
+            </Row>
+            <br />
+            <br />
+            You'll notice that t.h and t.d move very slowly. Each time input moves between
+            -1 and 1 over the course of its period. The hour and day inputs move slowest
+            because they are much larger units of time.
+            <br />
+            <br />
+            As you experiment with time nodes you will see how powerful they are. Try multiplying,
+            adding, and feeding time nodes into other functions. With time nodes you can speed up, slow down, or offset
+            the animations you create.
+          </Container>
+        ),
+        isCheckpoint: true,
+        checkpoint: (
+          <Container>
+            Try this:
+            <br />
+            <Row>
+              <Col>
+                1. Add an <b>x</b> and <b>t.s</b> variable to the workspace.
+              </Col>
+
+              <Col>
+                2. Drag in a <b>mult</b> block and connect the <b>x</b> and <b>t.s</b> to it.
+                Now you can see that as <b>t.s</b> changes, so does the <b>x</b> image.
+              </Col>
+
+              <Col>
+                3. Bring in a{" "}
+                <b>constant</b> variable and set it equal to 2. Connect this to the{" "}
+                <b>mult</b> block that is already there.
+              </Col>
+
+            </Row>
+
+            <br />
+            <br />
+          </Container>),
+
+        //Video
+        video: <Container> This is a video </Container>,
+
+        //Final
+        final: <Container> This is the final image </Container>,
+        isChallenge: true,
+        //Challenges
+        challenges: [
+          {
+            question: (
+              <Container>
+                <p1>
+                  Try making the following image: <br /><br />
+                </p1>
+                <MISTImage height="150" width="150" code="mult(x,y,t.s)" resolution="250" />
+              </Container>
+            ),
+
+            hint: (
+              <Container>
+                {" "}
+                What happens when some values get multipled?{" "}
+              </Container>
+            ),
+          },
+          {
+            question: (
+              <Container>
+                <p1>
+                  Now try making this image: <br /> <br />
+                </p1>
+                <MISTImage height="150" width="150" code="wsum(sin(x),y,t.s)" resolution="250"></MISTImage>
+              </Container>
+            ),
+            hint: <Container>
+              What happens when you use <b>wsum</b> with <b>sin</b>? Try a few different values.
+              {/* What happens when you add <b>sin</b> of <b>x</b> and another value? */}
+            </Container>,
           },
         ],
       },
