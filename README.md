@@ -52,8 +52,14 @@ git clone git@github.com:GlimmerLabs/MIST.git
    The checking for PostgreSQL part does not work for Windows, because Windows is a bitch. Bill Gates you filthy money grabber
 
 ```
-cd MIST && ./install.sh
+cd MIST
 ```
+
+```
+./setup.sh
+```
+
+(If you're running it the first time you might have to do `chmod +x ./setup.sh` first.)
 
 The [setup.sh](setup.sh) script will do the following:
 
