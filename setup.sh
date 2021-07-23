@@ -11,7 +11,8 @@ echo "Using npm version: $(npm -v)"
 ## Check if node_modules & package-lock.json already exists
 
 prompt_overwrite(){
-if [ -d "./$1/node_modules" ] || [ -f "./$1/package-lock.json" ]; then
+if [ -d "./$1/node_modules" ] || [ -f "./$1/package-lock.json" ] || [ ! "$(docker ps -a | grep MIST-db)" ] || [! "$(docker ps -a | grep MIST-backend)" ]
+then
     read -r -p "It appears that project is already set up on the $1. Would you like to re-install? [y/N]" response
     case "$response" in
         [Yy][Ee][Ss]|[Yy])
@@ -32,18 +33,18 @@ if [ "$do_backend_installation" == "true" ]; then
     select method in "Local" "Docker"; do
         case "$method" in
             "Local" )
-                # check if postgres is installed
+                # Check if postgres is installed
                 echo "Checking if Postgres is installed..."
                 which psql > /dev/null
                 if [[ $? == 0 ]]; then
-                    # postgres is installed, check if it's running on port 5432
+                    # Postgres is installed, check if it's running on port 5432
                         echo "Checking if Postgres is running..."
                         if ! [[ $(netstat -an --tcp --program | grep 5432) ]]; then
-                            # not running, start postgres
+                            # Not running, start postgres
                             echo "PostgreSQL is not running, or it is running but not on port 5432."
                             echo "Zaen is too tired to figure out how to run postgres on your OS. Google or smth!"
                         else
-                            # everything is good! do npm install
+                            # All good! Do npm install
                             "Installing node packages for the backend..."
                             (cd backend && npm install)
                         fi
@@ -64,7 +65,7 @@ if [ "$do_backend_installation" == "true" ]; then
                         docker rm -v MIST-backend
                         docker rm -v MIST-db
                         echo "Setting up Docker for the backend..."
-                        (cd backend && docker-compose up --build &)
+                        (cd backend && docker-compose up --build -d)
                     else
                         echo "Docker-compose is not installed. Please install it alongside Docker."
                     fi
