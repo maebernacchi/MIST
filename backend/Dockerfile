@@ -6,11 +6,11 @@ ENV PORT=8000
 
 EXPOSE 8000
 
-WORKDIR /app
+WORKDIR /app/src
 
-COPY ./src /app
+COPY ./src /app/src
 
-COPY ./package.json /app
+COPY ./package.json /app/src
 
 RUN yarn install
 
