@@ -126,7 +126,7 @@ const functions = {
   },
   sign: {
     wordRep: "sign",
-    symbolRep: "polarize",
+    symbolRep: "split",
     max: 1,
     min: 1,
     prefix: "sign",
