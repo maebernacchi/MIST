@@ -15,7 +15,7 @@ if [ -d "./$1/node_modules" ] || [ -f "./$1/package-lock.json" ]; then
     read -r -p "It appears that project is already set up on the $1. Would you like to re-install? [y/N]" response
     case "$response" in
         [Yy][Ee][Ss]|[Yy])
-            #(cd $1 && rm -rf node_modules package-lock.json)
+            (cd $1 && rm -rf node_modules package-lock.json)
             eval "${2}=true";;
         *)
             eval "${2}=false";;
@@ -63,7 +63,7 @@ if [ "$do_backend_installation" == "true" ]; then
                         docker rm -v MIST-backend
                         docker rm -v MIST-db
                         echo "Setting up Docker for the backend..."
-                        (cd backend && docker-compose up)
+                        (cd backend && docker-compose up --build &)
                     else
                         echo "Docker-compose is not installed. Please install it alongside Docker."
                     fi
