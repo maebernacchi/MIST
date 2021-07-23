@@ -56,7 +56,7 @@ const functions = {
   },
   multiply: {
     wordRep: "mult",
-    symbolRep: "stretch",
+    symbolRep: "squish",
     max: 20,
     min: 2,
     prefix: "mult",
@@ -76,7 +76,7 @@ const functions = {
   },
   negate: {
     wordRep: "neg",
-    symbolRep: "reverse",
+    symbolRep: "invert",
     max: 1,
     min: 1,
     prefix: "neg",
@@ -86,7 +86,7 @@ const functions = {
   },
   sine: {
     wordRep: "sin",
-    symbolRep: "curve",
+    symbolRep: "stripes",
     max: 1,
     min: 1,
     prefix: "sin",
@@ -96,7 +96,7 @@ const functions = {
   },
   cosine: {
     wordRep: "cos",
-    symbolRep: "stripe",
+    symbolRep: "band",
     max: 1,
     min: 1,
     prefix: "cos",
@@ -126,7 +126,7 @@ const functions = {
   },
   sign: {
     wordRep: "sign",
-    symbolRep: "contrast",
+    symbolRep: "polarize",
     max: 1,
     min: 1,
     prefix: "sign",
