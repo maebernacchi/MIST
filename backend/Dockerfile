@@ -8,7 +8,9 @@ EXPOSE 8000
 
 WORKDIR /usr/src/app
 
-COPY . /usr/src/app
+COPY ./src /usr/src/app
+
+COPY ./package.json /usr/src/app
 
 RUN yarn install
 

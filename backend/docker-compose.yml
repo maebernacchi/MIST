@@ -1,4 +1,7 @@
 version: "3"
+volumes:
+  node_modules:
+    driver: local
 services:
   app:
     build:
@@ -8,7 +11,8 @@ services:
     image: mist/backend
     container_name: MIST-backend
     volumes:
-      - ./:/usr/src/app
+      - ./src:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
     ports:
       - 8000:8000
     environment:
