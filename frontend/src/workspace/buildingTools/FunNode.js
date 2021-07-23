@@ -293,7 +293,7 @@ export default function FunNode(props) {
           text={rep}
           fontFamily={fonts.globalFont}
           fill={"white"}
-          fontSize={props.rep == "Math" ? fonts.functionFontSize : fonts.functionFontSize *.82}
+          fontSize={props.rep == "Math" ? fonts.functionFontSize : fonts.functionFontSize *.85}
           x={0}
           y={0}
           width={functionWidth}

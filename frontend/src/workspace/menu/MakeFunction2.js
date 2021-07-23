@@ -239,7 +239,7 @@ function FuncGroup(props) {
             {...props}
             text={rep == "Math" ? gui.functions[funName].mathRep : gui.functions[funName].wordRep}
             fontFamily={gui.globalFont}
-            fontSize={rep == "Math" ? fonts.functionFontSize : fonts.functionFontSize *.89}
+            fontSize={rep == "Math" ? fonts.functionFontSize : fonts.functionFontSize *.85}
             fill={"white"}
             y={0}
             width={global.functionWidth}
