@@ -100,8 +100,6 @@ class WorkspaceComponent extends Component {
     this.offsetX = 0;
     this.offsetY = props.offset;
     this.valueWidth = props.valueWidth;
-    this.formOffsetX = props.formOffsetX;
-    this.formOffsetY = props.formOffsetY;
 
     //this.createLayout = this.createLayout.bind(this);
 
@@ -1222,8 +1220,7 @@ class WorkspaceComponent extends Component {
                             y={node.y}
                             offsetX={this.offsetX}
                             offsetY={this.offsetY}
-                            formOffsetX={this.formOffsetX}
-                            formOffsetY={this.formOffsetY}
+                           
                             renderFunction={
                               node.renderFunction.isRenderable
                                 ? node.renderFunction.renderFunction
@@ -1538,8 +1535,6 @@ WorkspaceComponent.propTypes = {
     offset:  PropTypes.number,
     valueWidth: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
-    formOffsetX:  PropTypes.number,
-    formOffsetY:  PropTypes.number,
 };
 
 export default WorkspaceComponent;

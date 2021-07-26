@@ -70,8 +70,11 @@ function FuncGroup(props) {
   const description = "Testing Description"
   const fonts = useContext(fontContext);
   const [isHovered, setIsHovered] = useState(false);
+  const width = global.width;
+  const functionWidth = global.functionWidth;
+  const isRGB = gui.functions[funName].rep === "rgb";
+  const isFixed = gui.functions[funName].max === gui.functions[funName].min;
   const rep = props.rep;
-  
   // const tips = props.descript + "\n" + props.usage;
   useEffect(() => {
     //console.log("props:"+props);
@@ -114,8 +117,8 @@ function FuncGroup(props) {
         if (pos.x < 0) {
           pos.x = 0;
         }
-        if (pos.x > global.width - global.functionWidth) {
-          pos.x = global.width - global.functionWidth;
+        if (pos.x > width - global.functionWidth) {
+          pos.x = width - global.functionWidth;
         }
         if (pos.y < 0) {
           pos.y = 0;
@@ -141,16 +144,19 @@ function FuncGroup(props) {
       <Circle
         x={global.functionWidth}
         y={global.functionWidth/2}
-        opacity={funName==="rgb" ? 0:1}
-        Radius={props.tabs.functionsOpen ? global.valueWidth/10 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+        opacity={props.tabs.functionsOpen? 
+          funName==="rgb" ? 0:1
+          : 0
+        }
+        Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
         fill={"#B3B3B3"}
       />
       <Group>
         <Circle
           x={0}
           y={global.functionWidth/5}
-          // opacity={props.tabs.functionsOpen? 1:0}
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          opacity={props.tabs.functionsOpen? 1:0}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "red" : "#B3B3B3"}
         />
         <Circle
@@ -166,7 +172,7 @@ function FuncGroup(props) {
               ?
                 0 : 1 
           }
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "green" : "#B3B3B3"}
         />
         <Circle
@@ -181,27 +187,27 @@ function FuncGroup(props) {
                 funName === "wrapsum" ?
                 .5 : 0 
           }
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "blue" : "#B3B3B3"}
         />
       </Group>
       <Spring
         native
         from={{
-          x: props.tabs.valuesOpen ? global.width :
+          x: props.tabs.valuesOpen ? width :
             props.tabs.functionsOpen ? 0 :
-            /* props.tabs.customOpen ? - global.width :
-            props.tabs.savedOpen ? - 2 * global.width :
-            - 3 * global.width, */
-            - global.width,
+            /* props.tabs.customOpen ? - width :
+            props.tabs.savedOpen ? - 2 * width :
+            - 3 * width, */
+            - width,
           fontSize: gui.nodeFontSize }}
         to={{
-          x: props.tabs.valuesOpen ? global.width :
+          x: props.tabs.valuesOpen ? width :
             props.tabs.functionsOpen ? 0 :
-            /* props.tabs.customOpen ? - global.width :
-            props.tabs.savedOpen ? - 2 * global.width :
-            - 3 * global.width, */
-            - global.width,
+            /* props.tabs.customOpen ? - width :
+            props.tabs.savedOpen ? - 2 * width :
+            - 3 * width, */
+            - width,
         }}
       >
         {(props) => (
@@ -212,26 +218,29 @@ function FuncGroup(props) {
             height={global.functionWidth}
             fill={gui.functions[funName].color}
             cornerRadius={10}
+            stroke={isRGB || isFixed ? "black" : gui.functions[funName].color}
+            strokeWidth={isRGB ? global.functionWidth / 30 : isFixed ? global.functionWidth / 20 : 0}
+            dash={isRGB ? [global.functionWidth / 1, 0] : isFixed ? [global.functionWidth / 5, global.functionWidth / 5] : [0,0]}
           />
         )}
       </Spring>
       <Spring
         native
         from={{
-          x: props.tabs.valuesOpen ? global.width :
+          x: props.tabs.valuesOpen ? width :
             props.tabs.functionsOpen ? 0 :
-            /* props.tabs.customOpen ? - global.width :
-            props.tabs.savedOpen ? - 2 * global.width :
-            - 3 * global.width, */
-            - global.width,
+            /* props.tabs.customOpen ? - width :
+            props.tabs.savedOpen ? - 2 * width :
+            - 3 * width, */
+            - width,
           fontSize: gui.nodeFontSize }}
         to={{
-          x: props.tabs.valuesOpen ? global.width :
+          x: props.tabs.valuesOpen ? width :
             props.tabs.functionsOpen ? 0 :
-            /* props.tabs.customOpen ? - global.width :
-            props.tabs.savedOpen ? - 2 * global.width :
-            - 3 * global.width, */
-            - global.width,
+            /* props.tabs.customOpen ? - width :
+            props.tabs.savedOpen ? - 2 * width :
+            - 3 * width, */
+            - width,
         }}
       >
         {(props) => (

@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { Rect, Group, Text } from "react-konva";
-import { Html } from "react-konva-utils";
 import "../../design/styleSheets/FunBar.css";
 import { Spring, animated } from "react-spring/renderprops-konva";
 import { funBarContext } from "../globals/globals-funbar-dimensions";
