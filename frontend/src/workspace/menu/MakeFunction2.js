@@ -74,7 +74,7 @@ function FuncGroup(props) {
   const functionWidth = global.functionWidth;
   const isRGB = gui.functions[funName].rep === "rgb";
   const isFixed = gui.functions[funName].max === gui.functions[funName].min;
-
+  const rep = props.rep;
   // const tips = props.descript + "\n" + props.usage;
   useEffect(() => {
     //console.log("props:"+props);
@@ -144,16 +144,19 @@ function FuncGroup(props) {
       <Circle
         x={global.functionWidth}
         y={global.functionWidth/2}
-        opacity={funName==="rgb" ? 0:1}
-        Radius={props.tabs.functionsOpen ? global.valueWidth/10 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+        opacity={props.tabs.functionsOpen? 
+          funName==="rgb" ? 0:1
+          : 0
+        }
+        Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
         fill={"#B3B3B3"}
       />
       <Group>
         <Circle
           x={0}
           y={global.functionWidth/5}
-          // opacity={props.tabs.functionsOpen? 1:0}
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          opacity={props.tabs.functionsOpen? 1:0}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "red" : "#B3B3B3"}
         />
         <Circle
@@ -169,7 +172,7 @@ function FuncGroup(props) {
               ?
                 0 : 1 
           }
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "green" : "#B3B3B3"}
         />
         <Circle
@@ -184,7 +187,7 @@ function FuncGroup(props) {
                 funName === "wrapsum" ?
                 .5 : 0 
           }
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "blue" : "#B3B3B3"}
         />
       </Group>
@@ -243,9 +246,9 @@ function FuncGroup(props) {
         {(props) => (
           <animated.Text
             {...props}
-            text={gui.functions[funName].rep}
+            text={rep == "Math" ? gui.functions[funName].mathRep : gui.functions[funName].wordRep}
             fontFamily={gui.globalFont}
-            fontSize={fonts.functionFontSize}
+            fontSize={rep == "Math" ? fonts.functionFontSize : fonts.functionFontSize *.85}
             fill={"white"}
             y={0}
             width={global.functionWidth}

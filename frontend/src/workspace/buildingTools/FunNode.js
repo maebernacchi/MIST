@@ -64,6 +64,8 @@ import useImage from "use-image";
 import { nodeContext } from "../globals/globals-nodes-dimensions.js";
 import { globalContext } from "../globals/global-context";
 import { fontContext } from "../globals/globals-fonts";
+import { FunBarDimensions } from "../globals/globals-funbar-dimensions";
+
 
 // +----------------------------+
 // | All dependent files        |
@@ -74,7 +76,18 @@ export default function FunNode(props) {
   const index = props.index;
   const x = props.x;
   const y = props.y;
-  const rep = gui.functions[name].rep;
+  let rep = props.rep;
+  let tempRep = props.rep;
+  switch (tempRep) {
+    case "Math": 
+      rep = gui.functions[name].mathRep;
+      break;
+    case "Words":
+      rep = gui.functions[name].wordRep;
+      break;
+    default:
+      Error("Error: not a valid representation");
+      break;}
   const numOutlets = props.numOutlets;
   const [hovered, setHovered] = useState(false);
   const [trashHovered, setTrashHovered] = useState(false);
@@ -150,6 +163,13 @@ export default function FunNode(props) {
         if (pos.y > height - funBarHeight - functionWidth) {
           pos.y = height - funBarHeight - functionWidth;
         }
+        if (pos.x > FunBarDimensions.imagePlaceX){
+            pos.x = FunBarDimensions.imagePlaceX;
+          }
+          if (pos.x > width - 270 - functionWidth &&
+            pos.y > height-width/7-45 - functionWidth){
+              pos.x = width - 270 - functionWidth
+            }
         return pos;
       }}
       onDragStart={(e) => {
@@ -164,9 +184,9 @@ export default function FunNode(props) {
           scaleY: 1.1,
         });
         if (props.renderFunction && props.imageShowing) {
-          props.toggleBox();
           setOnDrag(true);
         }
+        props.offRenderBox();
       }}
       onDragEnd={(e) => {
         e.target.to({
@@ -176,7 +196,6 @@ export default function FunNode(props) {
           scaleY: 1,
         });
         if (props.renderFunction && onDrag) {
-          props.toggleBox();
         }
         // Updates the x & y coordinates once the node has stopped dragging
         props.updateNodePosition(
@@ -203,10 +222,15 @@ export default function FunNode(props) {
         } else {
           props.funClicked(index);
         }
+        props.onImageBox();
       }}
       onDblClick={() => {
         // Generates the temporary line when double clicked
         props.dblClickHandler(index);
+      }}
+      onTap={() => {
+        props.tapHandler(index);
+        props.onImageBox();
       }}
 
       onTap={() => props.tapHandler(index)}
@@ -219,6 +243,7 @@ export default function FunNode(props) {
         } else {
           props.funClicked(index);
         }
+        props.onImageBox();
       }}
     >
       <Group
@@ -258,7 +283,7 @@ export default function FunNode(props) {
                 (props.numOutlets - 3) * nodeDimensions.outletYOffset
           }
           fill={gui.functions[name].color}
-          cornerRadius={10}
+          cornerRadius={props.imageShowing? 30:10}
           shadowColor={
             hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
           }
@@ -274,7 +299,7 @@ export default function FunNode(props) {
           text={rep}
           fontFamily={fonts.globalFont}
           fill={"white"}
-          fontSize={fonts.functionFontSize}
+          fontSize={props.rep == "Math" ? fonts.functionFontSize : fonts.functionFontSize *.85}
           x={0}
           y={0}
           width={functionWidth}
@@ -292,26 +317,17 @@ export default function FunNode(props) {
       </Group>
       <Rect
         onTap={() => {
-          if (props.renderFunction) {
-            props.toggleBox();
-          }
+          props.toggleRenderBox();
         }}
         onClick={() => {
-          if (props.renderFunction) {
-            props.toggleBox();
-          }
+          props.toggleRenderBox();
         }}
-        name={"imageBox"}
-        x={nodeDimensions.functionImageBoxOffset}
-        y={
-          props.numOutlets <= 3
-            ? nodeDimensions.functionImageBoxOffset
-            : nodeDimensions.functionImageBoxOffset +
-              (props.numOutlets - 3) * nodeDimensions.outletYOffset
-        }
+        name={"renderBox"}
+        x={nodeDimensions.functionImageBoxOffset+3}
+        y={nodeDimensions.functionImageBoxOffset+3}
         width={nodeDimensions.imageBoxSideLength}
         height={nodeDimensions.imageBoxSideLength}
-        fill={gui.imageBoxColor}
+        fill={props.renderBoxOn? "red" : gui.imageBoxColor}
         shadowColor={"gray"}
         shadowBlur={2}
         shadowOffsetX={1}

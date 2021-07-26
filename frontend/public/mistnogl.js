@@ -1558,22 +1558,6 @@ function wrap(val)
   else
     return val;
 } // wrap
-
-// alternate function for if we want to use a wrap function
-// with functions that grow rapidly close to 0 (such as div(1,x))
-// function wrapTwo(val){
-//   // for (let i = 0; i < 10000; i++){
-//   for (let i = 0; i < 15; i++){
-//     if (val < -1){
-//       val+= 2;
-//     }
-//     else if (val > 1){
-//       val-= 2;
-//     }
-//     else return val;
-//   }
-// }
-// MIST.wrapTwo = wrapTwo;
  
 // +-------------------+---------------------------------------------
 // | Builtin Functions |
