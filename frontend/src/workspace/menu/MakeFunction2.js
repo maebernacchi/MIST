@@ -141,16 +141,19 @@ function FuncGroup(props) {
       <Circle
         x={global.functionWidth}
         y={global.functionWidth/2}
-        opacity={funName==="rgb" ? 0:1}
-        Radius={props.tabs.functionsOpen ? global.valueWidth/10 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+        opacity={props.tabs.functionsOpen? 
+          funName==="rgb" ? 0:1
+          : 0
+        }
+        Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
         fill={"#B3B3B3"}
       />
       <Group>
         <Circle
           x={0}
           y={global.functionWidth/5}
-          // opacity={props.tabs.functionsOpen? 1:0}
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          opacity={props.tabs.functionsOpen? 1:0}
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "red" : "#B3B3B3"}
         />
         <Circle
@@ -166,7 +169,7 @@ function FuncGroup(props) {
               ?
                 0 : 1 
           }
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "green" : "#B3B3B3"}
         />
         <Circle
@@ -181,7 +184,7 @@ function FuncGroup(props) {
                 funName === "wrapsum" ?
                 .5 : 0 
           }
-          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0} // if functions is not open, circles have radius of 0, therefore hiding them
+          Radius={props.tabs.functionsOpen ? global.valueWidth/12 : 0}
           fill={ funName === "rgb"? "blue" : "#B3B3B3"}
         />
       </Group>
