@@ -5,7 +5,6 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
-const flash = require("connect-flash");
 LocalStrategy = require("passport-local").Strategy;
 const path = require("path");
 const app = express();
@@ -25,7 +24,6 @@ app.use(
 		credentials: true,
 	})
 );
-app.use(flash());
 
 app.use(
 	session({
