@@ -90,7 +90,7 @@ class WorkspaceComponent extends Component {
     let layout1 = new MIST.Layout();
 
     this.themes = ["Classic", "Dusk", "Dark"]; //is this where we should capitalize?
-    this.reps = ["Words" , "Symbols"];
+    this.reps = ["Math" , "Words"];
 
     this.width = props.width;
     this.height = props.height;
@@ -121,7 +121,7 @@ class WorkspaceComponent extends Component {
       themeIndex: 1,
       theme: "Dusk", //changes default theme
       repIndex: 0,
-      rep: "Words",
+      rep: "Math",
       pos1: { x: 100, y: 200 },
       pos2: { x: 0, y: 100 },
       isImageModalOpen: false,

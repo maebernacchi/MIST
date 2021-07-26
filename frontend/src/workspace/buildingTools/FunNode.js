@@ -79,11 +79,11 @@ export default function FunNode(props) {
   let rep = props.rep;
   let tempRep = props.rep;
   switch (tempRep) {
-    case "Words": 
-      rep = gui.functions[name].wordRep;
+    case "Math": 
+      rep = gui.functions[name].mathRep;
       break;
-    case "Symbols":
-      rep = gui.functions[name].symbolRep;
+    case "Words":
+      rep = gui.functions[name].wordRep;
       break;
     default:
       Error("Error: not a valid representation");
@@ -294,7 +294,7 @@ export default function FunNode(props) {
           text={rep}
           fontFamily={fonts.globalFont}
           fill={"white"}
-          fontSize={fonts.functionFontSize}
+          fontSize={props.rep == "Math" ? fonts.functionFontSize : fonts.functionFontSize *.85}
           x={0}
           y={0}
           width={functionWidth}
