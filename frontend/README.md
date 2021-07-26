@@ -1,12 +1,22 @@
 # Setup
-1. Run `npm install`
-2. Download [twgl.min.js](https://github.com/greggman/twgl.js/tree/master/dist/4.x), and put it in the public folder
 
-# Testing server
-Run `npm start`
+Use [setup.sh](../setup.sh) in the parent folder.
+
+# Set up manually
+
+1. Run `npm install`
+2. Remove the eslint folder to avoid error
+
+```
+rm -rf node_modules/eslint
+```
+
+3. Run `npm run start`
 
 # Building
-Run `npm build`
 
-# Problems with webgl
-Move `src/mistnogl.js` to `src/mist.js` (but, don't commit this change)
+Builds the app for production in the ./build folder.
+
+```
+npm run build
+```

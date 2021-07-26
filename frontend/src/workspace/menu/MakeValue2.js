@@ -119,6 +119,10 @@ function ValGroup(props) {
         if (pos.y > global.height - global.funBarHeight - global.valueWidth) {
           pos.y = global.height - global.funBarHeight - global.valueWidth;
         }
+        if (pos.x > global.width - 270 - global.functionWidth &&
+          pos.y > global.height-global.width/7-45 - global.functionWidth){
+            pos.x = global.width - 270 - global.functionWidth
+          }
         return pos;
       }}
       onMouseOver={function (props) {
@@ -131,8 +135,7 @@ function ValGroup(props) {
       <Circle
         y={global.valueWidth/2}
         x={global.valueWidth*.95}
-        opacity={props.tabs.valuesOpen? 1:0}
-        Radius={global.valueWidth/10}
+        Radius={props.tabs.valuesOpen ? global.valueWidth/10 : 0} // if values is not open, circles have radius of 0, therefore hiding them
         fill={"#B3B3B3"}
       />
       <Spring

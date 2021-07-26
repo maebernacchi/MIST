@@ -77,6 +77,7 @@ import { UserContext } from "../pages/components/Contexts/UserContext";
 import PropTypes from "prop-types";
 import { LinkContainer } from "react-router-bootstrap";
 import { FunBarDimensions } from "./globals/globals-funbar-dimensions";
+import MISTImage from "./buildingTools/MISTImage.js";
 
 // +----------------------------+
 // | All dependent files        |
@@ -88,7 +89,8 @@ class WorkspaceComponent extends Component {
 
     let layout1 = new MIST.Layout();
 
-    this.themes = ["classic", "dusk", "dark"];
+    this.themes = ["Classic", "Dusk", "Dark"]; //is this where we should capitalize?
+    this.reps = ["Math" , "Words"];
 
     this.width = props.width;
     this.height = props.height;
@@ -117,7 +119,9 @@ class WorkspaceComponent extends Component {
       currentNode: null,
       layouts: [layout1],
       themeIndex: 1,
-      theme: "dusk", //changes default theme
+      theme: "Dusk", //changes default theme
+      repIndex: 0,
+      rep: "Math",
       pos1: { x: 100, y: 200 },
       pos2: { x: 0, y: 100 },
       isImageModalOpen: false,
@@ -127,8 +131,8 @@ class WorkspaceComponent extends Component {
       confirmationOnClickCallback: () => { console.log('STUB Confirmation'); },
       isDeleteWorkspaceModalOpen: false,
       menuTabs: {
-        valuesOpen: false,
-        functionsOpen: true,
+        valuesOpen: true,
+        functionsOpen: false,
         customOpen: false,
         savedOpen: false,
         settingsOpen: false,
@@ -1146,6 +1150,7 @@ class WorkspaceComponent extends Component {
                             draggable={node.draggable}
                             toggleDraggable={this.toggleDraggable.bind(this)}
                             name={node.name}
+                            rep={this.state.rep}
                             key={index} // just to silence a warning message
                             index={index}
                             x={node.x}
@@ -1170,9 +1175,27 @@ class WorkspaceComponent extends Component {
                               colors.nodeHoverShadow[this.state.theme]
                             }
                             imageShowing={node.imageShowing}
-                            toggleBox={() => {
+                            renderBoxOn={node.renderBoxOn}
+                            onImageBox={() => {
                               const newNodes = this.state.nodes;
-                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                              for(let i=0; i<newNodes.length; i++){
+                                if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                              }
+                              newNodes[index].imageShowing = true;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            toggleRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            offRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = false;
                               this.setState({
                                 nodes: newNodes,
                               });
@@ -1216,9 +1239,27 @@ class WorkspaceComponent extends Component {
                             removeNode={this.removeNode.bind(this)}
                             updateHashValue={this.updateHashValue.bind(this)}
                             imageShowing={node.imageShowing}
-                            toggleBox={() => {
+                            renderBoxOn={node.renderBoxOn}
+                            onImageBox={() => {
                               const newNodes = this.state.nodes;
-                              newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                              for(let i=0; i<newNodes.length; i++){
+                                if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                              }
+                              newNodes[index].imageShowing = true;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            toggleRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                              this.setState({
+                                nodes: newNodes,
+                              });
+                            }}
+                            offRenderBox={() => {
+                              const newNodes = this.state.nodes;
+                              newNodes[index].renderBoxOn = false;
                               this.setState({
                                 nodes: newNodes,
                               });
@@ -1246,10 +1287,10 @@ class WorkspaceComponent extends Component {
                       bgColor={colors.menuBackground[this.state.theme]}
                       wsButtonColor={colors.workspaceButton[this.state.theme]}
                       valueMenuColor={
-                        (this.state.theme === "classic" &&
+                        (this.state.theme === "Classic" &&
                           colors.valueMenuColor1) ||
-                        (this.state.theme === "dusk" && colors.valueMenuColor2) ||
-                        (this.state.theme === "dark" && colors.valueMenuColor3)
+                        (this.state.theme === "Dusk" && colors.valueMenuColor2) ||
+                        (this.state.theme === "Dark" && colors.valueMenuColor3)
                       }
                       funTabColor={colors.menuFunTab[this.state.theme]}
                       valTabColor={colors.menuValTab[this.state.theme]}
@@ -1257,6 +1298,7 @@ class WorkspaceComponent extends Component {
                       savedTabColor={colors.menuSavedTab[this.state.theme]}
                       settingsTabColor={colors.menuSettingsTab[this.state.theme]}
                       theme={this.state.theme}
+                      rep={this.state.rep}
                       setMenuTabs={(
                         valuesOpen,
                         functionsOpen,
@@ -1280,6 +1322,14 @@ class WorkspaceComponent extends Component {
                         this.setState({
                           themeIndex: i,
                           theme: this.themes[i],
+                        });
+                      }
+                      }
+                      toggleRep={() => {
+                        let i = (this.state.repIndex + 1) % this.reps.length;
+                        this.setState({
+                          repIndex: i,
+                          rep: this.reps[i],
                         });
                       }
                       }
@@ -1319,10 +1369,10 @@ class WorkspaceComponent extends Component {
                         this.toggleTheme()
                       }}
                       functionBoxBg={
-                        this.state.theme === "dark" ? "darkgray" : "white"
+                        this.state.theme === "Dark" ? "darkgray" : "white"
                       }
                       functionTextColor={
-                        this.state.theme === "dark" ? "black" : "black"
+                        this.state.theme === "Dark" ? "black" : "black"
                       }
                       openPopupCanvas={() => {
                         this.setState({
@@ -1418,7 +1468,7 @@ class WorkspaceComponent extends Component {
           (node, index) =>
             node &&
             node.renderFunction.isRenderable &&
-            node.imageShowing && (
+            node.renderBoxOn && (
               <ContextProvider
                 width={this.width}
                 height={this.height}
@@ -1432,15 +1482,47 @@ class WorkspaceComponent extends Component {
                   y={node.y}
                   type={node.type}
                   renderFunction={node.renderFunction.renderFunction}
-                  toggleBox={() => {
+                  onImageBox={() => {
                     const newNodes = this.state.nodes;
-                    newNodes[index].imageShowing = !this.state.nodes[index].imageShowing;
+                    for(let i=0; i<newNodes.length; i++){
+                      if(newNodes[i].imageShowing==true) newNodes[i].imageShowing = false;
+                    }
+                    newNodes[index].imageShowing = true;
+                    this.setState({
+                      nodes: newNodes,
+                    });
+                  }}
+                  toggleRenderBox={() => {
+                    const newNodes = this.state.nodes;
+                    newNodes[index].renderBoxOn = !newNodes[index].renderBoxOn;
+                    this.setState({
+                      nodes: newNodes,
+                    });
+                  }}
+                  offRenderBox={() => {
+                    const newNodes = this.state.nodes;
+                    newNodes[index].renderBoxOn = false;
                     this.setState({
                       nodes: newNodes,
                     });
                   }}
                 />
               </ContextProvider>
+            )
+        )}
+        {this.state.nodes.map(
+          (node, index) =>
+            node &&
+            node.renderFunction.isRenderable &&
+            node.imageShowing && (
+                <MISTImage
+                  x={this.width*.8285} //I am so sorry. But it works...
+                  y={(this.width * 0.02) - (this.width - 12 * (this.width * 0.02) - (this.width * 0.6)) + 536} //SO sorry. So sorry. Sorry.
+                  width={(this.width - 12 * this.width * 0.02 - this.width * 0.6) * 0.9}//MISTImages are always squares, so they only need one dimension
+                  type={node.type}
+                  renderFunction={node.renderFunction.renderFunction}
+                  automated={true}
+                />
             )
         )}
       </div>
