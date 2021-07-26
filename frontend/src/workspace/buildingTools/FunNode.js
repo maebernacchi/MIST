@@ -102,6 +102,8 @@ export default function FunNode(props) {
   const fonts = useContext(fontContext);
   const [onDrag, setOnDrag] = useState(false);
   const bezPoint = width / 50;
+  const isRGB = gui.functions[name].rep === "rgb";
+  const isFixed = gui.functions[name].max === gui.functions[name].min;
 
   // +----------------------------+------------------------------------
   // | Trashcan                   |
@@ -287,8 +289,11 @@ export default function FunNode(props) {
           }
           shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
           shadowBlur={3}
+          stroke={isRGB || isFixed ? "black" : gui.functions[name].color}
+          strokeWidth={isRGB ? functionWidth / 30 : isFixed ? functionWidth / 20 : 0}
+          dash={isRGB ? [functionWidth / 1, 0] : isFixed ? [functionWidth / 5, functionWidth / 5] : [0,0]}
           _useStrictMode
-          stroke={props.draggable ? gui.functions[name].color : 'black'}
+          // stroke={props.draggable ? gui.functions[name].color : 'black'}
         />
         <Text
           text={rep}
