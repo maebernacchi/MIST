@@ -78,8 +78,9 @@ fi
 if [[ "$do_frontend_installation" == "true" ]]; then
     echo "Installing the frontend..."
     (cd frontend && npm install)
-    echo "Removing the eslint folder (so annoything maaan)"
-    (cd frontend && rm -rf node_modules/eslint)
+    # uncomment if it gives eslint dependency tree errors
+    #echo "Removing the eslint folder (so annoything maaan)"
+    #(cd frontend && rm -rf node_modules/eslint)
     echo "Starting up the frontend..."
     (cd frontend && npm run start)
 fi
