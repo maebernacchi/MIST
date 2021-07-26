@@ -12,7 +12,9 @@ There is an option to set up a connection to either the local PostgreSQL instanc
 2. Make sure the Docker service is up
 3. Run `docker-compose up`
 
-If there's a change in the Database schema ([DB initialization scripts](./db/scripts)), you need to run a migration of the current data, or destroy the current table and make a new one. Since we're not using an ORM and writing migration is a pain, I recommend just running
+- To observe what's happening in the two containers, you can run `docker logs (container name) -f` (MIST-backend / MIST-db).
+
+- If there's a change in the Database schema ([DB initialization scripts](./db/scripts)), you need to run a migration of the current data, or destroy the current table and make a new one. Since we're not using an ORM and writing migration is a pain, I recommend just running
 
 ```
 docker rm -v MIST-backend MIST-db
