@@ -81,6 +81,8 @@ if [[ "$do_frontend_installation" == "true" ]]; then
     # Remove the two lines after upgrading the frontend react packages to v.17
     echo "Removing the eslint folder (so annoything maaan)"
     (cd frontend && rm -rf node_modules/eslint)
+    echo "Downloading the twgl.js file..."
+    curl -sL https://raw.githubusercontent.com/greggman/twgl.js/4f6b81a3a8a73fbda701b68536703a4c04a9b192/dist/4.x/twgl.min.js --output ./frontend/public/twgl.min.js
     echo "Starting up the frontend..."
     (cd frontend && npm run start)
 fi
