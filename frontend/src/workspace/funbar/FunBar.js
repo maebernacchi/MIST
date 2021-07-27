@@ -6,6 +6,7 @@ import { funBarContext } from "../globals/globals-funbar-dimensions";
 import { fontContext } from "../globals/globals-fonts";
 import { globalContext } from "../globals/global-context";
 import MISTImage from "../buildingTools/MISTImage.js";
+import { Html } from "react-konva-utils";
 
 
 function FunBar(props) {

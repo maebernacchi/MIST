@@ -78,9 +78,9 @@ fi
 if [[ "$do_frontend_installation" == "true" ]]; then
     echo "Installing the frontend..."
     (cd frontend && npm install)
-    # uncomment if it gives eslint dependency tree errors
-    #echo "Removing the eslint folder (so annoything maaan)"
-    #(cd frontend && rm -rf node_modules/eslint)
+    # Remove the two lines after upgrading the frontend react packages to v.17
+    echo "Removing the eslint folder (so annoything maaan)"
+    (cd frontend && rm -rf node_modules/eslint)
     echo "Starting up the frontend..."
     (cd frontend && npm run start)
 fi
