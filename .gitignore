@@ -2,5 +2,5 @@ frontend/build
 node_modules
 .DS_Store
 .env
-yarn.lock
+package-lock.json
 yarn-error.log
