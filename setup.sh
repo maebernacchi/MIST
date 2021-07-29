@@ -43,6 +43,7 @@ if [ "$do_backend_installation" == "true" ]; then
                             # Not running, start postgres
                             echo "PostgreSQL is not running, or it is running but not on port 5432."
                             echo "Zaen is too tired to figure out how to run postgres on your OS. Google or smth!"
+                            exit 1
                         else
                             # All good! Do npm install
                             "Installing node packages for the backend..."
@@ -50,6 +51,7 @@ if [ "$do_backend_installation" == "true" ]; then
                         fi
                 else 
                     echo "PostgreSQL is not installed. Please install PostgreSQL by following README.md."
+                    exit 1
                 fi
                 break;;
             "Docker" )
@@ -66,9 +68,11 @@ if [ "$do_backend_installation" == "true" ]; then
                         (cd backend && docker-compose up --build -d)
                     else
                         echo "Docker-compose is not installed. Please install it alongside Docker."
+                        exit 1
                     fi
                 else
                     echo "Docker is not installed. Please install Docker by following README.md."
+                    exit 1
                 fi
                 break;;
         esac
@@ -86,4 +90,6 @@ if [[ "$do_frontend_installation" == "true" ]]; then
     echo "Starting up the frontend..."
     (cd frontend && npm run start)
 fi
+
+exit 0
 
