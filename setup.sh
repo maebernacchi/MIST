@@ -29,7 +29,8 @@ prompt_overwrite backend do_backend_installation
 prompt_overwrite frontend do_frontend_installation
 
 if [ "$do_backend_installation" == "true" ]; then
-    echo "You can either choose to run a local PostgreSQL instance, or use a Docker container to host the backend.\Docker is strongly recommended."
+    echo "You can either choose to run a local PostgreSQL instance, or use a Docker container to host the backend.
+Docker is strongly recommended."
     select method in "Local" "Docker"; do
         case "$method" in
             "Local" )
