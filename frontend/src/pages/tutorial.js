@@ -1360,7 +1360,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sum(x,x,y)" resolution="200" />
               </Container>
             ),
             hint: (
@@ -1375,7 +1375,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="avg(mult(x,x)y)" resolution="200" />
               </Container>
             ),
             hint: (
@@ -1422,17 +1422,17 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sqr(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="neg(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sin(x)" resolution="200" />
               </Col>
             </Row>
             <br />
@@ -1455,17 +1455,17 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sign(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="abs(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="cos(x)" resolution="200" />
               </Col>
             </Row>
             <br />
