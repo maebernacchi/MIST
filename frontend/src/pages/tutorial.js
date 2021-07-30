@@ -969,7 +969,7 @@ const sections = [
         keywords: ["animation", "grayscale", "time"],
         image: <MISTImage height={document.documentElement.clientWidth/10} 
         width={document.documentElement.clientWidth/10} 
-        code="x" resolution="200" />,
+        code="t.s" resolution="200" />,
         isAnimated: true,
         //Text
         text: (
@@ -982,7 +982,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="t.s" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.s
@@ -991,7 +991,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="t.m" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.m
@@ -1000,7 +1000,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="t.h" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.h
@@ -1009,7 +1009,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="t.d" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.d
@@ -1072,7 +1072,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="x" resolution="200" />
               </Container>
             ),
 
@@ -1091,7 +1091,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="x" resolution="200" />
               </Container>
             ),
             hint: <Container>
@@ -1111,7 +1111,7 @@ const sections = [
         keywords: ["animation", "grayscale", "mouse"],
         image: <MISTImage height={document.documentElement.clientWidth/10} 
         width={document.documentElement.clientWidth/10} 
-        code="x" resolution="200" />,
+        code="m.x" resolution="200" />,
         isAnimated: false,
         //Text
         text: (
@@ -1123,7 +1123,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="m.x" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> m.x
@@ -1132,10 +1132,10 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="m.y" resolution="200" />
                 {/* <br/> */}
                 <br />
-                <b>Code:</b> m.x
+                <b>Code:</b> m.y
                 <br /> The mouse's <b>y</b> value
               </Col>
             </Row>
