@@ -417,8 +417,8 @@ function Text(props) {
     >
       <Card.Body>
         <Row>
-          <Col xs="4">
-            <Container><h4 style={{overflowWrap: "breakword"}}>Introduction</h4></Container>
+          <Col xs="0">
+            <Container><h4 style={{overflowWrap: "breakword"}}>Text</h4></Container>
             {/* {props.text} */}
           </Col>
         </Row>
@@ -969,7 +969,7 @@ const sections = [
         keywords: ["animation", "grayscale", "time"],
         image: <MISTImage height={document.documentElement.clientWidth/10} 
         width={document.documentElement.clientWidth/10} 
-        code="x" resolution="200" />,
+        code="t.s" resolution="200" />,
         isAnimated: true,
         //Text
         text: (
@@ -982,7 +982,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="t.s" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.s
@@ -991,7 +991,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="t.m" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.m
@@ -1000,7 +1000,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="t.h" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.h
@@ -1009,7 +1009,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="t.d" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> t.d
@@ -1072,7 +1072,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="mult(x,y,t.s)" resolution="200" />
               </Container>
             ),
 
@@ -1091,7 +1091,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="wsum(sin(x),y,t.s)" resolution="200" />
               </Container>
             ),
             hint: <Container>
@@ -1111,7 +1111,7 @@ const sections = [
         keywords: ["animation", "grayscale", "mouse"],
         image: <MISTImage height={document.documentElement.clientWidth/10} 
         width={document.documentElement.clientWidth/10} 
-        code="x" resolution="200" />,
+        code="m.x" resolution="200" />,
         isAnimated: false,
         //Text
         text: (
@@ -1123,7 +1123,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="m.x" resolution="200" />
                 {/* <br/> */}
                 <br />
                 <b>Code:</b> m.x
@@ -1132,10 +1132,10 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="m.y" resolution="200" />
                 {/* <br/> */}
                 <br />
-                <b>Code:</b> m.x
+                <b>Code:</b> m.y
                 <br /> The mouse's <b>y</b> value
               </Col>
             </Row>
@@ -1270,7 +1270,7 @@ const sections = [
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sum(x,y)" resolution="200" />
               </Col>
               <Col>
 
@@ -1278,7 +1278,7 @@ const sections = [
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="wsum(x,y)" resolution="200" />
               </Col>
             </Row>
 
@@ -1303,14 +1303,14 @@ const sections = [
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="mult(x,y)" resolution="200" />
               </Col>
               <Col>
                 Here's <b>avg(x,y)</b>.
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="avg(x,y)" resolution="200" />
               </Col>
             </Row>
             <br />
@@ -1360,7 +1360,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sum(x,x,y)" resolution="200" />
               </Container>
             ),
             hint: (
@@ -1375,7 +1375,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="avg(mult(x,x)y)" resolution="200" />
               </Container>
             ),
             hint: (
@@ -1422,17 +1422,17 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="square(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="neg(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sin(x)" resolution="200" />
               </Col>
             </Row>
             <br />
@@ -1450,22 +1450,21 @@ const sections = [
               </Col>
             </Row>
             <br />
-            <br />
             <Row>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sign(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="abs(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="cos(x)" resolution="200" />
               </Col>
             </Row>
             <br />
@@ -1519,7 +1518,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="mistif(y,y,x)" resolution="200" />
               </Container>
             ),
 
@@ -1538,7 +1537,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="cos(sin(x))" resolution="200" />
               </Container>
             ),
             hint: (
@@ -1590,7 +1589,8 @@ const sections = [
             <br />
             <Row>
               <Col>
-                An example of solid red,
+                An example of solid red
+                <br />
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
@@ -1635,9 +1635,7 @@ const sections = [
 
         checkpoint: (
           <Container>
-            <br />
             To make your own colorful image, try this!
-            <br />
             <br />
             <Row>
               <Col>
@@ -1868,7 +1866,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sign(sum(x,negate(y)))" resolution="250" />
+                          code="sign(sum(x,negate(y)))" resolution="400" />
               </Container>
             ),
             hint: <Container> What inverts colors? </Container>,
