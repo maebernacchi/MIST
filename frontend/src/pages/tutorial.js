@@ -423,7 +423,6 @@ function Text(props) {
           </Col>
         </Row>
         <br />
-        <br />
         <Row>
           <Col xs="0">
             {/* <Container><h4>Introduction</h4></Container> */}
@@ -457,7 +456,6 @@ function CheckPoint(props) {
 
           </Col>
         </Row>
-        <br />
         <br />
         <Row>
           <Col xs="0">
@@ -505,7 +503,6 @@ function Challenges(props) {
 
           {/* each section's small menu icon on the right side */}
         </Row>
-        <br />
         <br />
         <Row>
           <Container>
