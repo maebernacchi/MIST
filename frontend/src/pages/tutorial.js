@@ -1422,7 +1422,7 @@ const sections = [
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sqr(x)" resolution="200" />
+                          code="square(x)" resolution="200" />
               </Col>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
@@ -1519,7 +1519,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="mistif(y,y,x)" resolution="200" />
               </Container>
             ),
 
@@ -1538,7 +1538,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="cos(sin(x))" resolution="200" />
               </Container>
             ),
             hint: (
