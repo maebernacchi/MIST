@@ -222,6 +222,7 @@ export default function FunNode(props) {
         } else {
           props.funClicked(index);
         }
+        props.funClicked(index);
         props.onImageBox();
       }}
       onDblClick={() => {
@@ -230,6 +231,7 @@ export default function FunNode(props) {
       }}
       onTap={() => {
         props.tapHandler(index);
+        props.funClicked(index);
         props.onImageBox();
       }}
 
@@ -243,6 +245,7 @@ export default function FunNode(props) {
         } else {
           props.funClicked(index);
         }
+        props.funClicked(index);
         props.onImageBox();
       }}
     >
