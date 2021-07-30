@@ -417,8 +417,8 @@ function Text(props) {
     >
       <Card.Body>
         <Row>
-          <Col xs="4">
-            <Container><h4 style={{overflowWrap: "breakword"}}>Introduction</h4></Container>
+          <Col xs="0">
+            <Container><h4 style={{overflowWrap: "breakword"}}>Text</h4></Container>
             {/* {props.text} */}
           </Col>
         </Row>
@@ -1589,7 +1589,8 @@ const sections = [
             <br />
             <Row>
               <Col>
-                An example of solid red,
+                An example of solid red
+                <br />
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
@@ -1634,9 +1635,7 @@ const sections = [
 
         checkpoint: (
           <Container>
-            <br />
             To make your own colorful image, try this!
-            <br />
             <br />
             <Row>
               <Col>
@@ -1867,7 +1866,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sign(sum(x,negate(y)))" resolution="250" />
+                          code="sign(sum(x,negate(y)))" resolution="400" />
               </Container>
             ),
             hint: <Container> What inverts colors? </Container>,
