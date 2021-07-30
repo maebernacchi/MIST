@@ -1072,7 +1072,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />
+                          code="mult(x,y,t.s)" resolution="200" />
               </Container>
             ),
 
@@ -1091,7 +1091,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />
+                          code="wsum(sin(x),y,t.s)" resolution="200" />
               </Container>
             ),
             hint: <Container>
@@ -1270,7 +1270,7 @@ const sections = [
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="sum(x,y)" resolution="200" />
               </Col>
               <Col>
 
@@ -1278,7 +1278,7 @@ const sections = [
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="wsum(x,y)" resolution="200" />
               </Col>
             </Row>
 
@@ -1303,14 +1303,14 @@ const sections = [
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="mult(x,y)" resolution="200" />
               </Col>
               <Col>
                 Here's <b>avg(x,y)</b>.
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="avg(x,y)" resolution="200" />
               </Col>
             </Row>
             <br />
