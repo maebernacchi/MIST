@@ -1450,7 +1450,6 @@ const sections = [
               </Col>
             </Row>
             <br />
-            <br />
             <Row>
               <Col>
                 <MISTImage height={document.documentElement.clientWidth/10} 
