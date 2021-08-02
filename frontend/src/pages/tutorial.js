@@ -706,7 +706,7 @@ const sections = [
               <br />
               {/* <Image src={GUIgif} fluid></Image> */}
               <Container fluid>
-                <iframe width={document.documentElement.clientWidth/3} height="276" src={workspaceIntro}
+                <iframe width={document.documentElement.clientWidth/2.5} height="276" src={workspaceIntro}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -720,7 +720,7 @@ const sections = [
               <br />
               {/* <Image src={nodeDragGif} fluid></Image>  */}
               <Container fluid>
-                <iframe width={document.documentElement.clientWidth/3} height="276" src={workspaceDrag}
+                <iframe width={document.documentElement.clientWidth/2.5} height="276" src={workspaceDrag}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -734,7 +734,7 @@ const sections = [
               <br />
               <br />
               <Container fluid>
-                <iframe width={document.documentElement.clientWidth/3} height="276" src={workspaceConnect}
+                <iframe width={document.documentElement.clientWidth/2.5} height="276" src={workspaceConnect}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -746,7 +746,7 @@ const sections = [
               <br />
               <br />
               <Container fluid>
-                <iframe width={document.do} height="276" src={funcConnectVideo}
+                <iframe width={document.documentElement.clientWidth/2.5} height="276" src={funcConnectVideo}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -781,7 +781,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width={document.documentElement.clientWidth/3} height="276" src={codeIntro}
+              <iframe width={document.documentElement.clientWidth/2.5} height="276" src={codeIntro}
                 title="code-intro" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -795,7 +795,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width={document.documentElement.clientWidth/3} height="276" src={savingFunction}
+              <iframe width={document.documentElement.clientWidth/2.5} height="276" src={savingFunction}
                 title="using-params" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -849,7 +849,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width={document.documentElement.clientWidth/3} height="276" src={allVars}
+              <iframe width={document.documentElement.clientWidth/2.5} height="276" src={allVars}
                 title="values" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -940,7 +940,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width={document.documentElement.clientWidth/3} height="276" src={constantDemo}
+              <iframe width={document.documentElement.clientWidth/2.5} height="276" src={constantDemo}
                 title="constant-entry" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
