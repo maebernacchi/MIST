@@ -289,9 +289,9 @@ export default function FunNode(props) {
           }
           shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
           shadowBlur={3}
-          stroke={isRGB || isFixed ? "black" : gui.functions[name].color}
-          strokeWidth={isRGB ? functionWidth / 30 : isFixed ? functionWidth / 20 : 0}
-          dash={isRGB ? [functionWidth / 1, 0] : isFixed ? [functionWidth / 5, functionWidth / 5] : [0,0]}
+          //stroke={isRGB || isFixed ? "black" : gui.functions[name].color}
+          //strokeWidth={isRGB ? functionWidth / 30 : isFixed ? functionWidth / 20 : 0}
+          //dash={isRGB ? [functionWidth / 1, 0] : isFixed ? [functionWidth / 5, functionWidth / 5] : [0,0]}
           _useStrictMode
           // stroke={props.draggable ? gui.functions[name].color : 'black'}
         />

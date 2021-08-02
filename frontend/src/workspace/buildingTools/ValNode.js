@@ -256,9 +256,9 @@ function ValNode(props) {
           shadowBlur={2}
           shadowOffsetX={1}
           shadowOffsetY={1}
-          stroke={isConst || isTime || isMouse ? "black" : gui.values[name].color}
-          strokeWidth={isConst ? valueWidth / 30 : isTime ? valueWidth / 20 : isMouse ? valueWidth / 20 : 0}
-          dash={isConst ? [valueWidth /1, 0] : isTime ? [valueWidth / 5, valueWidth / 5] : isMouse ? [valueWidth / 10, valueWidth / 10] : [valueWidth/1,0]}
+          //stroke={isConst || isTime || isMouse ? "black" : gui.values[name].color}
+          //strokeWidth={isConst ? valueWidth / 30 : isTime ? valueWidth / 20 : isMouse ? valueWidth / 20 : 0}
+          //dash={isConst ? [valueWidth /1, 0] : isTime ? [valueWidth / 5, valueWidth / 5] : isMouse ? [valueWidth / 10, valueWidth / 10] : [valueWidth/1,0]}
           // stroke={props.draggable ? gui.values[name].color : 'black'}
           _useStrictMode
         />

@@ -178,9 +178,9 @@ function ValGroup(props) {
             fill={gui.values[valName].color}
             cornerRadius={10}
             rotation={45}
-            stroke={isConst || isTime || isMouse ? "black" : gui.values[valName].color}
-            strokeWidth={isConst ? valueSide / 30 : isTime ? valueSide / 20 : isMouse ? valueSide / 20 : 0}
-            dash={isConst ? [valueSide /1, 0] : isTime ? [valueSide / 5, valueSide / 5] : isMouse ? [valueSide / 10, valueSide / 10] : [valueSide/1,0]}
+            //stroke={isConst || isTime || isMouse ? "black" : gui.values[valName].color}
+            //strokeWidth={isConst ? valueSide / 30 : isTime ? valueSide / 20 : isMouse ? valueSide / 20 : 0}
+            //dash={isConst ? [valueSide /1, 0] : isTime ? [valueSide / 5, valueSide / 5] : isMouse ? [valueSide / 10, valueSide / 10] : [valueSide/1,0]}
           />
         )}
       </Spring>
