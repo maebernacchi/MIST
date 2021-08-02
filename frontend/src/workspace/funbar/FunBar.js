@@ -111,7 +111,7 @@ function FunBar(props) {
           )}
         </Spring>
         <Text
-          text={"Image"}
+          text={"Image Options"}
           width={funBarDimensions.imageButtonWidth}
           height={funBarDimensions.imageButtonHeight}
           align={"center"}
