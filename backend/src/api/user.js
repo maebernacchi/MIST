@@ -70,7 +70,7 @@ userHandlers.signUp = async function (req, res) {
  *   info.action: signIn
  */
 // TODO move to database
-userHandlers.signIn = async function (req, res, next) {
+userHandlers.signIn = async function (req, res) {
 	var message = "";
 	const emailVerified = await userDB.checkEmailVerified(req, (mes) => {
 		message = mes;
@@ -94,7 +94,7 @@ userHandlers.signIn = async function (req, res, next) {
 						res.json(message);
 					});
 				}
-			})(req, res, next);
+			})(req, res);
 		} catch (error) {
 			console.log(error);
 		}
