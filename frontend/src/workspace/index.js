@@ -117,7 +117,7 @@ class WorkspaceComponent extends Component {
       currentNode: null,
       layouts: [layout1],
       themeIndex: 1,
-      theme: "Dusk", //changes default theme
+      theme: "Classic", //changes default theme
       repIndex: 0,
       rep: "Math",
       pos1: { x: 100, y: 200 },
@@ -531,7 +531,7 @@ class WorkspaceComponent extends Component {
   // | Updating Node Position |
   // +------------------------+----------------------------------------
 
-  // +--------------------------+--------------------------------------
+    // +--------------------------+--------------------------------------
   // | Removing Nodes and Lines |
   // +--------------------------+
 
@@ -539,7 +539,7 @@ class WorkspaceComponent extends Component {
    * Resets the nodes and lines to reflect the deletion of a node at index
    * @param {index} index
    */
-  removeNode = (index) => {
+   removeNode = (index) => {
     let newNodes = [...this.state.nodes];
     let newLines = [...this.state.lines];
     const node = this.state.nodes[index];
@@ -1513,8 +1513,9 @@ class WorkspaceComponent extends Component {
             node.renderFunction.isRenderable &&
             node.imageShowing && (
                 <MISTImage
+                  id="MISTImage"
                   x={this.width*.8285} //I am so sorry. But it works...
-                  y={(this.width * 0.02) - (this.width - 12 * (this.width * 0.02) - (this.width * 0.6)) + 536} //SO sorry. So sorry. Sorry.
+                  y={this.height-(this.height*.4)} //SO sorry. So sorry. Sorry.
                   width={(this.width - 12 * this.width * 0.02 - this.width * 0.6) * 0.9}//MISTImages are always squares, so they only need one dimension
                   type={node.type}
                   renderFunction={node.renderFunction.renderFunction}
