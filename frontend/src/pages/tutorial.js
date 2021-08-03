@@ -742,7 +742,9 @@ const sections = [
               </Container>
               <br />
               <br />
-              Some functions can also be inputs for other functions!
+              Some functions can also be inputs for other functions! 
+              <br /> 
+              If you want to see the individual images, you can click on the white boxes!
               <br />
               <br />
               <Container fluid>
@@ -753,6 +755,7 @@ const sections = [
                 </iframe>
               </Container>
               <br />
+              And remember, if you want to delete all of your nodes, then go to settings and click the reset button!
               <br />
             </Container>
           ),
