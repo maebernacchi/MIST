@@ -442,7 +442,7 @@ function Expert(props) {
                 bkcolor="#353b48"
                 displayDirection="row"
                 width="100%"
-                height="100vh"
+                height="115vh"
                 panelsSize={[15, 43, 42]}
                 sizeUnitMeasure="%"
                 resizerSize="10px"
