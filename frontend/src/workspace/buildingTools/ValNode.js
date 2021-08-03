@@ -374,19 +374,19 @@ function ValNode(props) {
                   backgroundColor: gui.valueConstantColor,
                   border: "none",
                 }}
-                onChange={(e) => { // automatic update when you change constant value
+                onChange={(e) => { // automatic update when you change constant value? needs more testing, so I've left it commented out.
                   setFormValue(e.target.value);
-                  e.preventDefault();
-                  e.stopPropagation();
-                  e.nativeEvent.stopImmediatePropagation();
-                  if (parseFloat(formValue) !== null) {
-                    setRenderFunction(formValue);
-                    props.updateHashValue(index, formValue);
-                    //setSubmitted(true);
-                  } else {
-                    console.log("Invalid Number");
-                  }
-                  return false;
+                  // e.preventDefault();
+                  // e.stopPropagation();
+                  // e.nativeEvent.stopImmediatePropagation();
+                  // if (parseFloat(formValue) !== null) {
+                  //   setRenderFunction(formValue);
+                  //   props.updateHashValue(index, formValue);
+                  //   //setSubmitted(true);
+                  // } else {
+                  //   console.log("Invalid Number");
+                  // }
+                  // return false;
                 }}
               />
             </label>
