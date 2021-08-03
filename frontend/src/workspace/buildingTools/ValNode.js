@@ -350,8 +350,19 @@ function ValNode(props) {
                 type="text"
                 placeholder="#"
                 onFocus={() => {setFocused(true)}}
-                onBlur={() => {
+                onBlur={(e) => { // automatic update when you click out of the constant entry form. this could be made into a function at the top instead, but. for now. oh well.
                   setFocused(false);
+                  e.preventDefault();
+                  e.stopPropagation();
+                  e.nativeEvent.stopImmediatePropagation();
+                  if (parseFloat(formValue) !== null) {
+                    setRenderFunction(formValue);
+                    props.updateHashValue(index, formValue);
+                    //setSubmitted(true);
+                  } else {
+                    console.log("Invalid Number");
+                  }
+                  return false;
                 }}
                 onSubmit={() => {setFocused(false)}} // for use when it's an <input> component.
                 style={{
@@ -363,8 +374,19 @@ function ValNode(props) {
                   backgroundColor: gui.valueConstantColor,
                   border: "none",
                 }}
-                onChange={(e) => {
+                onChange={(e) => { // automatic update when you change constant value? needs more testing, so I've left it commented out.
                   setFormValue(e.target.value);
+                  // e.preventDefault();
+                  // e.stopPropagation();
+                  // e.nativeEvent.stopImmediatePropagation();
+                  // if (parseFloat(formValue) !== null) {
+                  //   setRenderFunction(formValue);
+                  //   props.updateHashValue(index, formValue);
+                  //   //setSubmitted(true);
+                  // } else {
+                  //   console.log("Invalid Number");
+                  // }
+                  // return false;
                 }}
               />
             </label>
