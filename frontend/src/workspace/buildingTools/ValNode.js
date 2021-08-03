@@ -94,7 +94,7 @@ function ValNode(props) {
   const isConst = gui.values[name].rep === "#";
   
   // +----------------------------+------------------------------------
-  // | Trashcan                   |
+  // | Trashcan and Connect Circle|                
   // +----------------------------+
 
   function Trashcan() {
@@ -123,8 +123,60 @@ function ValNode(props) {
     );
   }
 
+  function ConnectCircle() {
+    return(
+    <Circle
+        x={valueWidth}
+        y={valueWidth/2}
+        radius={valueWidth/8}
+        fill={"#B3B3B3"}
+        onClick={() => {
+          props.dblClickHandler(index);
+        }}
+        onTap={() => { 
+          props.dblClickHandler(index);
+        }}
+        onDblTap={() => { 
+          props.dblClickHandler(index);
+        }}
+        onDragStart={() => {
+          props.dblClickHandler(index);
+        }}
+        shadowColor={
+          hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
+        }
+        shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
+        shadowBlur={3}
+        onMouseEnter={(e) => {
+          groupRef.current.children.map((u, i) => {
+            u.to({
+              duration: 0.5,
+              easing: Konva.Easings.ElasticEaseOut,
+              scaleX: 1.07,
+              scaleY: 1.07,
+            });
+            return 0;
+          });
+          setHovered(true);
+        }}
+        onMouseLeave={(e) => {
+          setHovered(false);
+          groupRef.current.children.map((u, i) => {
+            u.to({
+              duration: 0.5,
+              easing: Konva.Easings.ElasticEaseOut,
+              scaleX: 1,
+              scaleY: 1,
+            });
+            return 0;
+          });
+        }}
+      />
+    );
+  }
+
   // +----------------------------+
-  // | Trashcan                   |
+  // | Trashcan and Connect Circle| 
   // +----------------------------+------------------------------------
 
   // +----------------------------------------+------------------------
@@ -132,7 +184,7 @@ function ValNode(props) {
   // +----------------------------------------+
 
   return (
-    <Group
+      <Group
       x={x}
       y={y}
       ref={groupRef}
@@ -248,28 +300,27 @@ function ValNode(props) {
           width={nodeDimensions.valueSideLength}
           height={nodeDimensions.valueSideLength}
           fill={gui.values[name].color}
-          cornerRadius={props.imageShowing? 30:10}
+          cornerRadius={10}
           lineJoin={"round"}
           rotation={45}
           strokeWidth={nodeDimensions.functionStrokeWidth}
-          shadowColor={"gray"}
-          shadowBlur={2}
+          shadowColor={hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"}
+          shadowBlur={1}
           shadowOffsetX={1}
           shadowOffsetY={1}
-          stroke={isConst || isTime || isMouse ? "black" : gui.values[name].color}
-          strokeWidth={isConst ? valueWidth / 30 : isTime ? valueWidth / 20 : isMouse ? valueWidth / 20 : 0}
-          dash={isConst ? [valueWidth /1, 0] : isTime ? [valueWidth / 5, valueWidth / 5] : isMouse ? [valueWidth / 10, valueWidth / 10] : [valueWidth/1,0]}
-          // stroke={props.draggable ? gui.values[name].color : 'black'}
+          stroke={props.imageShowing? "black" : gui.values[name].color}
+          strokeWidth={props.imageShowing? valueWidth / 20 : 0}
           _useStrictMode
         />
         {rep === "#" ?  (
           <Html
-
           transform={true}
           groupProps={{
             position: {
               x: (nodeDimensions.valueOffset /1.5) - props.x, // I know that it looks weird to have this be undoing the form's
               y: (nodeDimensions.valueOffset /1.5) - props.y, // position values but I swear, the form won't move otherwise.
+              height: 100,
+              width: 100,
             },
           }}
         >
@@ -304,10 +355,10 @@ function ValNode(props) {
                 }}
                 onSubmit={() => {setFocused(false)}} // for use when it's an <input> component.
                 style={{
-                  // resize: "none",              // these were for experimenting with a textarea input
-                  // overflow: "auto",
-                  // overflowWrap: "break-word",
-                  width: focused? "auto" : 0.33 * valueWidth, //(formValue.length < 2) ? (0.33 * valueWidth) : (focused? "auto" : 0.66 * valueWidth),
+                  //resize: "none",              // these were for experimenting with a textarea input
+                  //overflow: "auto",
+                  //overflowWrap: "break-word",
+                  width: formValue.length > 3 && focused ?  "auto" : 0.35 * valueWidth,
                   height: (focused? "auto" : 0.29 * valueWidth),
                   backgroundColor: gui.valueConstantColor,
                   border: "none",
@@ -336,6 +387,7 @@ function ValNode(props) {
           />
         )}
         <Trashcan />
+        <ConnectCircle />
       </Group>
       <Rect
         onTap={() => {
@@ -356,45 +408,6 @@ function ValNode(props) {
         shadowOffsetY={1}
         expanded={false}
         visible={typeof props.renderFunction === "string"} //double check this after merge
-      />
-      <Circle
-        x={valueWidth}
-        y={valueWidth/2}
-        radius={valueWidth/8}
-        fill={"#B3B3B3"}
-        onDblClick={(e) => {
-          // Generates the temporary line when double clicked
-          props.dblClickHandler(index);
-        }}
-        shadowColor={
-          hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
-        }
-        shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
-        shadowBlur={3}
-        onMouseEnter={(e) => {
-          groupRef.current.children.map((u, i) => {
-            u.to({
-              duration: 0.5,
-              easing: Konva.Easings.ElasticEaseOut,
-              scaleX: 1.07,
-              scaleY: 1.07,
-            });
-            return 0;
-          });
-          setHovered(true);
-        }}
-        onMouseLeave={(e) => {
-          setHovered(false);
-          groupRef.current.children.map((u, i) => {
-            u.to({
-              duration: 0.5,
-              easing: Konva.Easings.ElasticEaseOut,
-              scaleX: 1,
-              scaleY: 1,
-            });
-            return 0;
-          });
-        }}
       />
     </Group>
   );
