@@ -49,7 +49,7 @@ git clone git@github.com:GlimmerLabs/MIST.git
 ```
 
 2. Run the installation script in the Terminal. If you're on Windows, run it on the Bash Shell. (It should be included with Windows 10)
-   The checking for PostgreSQL part does not work for Windows, because Windows is a bitch. Bill Gates you filthy money grabber
+   The checking for PostgreSQL part does not curretly work for Windows.
 
 ```
 cd MIST
