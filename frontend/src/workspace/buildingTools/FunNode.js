@@ -135,6 +135,50 @@ export default function FunNode(props) {
     );
   }
 
+  function ConnectCircle() {
+    return(
+    <Circle
+        x={functionWidth}
+        y={functionWidth/2}
+        radius={functionWidth/8}
+        fill={"#B3B3B3"}
+        onClick={(e) => {
+          // Generates the temporary line when double clicked
+          props.dblClickHandler(index);
+        }}
+        shadowColor={
+          hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
+        }
+        shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
+        shadowBlur={3}
+        onMouseEnter={(e) => {
+          groupRef.current.children.map((u, i) => {
+            u.to({
+              duration: 0.5,
+              easing: Konva.Easings.ElasticEaseOut,
+              scaleX: 1.07,
+              scaleY: 1.07,
+            });
+            return 0;
+          });
+          setHovered(true);
+        }}
+        onMouseLeave={(e) => {
+          setHovered(false);
+          groupRef.current.children.map((u, i) => {
+            u.to({
+              duration: 0.5,
+              easing: Konva.Easings.ElasticEaseOut,
+              scaleX: 1,
+              scaleY: 1,
+            });
+            return 0;
+          });
+        }}
+      />
+    );
+  }
+
   // +----------------------------+
   // | Trashcan                   |
   // +----------------------------+------------------------------------
@@ -283,17 +327,15 @@ export default function FunNode(props) {
                 (props.numOutlets - 3) * nodeDimensions.outletYOffset
           }
           fill={gui.functions[name].color}
-          cornerRadius={props.imageShowing? 30:10}
+          cornerRadius={10}
           shadowColor={
             hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
           }
           shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
           shadowBlur={3}
-          //stroke={isRGB || isFixed ? "black" : gui.functions[name].color}
-          //strokeWidth={isRGB ? functionWidth / 30 : isFixed ? functionWidth / 20 : 0}
-          //dash={isRGB ? [functionWidth / 1, 0] : isFixed ? [functionWidth / 5, functionWidth / 5] : [0,0]}
+          stroke={props.imageShowing? "black" : gui.functions[name].color}
+          strokeWidth={props.imageShowing? functionWidth / 20 : 0}
           _useStrictMode
-          // stroke={props.draggable ? gui.functions[name].color : 'black'}
         />
         <Text
           text={rep}
@@ -314,6 +356,7 @@ export default function FunNode(props) {
           _useStrictMode
         />
         <Trashcan />
+        <ConnectCircle />
       </Group>
       <Rect
         onTap={() => {
@@ -452,48 +495,6 @@ export default function FunNode(props) {
             />
             
           ))}
-          <Circle
-            x={functionWidth*1.1}
-            y={functionWidth/2}
-            radius={functionWidth/8}
-            fill={"#B3B3B3"}
-            onDblClick={(e) => {
-                // Generates the temporary line when double clicked
-                props.dblClickHandler(index);
-            }}
-            opacity={
-              name==="rgb" ? 0:1
-            }
-            shadowColor={
-              hovered ? (trashHovered ? "red" : props.hoverShadowColor) : "black"
-            }
-            shadowOffset={{ x: hovered ? 0 : 1, y: hovered ? 0 : 1 }}
-            shadowBlur={3}
-            onMouseEnter={(e) => {
-            groupRef.current.children.map((u, i) => {
-              u.to({
-                duration: 0.5,
-                easing: Konva.Easings.ElasticEaseOut,
-                scaleX: 1.07,
-                scaleY: 1.07,
-              });
-              return 0;
-            });
-            setHovered(true);
-            }}
-            onMouseLeave={(e) => {
-              setHovered(false);
-              groupRef.current.children.map((u, i) => {
-                u.to({
-                  duration: 0.5,
-                  easing: Konva.Easings.ElasticEaseOut,
-                  scaleX: 1,
-                  scaleY: 1,
-                });
-                return 0;
-              });
-            }}
-          />
     </Group>
   );
   // +----------------------------------------+
