@@ -1417,7 +1417,7 @@ class WorkspaceComponent extends Component {
             }} 
             handleExpert={() => {
               this.setState({ isImageModalOpen: false });
-              window.location.replace("http://localhost:3000/expert");
+              window.location.replace("http://mist-dev.herokuapp.com/expert");
             }}
           />
 
@@ -1512,15 +1512,16 @@ class WorkspaceComponent extends Component {
             node &&
             node.renderFunction.isRenderable &&
             node.imageShowing && (
-                <MISTImage
-                  id="MISTImage"
-                  x={this.width*.8285} //I am so sorry. But it works...
-                  y={this.height-(this.height*.4)} //SO sorry. So sorry. Sorry.
-                  width={(this.width - 12 * this.width * 0.02 - this.width * 0.6) * 0.9}//MISTImages are always squares, so they only need one dimension
-                  type={node.type}
-                  renderFunction={node.renderFunction.renderFunction}
-                  automated={true}
-                />
+              <MISTImage
+                id="MISTImage"
+                x={this.width*.8285}
+                //height - (size of box) - (rough margin for extra space)
+                y={this.height - this.width*.144-35} 
+                width={this.width*.144}
+                type={node.type}
+                renderFunction={node.renderFunction.renderFunction}
+                automated={true}
+              />
             )
         )}
       </div>
