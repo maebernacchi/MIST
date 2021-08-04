@@ -4,9 +4,9 @@
 
 // Workspace's background.
 const workspaceBackground = {
-  Classic: "#FAFBFF",
-  Dusk: "#edf2fd",
-  Dark: "black",
+  Classic: "#edf2fd",
+  Dusk: "#e1e1e1",
+  Dark: "#4d4d4d",
 };
 
 // +-------------+---------------------------------------------------
@@ -36,8 +36,8 @@ const nodeHoverShadow = {
 // Menu background color.
 const menuBackground = {
     Classic: 'white',
-    Dusk: 'white',
-    Dark: '#1c170f',
+    Dusk: '#eeeeee',
+    Dark: '#353535',
 }
 
 // FOR NOW: Color of the value node on the menu value button.

@@ -218,9 +218,9 @@ function FuncGroup(props) {
             height={global.functionWidth}
             fill={gui.functions[funName].color}
             cornerRadius={10}
-            stroke={isRGB || isFixed ? "black" : gui.functions[funName].color}
-            strokeWidth={isRGB ? global.functionWidth / 30 : isFixed ? global.functionWidth / 20 : 0}
-            dash={isRGB ? [global.functionWidth / 1, 0] : isFixed ? [global.functionWidth / 5, global.functionWidth / 5] : [0,0]}
+            //stroke={isRGB || isFixed ? "black" : gui.functions[funName].color}
+            //strokeWidth={isRGB ? global.functionWidth / 30 : isFixed ? global.functionWidth / 20 : 0}
+            //dash={isRGB ? [global.functionWidth / 1, 0] : isFixed ? [global.functionWidth / 5, global.functionWidth / 5] : [0,0]}
           />
         )}
       </Spring>

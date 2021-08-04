@@ -90,7 +90,7 @@ reportHandlers.getBlockedStatus = function (info, req, res) {
  *  blockedid: STRING,
  * }
  */
-reportHandlers.blockUser = function (info, req, res) {
+reportHandlers.blockUser = function (req, res) {
 	if (!req.isAuthenticated()) throw "You have to be logged in to block a user";
 	else
 		database.blockUser(req.user._id, req.body.blockedid, (message) =>

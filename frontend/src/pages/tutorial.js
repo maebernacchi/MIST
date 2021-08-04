@@ -588,7 +588,7 @@ const sections = [
           keywords: ["introduction", "MIST", "general"],
           image: <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sum(x,y)" resolution="250" />,
+                          code="sum(x,y)" resolution="350" />,
           isAnimated: false,
           //Text
           text: (
@@ -628,7 +628,7 @@ const sections = [
               <br />
               <br />
               <Image src={arrowXandY} fluid></Image>
-              {/* <MISTImage code="x" resolution="250"/> */}
+              {/* <MISTImage code="x" resolution="350"/> */}
               <br />
               <br />
               Now you will explore the variable and function blocks
@@ -703,7 +703,7 @@ const sections = [
               <br />
               {/* <Image src={GUIgif} fluid></Image> */}
               <Container fluid>
-                <iframe width={document.documentElement.clientWidth/3} height="276" src={workspaceIntro}
+                <iframe width={document.documentElement.clientWidth/2.5} height="276" src={workspaceIntro}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -717,7 +717,7 @@ const sections = [
               <br />
               {/* <Image src={nodeDragGif} fluid></Image>  */}
               <Container fluid>
-                <iframe width={document.documentElement.clientWidth/3} height="276" src={workspaceDrag}
+                <iframe width={document.documentElement.clientWidth/2.5} height="276" src={workspaceDrag}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -731,7 +731,7 @@ const sections = [
               <br />
               <br />
               <Container fluid>
-                <iframe width={document.documentElement.clientWidth/3} height="276" src={workspaceConnect}
+                <iframe width={document.documentElement.clientWidth/2.5} height="276" src={workspaceConnect}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
@@ -739,17 +739,20 @@ const sections = [
               </Container>
               <br />
               <br />
-              Some functions can also be inputs for other functions!
+              Some functions can also be inputs for other functions! 
+              <br /> 
+              If you want to see the individual images, you can click on the white boxes!
               <br />
               <br />
               <Container fluid>
-                <iframe width={document.do} height="276" src={funcConnectVideo}
+                <iframe width={document.documentElement.clientWidth/2.5} height="276" src={funcConnectVideo}
                   title="workspace-function-connect" frameborder="0"
                   allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen>
                 </iframe>
               </Container>
               <br />
+              And remember, if you want to delete all of your nodes, then go to settings and click the reset button!
               <br />
             </Container>
           ),
@@ -778,7 +781,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width={document.documentElement.clientWidth/3} height="276" src={codeIntro}
+              <iframe width={document.documentElement.clientWidth/2.5} height="276" src={codeIntro}
                 title="code-intro" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -792,7 +795,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width={document.documentElement.clientWidth/3} height="276" src={savingFunction}
+              <iframe width={document.documentElement.clientWidth/2.5} height="276" src={savingFunction}
                 title="using-params" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -846,7 +849,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width={document.documentElement.clientWidth/3} height="276" src={allVars}
+              <iframe width={document.documentElement.clientWidth/2.5} height="276" src={allVars}
                 title="values" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -862,7 +865,7 @@ const sections = [
                 <b>Code:</b> x
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="x" resolution="200" />
                 <br />
                 <br />
                 As <b>X</b> increases, the image gets darker.
@@ -871,7 +874,7 @@ const sections = [
                 <b>Code:</b> y
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="x" resolution="200" />,
+                          code="y" resolution="200" />
                 <br />
                 <br />
                 As <b>Y</b> increases, the image gets darker. <b>Remember:</b> in MIST the Y axis increases
@@ -937,7 +940,7 @@ const sections = [
             <br />
             <br />
             <Container fluid>
-              <iframe width={document.documentElement.clientWidth/3} height="276" src={constantDemo}
+              <iframe width={document.documentElement.clientWidth/2.5} height="276" src={constantDemo}
                 title="constant-entry" frameborder="0"
                 allow="accelerometer; autopause; loop; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -1182,7 +1185,7 @@ const sections = [
                 <p1>
                   Try making the following image: <br />
                 </p1>
-                <MISTImage code="wsum(mult(x,m.x,y),m.y)" resolution="250" />
+                <MISTImage code="wsum(mult(x,m.x,y),m.y)" resolution="350" />
               </Container>
             ),
 
@@ -1202,7 +1205,7 @@ const sections = [
                 <MISTImage
                   height="200" width="200"
                   code="wsum(sin(x),cos(y),m.y,m.x)"
-                  resolution="250"
+                  resolution="350"
                 />
               </Container>
             ),
@@ -1523,6 +1526,8 @@ const sections = [
               <Container>
                 {" "}
                 How do you change images from vertical to horizonal?{" "}
+                <br />
+                Have you tried using the 'if' node? {" "}
               </Container>
             ),
           },
@@ -1556,7 +1561,7 @@ const sections = [
         keywords: ["graph", "color", "image"],
         image: <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="rgb(mult(y,y),x,square(x))" resolution="250" />,
+                          code="rgb(mult(y,y),x,square(x))" resolution="350" />,
         isAnimated: false,
         //Text
         text: (
@@ -1591,21 +1596,21 @@ const sections = [
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="rgb(1,-1,-1)" resolution="250" />
+                          code="rgb(1,-1,-1)" resolution="350" />
               </Col>
               <Col>
                 An example of solid green
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="rgb(-1,1,-1)" resolution="250" />
+                          code="rgb(-1,1,-1)" resolution="350" />
               </Col>
               <Col>
                 An example of solid blue
                 <br />
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="rgb(-1,-1,1)" resolution="250" />
+                          code="rgb(-1,-1,1)" resolution="350" />
               </Col>
             </Row>
             Different amounts of each color component make a unique color.
@@ -1673,7 +1678,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="rgb(x,x,y)" resolution="250" />
+                          code="rgb(x,x,y)" resolution="350" />
               </Container>
             ),
             hint: (
@@ -1698,7 +1703,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
                   code="rgb(cos(y),sum(cos(y),x),x)"
-                  resolution="250"
+                  resolution="350"
                 />
               </Container>
             ),
@@ -1727,7 +1732,7 @@ const sections = [
         image: (
           <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sign(wsum(square(x),square(y)))" resolution="250" />
+                          code="sign(wsum(square(x),square(y)))" resolution="350" />
         ),
         isAnimated: false,
         //Text
@@ -1785,7 +1790,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
                   code="neg(sign(wsum(square(x),square(y))))"
-                  resolution="250"
+                  resolution="350"
                 />
               </Container>
             ),
@@ -1800,7 +1805,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
                   code="wsum(sum(mult(x,x),mult(y,y),t.s),t.s)"
-                  resolution="250"
+                  resolution="350"
                 />
               </Container>
             ),
@@ -1818,7 +1823,7 @@ const sections = [
         keywords: ["shape", "grayscale", "image"],
         image: <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sign(sum(x,y))" resolution="250" />,
+                          code="sign(sum(x,y))" resolution="350" />,
         isAnimated: false,
         //Text
         text: (
@@ -1876,7 +1881,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="wsum(x,y,t.s)" resolution="250" />
+                          code="wsum(x,y,t.s)" resolution="350" />
               </Container>
             ),
             hint: <Container> How do you get it to move? </Container>,
@@ -1899,7 +1904,7 @@ const sections = [
         keywords: ["shape", "grayscale", "image"],
         image: <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sign(neg(sum(x,y)))" resolution="250" />,
+                          code="sign(neg(sum(x,y)))" resolution="350" />,
         isAnimated: false,
         //Text
         text: (
@@ -1937,7 +1942,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sum(sin(x),sin(y),-0.5)" resolution="250" />
+                          code="sum(sin(x),sin(y),-0.5)" resolution="350" />
               </Container>
             ),
             hint: (
@@ -1960,7 +1965,7 @@ const sections = [
         keywords: ["size", "shape", "grayscale"],
         image: <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sign(sum(x,y,-0.5))" resolution="250" />,
+                          code="sign(sum(x,y,-0.5))" resolution="350" />,
         isAnimated: false,
         //Text
         text: (
@@ -1999,7 +2004,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
                   code="sign(wsum(square(x),square(y),0.5))"
-                  resolution="250"
+                  resolution="350"
                 />
               </Container>
             ),
@@ -2023,7 +2028,7 @@ const sections = [
         image: (
           <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
             code="wsum(square(sum(x,0.5)),square(y))"
-            resolution="250"
+            resolution="350"
           />
         ),
         isAnimated: false,
@@ -2066,7 +2071,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
                   code="sum(sign(sum(x,0.5)),sign(sum(y,0.5)))"
-                  resolution="250"
+                  resolution="350"
                 />
               </Container>
             ),
@@ -2091,7 +2096,7 @@ const sections = [
         image: (
           <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
             code="mistif(sign(wsum(square(x),square(y))),y,sign(sum(x,y)))"
-            resolution="250"
+            resolution="350"
           />
         ),
         isAnimated: false,
@@ -2225,7 +2230,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
                   code="mistif(x,mistif(y,cos(sin(x)),sign(sum(x,y))),mistif(y,wsum(square(x),square(y)),y))"
-                  resolution="250"
+                  resolution="350"
                 />{" "}
               </Container>
             ),
@@ -2258,7 +2263,7 @@ const sections = [
         image: (
           <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
             code="rgb(sin(sin(cos(x))),mult(sin(sin(cos(x))),y),wsum(y,t.s))"
-            resolution="250"
+            resolution="350"
           />
         ),
         isAnimated: false,
@@ -2316,7 +2321,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="rgb(sin(x),cos(y),t.s)" resolution="250" />
+                          code="rgb(sin(x),cos(y),t.s)" resolution="350" />
               </Container>
             ),
             hint: (
@@ -2335,7 +2340,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
                   code="rgb(cos(sin(sin(x))),sum(cos(sin(sin(x))),y),y)"
-                  resolution="250"
+                  resolution="350"
                 />{" "}
               </Container>
             ),
@@ -2360,7 +2365,7 @@ const sections = [
         image: (
           <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
             code="sin(wsum(neg(square(x)),neg(y),mult(t.s,m.y),m.x,mult(x,y)))"
-            resolution="250"
+            resolution="350"
           />
         ),
         isAnimated: false,
@@ -2420,7 +2425,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} 
                           width={document.documentElement.clientWidth/10} 
-                          code="sin(sin(sum(m.x,x)))" resolution="250" />
+                          code="sin(sin(sum(m.x,x)))" resolution="350" />
               </Container>
             ),
 
@@ -2434,7 +2439,7 @@ const sections = [
                 </p1>
                 <MISTImage height={document.documentElement.clientWidth/10} width={document.documentElement.clientWidth/10}
                   code="wsum(cos(mult(x,x,x)),cos(mult(x,x,x)),cos(mult(x,x,x)))"
-                  resolution="250"
+                  resolution="350"
                 />
               </Container>
             ),
