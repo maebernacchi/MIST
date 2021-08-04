@@ -2103,13 +2103,35 @@ const sections = [
             need to use the if function. Let’s say you have the following 3
             images:
             <br />
+            <Row>
+              <Col>
+                <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="x" resolution="300" />
+              </Col>
+              <Col>
+                <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="sum(square(x),square(y))" resolution="300" />
+              </Col>
+              <Col>
+                <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="sign(sum(x,y))" resolution="300" />
+              </Col>
+            </Row>
             <br />
             And you want to make it into the following:
             <br />
             <br />
-            It uses the circle outline, and uses the second picture as the
-            inside of the circle and the third picture as the outside of the
-            circle. You just need to connect them together with an if function:
+            <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="mistif(x,sum(square(x),square(y)), sign(sum(x,y)))" resolution="300" />
+            <br />
+            <br />
+            It uses the x outline, and uses the second picture as the
+            right half and the third picture as the left half. You just 
+            need to connect them together with an if function:
             <br />
             <br />
             Remember what if does? It takes 3 inputs in -- 3 images. It uses the
@@ -2123,29 +2145,47 @@ const sections = [
             parts (white parts) of the first image (the circle).
             <br />
             <br />
-            So how would it look like if the order was the following with the
-            following images:
-            <br />
-            <br />
-            (These are the same images as in the previous one except the circle
-            is blended.
-            <br />
-            <br />
-            It looks the following:
-            <br />
-            <br />
-            This is because sign changes all negative parts into white, and
-            positive parts into black. By adding a sign function on the first
-            image input, you will have an easier time seeing through the
-            different parts of the image and the exact dividers.
-            <br />
-            <br />
             You can also think in quadrants, like in math with graphs and
             coordinates. For example you can use four different images to make
             the following:
             <br />
             <br />
+            <Col>
+                <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="mistif(x,mistif(y,wsum(x,y),sum(square(x),square(y))), 
+                                       mistif(y,sign(sum(x,y)),sin(sum(square(x),square(y)))))" resolution="300" />
+              </Col>
+            <br />
+            <br />
             It makes up of the following four images:
+            <br />
+            <br />
+            <Row>
+              <Col>
+                <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="wsum(x,y)" resolution="300" />
+              </Col>
+              <Col>
+                <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="sum(square(x),square(y))" resolution="300" />
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+                <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="sign(sum(x,y))" resolution="300" />
+              </Col>
+              <Col>
+                <MISTImage height={document.documentElement.clientWidth/10} 
+                          width={document.documentElement.clientWidth/10} 
+                          code="sin(sum(square(x),square(y)))" resolution="300" />
+              </Col>
+            </Row>
             <br />
             <br />
             1. Make each of these shapes:
