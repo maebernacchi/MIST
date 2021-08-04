@@ -1650,7 +1650,7 @@ const sections = [
               </Col>
               <Col>
                 4. Connect the <b>mult</b>{" "}
-                block to the red, the x to the green, and sign to the blue.
+                block to the red, the <b>x</b> to the green, and <b>sin</b> to the blue.
               </Col>
             </Row>
           </Container>
