@@ -1,6 +1,5 @@
 #!/bin/bash
 ## Installation script for MIST (Mathematical Image Synthesis Toolkit)
-## Copyrighted by Zaen LOL (jk idk how it works)
 
 do_backend_installation=true
 do_frontend_installation=true
@@ -43,7 +42,7 @@ Docker is strongly recommended."
                         if ! [[ $(netstat -an --tcp --program | grep 5432) ]]; then
                             # Not running, start postgres
                             echo "PostgreSQL is not running, or it is running but not on port 5432."
-                            echo "Zaen is too tired to figure out how to run postgres on your OS. Google or smth!"
+                            echo "Please search the web for more information about how to run PostgreSQL on your OS."
                             exit 1
                         else
                             # All good! Do npm install
@@ -84,7 +83,7 @@ if [[ "$do_frontend_installation" == "true" ]]; then
     echo "Installing the frontend..."
     (cd frontend && npm install)
     # Remove the two lines after upgrading the frontend react packages to v.17
-    echo "Removing the eslint folder (so annoything maaan)"
+    echo "Removing the eslint folder..."
     (cd frontend && rm -rf node_modules/eslint)
     echo "Downloading the twgl.js file..."
     curl -sL https://raw.githubusercontent.com/greggman/twgl.js/4f6b81a3a8a73fbda701b68536703a4c04a9b192/dist/4.x/twgl.min.js --output ./frontend/public/twgl.min.js
