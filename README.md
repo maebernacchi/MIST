@@ -3,6 +3,8 @@ MIST
 </h1>
 <p align="center">
 MIST (or the Mathematical Image Synthesis Toolkit) is a tool for creating images and animations using simple math functions. You can make your own art from scratch, complete challenges, and share your creations with the MIST community.
+
+This is on my personal account as I was a member of the GLIMMER research lab in the summer of 2021.
 </p>
 
 # Contents
